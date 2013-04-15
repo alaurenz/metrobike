@@ -3,6 +3,8 @@
     package="com.HuskySoft.hellometrobike"
     android:versionCode="1"
     android:versionName="1.0" >
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- From http://stackoverflow.com/questions/6305592/when-i-try-load-an-image-unknown-host-exception-in-android -->
 
     <uses-sdk
         android:minSdkVersion="8"
