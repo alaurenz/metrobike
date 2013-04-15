@@ -25,7 +25,7 @@ https://help.github.com/articles/set-up-git
 
 Step 3: Get added as a collaborator
 If you have not already ensure you have been added as a collaborator to the repo
-for our project. Email Adrian with your GitHub username if youhave not been 
+for our project. Email Adrian with your GitHub username if you have not been 
 added.
 
 Step 4: Create an ssh key
