@@ -17,10 +17,10 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
             android:contentDescription="@string/company_logo"
-            android:src="@drawable/huskey_soft" />
+            android:src="@drawable/husky_soft" />
 
         <ScrollView
             android:id="@+id/scrollView1"
