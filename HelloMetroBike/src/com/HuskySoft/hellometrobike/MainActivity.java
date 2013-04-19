@@ -15,9 +15,25 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
+	public static final String BICYCLE_URL = 
+			"http://maps.googleapis.com/maps/api/directions/json?" +
+			"origin=6504%20Latona%20Ave%20NE%2CSeattle%2CWA&" +
+			"destination=3801%20Brooklyn%20Ave%20NE%2CSeattle%2CWA&" +
+			"sensor=false&" +
+			"mode=bicycling";
+	
+	public static final String TRANSIT_URL = 
+			"http://maps.googleapis.com/maps/api/directions/json?" +
+			"origin=6504%20Latona%20Ave%20NE%2CSeattle%2CWA&" +
+			"destination=3801%20Brooklyn%20Ave%20NE%2CSeattle%2CWA&" +
+			"sensor=false&" +
+			"arrival_time=1368644400&" +
+			"mode=transit";
+	
 	public static final String TAG = "HelloMetroBikeMain";
 	
-	TextView mainText;
+	TextView bicycleText; // The place to display bicycle directions
+	TextView transitText; // The place to display transit directions
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +41,16 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.activity_main);
 		
-		mainText = (TextView) findViewById(R.id.mainText);
-		if(mainText == null){
-			Log.e(TAG,"Couldn't find mainText!");
+		// Find our display TextView objects and save references to them
+		bicycleText = (TextView) findViewById(R.id.bicycleText);
+		transitText = (TextView) findViewById(R.id.transitText);
+		
+		if(bicycleText == null | transitText == null){
+			Log.e(TAG,"Couldn't find main text views!");
 		} else {
-			mainText.setText("App is starting!");
+			// Start the communication thread to get directions!
+			bicycleText.setText("App is starting!");
+			transitText.setText("App is starting!");
 			Thread testThread = new Thread(new GMapsCommTest());
 			testThread.start();
 		}
@@ -47,15 +68,53 @@ public class MainActivity extends Activity {
 		
 		@Override
 		public void run() {
+			
+			// Get bicycle directions
+			
 			// Change current text
 			MainActivity.this.runOnUiThread(new Runnable () {
 				public void run(){
-					mainText.setText("Contacting Google Maps...");
+					bicycleText.setText("Contacting Google Maps...");
 				}
 			});
 			
+			myResponse = doQuery(BICYCLE_URL);
+			
+			Log.w(TAG, "Got response: " + myResponse);
+			
+			// Change current text
+			MainActivity.this.runOnUiThread(new Runnable () {
+				public void run(){
+					bicycleText.setText("Response from Google Maps:\n\n" + GMapsCommTest.this.myResponse);
+				}
+			});
+			
+			// Get transit directions
+			
+			// Change current text
+			MainActivity.this.runOnUiThread(new Runnable () {
+				public void run(){
+					transitText.setText("Contacting Google Maps...");
+				}
+			});
+			
+			myResponse = doQuery(TRANSIT_URL);
+			
+			Log.w(TAG, "Got response: " + myResponse);
+			
+			// Change current text
+			MainActivity.this.runOnUiThread(new Runnable () {
+				public void run(){
+					transitText.setText("Response from Google Maps:\n\n" + GMapsCommTest.this.myResponse);
+				}
+			});
+		}
+
+		private String doQuery(String theURL){
+			String myResponse = "";
+			
 			try {
-				URL url = new URL("http://maps.googleapis.com/maps/api/directions/xml?origin=Seattle%2CWA&destination=New%20York%2CNY&sensor=false");
+				URL url = new URL(theURL);
 				//URL url = new URL("http://google.com");
 				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 				try {
@@ -77,28 +136,7 @@ public class MainActivity extends Activity {
 			} catch (IOException e) {
 				Log.e(TAG,"IO Exception..." + e.getMessage());
 			}
-			
-			Log.w(TAG, "Got response: " + myResponse);
-			
-//			try {
-//				Thread.sleep(2000);
-//			} catch (InterruptedException e) {
-//				// Do nothing if interrupted
-//			}
-			
-			// Change current text
-			MainActivity.this.runOnUiThread(new Runnable () {
-				public void run(){
-					mainText.setText("Got information!\n" + GMapsCommTest.this.myResponse);
-				}
-			});
+			return myResponse;
 		}
-		
-		
-		
-		
-		
-		
-		
 	}
 }

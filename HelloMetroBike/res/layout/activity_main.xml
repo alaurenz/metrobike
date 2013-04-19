@@ -1,39 +1,64 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:isScrollContainer="true"
+    android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true"
     tools:context=".MainActivity" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <ImageView
+        android:id="@+id/mainLogo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
+        android:layout_height="100dip"
+        android:contentDescription="@string/company_logo"
+        android:src="@drawable/husky_soft" />
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="100dip"
-            android:contentDescription="@string/company_logo"
-            android:src="@drawable/husky_soft" />
+    <TextView
+        android:id="@+id/bicycleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/bicycleTitle"
+        android:textSize="@dimen/Bold" />
 
-        <ScrollView
-            android:id="@+id/scrollView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+    <ScrollView
+        android:id="@+id/bicycleScroll"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
 
-            <TextView
-                android:id="@+id/mainText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="112dp"
-                android:text="@string/hello_world" />
-        </ScrollView>
-    </LinearLayout>
+        <TextView
+            android:id="@+id/bicycleText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/hello_world" />
 
-</RelativeLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/transitLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/transitTitle"
+        android:textSize="@dimen/Bold" />
+
+    <ScrollView
+        android:id="@+id/transitScroll"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/transitText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/hello_world" />
+
+    </ScrollView>
+
+</LinearLayout>
