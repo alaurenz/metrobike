@@ -1,10 +1,13 @@
 Adding Google Play API
 
+(1) Load the library into Eclipse
 File -> Import
 Android -> Existing Android Code Into Workspace
 from HelloMetroBike/libs/google-play-services_lib
 
+(2) Add the library to the target project
 Then, Right click HelloMetroBike project -> Properties
 Under Android, Library, Add... google-play-services_lib
 
+(3) Rebuild
 Then, Project -> Clean... and clean all
