@@ -8,5 +8,6 @@
     <string name="largeText">abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz</string>
     <string name="bicycleTitle">Bicycle directions from Google</string>
     <string name="transitTitle">Transit directions from Google</string>
+    <string name="mapTitle">Sample map</string>
 
 </resources>
