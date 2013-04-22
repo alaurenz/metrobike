@@ -3,3 +3,8 @@ HelloMetroBike/.project
 HelloMetroBike/bin/
 HelloMetroBike/gen/
 HelloMetroBike/project.properties
+HelloMetroBike/libs/google-play-services_lib/.classpath
+HelloMetroBike/libs/google-play-services_lib/.project
+HelloMetroBike/libs/google-play-services_lib/bin
+HelloMetroBike/libs/google-play-services_lib/gen
+HelloMetroBike/libs/google-play-services_lib/project.properties
