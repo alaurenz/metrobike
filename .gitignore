@@ -8,3 +8,15 @@ HelloMetroBike/libs/google-play-services_lib/.project
 HelloMetroBike/libs/google-play-services_lib/bin/
 HelloMetroBike/libs/google-play-services_lib/gen/
 HelloMetroBike/libs/google-play-services_lib/project.properties
+MetroBike/.classpath
+MetroBike/.project
+MetroBike/.settings
+MetroBike/progaurd-project.txt
+MetroBike/bin/
+MetroBike/gen/
+MetroBike/project.properties
+MetroBike/libs/google-play-services_lib/.classpath
+MetroBike/libs/google-play-services_lib/.project
+MetroBike/libs/google-play-services_lib/bin/
+MetroBike/libs/google-play-services_lib/gen/
+MetroBike/libs/google-play-services_lib/project.properties
