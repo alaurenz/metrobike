@@ -11,7 +11,7 @@ HelloMetroBike/libs/google-play-services_lib/project.properties
 MetroBike/.classpath
 MetroBike/.project
 MetroBike/.settings
-MetroBike/progaurd-project.txt
+MetroBike/proguard-project.txt
 MetroBike/bin/
 MetroBike/gen/
 MetroBike/project.properties
