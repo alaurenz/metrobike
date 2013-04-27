@@ -4,21 +4,30 @@
     android:layout_height="match_parent"
     tools:context=".ResultsActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editText4"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world" />
+        android:ems="10"
+        android:hint="Text1"
+        android:singleLine="true" />
 
     <Button
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView1"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_marginBottom="82dp"
-        android:text="@string/go_to_details" 
-        android:onClick="goToDetail"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Button" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editText4"
+        android:ems="10"
+        android:hint="Text2"
+        android:singleLine="true" />
 
 </RelativeLayout>
