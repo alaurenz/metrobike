@@ -7,27 +7,59 @@
     <EditText
         android:id="@+id/editText4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="80dp"
         android:ems="10"
+        android:background="@drawable/blue_border"
         android:hint="Text1"
         android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="80dp"
+        android:layout_below="@+id/editText4"
+        android:background="@drawable/blue_border"
+        android:ems="10"
+        android:hint="Text2"
+        android:singleLine="true" >
+
+        <requestFocus />
+    </EditText>
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="35sp"
+        android:layout_height="35sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/editText4"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="42dp"
+        android:src="@android:drawable/btn_star" />
+
+    <ImageButton
+        android:id="@+id/ImageButton01"
+        android:layout_width="35sp"
+        android:layout_height="35sp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_alignTop="@+id/imageButton1"
+        android:src="@android:drawable/btn_star" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Button" />
+        android:layout_alignRight="@+id/ImageButton01"
+        android:layout_below="@+id/editText1"
+        android:layout_marginTop="8dp"
+        android:text="@string/nevigate" />
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/editText4"
-        android:ems="10"
-        android:hint="Text2"
-        android:singleLine="true" />
 
 </RelativeLayout>
