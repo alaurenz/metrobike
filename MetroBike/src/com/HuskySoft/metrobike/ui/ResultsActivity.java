@@ -1,10 +1,11 @@
 package com.HuskySoft.metrobike.ui;
 
 import com.HuskySoft.metrobike.R;
-
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
 
 public class ResultsActivity extends Activity {
 
@@ -21,4 +22,9 @@ public class ResultsActivity extends Activity {
 		return true;
 	}
 
+	public void goToDetail(View view) {
+        // Do something in response to button
+    	Intent intent = new Intent(this, DetailsActivity.class);
+    	startActivity(intent);
+    }
 }
