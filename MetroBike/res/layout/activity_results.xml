@@ -35,22 +35,28 @@
 
     <ImageButton
         android:id="@+id/imageButton1"
-        android:layout_width="35sp"
-        android:layout_height="35sp"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/editText4"
         android:layout_marginTop="15dp"
         android:layout_marginRight="42dp"
-        android:src="@android:drawable/btn_star" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:padding="0dp"
+        android:src="@drawable/Reverse" />
 
     <ImageButton
         android:id="@+id/ImageButton01"
-        android:layout_width="35sp"
-        android:layout_height="35sp"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_alignTop="@+id/imageButton1"
-        android:src="@android:drawable/btn_star" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:padding="0dp"
+        android:src="@drawable/search" />
 
     <Button
         android:id="@+id/button1"
@@ -61,5 +67,22 @@
         android:layout_marginTop="8dp"
         android:text="@string/nevigate" />
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
+        android:layout_above="@+id/editText1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTope="2dp"
+        android:src="@drawable/A" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
+        android:layout_above="@+id/button1"
+        android:layout_alignLeft="@+id/imageView1"
+        android:src="@drawable/B" />
 
 </RelativeLayout>
