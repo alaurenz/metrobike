@@ -20,3 +20,10 @@ MetroBike/libs/google-play-services_lib/.project
 MetroBike/libs/google-play-services_lib/bin/
 MetroBike/libs/google-play-services_lib/gen/
 MetroBike/libs/google-play-services_lib/project.properties
+MetroBikeJavaBackendTester/.classpath
+MetroBikeJavaBackendTester/.project
+MetroBikeJavaBackendTester/.settings
+MetroBikeJavaBackendTester/proguard-project.txt
+MetroBikeJavaBackendTester/bin/
+MetroBikeJavaBackendTester/gen/
+MetroBikeJavaBackendTester/project.properties
