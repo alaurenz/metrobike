@@ -23,8 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.HuskySoft.metrobike.DetailsActivity"
+            android:name="com.HuskySoft.metrobike.ui.DetailsActivity"
             android:label="@string/title_activity_details" >
+        </activity>
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.NevigateActivity"
+            android:label="@string/title_activity_nevigate" >
         </activity>
     </application>
 
