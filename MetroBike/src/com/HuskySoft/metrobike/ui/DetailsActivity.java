@@ -1,11 +1,12 @@
 package com.HuskySoft.metrobike.ui;
 
-import com.HuskySoft.metrobike.R;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+
+import com.HuskySoft.metrobike.R;
 
 public class DetailsActivity extends Activity {
 
@@ -24,7 +25,7 @@ public class DetailsActivity extends Activity {
 
 	public void goToNevigate(View view) {
         // Do something in response to button
-    	Intent intent = new Intent(this, NevigateActivity.class);
+    	Intent intent = new Intent(this, NavigateActivity.class);
     	startActivity(intent);
     }
 }
