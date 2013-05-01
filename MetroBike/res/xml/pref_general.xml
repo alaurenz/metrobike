@@ -1,0 +1,46 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--
+    NOTE: If you need to change the string for the android:key, 
+    please also change in SettingsActivity.java
+    -->
+
+
+    <!-- General category -->
+    <PreferenceCategory android:title="@string/pref_header_general" >
+
+        <!-- First preference (about) -->
+        <Preference
+            android:key="about_key"
+            android:selectable="true"
+            android:title="@string/pref_title_about" >
+        </Preference>
+
+        <!--
+        NOTE: I want to display the title and the defaultValue on the screen without useing 
+        EditTextPreference, but I still cannot figure it out yet. So I just set selectable = false
+        -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_detail_version"
+            android:key="version_key"
+            android:selectable="false"
+            android:title="@string/pref_title_version" />
+    </PreferenceCategory>
+
+    <!-- History category -->
+    <PreferenceCategory android:title="@string/pref_header_history" >
+
+        <!-- First preference (clear history) -->
+        <Preference
+            android:key="clear_history_key"
+            android:selectable="true"
+            android:title="@string/clear_history" />
+
+        <!-- Second preference (view history) -->
+        <Preference
+            android:key="view_history"
+            android:selectable="true"
+            android:title="@string/view_history" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
