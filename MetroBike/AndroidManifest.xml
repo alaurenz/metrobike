@@ -14,8 +14,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.HuskySoft.metrobike.ui.ResultsActivity"
-            android:label="@string/app_name" >
+            android:name="com.HuskySoft.metrobike.ui.MainActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,8 +24,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.HuskySoft.metrobike.DetailsActivity"
-            android:label="@string/title_activity_details" >
+            android:name="com.HuskySoft.metrobike.ui.ResultsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.DetailsActivity"
+            android:label="@string/title_activity_details"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.NavigateActivity"
+            android:label="@string/title_activity_navigate"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

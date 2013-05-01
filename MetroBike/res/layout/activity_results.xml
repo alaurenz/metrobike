@@ -2,87 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ResultsActivity" >
+    tools:context=".DetailsActivity" >
 
-    <EditText
-        android:id="@+id/editText4"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="80dp"
-        android:ems="10"
-        android:background="@drawable/blue_border"
-        android:hint="Text1"
-        android:singleLine="true" />
-
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="80dp"
-        android:layout_below="@+id/editText4"
-        android:background="@drawable/blue_border"
-        android:ems="10"
-        android:hint="Text2"
-        android:singleLine="true" >
-
-        <requestFocus />
-    </EditText>
-
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/editText4"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="42dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:padding="0dp"
-        android:src="@drawable/reverse" />
-
-    <ImageButton
-        android:id="@+id/ImageButton01"
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_alignTop="@+id/imageButton1"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:padding="0dp"
-        android:src="@drawable/search" />
-
-    <Button
-        android:id="@+id/button1"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/ImageButton01"
-        android:layout_below="@+id/editText1"
-        android:layout_marginTop="8dp"
-        android:text="@string/nevigate" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:layout_above="@+id/editText1"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="2dp"
-        android:src="@drawable/a" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:layout_above="@+id/button1"
-        android:layout_alignLeft="@+id/imageView1"
-        android:src="@drawable/b" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/hello_world" />
 
 </RelativeLayout>
