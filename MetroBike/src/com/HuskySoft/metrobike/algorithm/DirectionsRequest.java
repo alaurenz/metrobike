@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
-
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.TravelMode;
 
@@ -19,11 +18,12 @@ public final class DirectionsRequest implements Serializable {
      * Part of serializability, this id tracks if a serialized object can be
      * deserialized using this version of the class.
      * 
-     * NOTE: Please add 1 to this number every time you change the class
-     * definition, so we don't have old-version DirectionsRequest objects (ex:
-     * from the log) being made into new-version DirectionsRequest objects.
+     * NOTE: Please add 1 to this number every time you change the readObject()
+     * or writeObject() methods, so we don't have old-version DirectionsRequest
+     * objects (ex: from the log) being made into new-version DirectionsRequest
+     * objects.
      */
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The starting location that the user wants directions from.
@@ -52,12 +52,12 @@ public final class DirectionsRequest implements Serializable {
      * An optional field. It sets a minimum distance the user would like to
      * bike.
      */
-    private int minDistanceToBikeInMeters;
+    private long minDistanceToBikeInMeters;
     /**
      * An optional field. It sets the maximum distance the user would like to
      * bike. (In case they are exercise averse)
      */
-    private int maxDistanceToBikeInMeters;
+    private long maxDistanceToBikeInMeters;
     /**
      * An optional field. The minimum number of bus transfers to have. In case
      * they like multiple transfers.
@@ -84,7 +84,8 @@ public final class DirectionsRequest implements Serializable {
     /**
      * Set the starting address for the trip.
      * 
-     * @param newStartAddress the address to start from.
+     * @param newStartAddress
+     *            the address to start from.
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
      */
@@ -96,22 +97,53 @@ public final class DirectionsRequest implements Serializable {
     /**
      * Implements a custom serialization of a DirectionsRequest object.
      * 
-     * @param out the ObjectOutputStream to write to
-     * @throws IOException if the stream fails
+     * @param out
+     *            the ObjectOutputStream to write to
+     * @throws IOException
+     *             if the stream fails
      */
     private void writeObject(final ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
+        // Write each field to the stream in a specific order.
+        // Specifying this order helps shield the class from problems
+        // in future versions.
+        // The order must be the same as the read order in readObject()
+        out.writeObject(startAddress);
+        out.writeObject(endAddress);
+        out.writeLong(arrivalTime);
+        out.writeLong(departureTime);
+        out.writeObject(travelMode);
+        out.writeLong(minDistanceToBikeInMeters);
+        out.writeLong(maxDistanceToBikeInMeters);
+        out.writeInt(minNumberBusTransfers);
+        out.writeInt(maxNumberBusTransfers);
+        out.writeObject(solutions);
     }
 
     /**
      * Implements a custom deserialization of a DirectionsRequest object.
      * 
-     * @param in the ObjectInputStream to read from
-     * @throws IOException if the stream fails
-     * @throws ClassNotFoundException if a class is not found
+     * @param in
+     *            the ObjectInputStream to read from
+     * @throws IOException
+     *             if the stream fails
+     * @throws ClassNotFoundException
+     *             if a class is not found
      */
     private void readObject(final ObjectInputStream in) throws IOException,
             ClassNotFoundException {
-        in.defaultReadObject();
+        // Read each field from the stream in a specific order.
+        // Specifying this order helps shield the class from problems
+        // in future versions.
+        // The order must be the same as the writing order in writeObject()
+        startAddress = (String) in.readObject();
+        endAddress = (String) in.readObject();
+        arrivalTime = in.readLong();
+        departureTime = in.readLong();
+        travelMode = (TravelMode) in.readObject();
+        minDistanceToBikeInMeters = in.readLong();
+        maxDistanceToBikeInMeters = in.readLong();
+        minNumberBusTransfers = in.readInt();
+        maxNumberBusTransfers = in.readInt();
+        solutions = (List<Route>) in.readObject();
     }
 }
