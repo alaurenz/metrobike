@@ -13,23 +13,37 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="com.HuskySoft.metrobike.ui.ResultsActivity"
-            android:label="@string/app_name" >
+        
+       	<activity
+            android:name="com.HuskySoft.metrobike.ui.MainActivity"
+            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.ResultsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
         <activity
             android:name="com.HuskySoft.metrobike.ui.DetailsActivity"
             android:label="@string/title_activity_details" >
         </activity>
+        
         <activity
-            android:name="com.HuskySoft.metrobike.ui.NevigateActivity"
-            android:label="@string/title_activity_nevigate" >
+            android:name="com.HuskySoft.metrobike.ui.NavigateActivity"
+            android:label="@string/title_activity_navigate" >
         </activity>
+        
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.SearchActivity"
+            android:label="@string/title_activity_search" >
+        </activity>
+
     </application>
 
 </manifest>

@@ -3,10 +3,19 @@
 
     <string name="app_name">MetroBike</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_settings">Settings</string><string name="title_activity_main">MainActivity</string>
+    
     <string name="title_activity_details">DetailsActivity</string>
-    <string name="go_to_details">Details</string>
-    <string name="nevigate">Nevigate</string>
-    <string name="title_activity_nevigate">NevigateActivity</string>
+    <string name="title_activity_navigate">NavigateActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="action_settings">Settings</string><string name="button_details">Details</string>
+    <string name="button_navigate">Navigate</string>
+    <string name="button_search">Search</string>
+    <string name="button_reverse_desc">Reverse Button</string><string name="button_search_desc">Search Button</string><string name="edittext_hint_to">To</string><string name="edittext_hint_startfrom">Start from</string>
+    
+    
+    
+    <string name="image_desc">Image</string>
+    
 
 </resources>
