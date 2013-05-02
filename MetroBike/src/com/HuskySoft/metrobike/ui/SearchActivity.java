@@ -22,5 +22,4 @@ public class SearchActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_search, menu);
 		return true;
 	}
-
 }

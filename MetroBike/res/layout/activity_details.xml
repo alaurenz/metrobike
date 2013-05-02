@@ -1,88 +1,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ResultsActivity" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <EditText
-        android:id="@+id/editText4"
+    
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="80dp"
-        android:ems="10"
-        android:background="@drawable/blue_border"
-        android:hint="Text1"
-        android:singleLine="true" />
-
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="80dp"
-        android:layout_below="@+id/editText4"
-        android:background="@drawable/blue_border"
-        android:ems="10"
-        android:hint="Text2"
-        android:singleLine="true" >
+        android:layout_alignParentTop="true" 
+        android:background="@drawable/blue_border"/>
 
-        <requestFocus />
-    </EditText>
-
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/editText4"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="42dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:padding="0dp"
-        android:src="@drawable/reverse" />
-
-    <ImageButton
-        android:id="@+id/ImageButton01"
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_alignTop="@+id/imageButton1"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:padding="0dp"
-        android:src="@drawable/search" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/ImageButton01"
-        android:layout_below="@+id/editText1"
-        android:layout_marginTop="8dp"
-        android:text="@string/button_navigate" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:layout_above="@+id/editText1"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="2dp"
-        android:src="@drawable/a" />
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:layout_above="@+id/button1"
-        android:layout_alignLeft="@+id/imageView1"
-        android:src="@drawable/b" />
+        <Button
+            android:id="@+id/button_go_to_search"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:onClick="goToSearchPage"
+            android:text="@string/button_go_to_search"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button_go_to_result"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".34"
+            android:onClick="goToResults"
+            android:text="@string/button_go_to_results"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button_navigate"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:onClick="goToNavigate"
+            android:text="@string/button_navigate"
+            android:textSize="18sp" />
+    </LinearLayout>
 
 </RelativeLayout>

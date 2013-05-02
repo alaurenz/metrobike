@@ -1,14 +1,53 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
+    android:isScrollContainer="true"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
     tools:context=".DetailsActivity" >
 
-    <TextView
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world" />
+        android:layout_height="fill_parent" />
 
-</RelativeLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
+
+        <Button
+            android:id="@+id/button_go_to_search"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:onClick="goToSearchPage"
+            android:text="@string/button_go_to_search"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button_go_to_detail"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".34"
+            android:onClick="goToResults"
+            android:text="@string/button_go_to_detail"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button_navigate"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:onClick="goToNavigate"
+            android:text="@string/button_navigate"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>

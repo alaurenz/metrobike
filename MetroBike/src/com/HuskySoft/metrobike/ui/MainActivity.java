@@ -24,6 +24,14 @@ public class MainActivity extends Activity {
 		    	startActivity(intent);
 		    }
 		});
+		
+		Button DetailsButton = (Button) findViewById(R.id.buttonDetails);
+		DetailsButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v) {
+		    	Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+		    	startActivity(intent);
+		    }
+		});
 	}
 
 	@Override
@@ -33,4 +41,6 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	
+	
 }
