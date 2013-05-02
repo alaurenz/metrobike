@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.HuskySoft.metrobike.backend.Leg;
+import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
+import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
 
 /**
@@ -30,46 +34,55 @@ public final class DirectionsRequest implements Serializable {
      * The starting location that the user wants directions from.
      */
     private String startAddress;
+
     /**
      * The ending location that the user wants directions to.
      */
     private String endAddress;
+
     /**
      * Time the user would like to arrive at their destination. If this is set
      * (ie. it equals a nonzero value), then departure time should not be set.
      */
     private long arrivalTime = 0;
+
     /**
      * Time the user would like to depart from their starting location. If this
      * is set (ie. it equals a nonzero value), then arrival time should not be
      * set.
      */
     private long departureTime = 0;
+
     /**
      * The travel mode the user is requesting directions for. Default is
      * "MIXED."
      */
     private TravelMode travelMode = TravelMode.MIXED;
+
     /**
      * An optional field. It sets a minimum distance the user would like to
      * bike.
      */
     private long minDistanceToBikeInMeters;
+
     /**
      * An optional field. It sets the maximum distance the user would like to
      * bike. (In case they are exercise averse)
      */
     private long maxDistanceToBikeInMeters;
+
     /**
      * An optional field. The minimum number of bus transfers to have. In case
      * they like multiple transfers.
      */
     private int minNumberBusTransfers;
+
     /**
      * An optional field. Setting the maximum number of bus transfers in case
      * the user doesn't want routes with lots of transfers.
      */
     private int maxNumberBusTransfers;
+
     /**
      * When the request is complete, this holds a list of all of the chosen
      * routes.
@@ -80,38 +93,149 @@ public final class DirectionsRequest implements Serializable {
      * Initiates the request calculation. This is a blocking call.
      */
     public void doRequest() {
-        // TODO Auto-generated method stub
-        validateRequestParameters();
-        //@Jaylen, I think we can use this to do the proper encoding for the
-        //http request. -> java.net.URLEncoder;
-        //URLEncoder.encode("", "");
-        //TODO: Modify the string builder appends to not use String 
-        //concatenation in them. Leaving them in there now for readability.
-        StringBuilder requestString = new StringBuilder("http://maps." 
-                    + "googleapis.com/maps/api/directions/json?");
-        requestString.append("origin=" + startAddress + "&");
-        requestString.append("destination=" + endAddress + "&");
-        //TODO: This should probably be set to true if we are using the sensor
-        //to determine the location.
-        //Hardcoding it to false for now.
-        requestString.append("sensor=false" + "&");
-        //TODO: I'm hardcoding this to transit for now since that is the more
-        //complicated of the two cases.  We should really be checking if it is
-        //MIXED, TRANSIT, BICYCLING, WALKING, or UNKNOWN.
-        requestString.append("mode=transit" + "&");
+        // TODO: Clean up this method and make it more general-purpose.
+        // TODO: Consider clearing the solutions field whenever any change is
+        // made to the query.
+        // For now, just generate dummy results
+
+        solutions = new ArrayList<Route>();
+
+        Route dummyRoute = new Route();
+
+        dummyRoute.setSummary("Roosevelt Way NE");
+
+        List<String> warnings = new ArrayList<String>();
+        warnings.add("Bicycling directions are in beta. Use caution: "
+                + "This route may contain streets that aren't suited "
+                + "for bicycling.");
+
+        dummyRoute.setWarnings(warnings);
+
+        Leg dummyLeg = new Leg();
+
+        dummyLeg.setEndAddress("3801 Brooklyn Avenue Northeast, "
+                + "University of Washington, Seattle, WA 98105, USA");
+
+        dummyLeg.setStartAddress("6504 Latona Avenue Northeast, "
+                + "Seattle, WA 98115, USA");
+
+        // Add Step 1
+        dummyLeg.addStep((new Step())
+                .setDistanceInMeters(18)
+                .setDurationInSeconds(6)
+                .setEndLocation(new Location(47.675910, -122.325690))
+                .setHtmlInstruction(
+                        "Head southeast on Latona Ave NE toward NE 65th St")
+                .setPolyLinePoints("gv~aHjwriVXY")
+                .setStartLocation(new Location(47.67604, -122.32582))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add Step 2
+        dummyLeg.addStep((new Step()).setDistanceInMeters(252)
+                .setDurationInSeconds(63)
+                .setEndLocation(new Location(47.67588, -122.32233))
+                .setHtmlInstruction("Turn left onto NE 65th St")
+                .setPolyLinePoints("mu~aHpvriV@s@@qE@gE?w@?u@?cB")
+                .setStartLocation(new Location(47.67591, -122.32569))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add Step 3
+        dummyLeg.addStep((new Step())
+                .setDistanceInMeters(593)
+                .setDurationInSeconds(142)
+                .setEndLocation(new Location(47.67201, -122.31736))
+                .setHtmlInstruction("Turn right onto NE Ravenna Blvd")
+                .setPolyLinePoints(
+                        "gu~aHpariVZYn@m@bA{@x@s@POFI`@]XWBCBEZYNOh@e@dB"
+                                + "{ALMPOjC}BZYN]Jq@|@}G")
+                .setStartLocation(new Location(47.67588, -122.32233))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add Step 4
+        dummyLeg.addStep((new Step())
+                .setDistanceInMeters(1775)
+                .setDurationInSeconds(378)
+                .setEndLocation(new Location(47.65609, -122.31788))
+                .setHtmlInstruction("Turn right onto Roosevelt Way NE")
+                .setPolyLinePoints(
+                        "a}}aHnbqiVnA?X?nC?jC?V?f@?|@?VApC@fA@~E@~B?hA@P?"
+                                + "r@?xB@b@?^?`A@R?jCAjB@~GDj@F^PRLHDHBFBJ@L?tC?~"
+                                + "@BpA@r@@`DBlD@|BB\\?^@r@?L@@?PDHB")
+                .setStartLocation(new Location(47.67201, -122.31736))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add Step 5
+        dummyLeg.addStep((new Step()).setDistanceInMeters(348)
+                .setDurationInSeconds(114)
+                .setEndLocation(new Location(47.65598, -122.31325))
+                .setHtmlInstruction("Turn left onto NE Campus Pkwy")
+                .setPolyLinePoints("qyzaHveqiVDS@I@IAkAByB?OBkE@sB?C?qB@wB@qB")
+                .setStartLocation(new Location(47.65609, -122.31788))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add Step 6
+        dummyLeg.addStep((new Step()).setDistanceInMeters(268)
+                .setDurationInSeconds(31)
+                .setEndLocation(new Location(47.65358, -122.31334))
+                .setHtmlInstruction("Turn right onto University Way NE")
+                .setPolyLinePoints("{xzaHxhpiV^B|A@hCDlB@L@zA@")
+                .setStartLocation(new Location(47.65598, -122.31325))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add Step 7
+        dummyLeg.addStep((new Step()).setDistanceInMeters(113)
+                .setDurationInSeconds(21)
+                .setEndLocation(new Location(47.65422, -122.31447))
+                .setHtmlInstruction("Turn right onto Burke-Gilman Trail")
+                .setPolyLinePoints("{izaHjipiVM`@Sh@EHCDEBIDGDEDINEJOb@Un@")
+                .setStartLocation(new Location(47.65358, -122.31334))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add Step 8
+        dummyLeg.addStep((new Step())
+                .setDistanceInMeters(35)
+                .setDurationInSeconds(6)
+                .setEndLocation(new Location(47.6539, -122.31448))
+                .setHtmlInstruction(
+                        "Turn left onto Brooklyn Ave NE.  Destination will "
+                                + "be on the right")
+                .setPolyLinePoints("{mzaHlppiVp@@L?")
+                .setStartLocation(new Location(47.65422, -122.31447))
+                .setTravelMode(TravelMode.BICYCLING));
+
+        // Add the leg to the route
+        dummyRoute.addLeg(dummyLeg);
         
-//        + "origin=6504%20Latona%20Ave%20NE%2CSeattle%2CWA&"
-//        + "destination=3801%20Brooklyn%20Ave%20NE%2CSeattle%2CWA&"
-//        + "sensor=false&" + "arrival_time=1368644400&"
-//        + "mode=transit";
-//        
-        
-        
+        // Add the route to our solution
+        solutions.add(dummyRoute);
+
+        /*
+         * // TODO Auto-generated method stub validateRequestParameters();
+         * //@Jaylen, I think we can use this to do the proper encoding for the
+         * //http request. -> java.net.URLEncoder; //URLEncoder.encode("", "");
+         * //TODO: Modify the string builder appends to not use String
+         * //concatenation in them. Leaving them in there now for readability.
+         * StringBuilder requestString = new StringBuilder("http://maps." +
+         * "googleapis.com/maps/api/directions/json?");
+         * requestString.append("origin=" + startAddress + "&");
+         * requestString.append("destination=" + endAddress + "&"); //TODO: This
+         * should probably be set to true if we are using the sensor //to
+         * determine the location. //Hardcoding it to false for now.
+         * requestString.append("sensor=false" + "&"); //TODO: I'm hardcoding
+         * this to transit for now since that is the more //complicated of the
+         * two cases. We should really be checking if it is //MIXED, TRANSIT,
+         * BICYCLING, WALKING, or UNKNOWN. requestString.append("mode=transit" +
+         * "&");
+         * 
+         * // + "origin=6504%20Latona%20Ave%20NE%2CSeattle%2CWA&" // +
+         * "destination=3801%20Brooklyn%20Ave%20NE%2CSeattle%2CWA&" // +
+         * "sensor=false&" + "arrival_time=1368644400&" // + "mode=transit"; //
+         */
     }
 
     /**
-     * Is responsible for validating all of the input parameters needed 
-     * by the doRequest call.
+     * Is responsible for validating all of the input parameters needed by the
+     * doRequest call.
      */
     public void validateRequestParameters() {
 
@@ -253,6 +377,22 @@ public final class DirectionsRequest implements Serializable {
     }
 
     /**
+     * Return the solutions to the request for directions. This field is null
+     * before doRequest() is called.
+     * 
+     * @return the solutions
+     */
+    public List<Route> getSolutions() {
+        return solutions;
+    }
+
+    @Override
+    public String toString() {
+        // TODO: Make this toString meaningful and easy to read (if possible).
+        return super.toString();
+    }
+    
+    /**
      * Implements a custom serialization of a DirectionsRequest object.
      * 
      * @param out
@@ -287,6 +427,7 @@ public final class DirectionsRequest implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
+    @SuppressWarnings("unchecked")
     private void readObject(final ObjectInputStream in) throws IOException,
             ClassNotFoundException {
         // Read each field from the stream in a specific order.

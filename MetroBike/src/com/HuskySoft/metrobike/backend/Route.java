@@ -7,14 +7,19 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author coreyh3
- * @author dutchscout Represents an entire route from the user's indicated start
- *         to end addresses.
+ * @author dutchscout
+ * 
+ *         Represents an entire route from the user's indicated start to end
+ *         addresses. A Route object can be created by parsing json or by
+ *         creating a blank route and adding to it.
  */
-public class Route implements Serializable {
+public final class Route implements Serializable {
     /**
      * Part of serializability, this id tracks if a serialized object can be
      * deserialized using this version of the class.
@@ -24,6 +29,11 @@ public class Route implements Serializable {
      * from the log) being made into new-version Route objects.
      */
     private static final long serialVersionUID = 0L;
+
+    /**
+     * Default value for the route summary.
+     */
+    private static final String DEFAULT_ROUTE_SUMMARY = "no summary";
 
     /**
      * For displaying the route, this is the location of the Northeast corner of
@@ -58,6 +68,161 @@ public class Route implements Serializable {
     private List<String> warnings;
 
     /**
+     * Constructs an empty Route.
+     */
+    public Route() {
+        neBound = null;
+        swBound = null;
+        legList = new ArrayList<Leg>();
+        polylinePoints = "";
+        summary = DEFAULT_ROUTE_SUMMARY;
+    }
+
+    /**
+     * Returns a new Route based on the passed json_src.
+     * 
+     * @param jsonSrc
+     *            the JSON to parse into a route object
+     * @return A route based on the passed json_src
+     */
+    public static Route buildRouteFromJSON(final String jsonSrc) {
+        // TODO: implement the JSON parsing for a route here
+        return new Route();
+    }
+
+    /**
+     * Add a new leg to this route.
+     * 
+     * @param toAdd
+     *            the leg to add
+     */
+    public void addLeg(final Leg toAdd) {
+
+        // Update neBound
+        neBound = Location
+                .makeNorthEastBound(neBound, toAdd.getStartLocation());
+        neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
+
+        // Update swBound
+        swBound = Location
+                .makeSouthWestBound(swBound, toAdd.getStartLocation());
+        swBound = Location.makeSouthWestBound(swBound, toAdd.getEndLocation());
+
+        // Add the leg to our list
+        legList.add(toAdd);
+
+        // TODO: consider if/how we should build the new polyline here.
+    }
+
+    /**
+     * @return the summary
+     */
+    public String getSummary() {
+        return summary;
+    }
+
+    /**
+     * Sets the route summary to the passed String.
+     * 
+     * @param newSummary
+     *            the new summary
+     * @return the modified Route, for Builder pattern purposes
+     */
+    public Route setSummary(final String newSummary) {
+        this.summary = newSummary;
+        return this;
+    }
+
+    /**
+     * Returns the list of warnings that must be displayed on the map.
+     * 
+     * @return the list of warnings that must be displayed on the map.
+     */
+    public List<String> getWarnings() {
+        return warnings;
+    }
+
+    /**
+     * Sets the list of warnings that must be displayed on the map.
+     * 
+     * @param newWarnings
+     *            the warnings to set
+     * @return the modified Route, for Builder pattern purposes
+     */
+    public Route setWarnings(final List<String> newWarnings) {
+        this.warnings = newWarnings;
+        return this;
+    }
+
+    /**
+     * Returns the North-East bound for the route display area.
+     * 
+     * @return the North-East bound for the route display area.
+     */
+    public Location getNeBound() {
+        return neBound;
+    }
+
+    /**
+     * Returns the South-West bound for the route display area.
+     * 
+     * @return the South-West bound for the route display area.
+     */
+    public Location getSwBound() {
+        return swBound;
+    }
+    
+    /**
+     * Returns the Route's current total distance in meters.
+     * 
+     * @return the Route's current total distance in meters
+     */
+    public long getDistanceInMeters() {
+        long myDistance = 0;
+        for (Leg l : legList) {
+            myDistance += l.getDistanceInMeters();
+        }
+        return myDistance;
+    }
+
+    /**
+     * Returns the Route's current total duration in seconds.
+     * 
+     * @return the Route's current total duration in seconds
+     */
+    public long getDurationInSeconds() {
+        long myDuration = 0;
+        for (Leg l : legList) {
+            myDuration += l.getDurationInSeconds();
+        }
+        return myDuration;
+    }
+
+    /**
+     * Returns an unmodifiable list of Legs to complete this Route.
+     * 
+     * @return an unmodifiable list of Legs to complete this Route
+     */
+    public List<Leg> getLegList() {
+        return Collections.unmodifiableList(legList);
+    }
+
+    /**
+     * Returns the polyline points string for plotting the Route on the map.
+     * 
+     * @return the polyline points string for plotting the Route on the map.
+     */
+    public String getPolylinePoints() {
+        return polylinePoints;
+    }
+
+    @Override
+    public String toString() {
+        // TODO: Make this toString meaningful and easy to read (if possible).
+        return super.toString();
+    }
+    
+    /**
      * Implements a custom serialization of a Route object.
      * 
      * @param out
@@ -88,6 +253,7 @@ public class Route implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
+    @SuppressWarnings("unchecked")
     private void readObject(final ObjectInputStream in) throws IOException,
             ClassNotFoundException {
         // Read each field from the stream in a specific order.
