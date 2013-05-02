@@ -3,6 +3,7 @@ package com.HuskySoft.metrobike.ui;
 
 import com.HuskySoft.metrobike.R;
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
@@ -13,6 +14,8 @@ public class ResultsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ActionBar actionBar = this.getActionBar();
+		actionBar.setTitle("Result");
 		setContentView(R.layout.activity_results);
 	}
 
@@ -52,7 +55,7 @@ public class ResultsActivity extends Activity {
 	 */
 	public void goToDetail(View view) {
         // Do something in response to button
-	   	Intent intent = new Intent(this, NavigateActivity.class);
+	   	Intent intent = new Intent(this, DetailsActivity.class);
 	   	startActivity(intent);
     }
 }

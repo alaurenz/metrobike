@@ -47,7 +47,7 @@ public class NavigateActivity extends Activity {
 	 */
 	public void goToDetail(View view) {
        // Do something in response to button
-	   	Intent intent = new Intent(this, NavigateActivity.class);
+	   	Intent intent = new Intent(this, DetailsActivity.class);
 	   	startActivity(intent);
     }
 	

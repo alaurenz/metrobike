@@ -1,12 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:isScrollContainer="true"
-    android:orientation="vertical"
-    android:scrollbarAlwaysDrawVerticalTrack="true"
-    tools:context=".NavigateActivity" >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
 	<fragment
         android:id="@+id/map"
@@ -16,9 +10,11 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="50dip"
+        android:layout_width="280dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
         android:orientation="horizontal"
+        android:layout_marginBottom="15dip"
         android:weightSum="1.0" >
 
         <Button
@@ -49,4 +45,4 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
