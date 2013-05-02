@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 
@@ -42,7 +43,7 @@ public class SearchActivity extends Activity {
 			// Do something with the time chosen by the user
 			EditText timeEditText = (EditText) getActivity().findViewById(R.id.editTextTime);
 			
-			// Formatting string be displayer
+			// Formatting string be displayed
 			String hourString = "";
 			if (hourOfDay < 10) hourString += "0";
 			hourString += hourOfDay;
@@ -76,7 +77,7 @@ public class SearchActivity extends Activity {
 			// Do something with the time chosen by the user
 			EditText dateEditText = (EditText) getActivity().findViewById(R.id.editTextDate);
 			
-			// Formatting string be displayer
+			// Formatting string be displayed
 			String monthString = "";
 			// system month starts from 0
 			month++;
@@ -93,10 +94,13 @@ public class SearchActivity extends Activity {
 	
 	private RadioButton departAtButton;
 	private RadioButton leaveNowButton;
+	private EditText startFromEditText;
+	private EditText toEditText;
 	private EditText dateEditText;
 	private EditText timeEditText;
 	private Button historyButton;
 	private Button findButton;
+	private ImageButton reverseButton;
 	
 	private final Calendar calendar = Calendar.getInstance();
 	
@@ -106,10 +110,13 @@ public class SearchActivity extends Activity {
 		setContentView(R.layout.activity_search);
 		departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
 		leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
+		startFromEditText = (EditText) findViewById(R.id.editTextStartFrom);
+		toEditText = (EditText) findViewById(R.id.editTextTo);
 		dateEditText = (EditText) findViewById(R.id.editTextDate);
 		timeEditText = (EditText) findViewById(R.id.editTextTime);
 		historyButton = (Button) findViewById(R.id.buttonHistory);
 		findButton = (Button) findViewById(R.id.buttonFind);
+		reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
 		
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		String hourString = "";
@@ -137,6 +144,14 @@ public class SearchActivity extends Activity {
 		
 		dateEditText.setText(monthString + "/" + dayString + "/" + year);
 		timeEditText.setText(hourString + ":" + minuteString);
+		
+		reverseButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v) {
+		    	String temp = startFromEditText.getText().toString();
+		    	startFromEditText.setText(toEditText.getText().toString());
+		    	toEditText.setText(temp);
+		    }
+		});
 		
 		leaveNowButton.setOnClickListener(new OnClickListener() {
 		    public void onClick(View v) {

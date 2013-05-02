@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background_shape_blue"
     tools:context=".SearchActivity" >
 
     <ImageView
@@ -10,6 +11,8 @@
         android:layout_height="40dp"
         android:layout_alignBottom="@+id/editTextStartFrom"
         android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:padding="0dp"
         android:contentDescription="@string/image_desc"
         android:src="@drawable/a" />
 
@@ -19,18 +22,18 @@
         android:layout_height="40dp"
         android:layout_alignBottom="@+id/editTextTo"
         android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:padding="0dp"
         android:contentDescription="@string/image_desc"
         android:src="@drawable/b" />
 
-    
-    
     <EditText
         android:id="@+id/editTextStartFrom"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_alignBottom="@+id/imageButtonReverse"
-        android:layout_marginBottom="14dp"
-        android:layout_toLeftOf="@+id/imageButtonReverse"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="15dp"
         android:layout_toRightOf="@+id/imageViewA"
         android:background="@drawable/blue_border"
         android:ems="10"
@@ -38,15 +41,31 @@
         android:singleLine="true"
         android:padding="10dp" >
 
-        <requestFocus android:layout_width="wrap_content" />
+        <requestFocus />
     </EditText>
     
+    <ImageButton
+        android:id="@+id/imageButtonReverse"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/editTextStartFrom"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/button_reverse_desc"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/reverse"
+        android:background="@null" />
+            
     <EditText
         android:id="@+id/editTextTo"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/imageViewA"
-        android:layout_toLeftOf="@+id/imageButtonReverse"
+        android:layout_below="@+id/imageButtonReverse"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="15dp"
         android:layout_toRightOf="@+id/imageViewB"
         android:background="@drawable/blue_border"
         android:ems="10"
@@ -54,29 +73,28 @@
         android:singleLine="true"
         android:padding="10dp" />
 
-
-
-    <ImageButton
-        android:id="@+id/imageButtonReverse"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
+    <TextView 
+        android:id="@+id/textViewDepartureTime"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_below="@+id/editTextTo"
         android:layout_marginTop="30dp"
-        android:layout_alignParentRight="true"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/button_reverse_desc"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/reverse" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/textview_departure_time"
+        android:textSize="20sp"/>
+
+
 
     <RadioGroup
         android:id="@+id/radioGroupStartingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextTo"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal" >
+        android:layout_below="@+id/textViewDepartureTime"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical" >
 
         <RadioButton
             android:id="@+id/radioButtonLeaveNow"
@@ -84,41 +102,40 @@
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/radio_button_leave_now" />
-
-        <RadioButton
+        
+       	<RadioButton
             android:id="@+id/radioButtonDepartAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="showTimePickerDialog"
             android:text="@string/radio_button_depart_at" />
+        	        
+	    <LinearLayout
+	        android:id="@+id/linearLayout1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+	
+	        <EditText
+	            android:id="@+id/editTextDate"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="30dp"
+	            android:enabled="false"
+	            android:inputType="date"
+	            android:gravity="center" />
+	
+	        <EditText
+	            android:id="@+id/editTextTime"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:enabled="false"
+	            android:inputType="time"
+	            android:gravity="center" />
+	    </LinearLayout>
+		    
     </RadioGroup>
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/radioGroupStartingTime"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/editTextDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:enabled="false"
-            android:inputType="date"
-            android:gravity="center" />
-
-        <EditText
-            android:id="@+id/editTextTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:enabled="false"
-            android:inputType="time"
-            android:gravity="center" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
