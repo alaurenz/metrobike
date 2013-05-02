@@ -52,4 +52,5 @@
     <string name="button_history">History</string>
     <string name="button_find">Find</string>
     <string name="textview_departure_time">Departure Time</string>
+    <string name="textview_history">History</string>
 </resources>

@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 
@@ -98,9 +101,10 @@ public class SearchActivity extends Activity {
 	private EditText toEditText;
 	private EditText dateEditText;
 	private EditText timeEditText;
-	private Button historyButton;
 	private Button findButton;
 	private ImageButton reverseButton;
+	private ListView historyListView;
+	private HistoryItem historyItemData[];
 	
 	private final Calendar calendar = Calendar.getInstance();
 	
@@ -114,9 +118,9 @@ public class SearchActivity extends Activity {
 		toEditText = (EditText) findViewById(R.id.editTextTo);
 		dateEditText = (EditText) findViewById(R.id.editTextDate);
 		timeEditText = (EditText) findViewById(R.id.editTextTime);
-		historyButton = (Button) findViewById(R.id.buttonHistory);
 		findButton = (Button) findViewById(R.id.buttonFind);
 		reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
+		historyListView = (ListView) findViewById(R.id.listViewHistory);
 		
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		String hourString = "";
@@ -187,12 +191,44 @@ public class SearchActivity extends Activity {
 		    	startActivity(intent);
 		    }
 		});
+		
+        historyItemData = new HistoryItem[]
+        {
+            //new HistoryItem(R.drawable.ic_launcher, "History1: From", "To: University of Washington"),
+            new HistoryItem(1, "Point A", "University of Washington"),
+            new HistoryItem(2, "Point B", "University of Washington"),
+            new HistoryItem(3, "Point C", "University of Washington"),
+            new HistoryItem(4, "Point D", "University of Washington"),
+            new HistoryItem(5, "Point E", "University of Washington"),
+            new HistoryItem(6, "Point F", "University of Washington"),
+            new HistoryItem(7, "Point H", "University of Washington"),
+            new HistoryItem(8, "Point I", "University of Washington"),
+            new HistoryItem(9, "Point J", "University of Washington"),
+        };
+        
+        HistoryAdapter adapter = new HistoryAdapter(this, 
+                R.layout.listview_history_item_row, historyItemData);
+         
+        //View header = (View)getLayoutInflater().inflate(R.layout.listview_header_row, null);
+        //listView1.addHeaderView(header);
+        
+        historyListView.setAdapter(adapter);
+        
+        historyListView.setOnItemClickListener(new OnItemClickListener() {
+        	@Override
+        	public void onItemClick(AdapterView<?> parent, View view,
+        							int position, long id) {
+        		startFromEditText.setText(historyItemData[position].from);
+        		toEditText.setText(historyItemData[position].to);
+        	}
+      	}); 
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_search, menu);
+		
 		return true;
 	}
 	

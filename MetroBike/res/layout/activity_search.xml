@@ -1,160 +1,193 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutSearch"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background_shape_blue"
-    tools:context=".SearchActivity" >
+    android:isScrollContainer="true"
+    android:orientation="vertical"
+    tools:context=".ResultsActivity" >
 
-    <ImageView
-        android:id="@+id/imageViewA"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignBottom="@+id/editTextStartFrom"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:padding="0dp"
-        android:contentDescription="@string/image_desc"
-        android:src="@drawable/a" />
+	<RelativeLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageViewB"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignBottom="@+id/editTextTo"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:padding="0dp"
-        android:contentDescription="@string/image_desc"
-        android:src="@drawable/b" />
+	    <ImageView
+	        android:id="@+id/imageViewA"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:layout_alignBottom="@+id/editTextStartFrom"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="10dp"
+	        android:padding="0dp"
+	        android:contentDescription="@string/image_desc"
+	        android:src="@drawable/a" />
 
-    <EditText
-        android:id="@+id/editTextStartFrom"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="15dp"
-        android:layout_toRightOf="@+id/imageViewA"
-        android:background="@drawable/blue_border"
-        android:ems="10"
-        android:hint="@string/edittext_hint_startfrom"
-        android:singleLine="true"
-        android:padding="10dp" >
+	    <ImageView
+	        android:id="@+id/imageViewB"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:layout_alignBottom="@+id/editTextTo"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="10dp"
+	        android:padding="0dp"
+	        android:contentDescription="@string/image_desc"
+	        android:src="@drawable/b" />
 
-        <requestFocus />
-    </EditText>
-    
-    <ImageButton
-        android:id="@+id/imageButtonReverse"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/editTextStartFrom"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/button_reverse_desc"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/reverse"
-        android:background="@null" />
-            
-    <EditText
-        android:id="@+id/editTextTo"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/imageButtonReverse"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="15dp"
-        android:layout_toRightOf="@+id/imageViewB"
-        android:background="@drawable/blue_border"
-        android:ems="10"
-        android:hint="@string/edittext_hint_to"
-        android:singleLine="true"
-        android:padding="10dp" />
+	    <EditText
+	        android:id="@+id/editTextStartFrom"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginTop="15dp"
+	        android:layout_toLeftOf="@+id/imageButtonReverse"
+	        android:layout_toRightOf="@+id/imageViewA"
+	        android:background="@drawable/blue_border"
+	        android:ems="10"
+	        android:hint="@string/edittext_hint_startfrom"
+	        android:padding="10dp"
+	        android:singleLine="true" >
 
-    <TextView 
-        android:id="@+id/textViewDepartureTime"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_below="@+id/editTextTo"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:text="@string/textview_departure_time"
-        android:textSize="20sp"/>
+	        <requestFocus />
+	    </EditText>
+	    
+	    <EditText
+	        android:id="@+id/editTextTo"
+	        android:layout_width="match_parent"
+	        android:layout_height="40dp"
+	        android:layout_alignRight="@+id/editTextStartFrom"
+	        android:layout_below="@+id/editTextStartFrom"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginTop="5dp"
+	        android:layout_toRightOf="@+id/imageViewB"
+	        android:background="@drawable/blue_border"
+	        android:ems="10"
+	        android:hint="@string/edittext_hint_to"
+	        android:padding="10dp"
+	        android:singleLine="true" />
+	    
+	    <ImageButton
+	        android:id="@+id/imageButtonReverse"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:layout_alignBottom="@+id/editTextTo"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginBottom="20dp"
+	        android:adjustViewBounds="true"
+	        android:background="@null"
+	        android:contentDescription="@string/button_reverse_desc"
+	        android:padding="0dp"
+	        android:scaleType="fitCenter"
+	        android:src="@drawable/reverse" />
 
+	</RelativeLayout>
 
+	<RelativeLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
 
-    <RadioGroup
-        android:id="@+id/radioGroupStartingTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewDepartureTime"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_alignParentLeft="true"
-        android:orientation="vertical" >
-
-        <RadioButton
-            android:id="@+id/radioButtonLeaveNow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/radio_button_leave_now" />
-        
-       	<RadioButton
-            android:id="@+id/radioButtonDepartAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_button_depart_at" />
-        	        
-	    <LinearLayout
-	        android:id="@+id/linearLayout1"
+	    <RadioGroup
+	        android:id="@+id/radioGroupStartingTime"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:orientation="horizontal" >
-	
-	        <EditText
-	            android:id="@+id/editTextDate"
+	        android:layout_below="@+id/textViewDepartureTime"
+	        android:layout_marginTop="5dp"
+	        android:layout_centerHorizontal="true"
+	        android:gravity="center"
+	        android:layout_alignParentLeft="true"
+	        android:orientation="vertical" >
+
+	        <RadioButton
+	            android:id="@+id/radioButtonLeaveNow"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="30dp"
-	            android:enabled="false"
-	            android:inputType="date"
-	            android:gravity="center" />
-	
-	        <EditText
-	            android:id="@+id/editTextTime"
+	            android:checked="true"
+	            android:text="@string/radio_button_leave_now" />
+	        
+	       	<RadioButton
+	            android:id="@+id/radioButtonDepartAt"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:enabled="false"
-	            android:inputType="time"
-	            android:gravity="center" />
-	    </LinearLayout>
-		    
-    </RadioGroup>
+	            android:text="@string/radio_button_depart_at" />
+	        	        
+		    <LinearLayout
+		        android:id="@+id/linearLayout1"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal" >
+		
+		        <EditText
+		            android:id="@+id/editTextDate"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:enabled="false"
+		            android:inputType="date"
+		            android:gravity="center" />
+		
+		        <EditText
+		            android:id="@+id/editTextTime"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:enabled="false"
+		            android:inputType="time"
+		            android:gravity="center" />
+		    </LinearLayout>
+			    
+	    </RadioGroup>
 
+	    <TextView
+	        android:id="@+id/textViewDepartureTime"
+	        android:layout_width="match_parent"
+	        android:layout_height="30sp"
+	        android:layout_alignParentTop="true"
+	        android:layout_centerHorizontal="true"
+	        android:gravity="center"
+	        android:layout_marginTop="24dp"
+	        android:text="@string/textview_departure_time"
+	        android:textSize="25sp" />
 
+	</RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="31dp" >
-        
-        <Button
-	        android:id="@+id/buttonHistory"
-	        android:layout_width="wrap_content"
+	
+	<RelativeLayout android:orientation="vertical" 
+		android:layout_width="match_parent" 
+		android:layout_height="wrap_content">
+
+		<Button
+		    android:id="@+id/buttonFind"
+		    android:layout_marginTop="20dp"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentTop="true"
+		    android:layout_centerHorizontal="true"
+		    android:text="@string/button_find" />
+		
+	</RelativeLayout>
+	
+	<RelativeLayout android:orientation="vertical" 
+		android:layout_width="match_parent" 
+		android:layout_height="wrap_content">
+	    
+		<TextView 
+	        android:id="@+id/History"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@string/button_history" />
-        
-        <Button
-	        android:id="@+id/buttonFind"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/button_find" />
-    </LinearLayout>
+	        android:layout_marginTop="20dp"
+	        android:gravity="center"
+	        android:text="@string/textview_history"
+	        android:textSize="25sp"/>
+	    	    
+	</RelativeLayout>
 
-</RelativeLayout>
+	<RelativeLayout android:orientation="vertical" 
+		android:layout_width="match_parent" 
+		android:layout_height="wrap_content">
+		<ListView
+		        android:id="@+id/listViewHistory"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="30dp"
+	        	android:layout_marginRight="30dp"
+	        	android:layout_marginBottom="30dp" />
+	</RelativeLayout>
+
+</LinearLayout>
