@@ -11,11 +11,11 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="280dip"
-        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
+        android:layout_height="50dip"
         android:orientation="horizontal"
         android:layout_marginBottom="15dip"
-        android:weightSum="1.0" >
+        android:weightSum="1.0">
 
         <Button
             android:id="@+id/button_go_to_search"
@@ -45,7 +45,7 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/scrollView1" 
 	    android:orientation="vertical"
 	    android:layout_gravity="left|center" 
