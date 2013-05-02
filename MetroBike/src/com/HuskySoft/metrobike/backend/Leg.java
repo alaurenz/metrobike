@@ -22,7 +22,7 @@ public final class Leg implements Serializable {
      * or writeObject() methods, so we don't have old-version Leg objects (ex:
      * from the log) being made into new-version Leg objects.
      */
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * A default address for the start and end of a leg.
