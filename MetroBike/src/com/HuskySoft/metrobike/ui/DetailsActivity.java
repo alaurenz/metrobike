@@ -71,7 +71,7 @@ public class DetailsActivity extends Activity {
 	
 	public void goToResults(View view) {
 		// Do something in response to button
-    	Intent intent = new Intent(this, DetailsActivity.class);
+    	Intent intent = new Intent(this, ResultsActivity.class);
     	startActivity(intent);
 	}
 	
