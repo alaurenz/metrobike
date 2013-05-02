@@ -40,17 +40,17 @@
     <string name="button_go_to_search">Search</string>
     <string name="button_go_to_results">Result</string>
     <string name="button_navigate">Navigate</string>
-    <string name="DetailsTitle">Details</string>
     
     <!-- Navigate Activity String -->
-    <string name="NavigatTitle">Navigate</string>
     <string name="button_go_to_detail">Details</string>
 
     <!-- Search Activity -->
     <string name="radio_button_leave_now">Leave Now</string>
-    <string name="radio_button_depart_at">Depart At</string>
+    <string name="radio_button_depart_at">Depart At:</string>
     <string name="dialogbox_date">Select a Date</string>
     <string name="dialogbox_time">Select a Time</string>
     <string name="button_history">History</string>
     <string name="button_find">Find</string>
+    <string name="textview_departure_time">Departure Time</string>
+    <string name="textview_history">History</string>
 </resources>

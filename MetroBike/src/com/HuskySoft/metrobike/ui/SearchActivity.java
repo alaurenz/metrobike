@@ -12,9 +12,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 
@@ -42,7 +46,7 @@ public class SearchActivity extends Activity {
 			// Do something with the time chosen by the user
 			EditText timeEditText = (EditText) getActivity().findViewById(R.id.editTextTime);
 			
-			// Formatting string be displayer
+			// Formatting string be displayed
 			String hourString = "";
 			if (hourOfDay < 10) hourString += "0";
 			hourString += hourOfDay;
@@ -76,7 +80,7 @@ public class SearchActivity extends Activity {
 			// Do something with the time chosen by the user
 			EditText dateEditText = (EditText) getActivity().findViewById(R.id.editTextDate);
 			
-			// Formatting string be displayer
+			// Formatting string be displayed
 			String monthString = "";
 			// system month starts from 0
 			month++;
@@ -93,10 +97,14 @@ public class SearchActivity extends Activity {
 	
 	private RadioButton departAtButton;
 	private RadioButton leaveNowButton;
+	private EditText startFromEditText;
+	private EditText toEditText;
 	private EditText dateEditText;
 	private EditText timeEditText;
-	private Button historyButton;
 	private Button findButton;
+	private ImageButton reverseButton;
+	private ListView historyListView;
+	private HistoryItem historyItemData[];
 	
 	private final Calendar calendar = Calendar.getInstance();
 	
@@ -106,10 +114,13 @@ public class SearchActivity extends Activity {
 		setContentView(R.layout.activity_search);
 		departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
 		leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
+		startFromEditText = (EditText) findViewById(R.id.editTextStartFrom);
+		toEditText = (EditText) findViewById(R.id.editTextTo);
 		dateEditText = (EditText) findViewById(R.id.editTextDate);
 		timeEditText = (EditText) findViewById(R.id.editTextTime);
-		historyButton = (Button) findViewById(R.id.buttonHistory);
 		findButton = (Button) findViewById(R.id.buttonFind);
+		reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
+		historyListView = (ListView) findViewById(R.id.listViewHistory);
 		
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		String hourString = "";
@@ -137,6 +148,14 @@ public class SearchActivity extends Activity {
 		
 		dateEditText.setText(monthString + "/" + dayString + "/" + year);
 		timeEditText.setText(hourString + ":" + minuteString);
+		
+		reverseButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v) {
+		    	String temp = startFromEditText.getText().toString();
+		    	startFromEditText.setText(toEditText.getText().toString());
+		    	toEditText.setText(temp);
+		    }
+		});
 		
 		leaveNowButton.setOnClickListener(new OnClickListener() {
 		    public void onClick(View v) {
@@ -172,12 +191,44 @@ public class SearchActivity extends Activity {
 		    	startActivity(intent);
 		    }
 		});
+		
+        historyItemData = new HistoryItem[]
+        {
+            //new HistoryItem(R.drawable.ic_launcher, "History1: From", "To: University of Washington"),
+            new HistoryItem(1, "Point A", "University of Washington"),
+            new HistoryItem(2, "Point B", "University of Washington"),
+            new HistoryItem(3, "Point C", "University of Washington"),
+            new HistoryItem(4, "Point D", "University of Washington"),
+            new HistoryItem(5, "Point E", "University of Washington"),
+            new HistoryItem(6, "Point F", "University of Washington"),
+            new HistoryItem(7, "Point H", "University of Washington"),
+            new HistoryItem(8, "Point I", "University of Washington"),
+            new HistoryItem(9, "Point J", "University of Washington"),
+        };
+        
+        HistoryAdapter adapter = new HistoryAdapter(this, 
+                R.layout.listview_history_item_row, historyItemData);
+         
+        //View header = (View)getLayoutInflater().inflate(R.layout.listview_header_row, null);
+        //listView1.addHeaderView(header);
+        
+        historyListView.setAdapter(adapter);
+        
+        historyListView.setOnItemClickListener(new OnItemClickListener() {
+        	@Override
+        	public void onItemClick(AdapterView<?> parent, View view,
+        							int position, long id) {
+        		startFromEditText.setText(historyItemData[position].from);
+        		toEditText.setText(historyItemData[position].to);
+        	}
+      	}); 
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_search, menu);
+		
 		return true;
 	}
 	
