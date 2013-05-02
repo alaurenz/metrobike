@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
+
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.TravelMode;
 
@@ -34,20 +35,21 @@ public final class DirectionsRequest implements Serializable {
      */
     private String endAddress;
     /**
-     * Time the user would like to arrive at their destination. If this is set,
-     * then departure time should not be set.
+     * Time the user would like to arrive at their destination. If this is set
+     * (ie. it equals a nonzero value), then departure time should not be set.
      */
-    private long arrivalTime;
+    private long arrivalTime = 0;
     /**
      * Time the user would like to depart from their starting location. If this
-     * is set, then arrival time should not be set.
+     * is set (ie. it equals a nonzero value), then arrival time should not be
+     * set.
      */
-    private long departureTime;
+    private long departureTime = 0;
     /**
      * The travel mode the user is requesting directions for. Default is
-     * "mixed."
+     * "MIXED."
      */
-    private TravelMode travelMode;
+    private TravelMode travelMode = TravelMode.MIXED;
     /**
      * An optional field. It sets a minimum distance the user would like to
      * bike.
@@ -79,6 +81,40 @@ public final class DirectionsRequest implements Serializable {
      */
     public void doRequest() {
         // TODO Auto-generated method stub
+        validateRequestParameters();
+        //@Jaylen, I think we can use this to do the proper encoding for the
+        //http request. -> java.net.URLEncoder;
+        //URLEncoder.encode("", "");
+        //TODO: Modify the string builder appends to not use String 
+        //concatenation in them. Leaving them in there now for readability.
+        StringBuilder requestString = new StringBuilder("http://maps." 
+                    + "googleapis.com/maps/api/directions/json?");
+        requestString.append("origin=" + startAddress + "&");
+        requestString.append("destination=" + endAddress + "&");
+        //TODO: This should probably be set to true if we are using the sensor
+        //to determine the location.
+        //Hardcoding it to false for now.
+        requestString.append("sensor=false" + "&");
+        //TODO: I'm hardcoding this to transit for now since that is the more
+        //complicated of the two cases.  We should really be checking if it is
+        //MIXED, TRANSIT, BICYCLING, WALKING, or UNKNOWN.
+        requestString.append("mode=transit" + "&");
+        
+//        + "origin=6504%20Latona%20Ave%20NE%2CSeattle%2CWA&"
+//        + "destination=3801%20Brooklyn%20Ave%20NE%2CSeattle%2CWA&"
+//        + "sensor=false&" + "arrival_time=1368644400&"
+//        + "mode=transit";
+//        
+        
+        
+    }
+
+    /**
+     * Is responsible for validating all of the input parameters needed 
+     * by the doRequest call.
+     */
+    public void validateRequestParameters() {
+
     }
 
     /**
@@ -91,6 +127,128 @@ public final class DirectionsRequest implements Serializable {
      */
     public DirectionsRequest setStartAddress(final String newStartAddress) {
         this.startAddress = newStartAddress;
+        return this;
+    }
+
+    /**
+     * Set the ending address for the trip.
+     * 
+     * @param newEndAddress
+     *            the address to end at.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setEndAddress(final String newEndAddress) {
+        this.endAddress = newEndAddress;
+        return this;
+    }
+
+    /**
+     * Set the arrival time. If this is set then departure time should not be
+     * set.
+     * 
+     * @param newArrivalTime
+     *            the time the user would like to arrive at their destination.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setArrivalTime(final long newArrivalTime) {
+        if (this.departureTime != 0) {
+            throw new IllegalArgumentException("departureTime was already "
+                    + "set.");
+        }
+        this.arrivalTime = newArrivalTime;
+        return this;
+    }
+
+    /**
+     * Set the departure time. If this is set then the arrival time should not
+     * be set.
+     * 
+     * @param newDepartureTime
+     *            the time the user would like to depart from their starting
+     *            location.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setDepartureTime(final long newDepartureTime) {
+        if (this.arrivalTime != 0) {
+            throw new IllegalArgumentException("departureTime was "
+                    + "already set.");
+        }
+        this.departureTime = newDepartureTime;
+        return this;
+    }
+
+    /**
+     * Set the travel mode that the user would like to arrive at their
+     * destination. The default travel mode is MIXED.
+     * 
+     * @param newTravelMode
+     *            the TravelMode that the user would like to arrive at their
+     *            destination.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setTravelMode(final TravelMode newTravelMode) {
+        this.travelMode = newTravelMode;
+        return this;
+    }
+
+    /**
+     * Set the minimum distance the user would like to bike in meters. This
+     * parameter is optional.
+     * 
+     * @param newMinDistanceToBikeInMeters
+     *            the minimum distance to bike in mneters
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setMinDistanceToBikeInMeters(
+            final long newMinDistanceToBikeInMeters) {
+        this.minDistanceToBikeInMeters = newMinDistanceToBikeInMeters;
+        return this;
+    }
+
+    /**
+     * Set the maximum distance to bike in meters. This parameter is optional.
+     * 
+     * @param newMaxDistanceToBikeInMeters
+     *            the max distance to bike in meters.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setMaxDistanceToBikeInMeters(
+            final long newMaxDistanceToBikeInMeters) {
+        this.maxDistanceToBikeInMeters = newMaxDistanceToBikeInMeters;
+        return this;
+    }
+
+    /**
+     * Set the minimum number of bus transfers. This parameter is optional.
+     * 
+     * @param newMinNumberBusTransfers
+     *            the minimum number of bus transfers.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setMinNumberBusTransfers(
+            final int newMinNumberBusTransfers) {
+        this.minNumberBusTransfers = newMinNumberBusTransfers;
+        return this;
+    }
+
+    /**
+     * Set the maximum number of bus transfers. This parameter is optional.
+     * 
+     * @param newMaxNumberBusTransfers
+     *            the maximum number of bus transfers.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setMaxNumberBusTransfers(
+            final int newMaxNumberBusTransfers) {
+        this.maxNumberBusTransfers = newMaxNumberBusTransfers;
         return this;
     }
 
