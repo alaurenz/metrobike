@@ -170,8 +170,8 @@ public class ResultsActivity extends Activity {
                             .getLongitude()));
                 }
             }
-            Polyline polyline = mMap.addPolyline(polylineOptions
-                    .color(Color.RED));
+            mMap.addPolyline(polylineOptions.color(Color.RED));
+            
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                     cameraLatitude, cameraLongitude), (float) 13.0),
                     animatedCameraDurationInMilliSecond, null);

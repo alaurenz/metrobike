@@ -1,7 +1,10 @@
 package com.HuskySoft.metrobike.ui;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -301,7 +304,15 @@ public class SearchActivity extends Activity {
     private void requestForRoutes() {
         DirectionsRequest dReq = new DirectionsRequest();
         // do some settings
-        dReq.doRequest();
+        try {
+			dReq.doRequest();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
         startActivity(intent);
