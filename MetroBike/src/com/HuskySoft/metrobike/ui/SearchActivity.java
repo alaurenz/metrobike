@@ -204,11 +204,15 @@ public class SearchActivity extends Activity {
 		    }
 		});
 		
+		dateEditText.setKeyListener(null);
+		
 		timeEditText.setOnClickListener(new OnClickListener() {
 		    public void onClick(View v) {
 		    	showTimePickerDialog(v);
 		    }
 		});
+		
+		timeEditText.setKeyListener(null);
 		
         findButton.setOnClickListener(new OnClickListener() {  
             @Override  

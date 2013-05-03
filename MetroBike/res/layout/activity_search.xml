@@ -109,7 +109,6 @@
 	            android:text="@string/radio_button_depart_at" />
 	        	        
 		    <LinearLayout
-		        android:id="@+id/linearLayout1"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:orientation="horizontal" >
@@ -120,7 +119,8 @@
 		            android:layout_height="wrap_content"
 		            android:enabled="false"
 		            android:inputType="date"
-		            android:gravity="center" />
+		            android:gravity="center"
+		            android:focusable="false" />
 		
 		        <EditText
 		            android:id="@+id/editTextTime"
@@ -128,7 +128,8 @@
 		            android:layout_height="wrap_content"
 		            android:enabled="false"
 		            android:inputType="time"
-		            android:gravity="center" />
+		            android:gravity="center"
+		            android:focusable="false" />
 		    </LinearLayout>
 			    
 	    </RadioGroup>
