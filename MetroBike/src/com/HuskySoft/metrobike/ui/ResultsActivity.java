@@ -11,20 +11,18 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
@@ -34,6 +32,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
  */
 
 public class ResultsActivity extends Activity {
+	
+	/**
+	 * duration of the animated camera in the map
+	 */
+	private static final int animatedCameraDurationInMilliSecond = 3000;
 	
 	/**
 	 * GoogleMap object stored here to be modified
@@ -115,32 +118,31 @@ public class ResultsActivity extends Activity {
 	 */
 	private void drawRoute() {
 		if (currRoute != null) {
-//			mMap.addMarker(new MarkerOptions()
-//	        .position(new LatLng(47.675910, -122.325690))
-//	        .title("Start Here!"));
-//			
-//			Polygon polygon = mMap.addPolygon(new PolygonOptions()
-//	        .add(new LatLng(47.67604, -122.32582), new LatLng(47.675910, -122.325690))
-//	        .strokeColor(Color.RED)
-//	        .fillColor(Color.BLUE));
+			
 			List<Leg> legs = currRoute.getLegList();
 			Location start = legs.get(0).getStartLocation();
 			Location end = legs.get(legs.size() - 1).getStepList().get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
+			
 			mMap.addMarker(new MarkerOptions()
-	        .position(new LatLng(start.latitude , start.longitude))
-	        .title("Start Here!"));
+	        .position(new LatLng(start.getLatitude(), start.getLongitude()))
+	        .title("Start Here!").icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
+			
 			mMap.addMarker(new MarkerOptions()
-	        .position(new LatLng(end.latitude , end.longitude))
-	        .title("End Here!"));
+	        .position(new LatLng(end.getLatitude(), end.getLongitude()))
+	        .title("End Here!").icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
+			
+			double cameraLatitude = (start.getLatitude() + end.getLatitude()) / 2;
+			double cameraLongitude = (start.getLongitude() + end.getLongitude()) / 2;
 			
 			PolylineOptions polyglineOptions = new PolylineOptions();
 			for (Leg l: legs) {
 				for (Step s: l.getStepList()) {
-					polyglineOptions = polyglineOptions.add(new LatLng(s.getStartLocation().latitude , s.getStartLocation().longitude ));
-					polyglineOptions = polyglineOptions.add(new LatLng(s.getEndLocation().latitude , s.getEndLocation().longitude ));
+					polyglineOptions = polyglineOptions.add(new LatLng(s.getStartLocation().getLatitude(), s.getStartLocation().getLongitude()));
+					polyglineOptions = polyglineOptions.add(new LatLng(s.getEndLocation().getLatitude(), s.getEndLocation().getLongitude()));
 				}
 			}
-			Polyline polyline = mMap.addPolyline(polyglineOptions.color(Color.RED));
+			mMap.addPolyline(polyglineOptions.color(Color.RED));
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude, cameraLongitude), (float) 13.0), animatedCameraDurationInMilliSecond, null);
 		}
 	}
 }
