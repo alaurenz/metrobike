@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * @author coreyh3
  * @author dutchscout
@@ -79,17 +83,42 @@ public final class Route implements Serializable {
     }
 
     /**
-     * Returns a new Route based on the passed json_src.
+     * Returns a new Route based on the passed jsonRoute.
      * 
      * @param jsonSrc
      *            the JSON to parse into a route object
      * @return A route based on the passed json_src
+     * @throws JSONException 
      */
-    public static Route buildRouteFromJSON(final String jsonSrc) {
-        // TODO: implement the JSON parsing for a route here
-        return new Route();
+    public static Route buildRouteFromJSON(final JSONObject jsonRoute) throws JSONException {
+        // TODO: Need to set the bounds here.  
+        Route newRoute = new Route();
+        JSONObject boundSet = jsonRoute.getJSONObject(WebRequestJSONKeys.BOUNDS.getLowerCase());
+        JSONObject tempBound = boundSet.getJSONObject(WebRequestJSONKeys.NORTHEAST.getLowerCase());
+        //Set the top location here.
+        //newRoute
+        tempBound = boundSet.getJSONObject(WebRequestJSONKeys.SOUTHWEST.getLowerCase());
+        //Set the bottom location here.
+        
+        JSONArray legsArray = jsonRoute.getJSONArray(WebRequestJSONKeys.LEGS.getLowerCase());
+        
+        for(int i = 0; i < legsArray.length(); i++) {
+            Leg currentLeg = Leg.buildLegFromJSON(legsArray.getJSONObject(i));
+            newRoute.addLeg(currentLeg);
+        }
+        
+        
+        JSONArray warningsArray = jsonRoute.getJSONArray(WebRequestJSONKeys.WARNINGS.getLowerCase());
+        
+        newRoute.setWarnings(Utility.jsonArrayToStringList(warningsArray)); 
+        
+        //TODO: need to set the polyline
+        
+        return newRoute;
     }
 
+
+    
     /**
      * Add a new leg to this route.
      * 

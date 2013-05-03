@@ -83,6 +83,24 @@ public final class Location implements Serializable {
     }
 
     /**
+     * Getter for the latitude field.
+     * 
+     * @return the latitude
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+    
+    /**
+     * Getter for the longitude field.
+     * 
+     * @return the longitude
+     */
+    public double getLongitude() {
+        return longitude;
+    }
+    
+    /**
      * Returns a Location that is a South-West bound on the passed Locations. If
      * one location is null, the non-null location will be returned. If both
      * locations are null, null will be returned.

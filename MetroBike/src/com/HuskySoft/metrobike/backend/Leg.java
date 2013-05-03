@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * @author coreyh3
  * @author dutchscout Represents a series of related steps to complete a portion
@@ -56,13 +60,34 @@ public final class Leg implements Serializable {
     /**
      * Returns a new Leg based on the passed json_src.
      * 
-     * @param jsonSrc
+     * @param jsonLeg
      *            the JSON to parse into a Leg object
      * @return A Leg based on the passed json_src
+     * @throws JSONException
      */
-    public static Leg buildLegFromJSON(final String jsonSrc) {
-        // TODO: implement the JSON parsing for a leg here
-        return new Leg();
+    public static Leg buildLegFromJSON(final JSONObject jsonLeg)
+            throws JSONException {
+        Leg newLeg = new Leg();
+        
+        //Set the start address
+        newLeg.setStartAddress(jsonLeg
+                .getString(WebRequestJSONKeys.START_ADDRESS.getLowerCase()));
+        
+        //Set the end address
+        newLeg.setEndAddress(jsonLeg.getString(WebRequestJSONKeys.END_ADDRESS
+                .getLowerCase()));
+
+        //Set the steps list
+        JSONArray stepsArray = jsonLeg.getJSONArray(WebRequestJSONKeys.STEPS
+                .getLowerCase());
+
+        for (int i = 0; i < stepsArray.length(); i++) {
+            Step currentStep = Step.buildStepFromJSON(stepsArray
+                    .getJSONObject(i));
+            newLeg.addStep(currentStep);
+        }
+
+        return newLeg;
     }
 
     /**
@@ -167,6 +192,7 @@ public final class Leg implements Serializable {
 
     /**
      * Returns an unmodifiable list of Steps necessary to complete this Leg.
+     * 
      * @return an unmodifiable list of Steps necessary to complete this Leg
      */
     public List<Step> getStepList() {
@@ -178,7 +204,7 @@ public final class Leg implements Serializable {
         // TODO: Make this toString meaningful and easy to read (if possible).
         return super.toString();
     }
-    
+
     /**
      * Implements a custom serialization of a Leg object.
      * 

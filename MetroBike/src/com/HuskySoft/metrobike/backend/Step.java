@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author coreyh3
@@ -56,6 +62,12 @@ public final class Step implements Serializable {
     private String polyLinePoints;
 
     /**
+     * A List of substeps. If there are no substeps for the current step then
+     * this will be null.
+     */
+    private List<Step> substeps;
+
+    /**
      * Constructs an empty Step.
      */
     public Step() {
@@ -66,20 +78,88 @@ public final class Step implements Serializable {
         travelMode = TravelMode.UNKNOWN;
         htmlInstruction = "";
         polyLinePoints = "";
+        substeps = null;
     }
-    
+
     /**
      * Returns a new Step based on the passed json_src.
      * 
-     * @param jsonSrc
+     * @param jsonStep
      *            the JSON to parse into a Step object
      * @return A Step based on the passed json_src
+     * @throws JSONException
+     * 
      */
-    public static Step buildStepFromJSON(final String jsonSrc) {
-        // TODO: implement the JSON parsing for a step here
-        return new Step();
+    public static Step buildStepFromJSON(final JSONObject jsonStep)
+            throws JSONException {
+        Step newStep = new Step();
+
+        // Set the distance.
+        JSONObject distance = jsonStep
+                .getJSONObject(WebRequestJSONKeys.DISTANCE.getLowerCase());
+        newStep.setDistanceInMeters(distance.getLong(WebRequestJSONKeys.VALUE
+                .getLowerCase()));
+
+        // Set the duration.
+        JSONObject duration = jsonStep
+                .getJSONObject(WebRequestJSONKeys.DURATION.getLowerCase());
+        newStep.setDurationInSeconds(duration.getLong(WebRequestJSONKeys.VALUE
+                .getLowerCase()));
+
+        // Set the start location.
+        JSONObject tempStartLocation = jsonStep
+                .getJSONObject(WebRequestJSONKeys.START_LOCATION
+                        .getLowerCase());
+        double startLat = tempStartLocation.getDouble(WebRequestJSONKeys.LAT
+                .getLowerCase());
+        double startLng = tempStartLocation.getDouble(WebRequestJSONKeys.LNG
+                .getLowerCase());
+        newStep.setStartLocation(new Location(startLat, startLng));
+
+        // Set the end location.
+        JSONObject tempEndLocation = jsonStep
+                .getJSONObject(WebRequestJSONKeys.END_LOCATION.getLowerCase());
+        double endLat = tempEndLocation.getDouble(WebRequestJSONKeys.LAT
+                .getLowerCase());
+        double endLng = tempEndLocation.getDouble(WebRequestJSONKeys.LNG
+                .getLowerCase());
+        newStep.setEndLocation(new Location(endLat, endLng));
+
+        // Set the substeps if they exist.
+        if (jsonStep.has(WebRequestJSONKeys.STEPS.getLowerCase())) {
+            List<Step> substeps = new ArrayList<Step>();
+
+            JSONArray substepsArray = jsonStep
+                    .getJSONArray(WebRequestJSONKeys.STEPS.getLowerCase());
+            for (int i = 0; i < substepsArray.length(); i++) {
+                Step currentSubstep = Step.buildStepFromJSON(substepsArray
+                        .getJSONObject(i));
+                substeps.add(currentSubstep);
+            }
+
+            newStep.setSubsteps(substeps);
+        }
+
+        // Set the travel mode.
+        String stringTravelMode = jsonStep
+                .getString(WebRequestJSONKeys.TRAVEL_MODE.getLowerCase());
+        newStep.setTravelMode(TravelMode.valueOf(stringTravelMode));
+
+        // Set the HTMLInstructions
+        String tempHtmlInstruction = jsonStep
+                .getString(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase());
+        newStep.setHtmlInstruction(tempHtmlInstruction);
+
+        // Set the PolyLine Points
+        JSONObject tempPolyLine = jsonStep
+                .getJSONObject(WebRequestJSONKeys.POLYLINE.getLowerCase());
+        String tempPoints = tempPolyLine.getString(WebRequestJSONKeys.POINTS
+                .getLowerCase());
+        newStep.setPolyLinePoints(tempPoints);
+
+        return newStep;
     }
-    
+
     /**
      * @return the distanceInMeters
      */
@@ -90,7 +170,8 @@ public final class Step implements Serializable {
     /**
      * Set the distance (in meters) for the step.
      * 
-     * @param newDistanceInMeters the distanceInMeters to set
+     * @param newDistanceInMeters
+     *            the distanceInMeters to set
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setDistanceInMeters(final long newDistanceInMeters) {
@@ -108,7 +189,8 @@ public final class Step implements Serializable {
     /**
      * Set the duration (in seconds) for the step.
      * 
-     * @param newDurationInSeconds the durationInSeconds to set
+     * @param newDurationInSeconds
+     *            the durationInSeconds to set
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setDurationInSeconds(final long newDurationInSeconds) {
@@ -126,7 +208,8 @@ public final class Step implements Serializable {
     /**
      * Set the start location for the step.
      * 
-     * @param newStartLocation the startLocation to set
+     * @param newStartLocation
+     *            the startLocation to set
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setStartLocation(final Location newStartLocation) {
@@ -144,7 +227,8 @@ public final class Step implements Serializable {
     /**
      * Set the end location for the step.
      * 
-     * @param newEndLocation the endLocation to set
+     * @param newEndLocation
+     *            the endLocation to set
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setEndLocation(final Location newEndLocation) {
@@ -162,7 +246,8 @@ public final class Step implements Serializable {
     /**
      * Set the travel mode (ex: BICYCLING) for the step.
      * 
-     * @param newTravelMode the travelMode to set
+     * @param newTravelMode
+     *            the travelMode to set
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setTravelMode(final TravelMode newTravelMode) {
@@ -180,7 +265,8 @@ public final class Step implements Serializable {
     /**
      * Set new instructions for the step.
      * 
-     * @param newHtmlInstruction the htmlInstruction to set
+     * @param newHtmlInstruction
+     *            the htmlInstruction to set
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setHtmlInstruction(final String newHtmlInstruction) {
@@ -198,11 +284,35 @@ public final class Step implements Serializable {
     /**
      * Set the polyline points for the step.
      * 
-     * @param newPolyLinePoints the polyLinePoints to set
+     * @param newPolyLinePoints
+     *            the polyLinePoints to set
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setPolyLinePoints(final String newPolyLinePoints) {
         this.polyLinePoints = newPolyLinePoints;
+        return this;
+    }
+
+    /**
+     * Get the List of substeps. If there are no substeps then this returns
+     * null.
+     * 
+     * @return the list of substeps. If there are no substeps then this returns
+     *         null.
+     */
+    public List<Step> getSubsteps() {
+        return substeps;
+    }
+
+    /**
+     * Set the list of substeps.
+     * 
+     * @param newSubsteps
+     *            the list of of substeps to set.
+     * @return the modified Step, for Builder pattern purposes.
+     */
+    public Step setSubsteps(final List<Step> newSubsteps) {
+        this.substeps = newSubsteps;
         return this;
     }
 
@@ -211,7 +321,7 @@ public final class Step implements Serializable {
         // TODO: Make this toString meaningful and easy to read (if possible).
         return super.toString();
     }
-    
+
     /**
      * Implements a custom serialization of a Step object.
      * 
