@@ -8,9 +8,7 @@
     <string name="title_activity_navigate">NavigateActivity</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="button_details">Details</string>
-
     <string name="button_search">Search</string>
-
     <string name="button_reverse_desc">Reverse Button</string>
     <string name="button_search_desc">Search Button</string>
     <string name="edittext_hint_to">To</string>
@@ -36,12 +34,12 @@
     <string name="clear_history">Clear History</string>
     <string name="view_history">View History</string>
 
-    <!-- Details Activity String -->
+    <!-- Details Activity -->
     <string name="button_go_to_search">Search</string>
     <string name="button_go_to_results">Result</string>
     <string name="button_navigate">Navigate</string>
-    
-    <!-- Navigate Activity String -->
+
+    <!-- Navigate Activity -->
     <string name="button_go_to_detail">Details</string>
 
     <!-- Search Activity -->
@@ -53,4 +51,12 @@
     <string name="button_find">Find</string>
     <string name="textview_departure_time">Departure Time</string>
     <string name="textview_history">History</string>
+
+    <!-- Result Activity -->
+    <string name="route1">Route1</string>
+    <string name="route2">Route2</string>
+    <string name="route3">Route3</string>
+    <string name="all4">All4</string>
+    <string name="all5">All5</string>
+
 </resources>

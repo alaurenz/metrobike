@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.HuskySoft.metrobike.R;
@@ -35,11 +36,23 @@ public class DetailsActivity extends Activity {
 	 * onCreate menu option of DetailsActivity
 	 */
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_details, menu);
+		getMenuInflater().inflate(R.menu.activity_menu, menu);
 		return true;
 	}
+	
+	 /**
+     * Invoked when user click setting button in the menu.
+     * 
+     * @param menuItem
+     *            the items in the menu bar
+     */
+    public final void goToSettingsPage(final MenuItem menuItem) {
+        // start the settings activity
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 
 	/**
 	 * 

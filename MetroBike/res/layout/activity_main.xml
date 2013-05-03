@@ -25,6 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/buttonSearch"
-        android:text="details" />
+        android:text="@string/button_details" />
 
 </RelativeLayout>

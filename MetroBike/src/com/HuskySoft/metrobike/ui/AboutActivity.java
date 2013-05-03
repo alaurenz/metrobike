@@ -4,25 +4,25 @@ import com.HuskySoft.metrobike.R;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
 
 /**
- * This activity shows the HuskySoft logo.
+ * This is a about activity which shows the HuskySoft logo, copyright,
+ * developer's name and more.
+ * 
  * @author Sam Wilson
  */
 public class AboutActivity extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_about);
-	}
+    // incomplete class, more details will added in this about activity
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_about, menu);
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // linked to the activity about xml
+        setContentView(R.layout.activity_about);
+    }
 
 }

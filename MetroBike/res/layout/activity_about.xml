@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".AboutActivity" >
 
-
+    <!-- The HuskySoft logo -->
 
     <ImageView
         android:id="@+id/husky_soft_logo"
@@ -13,9 +13,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/huskysoft" 
-        android:contentDescription="@string/huskysoft_description"/>
-    
-       
+        android:contentDescription="@string/huskysoft_description"
+        android:src="@drawable/huskysoft" />
+
+    <!-- Will add more details in this page -->
 
 </RelativeLayout>

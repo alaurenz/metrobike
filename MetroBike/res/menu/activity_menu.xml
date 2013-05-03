@@ -1,9 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!-- this item is a setting button which will invoke the setting page -->
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
+        android:onClick="goToSettingsPage"
         android:title="@string/title_activity_settings"/>
 
 </menu>
