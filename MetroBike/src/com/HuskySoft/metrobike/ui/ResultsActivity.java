@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.Leg;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
  * 
@@ -122,7 +125,7 @@ public class ResultsActivity extends Activity {
 //	        .fillColor(Color.BLUE));
 			List<Leg> legs = currRoute.getLegList();
 			Location start = legs.get(0).getStartLocation();
-			Location end = legs.get(legs.size() - 1).getEndLocation();
+			Location end = legs.get(legs.size() - 1).getStepList().get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
 			mMap.addMarker(new MarkerOptions()
 	        .position(new LatLng(start.latitude , start.longitude))
 	        .title("Start Here!"));
@@ -130,14 +133,14 @@ public class ResultsActivity extends Activity {
 	        .position(new LatLng(end.latitude , end.longitude))
 	        .title("End Here!"));
 			
-			PolygonOptions polygonOptions = new PolygonOptions();
+			PolylineOptions polyglineOptions = new PolylineOptions();
 			for (Leg l: legs) {
 				for (Step s: l.getStepList()) {
-					polygonOptions.add(new LatLng(s.getStartLocation().latitude , s.getStartLocation().longitude ));
-					polygonOptions.add(new LatLng(s.getEndLocation().latitude , s.getEndLocation().longitude ));
+					polyglineOptions = polyglineOptions.add(new LatLng(s.getStartLocation().latitude , s.getStartLocation().longitude ));
+					polyglineOptions = polyglineOptions.add(new LatLng(s.getEndLocation().latitude , s.getEndLocation().longitude ));
 				}
 			}
-			Polygon polygon = mMap.addPolygon(polygonOptions.strokeColor(Color.RED).fillColor(Color.BLUE));
+			Polyline polyline = mMap.addPolyline(polyglineOptions.color(Color.RED));
 		}
 	}
 }
