@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +15,10 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.HuskySoft.metrobike.backend.Leg;
+import com.HuskySoft.metrobike.backend.GoogleMapsResponseStatusCodes;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.TravelMode;
+import com.HuskySoft.metrobike.backend.Utility;
 import com.HuskySoft.metrobike.backend.WebRequestJSONKeys;
 
 /**
@@ -34,7 +37,17 @@ public final class DirectionsRequest implements Serializable {
      * objects.
      */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * The tag for Android logging
+     */
+    private static final String TAG = "MetroBikeDirectionsRequest";
 
+    /**
+     * The URL for Google Maps
+     */
+    private String googleMapsUrl = "http://maps.googleapis.com/maps/api/directions/json";
+    
     /**
      * The starting location that the user wants directions from.
      */
@@ -98,21 +111,49 @@ public final class DirectionsRequest implements Serializable {
      * Initiates the request calculation. This is a blocking call. NOTE: This
      * method is currently under heavy testing and does not currently meet style
      * guidelines.
+     * @throws UnsupportedEncodingException 
+     * @throws JSONException 
      */
-    public void doRequest() {
+    public void doRequest() throws UnsupportedEncodingException, JSONException {
 
         // TODO Remove this hard-coded JSON test
         solutions = new ArrayList<Route>();
 
+   /*     // TODO Auto-generated method stub validateRequestParameters();
+        StringBuilder requestString = new StringBuilder("?origin=" + startAddress + "&");
+        requestString.append("destination=" + endAddress + "&"); 
+        
+        //TODO: This should probably be set to true if we are using the sensor 
+        //to determine the location. //Hardcoding it to false for now.
+        requestString.append("sensor=false" + "&"); 
+        
+        //TODO: I'm hardcoding this to transit for now since that is the more 
+        //complicated of the two cases. We should really be checking if it is 
+        //MIXED, TRANSIT,BICYCLING, WALKING, or UNKNOWN. 
+        requestString.append("mode=transit" +"&");
+        
+        
+        requestString = new StringBuilder(googleMapsUrl + URLEncoder.encode(requestString.toString(), "UTF-8"));
+        
+        String jsonResponse = Utility.doQuery(requestString.toString());
+    */       
         JSONObject myJSON;
         try {
             myJSON = new JSONObject(DUMMY_TRANSIT_MULTI_JSON);
+            //Commenting this out until we have this part completely working.
+//            myJSON = new JSONObject(jsonResponse);
         } catch (JSONException e) {
             Log.e("JSON_TEST", "Error parsing JSON");
             e.printStackTrace();
             return;
         }
-
+        
+        //TODO: Decide how to handle this if the response is not "OK"
+        //For now just log the error and continue.
+        if(!myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()).equalsIgnoreCase(GoogleMapsResponseStatusCodes.OK.toString())) {
+            Log.e(TAG, "JSON Response returned: " + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
+        }
+        
         Route dummyRoute;
         JSONArray routesArray;
 
@@ -239,29 +280,6 @@ public final class DirectionsRequest implements Serializable {
          * // Add the leg to the route dummyRoute.addLeg(dummyLeg);
          * 
          * // Add the route to our solution solutions.add(dummyRoute);
-         */
-
-        /*
-         * // TODO Auto-generated method stub validateRequestParameters();
-         * //@Jaylen, I think we can use this to do the proper encoding for the
-         * //http request. -> java.net.URLEncoder; //URLEncoder.encode("", "");
-         * //TODO: Modify the string builder appends to not use String
-         * //concatenation in them. Leaving them in there now for readability.
-         * StringBuilder requestString = new StringBuilder("http://maps." +
-         * "googleapis.com/maps/api/directions/json?");
-         * requestString.append("origin=" + startAddress + "&");
-         * requestString.append("destination=" + endAddress + "&"); //TODO: This
-         * should probably be set to true if we are using the sensor //to
-         * determine the location. //Hardcoding it to false for now.
-         * requestString.append("sensor=false" + "&"); //TODO: I'm hardcoding
-         * this to transit for now since that is the more //complicated of the
-         * two cases. We should really be checking if it is //MIXED, TRANSIT,
-         * BICYCLING, WALKING, or UNKNOWN. requestString.append("mode=transit" +
-         * "&");
-         * 
-         * // + "origin=6504%20Latona%20Ave%20NE%2CSeattle%2CWA&" // +
-         * "destination=3801%20Brooklyn%20Ave%20NE%2CSeattle%2CWA&" // +
-         * "sensor=false&" + "arrival_time=1368644400&" // + "mode=transit"; //
          */
     }
 
