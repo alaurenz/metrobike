@@ -159,7 +159,7 @@ public final class Leg implements Serializable {
      */
     public Location getEndLocation() {
         if (!stepList.isEmpty()) {
-            return stepList.get(stepList.size() - 1).getStartLocation();
+            return stepList.get(stepList.size() - 1).getEndLocation();
         }
         return null;
     }
