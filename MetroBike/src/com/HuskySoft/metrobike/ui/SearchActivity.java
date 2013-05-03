@@ -1,11 +1,13 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.TimePicker;
 
 import com.HuskySoft.metrobike.R;
+import com.HuskySoft.metrobike.algorithm.DirectionsRequest;
 
 public class SearchActivity extends Activity {
 
@@ -95,6 +98,8 @@ public class SearchActivity extends Activity {
 		}
 	}
 	
+	private final Calendar calendar = Calendar.getInstance();
+	
 	private RadioButton departAtButton;
 	private RadioButton leaveNowButton;
 	private EditText startFromEditText;
@@ -105,23 +110,30 @@ public class SearchActivity extends Activity {
 	private ImageButton reverseButton;
 	private ListView historyListView;
 	private HistoryItem historyItemData[];
-	
-	private final Calendar calendar = Calendar.getInstance();
+	private ProgressDialog pd;  
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-		departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
-		leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
-		startFromEditText = (EditText) findViewById(R.id.editTextStartFrom);
-		toEditText = (EditText) findViewById(R.id.editTextTo);
-		dateEditText = (EditText) findViewById(R.id.editTextDate);
-		timeEditText = (EditText) findViewById(R.id.editTextTime);
-		findButton = (Button) findViewById(R.id.buttonFind);
-		reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
-		historyListView = (ListView) findViewById(R.id.listViewHistory);
 		
+		establishViewsAndOtherNecessaryComponents();
+		setInitialText();
+		setListeners();
+		setHistorySection();
+	}
+
+
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_search, menu);
+		
+		return true;
+	}
+	
+	private void setInitialText(){
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		String hourString = "";
 		if (hour < 10) hourString += "0";
@@ -148,7 +160,21 @@ public class SearchActivity extends Activity {
 		
 		dateEditText.setText(monthString + "/" + dayString + "/" + year);
 		timeEditText.setText(hourString + ":" + minuteString);
-		
+	}
+	
+	private void establishViewsAndOtherNecessaryComponents() {
+		departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
+		leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
+		startFromEditText = (EditText) findViewById(R.id.editTextStartFrom);
+		toEditText = (EditText) findViewById(R.id.editTextTo);
+		dateEditText = (EditText) findViewById(R.id.editTextDate);
+		timeEditText = (EditText) findViewById(R.id.editTextTime);
+		findButton = (Button) findViewById(R.id.buttonFind);
+		reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
+		historyListView = (ListView) findViewById(R.id.listViewHistory);
+	}
+	
+	private void setListeners() {
 		reverseButton.setOnClickListener(new OnClickListener() {
 		    public void onClick(View v) {
 		    	String temp = startFromEditText.getText().toString();
@@ -178,20 +204,33 @@ public class SearchActivity extends Activity {
 		    }
 		});
 		
+		dateEditText.setKeyListener(null);
+		
 		timeEditText.setOnClickListener(new OnClickListener() {
 		    public void onClick(View v) {
 		    	showTimePickerDialog(v);
 		    }
 		});
 		
-		findButton.setOnClickListener(new OnClickListener() {
-		    public void onClick(View v) {
-		    	// to be modified later, currently just directly call ResultsActivity
-		    	Intent intent = new Intent(v.getContext(), ResultsActivity.class);
-		    	startActivity(intent);
-		    }
-		});
+		timeEditText.setKeyListener(null);
 		
+        findButton.setOnClickListener(new OnClickListener() {  
+            @Override  
+            public void onClick(View v) {   
+                pd = ProgressDialog.show(v.getContext(), "Searching", "Searching for routes...");
+   
+                new Thread(new Runnable() {  
+                    @Override  
+                    public void run() {  
+                        requestForRoutes(); 
+                    }  
+  
+                }).start();  
+            }  
+        });
+	}
+	
+	private void setHistorySection(){
         historyItemData = new HistoryItem[]
         {
             //new HistoryItem(R.drawable.ic_launcher, "History1: From", "To: University of Washington"),
@@ -223,14 +262,6 @@ public class SearchActivity extends Activity {
         	}
       	}); 
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_search, menu);
-		
-		return true;
-	}
 	
 	public void showDatePickerDialog(View v) {
 	    DialogFragment dpf = new DatePickerFragment();
@@ -242,6 +273,14 @@ public class SearchActivity extends Activity {
 	    tpf.show(getFragmentManager(), "timePicker");
 	}
 	
-	
+    private void requestForRoutes() {  
+    	DirectionsRequest dReq = new DirectionsRequest();
+    	//do some settings
+    	dReq.doRequest();
+    	Intent intent = new Intent(this, ResultsActivity.class);
+    	intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
+    	startActivity(intent);
+    	pd.dismiss();
+    } 
 	
 }

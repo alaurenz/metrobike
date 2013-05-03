@@ -1,22 +1,73 @@
 
 package com.HuskySoft.metrobike.ui;
 
-import com.HuskySoft.metrobike.R;
-import android.os.Bundle;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
+
+import com.HuskySoft.metrobike.R;
+import com.HuskySoft.metrobike.backend.Leg;
+import com.HuskySoft.metrobike.backend.Location;
+import com.HuskySoft.metrobike.backend.Route;
+import com.HuskySoft.metrobike.backend.Step;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+/**
+ * 
+ * @author mengwan
+ *
+ */
 
 public class ResultsActivity extends Activity {
-
+	
+	/**
+	 * GoogleMap object stored here to be modified
+	 */
+	private GoogleMap mMap;
+	
+	/**
+	 * results from the search
+	 */
+	private ArrayList<Route> routes = null;
+	
+	
+	/**
+	 * current route that should be displayed on the map
+	 */
+	private Route currRoute = null;
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setTitle("Result");
-		setContentView(R.layout.activity_results);
+		
+		//get the solution from the search activity
+		routes = (ArrayList<Route>) getIntent().getSerializableExtra("List of Routes");
+		
+		//set the default route to be the first route of the solution
+		if (routes.size() > 0) {
+			currRoute = routes.get(0);
+		}
+		setContentView(R.layout.activity_results);	
+		mMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+		drawRoute();
 	}
 
 	@Override
@@ -58,4 +109,38 @@ public class ResultsActivity extends Activity {
 	   	Intent intent = new Intent(this, DetailsActivity.class);
 	   	startActivity(intent);
     }
+	
+	/**
+	 * draw the current route on the map
+	 */
+	private void drawRoute() {
+		if (currRoute != null) {
+//			mMap.addMarker(new MarkerOptions()
+//	        .position(new LatLng(47.675910, -122.325690))
+//	        .title("Start Here!"));
+//			
+//			Polygon polygon = mMap.addPolygon(new PolygonOptions()
+//	        .add(new LatLng(47.67604, -122.32582), new LatLng(47.675910, -122.325690))
+//	        .strokeColor(Color.RED)
+//	        .fillColor(Color.BLUE));
+			List<Leg> legs = currRoute.getLegList();
+			Location start = legs.get(0).getStartLocation();
+			Location end = legs.get(legs.size() - 1).getStepList().get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
+			mMap.addMarker(new MarkerOptions()
+	        .position(new LatLng(start.latitude , start.longitude))
+	        .title("Start Here!"));
+			mMap.addMarker(new MarkerOptions()
+	        .position(new LatLng(end.latitude , end.longitude))
+	        .title("End Here!"));
+			
+			PolylineOptions polyglineOptions = new PolylineOptions();
+			for (Leg l: legs) {
+				for (Step s: l.getStepList()) {
+					polyglineOptions = polyglineOptions.add(new LatLng(s.getStartLocation().latitude , s.getStartLocation().longitude ));
+					polyglineOptions = polyglineOptions.add(new LatLng(s.getEndLocation().latitude , s.getEndLocation().longitude ));
+				}
+			}
+			Polyline polyline = mMap.addPolyline(polyglineOptions.color(Color.RED));
+		}
+	}
 }

@@ -92,7 +92,6 @@
 	        android:layout_below="@+id/textViewDepartureTime"
 	        android:layout_marginTop="5dp"
 	        android:layout_centerHorizontal="true"
-	        android:gravity="center"
 	        android:layout_alignParentLeft="true"
 	        android:orientation="vertical" >
 
@@ -110,7 +109,6 @@
 	            android:text="@string/radio_button_depart_at" />
 	        	        
 		    <LinearLayout
-		        android:id="@+id/linearLayout1"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:orientation="horizontal" >
@@ -121,7 +119,8 @@
 		            android:layout_height="wrap_content"
 		            android:enabled="false"
 		            android:inputType="date"
-		            android:gravity="center" />
+		            android:gravity="center"
+		            android:focusable="false" />
 		
 		        <EditText
 		            android:id="@+id/editTextTime"
@@ -129,7 +128,8 @@
 		            android:layout_height="wrap_content"
 		            android:enabled="false"
 		            android:inputType="time"
-		            android:gravity="center" />
+		            android:gravity="center"
+		            android:focusable="false" />
 		    </LinearLayout>
 			    
 	    </RadioGroup>
@@ -159,6 +159,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentTop="true"
 		    android:layout_centerHorizontal="true"
+		    android:drawableLeft="@drawable/search"
 		    android:text="@string/button_find" />
 		
 	</RelativeLayout>
@@ -185,9 +186,9 @@
 		        android:id="@+id/listViewHistory"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:layout_marginLeft="30dp"
-	        	android:layout_marginRight="30dp"
-	        	android:layout_marginBottom="30dp" />
+		        android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_marginBottom="10dp" />
 	</RelativeLayout>
 
 </LinearLayout>
