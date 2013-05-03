@@ -10,6 +10,8 @@ package com.HuskySoft.metrobike.backend;
  *
  */
 public enum WebRequestJSONKeys {
+    
+    ROUTES,
     BOUNDS,
     NORTHEAST,
     SOUTHWEST,

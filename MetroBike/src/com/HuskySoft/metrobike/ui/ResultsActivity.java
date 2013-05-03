@@ -127,20 +127,20 @@ public class ResultsActivity extends Activity {
 			Location start = legs.get(0).getStartLocation();
 			Location end = legs.get(legs.size() - 1).getStepList().get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
 			mMap.addMarker(new MarkerOptions()
-	        .position(new LatLng(start.latitude , start.longitude))
+	        .position(new LatLng(start.getLatitude() , start.getLongitude()))
 	        .title("Start Here!"));
 			mMap.addMarker(new MarkerOptions()
-	        .position(new LatLng(end.latitude , end.longitude))
+	        .position(new LatLng(end.getLatitude() , end.getLongitude()))
 	        .title("End Here!"));
 			
-			PolylineOptions polyglineOptions = new PolylineOptions();
+			PolylineOptions polylineOptions = new PolylineOptions();
 			for (Leg l: legs) {
 				for (Step s: l.getStepList()) {
-					polyglineOptions = polyglineOptions.add(new LatLng(s.getStartLocation().latitude , s.getStartLocation().longitude ));
-					polyglineOptions = polyglineOptions.add(new LatLng(s.getEndLocation().latitude , s.getEndLocation().longitude ));
+					polylineOptions = polylineOptions.add(new LatLng(s.getStartLocation().getLatitude() , s.getStartLocation().getLongitude() ));
+					polylineOptions = polylineOptions.add(new LatLng(s.getEndLocation().getLatitude() , s.getEndLocation().getLongitude() ));
 				}
 			}
-			Polyline polyline = mMap.addPolyline(polyglineOptions.color(Color.RED));
+			Polyline polyline = mMap.addPolyline(polylineOptions.color(Color.RED));
 		}
 	}
 }

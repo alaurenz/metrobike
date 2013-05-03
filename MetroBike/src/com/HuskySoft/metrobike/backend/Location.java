@@ -32,12 +32,12 @@ public final class Location implements Serializable {
     /**
      * The latitude in decimal degrees.
      */
-    public double latitude;
+    private double latitude;
 
     /**
      * The longitude in decimal degrees.
      */
-    public double longitude;
+    private double longitude;
 
     /**
      * Constructs a new (immutable) Location with the given coordinates.

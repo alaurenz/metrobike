@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 /**
  * @author coreyh3
  * @author dutchscout Represents the shortest portion of a route.
@@ -146,9 +148,13 @@ public final class Step implements Serializable {
         newStep.setTravelMode(TravelMode.valueOf(stringTravelMode));
 
         // Set the HTMLInstructions
-        String tempHtmlInstruction = jsonStep
-                .getString(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase());
-        newStep.setHtmlInstruction(tempHtmlInstruction);
+        if (jsonStep.has(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase())){
+            String tempHtmlInstruction = jsonStep
+                    .getString(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase());
+            newStep.setHtmlInstruction(tempHtmlInstruction);
+        } else {
+            Log.w("","No HTML instructions in this step!");
+        }
 
         // Set the PolyLine Points
         JSONObject tempPolyLine = jsonStep
