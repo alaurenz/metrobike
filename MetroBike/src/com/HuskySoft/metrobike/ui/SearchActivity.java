@@ -29,7 +29,7 @@ import android.widget.RadioButton;
 import android.widget.TimePicker;
 
 import com.HuskySoft.metrobike.R;
-import com.HuskySoft.metrobike.algorithm.DirectionsRequest;
+import com.HuskySoft.metrobike.backend.DirectionsRequest;
 
 public class SearchActivity extends Activity {
 
@@ -303,16 +303,9 @@ public class SearchActivity extends Activity {
 
     private void requestForRoutes() {
         DirectionsRequest dReq = new DirectionsRequest();
-        // do some settings
-        try {
-			dReq.doRequest();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+        dReq.doRequest();
+		
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
         startActivity(intent);
