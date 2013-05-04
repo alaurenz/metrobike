@@ -10,7 +10,7 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="280dip"
+        android:layout_width="240dip"
         android:layout_height="50dip"
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="15dip"
@@ -24,7 +24,8 @@
             android:layout_weight=".33"
             android:onClick="goToSearchPage"
             android:text="@string/button_go_to_search"
-            android:textSize="15sp" />
+            android:padding="0dp"
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/button_detail"
@@ -33,7 +34,8 @@
             android:layout_weight=".34"
             android:onClick="goToDetail"
             android:text="@string/button_go_to_detail"
-            android:textSize="15sp" />
+            android:padding="0dp"
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/button_navigate"
@@ -42,52 +44,23 @@
             android:layout_weight=".33"
             android:onClick="goToNavigate"
             android:text="@string/button_navigate"
-            android:textSize="15sp" />
+            android:padding="0dp"
+            android:textSize="13sp" />
     </LinearLayout>
 
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scrollView1"
-        android:layout_width="90dp"
+        android:id="@+id/scrollViewRouteSelection"
+        android:layout_width="80dp"
         android:layout_height="216dp"
         android:layout_gravity="left|center"
         android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/linearLayoutForRouteSelection"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-
-            <Button
-                android:id="@+id/btnAll"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/route1" />
-
-            <Button
-                android:id="@+id/btnBarAndRes"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/route2" />
-
-            <Button
-                android:id="@+id/btnFashion"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/route3" />
-
-            <Button
-                android:id="@+id/btnParty"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/all4" />
-
-            <Button
-                android:id="@+id/btnLife"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/all5" />
         </LinearLayout>
     </ScrollView>
 

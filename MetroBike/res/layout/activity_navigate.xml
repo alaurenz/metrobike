@@ -24,25 +24,28 @@
             android:layout_weight=".33"
             android:onClick="goToSearchPage"
             android:text="@string/button_go_to_search"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/button_go_to_result"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight=".34"
-            android:onClick="goToResults"
-            android:text="@string/button_go_to_results"
-            android:textSize="18sp" />
+            android:padding="0dp"
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/button_detail"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
+            android:layout_weight=".34"
             android:onClick="goToDetail"
             android:text="@string/button_go_to_detail"
-            android:textSize="18sp" />
+            android:padding="0dp"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/button_results"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:onClick="goToResults"
+            android:text="@string/button_go_to_results"
+            android:padding="0dp"
+            android:textSize="13sp" />
     </LinearLayout>
 
 </FrameLayout>

@@ -1,5 +1,6 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.Leg;
@@ -23,7 +27,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
@@ -35,44 +38,54 @@ import com.google.android.gms.maps.model.PolylineOptions;
 public class ResultsActivity extends Activity {
 
     /**
-     * duration of the animated camera in the map
+     * duration of the animated camera in the map.
      */
-    private static final int animatedCameraDurationInMilliSecond = 3000;
+    private static final int ANIMATED_CAMERA_DURATION_IN_MILLISECOND = 3000;
 
     /**
-     * GoogleMap object stored here to be modified
+     * GoogleMap object stored here to be modified.
      */
     private GoogleMap mMap;
 
     /**
-     * results from the search
+     * Results from the search.
      */
     private ArrayList<Route> routes = null;
 
     /**
-     * current route that should be displayed on the map
+     * Current route that should be displayed on the map.
      */
-    private Route currRoute = null;
+    private int currRoute = -1;
+    
+    /**
+     * default camera zoom level.
+     */
+    private static final float FIXED_DEFAULT_ZOOM_LEVEL = 13.0f;
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = this.getActionBar();
         actionBar.setTitle("Result");
 
         // get the solution from the search activity
-        routes = (ArrayList<Route>) getIntent().getSerializableExtra(
-                "List of Routes");
-
+        @SuppressWarnings("unchecked")
+        List<Route> recievedRoutes = (ArrayList<Route>) getIntent()
+            .getSerializableExtra("List of Routes");
+        
+        
         // set the default route to be the first route of the solution
-        if (routes.size() > 0) {
-            currRoute = routes.get(0);
-        }
+
         setContentView(R.layout.activity_results);
-        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
-                .getMap();
-        drawRoute();
+        if (recievedRoutes != null) {
+            routes = (ArrayList<Route>) recievedRoutes;
+            currRoute = (Integer) getIntent().
+                getSerializableExtra("Current Route Index");
+            addRouteButtons();
+            mMap = ((MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map)).getMap();
+            drawRoute();
+        }
     }
 
     @Override
@@ -95,14 +108,16 @@ public class ResultsActivity extends Activity {
     }
 
     /**
-     * 
+     * Go to the Navigate Page.
      * @param view
      *            : the view of the button onClick function of the go to
      *            Navigate button
      */
-    public void goToNavigate(View view) {
+    public final void goToNavigate(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, NavigateActivity.class);
+        intent.putExtra("List of Routes", (Serializable) routes);
+        intent.putExtra("Current Route Index", currRoute);
         startActivity(intent);
     }
 
@@ -112,7 +127,7 @@ public class ResultsActivity extends Activity {
      *            : the view of the button onClick function of the return to
      *            search page button
      */
-    public void goToSearchPage(View view) {
+    public final void goToSearchPage(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
@@ -124,19 +139,64 @@ public class ResultsActivity extends Activity {
      *            : the view of the button onClick function of the go to details
      *            button
      */
-    public void goToDetail(View view) {
+    public final void goToDetail(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("List of Routes", (Serializable) routes);
+        intent.putExtra("Current Route Index", currRoute);
         startActivity(intent);
     }
 
     /**
-     * draw the current route on the map
+     * add the selecting route buttons to the scroll bar on left.
+     */
+    private void addRouteButtons() {
+        LinearLayout main = (LinearLayout) findViewById(
+            R.id.linearLayoutForRouteSelection);
+        for (int i = 0; i < routes.size(); i++) {
+            Button selectRouteBtn = new Button(this);
+            selectRouteBtn.setText("Route" + (i + 1));
+            selectRouteBtn.setPadding(0, 0, 0, 0);
+            selectRouteBtn.setOnClickListener(new MyOnClickListener(i));
+            main.addView(selectRouteBtn);
+        }
+    }
+    
+    /**
+     * Implemented onClickListener in order to passed in parameter.
+     * @author mengwan
+     *
+     */
+    private class MyOnClickListener implements OnClickListener {
+    	/**
+    	 * stores the routeNumber gets passed in.
+    	 */
+    	private int routeNumber;
+    	
+    	/**
+    	 * Create a MyOnClickListener object.
+    	 * @param routeSelectionNumber
+    	 * 		Route number that is passed in.
+    	 */
+    	public MyOnClickListener(final int routeSelectionNumber) {       
+    		this.routeNumber = routeSelectionNumber;
+		}
+		
+		@Override
+		public void onClick(final View v) {
+			currRoute = routeNumber;
+			drawRoute();
+		}
+    };
+    
+    
+    /**
+     * draw the current route on the map.
      */
     private void drawRoute() {
-        if (currRoute != null) {
-
-            List<Leg> legs = currRoute.getLegList();
+        if (currRoute >= 0 && currRoute < routes.size()) {
+        	mMap.clear();
+            List<Leg> legs = routes.get(currRoute).getLegList();
             Location start = legs.get(0).getStartLocation();
             Location end = legs.get(legs.size() - 1).getStepList()
                     .get(legs.get(legs.size() - 1).getStepList().size() - 1)
@@ -156,8 +216,10 @@ public class ResultsActivity extends Activity {
                     .icon(BitmapDescriptorFactory
                             .fromResource(R.drawable.ending)));
 
-            double cameraLatitude = (start.getLatitude() + end.getLatitude()) / 2;
-            double cameraLongitude = (start.getLongitude() + end.getLongitude()) / 2;
+            double cameraLatitude = (start.getLatitude() 
+            		+ end.getLatitude()) / 2;
+            double cameraLongitude = (start.getLongitude()
+            		+ end.getLongitude()) / 2;
 
             PolylineOptions polylineOptions = new PolylineOptions();
             for (Leg l : legs) {
@@ -173,8 +235,8 @@ public class ResultsActivity extends Activity {
             mMap.addPolyline(polylineOptions.color(Color.RED));
             
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-                    cameraLatitude, cameraLongitude), (float) 13.0),
-                    animatedCameraDurationInMilliSecond, null);
+                    cameraLatitude, cameraLongitude), FIXED_DEFAULT_ZOOM_LEVEL),
+                    ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
         }
     }
 }

@@ -1,6 +1,11 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.HuskySoft.metrobike.R;
+import com.HuskySoft.metrobike.backend.Route;
 
 import android.os.Bundle;
 import android.app.ActionBar;
@@ -17,6 +22,16 @@ import android.view.View;
  */
 
 public class NavigateActivity extends Activity {
+	
+	/**
+     * Results from the search.
+     */
+    private ArrayList<Route> routes = null;
+
+    /**
+     * Current route that should be displayed on the map.
+     */
+    private int currRoute = -1;
 
     /**
      * Oncreate function of NavigateActivity
@@ -26,6 +41,15 @@ public class NavigateActivity extends Activity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = this.getActionBar();
         actionBar.setTitle("Navigate");
+        
+        @SuppressWarnings("unchecked")
+		List<Route> recievedRoutes = (ArrayList<Route>) getIntent()
+                .getSerializableExtra("List of Routes");
+        if (recievedRoutes != null) {
+            routes = (ArrayList<Route>) recievedRoutes;
+            currRoute = (Integer) getIntent().
+            getSerializableExtra("Current Route Index");
+        }
         setContentView(R.layout.activity_navigate);
     }
 
@@ -57,6 +81,8 @@ public class NavigateActivity extends Activity {
     public void goToDetail(View view) {
         // Do something in response to button
         Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("List of Routes", (Serializable) routes);
+        intent.putExtra("Current Route Index", currRoute);
         startActivity(intent);
     }
 
@@ -82,6 +108,8 @@ public class NavigateActivity extends Activity {
     public void goToResults(View view) {
         // Do something in response to button
         Intent intent = new Intent(this, ResultsActivity.class);
+        intent.putExtra("List of Routes", (Serializable) routes);
+        intent.putExtra("Current Route Index", currRoute);
         startActivity(intent);
     }
 

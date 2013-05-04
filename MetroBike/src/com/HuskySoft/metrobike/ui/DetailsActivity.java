@@ -1,5 +1,9 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.HuskySoft.metrobike.R;
+import com.HuskySoft.metrobike.backend.Route;
 
 /**
  * @author mengwan
@@ -16,6 +21,16 @@ import com.HuskySoft.metrobike.R;
  */
 public class DetailsActivity extends Activity {
 
+	/**
+     * Results from the search.
+     */
+    private ArrayList<Route> routes = null;
+
+    /**
+     * Current route that should be displayed on the map.
+     */
+    private int currRoute = -1;
+	
 	/**
 	 * 
 	 * onCreate function of DetailsActivity class
@@ -28,6 +43,14 @@ public class DetailsActivity extends Activity {
 		this.setDetails();
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setTitle("Details");
+		@SuppressWarnings("unchecked")
+		List<Route> recievedRoutes = (ArrayList<Route>) getIntent()
+                .getSerializableExtra("List of Routes");
+        if (recievedRoutes != null) {
+            routes = (ArrayList<Route>) recievedRoutes;
+            currRoute = (Integer) getIntent().
+            getSerializableExtra("Current Route Index");
+        }
 		setContentView(R.layout.activity_details);
 	}
 	
@@ -62,6 +85,8 @@ public class DetailsActivity extends Activity {
 	public void goToNavigate(View view) {
         // Do something in response to button
     	Intent intent = new Intent(this, NavigateActivity.class);
+    	intent.putExtra("List of Routes", (Serializable) routes);
+        intent.putExtra("Current Route Index", currRoute);
     	startActivity(intent);
     }
 	
@@ -85,6 +110,8 @@ public class DetailsActivity extends Activity {
 	public void goToResults(View view) {
 		// Do something in response to button
     	Intent intent = new Intent(this, ResultsActivity.class);
+    	intent.putExtra("List of Routes", (Serializable) routes);
+        intent.putExtra("Current Route Index", currRoute);
     	startActivity(intent);
 	}
 	
