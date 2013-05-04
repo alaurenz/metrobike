@@ -18,6 +18,7 @@ public class AboutActivity extends Activity {
 
     /**
      * {@inheritDoc}
+     * 
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
     @Override

@@ -27,6 +27,8 @@ import android.widget.TimePicker;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
+import com.HuskySoft.metrobike.ui.utility.HistoryAdapter;
+import com.HuskySoft.metrobike.ui.utility.HistoryItem;
 
 public class SearchActivity extends Activity {
 
@@ -123,8 +125,13 @@ public class SearchActivity extends Activity {
     private HistoryItem historyItemData[];
     private ProgressDialog pd;
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
@@ -134,6 +141,14 @@ public class SearchActivity extends Activity {
         setHistorySection();
     }
 
+    /**
+     * Show the menu bar when the setting button is clicked.
+     * 
+     * @param menu
+     *            The options menu in which you place your items.
+     * @return true if the menu to be displayed.
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public final boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -160,7 +175,7 @@ public class SearchActivity extends Activity {
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     private void setInitialText() {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         String hourString = "";

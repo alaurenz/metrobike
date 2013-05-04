@@ -18,7 +18,9 @@ public class DetailsActivity extends Activity {
 
     /**
      * onCreate function of DetailsActivity class Display the details of
-     * metroBike search
+     * metroBike search.
+     * 
+     * {@inheritDoc}
      * 
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
@@ -67,47 +69,49 @@ public class DetailsActivity extends Activity {
     }
 
     /**
+     * Direct to navigate page.
      * 
      * @param view
      *            : the view of the button onClick function of the go to
      *            Navigate button
      */
-    public void goToNavigate(View view) {
+    public final void goToNavigate(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, NavigateActivity.class);
         startActivity(intent);
     }
 
     /**
+     * Direct to search page.
      * 
      * @param view
-     *            : the view of the button onClick function of the return to
+     *            the view of the button onClick function of the return to
      *            search page button
      */
-    public void goToSearchPage(View view) {
+    public final void goToSearchPage(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 
     /**
+     * Direct to result page.
      * 
      * @param view
-     *            : the view of the button onClick function for the return to
+     *            the view of the button onClick function for the return to
      *            result page button
      */
 
-    public void goToResults(View view) {
+    public final void goToResults(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, ResultsActivity.class);
         startActivity(intent);
     }
 
     /**
-     * 
-     * helper function that sets up the details of a route
+     * helper function that sets up the details of a route.
      */
     private void setDetails() {
-        // sets up details
+        // TODO sets up details
     }
 }

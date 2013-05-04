@@ -20,8 +20,6 @@ import com.HuskySoft.metrobike.R;
 public class MainActivity extends Activity {
 
     /*
-     * This code passes the checkStyle
-     * 
      * Feature added in Beta version: Google map on this screen. Rearrange
      * buttons. Create android life cycle methods such as onBackPressed().
      */
