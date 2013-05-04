@@ -132,8 +132,11 @@ public final class Location implements Serializable {
     
     @Override
     public String toString() {
-        // TODO: Make this toString meaningful and easy to read (if possible).
-        return super.toString();
+        StringBuilder locationString = new StringBuilder();
+        locationString.append("Location:\n");
+        locationString.append("Latitude: " + latitude + "\n");
+        locationString.append("Longitude: " + longitude + "\n");
+        return locationString.toString();
     }
 
     @Override

@@ -324,8 +324,21 @@ public final class Step implements Serializable {
 
     @Override
     public String toString() {
-        // TODO: Make this toString meaningful and easy to read (if possible).
-        return super.toString();
+        StringBuilder stepToString = new StringBuilder();
+        stepToString.append("Step\n");
+        stepToString.append("distanceInMeters: " + distanceInMeters + "\n");
+        stepToString.append("durationInSeconds: " + durationInSeconds + "\n");
+        stepToString.append("startLocation: " + startLocation.toString() + "\n");
+        stepToString.append("endLocation: " + endLocation.toString() + "\n");
+        stepToString.append("travelMode: " + travelMode.toString() + "\n");
+        stepToString.append("htmlInstruction: " + htmlInstruction + "\n");
+        stepToString.append("polyLinePoints: " + polyLinePoints + "\n");
+        stepToString.append(Utility.getSubstepsAsString(substeps) + "\n");
+        
+        
+        
+        
+        return stepToString.toString();
     }
 
     /**

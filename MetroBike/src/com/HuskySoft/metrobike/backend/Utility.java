@@ -281,4 +281,39 @@ public class Utility {
         }
         return response.toString();
     }
+
+    /**
+     * This pretty prints out an list as a String
+     * 
+     * @param solutions a list of solutions.
+     * @return a String representation of the solutions.
+     */
+    public static String arrayListPrettyPrint(List<Route> solutions) {
+        StringBuilder listAsString = new StringBuilder();
+        for(int i = 0; i < solutions.size(); i++) {
+            listAsString.append(i + ": " + solutions.get(i) + "\n");
+        }
+        return listAsString.toString();
+    }
+    
+    /**
+     * This recursively converts a list of substeps into a String 
+     * representation
+     * 
+     * @param substeps A list of substeps.
+     * @return A String representation of the substeps.
+     */
+    public static String getSubstepsAsString(List<Step> substeps) {
+        if(substeps == null || substeps.size() == 0) {
+            return "";
+        }
+        
+        StringBuilder substepString = new StringBuilder();
+        for(int i = 0; i < substeps.size(); i++) {
+            substepString.append(substeps.get(i).toString());
+        }
+        
+        return substepString.toString();
+    }
+
 }

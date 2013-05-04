@@ -229,15 +229,17 @@ public final class DirectionsRequest implements Serializable {
          */
         private static final long serialVersionUID = 0L;
 
+        private String Tag = "DirectionsRequest";
+        
         /**
          * The starting location that the user wants directions from.
          */
-        private String startAddress;
+        private String startAddress = null;
 
         /**
          * The ending location that the user wants directions to.
          */
-        private String endAddress;
+        private String endAddress = null;
 
         /**
          * Time the user would like to arrive at their destination. If this is
@@ -263,25 +265,25 @@ public final class DirectionsRequest implements Serializable {
          * An optional field. It sets a minimum distance the user would like to
          * bike.
          */
-        private long minDistanceToBikeInMeters;
+        private long minDistanceToBikeInMeters = 0;
 
         /**
          * An optional field. It sets the maximum distance the user would like
          * to bike. (In case they are exercise averse)
          */
-        private long maxDistanceToBikeInMeters;
+        private long maxDistanceToBikeInMeters = 0;
 
         /**
          * An optional field. The minimum number of bus transfers to have. In
          * case they like multiple transfers.
          */
-        private int minNumberBusTransfers;
+        private int minNumberBusTransfers = 0;
 
         /**
          * An optional field. Setting the maximum number of bus transfers in
          * case the user doesn't want routes with lots of transfers.
          */
-        private int maxNumberBusTransfers;
+        private int maxNumberBusTransfers = 0;
 
         /**
          * @return the startAddress
@@ -351,7 +353,38 @@ public final class DirectionsRequest implements Serializable {
          * the doRequest call.
          */
         public void validateParameters() {
-            // TODO write this method
+            if(startAddress == null) {
+                Log.e(Tag, "startAddress is null.");
+            }
+            
+            if(endAddress == null) {
+                Log.e(Tag, "endAddress is null.");
+            }
+            
+            if(travelMode == TravelMode.UNKNOWN) {
+                Log.e(Tag, "travelMode is TravelMode.UNKNOWN.");
+            //Including walking since the Algorithm switch statements 
+            //don't check for walking. 
+            } else if(travelMode == TravelMode.WALKING) {
+                Log.e(Tag, "travelMode is TravelMode.WALKING.");
+            }
+            
+            //Not checking if the departure time is valid (if set) 
+            //as google lets you set times in the past.
+            
+            //Not really anyway to validate the optional parameters
+            //(Max and min bus transfers and max and min distance to bike)
+            
+            //Printing out the parameters for debug purposes
+            Log.v(Tag, "StartAddress: " + startAddress);
+            Log.v(Tag, "EndAddress: " + endAddress);
+            Log.v(Tag, "ArrivalTime: " + arrivalTime);
+            Log.v(Tag, "DepartureTime: " + departureTime);
+            Log.v(Tag, "TravelMode: " + travelMode);
+            Log.v(Tag, "MinDistanceToBikeInMeters: " + minDistanceToBikeInMeters);
+            Log.v(Tag, "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
+            Log.v(Tag, "MinNumberBusTransfers: " + minNumberBusTransfers);
+            Log.v(Tag, "MaxNumberBusTransfers: " + maxNumberBusTransfers);
         }
 
         /**
@@ -404,6 +437,21 @@ public final class DirectionsRequest implements Serializable {
             maxDistanceToBikeInMeters = in.readLong();
             minNumberBusTransfers = in.readInt();
             maxNumberBusTransfers = in.readInt();
+        }
+        
+        @Override
+        public String toString() {
+            return "RequestParameters:" 
+                    + "\nstartAddress: " + startAddress 
+                    + "\nendAddress: " + endAddress
+                    + "\narrivalTime: " + arrivalTime
+                    + "\ndepartureTime: " + departureTime
+                    + "\ntravelMode: " + travelMode.toString()
+                    + "\nminDistanceToBikeInMeters: " + minDistanceToBikeInMeters
+                    + "\nmaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters
+                    + "\nminNumberBusTransfers: " + minNumberBusTransfers
+                    + "\nmaxNumberBusTransfers: " + maxNumberBusTransfers 
+                    + "\n";
         }
 
     }
@@ -555,8 +603,9 @@ public final class DirectionsRequest implements Serializable {
 
     @Override
     public String toString() {
-        // TODO: Make this toString meaningful and easy to read (if possible).
-        return super.toString();
+        return "DirectionsRequest: "
+                + myParams.toString()
+                + "solutions: " + Utility.arrayListPrettyPrint(solutions);
     }
 
     /**

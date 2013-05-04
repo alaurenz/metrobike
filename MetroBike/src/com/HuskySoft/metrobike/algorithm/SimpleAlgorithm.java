@@ -24,6 +24,7 @@ public final class SimpleAlgorithm extends AlgorithmWorker {
     public void findRoutes(final RequestParameters toProcess) {
         clearErrors();
         clearResults();
+        toProcess.validateParameters();
 
         try {
             switch (toProcess.getTravelMode()) {
