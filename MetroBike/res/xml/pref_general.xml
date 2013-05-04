@@ -25,6 +25,13 @@
             android:key="version_key"
             android:selectable="false"
             android:title="@string/pref_title_version" />
+        
+        <EditTextPreference
+            android:defaultValue="@string/pref_detail_locate"
+            android:key="locate_key"
+            android:selectable="false"
+            android:title="@string/pref_title_locate" />
+        
     </PreferenceCategory>
 
     <!-- History category -->

@@ -1,9 +1,6 @@
 package com.HuskySoft.metrobike.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -24,26 +21,22 @@ import com.HuskySoft.metrobike.R;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  * 
- * modified by Sam Wilson
+ * @author Sam Wilson
  */
 public class SettingsActivity extends PreferenceActivity {
-    /**
-     * Determines whether to always show the simplified settings UI, where
-     * settings are presented in a single list. When false, settings are shown
-     * as a master/detail two-pane view on tablets. When true, a single pane is
-     * shown on tablets.
-     */
-    private static final boolean ALWAYS_SIMPLE_PREFS = false;
-
     /*
-     * noted that if you going to change these strings, you also need to change
-     * them in the string_activity_setting.xml
+     * noted that if you going to change the strings in the instance field, you
+     * also need to change them in the string_activity_setting.xml
      */
-
     /**
      * the xml key of version tab.
      */
     private static final String VERSION = "version_key";
+
+    /**
+     * the xml key of locate tab.
+     */
+    private static final String LOCATE = "locate_key";
 
     /**
      * the xml key of clear history tab.
@@ -62,6 +55,8 @@ public class SettingsActivity extends PreferenceActivity {
 
     /**
      * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onPostCreate(android.os.Bundle)
      */
     @Override
     protected final void onPostCreate(final Bundle savedInstanceState) {
@@ -76,10 +71,6 @@ public class SettingsActivity extends PreferenceActivity {
      */
     @SuppressWarnings("deprecation")
     private void setupSimplePreferencesScreen() {
-        if (!isSimplePreferences(this)) {
-            return;
-        }
-
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
 
@@ -87,6 +78,7 @@ public class SettingsActivity extends PreferenceActivity {
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(VERSION));
+        bindPreferenceSummaryToValue(findPreference(LOCATE));
         // this is binding the button
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));
@@ -131,43 +123,6 @@ public class SettingsActivity extends PreferenceActivity {
         }
     };
 
-    /** {@inheritDoc} */
-    @Override
-    public final boolean onIsMultiPane() {
-        return isXLargeTablet(this) && !isSimplePreferences(this);
-    }
-
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     * 
-     * @param context
-     *            this context view
-     * @return true if user using a XLarge tablet
-     */
-    private static boolean isXLargeTablet(final Context context) {
-        return (context.getResources().getConfiguration().screenLayout 
-                & Configuration.SCREENLAYOUT_SIZE_MASK) 
-                    >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
-
-    /**
-     * Determines whether the simplified settings UI should be shown. This is
-     * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
-     * doesn't have newer APIs like {@link PreferenceFragment}, or the device
-     * doesn't have an extra-large screen. In these cases, a single-pane
-     * "simplified" settings UI should be shown.
-     * 
-     * @param context
-     *            this context view
-     * @return true if this preference format is simple
-     */
-    private static boolean isSimplePreferences(final Context context) {
-        return ALWAYS_SIMPLE_PREFS
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
-                || !isXLargeTablet(context);
-    }
-
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -192,9 +147,6 @@ public class SettingsActivity extends PreferenceActivity {
                 } else {
                     preference.setSummary(null);
                 }
-                // preference
-                // .setSummary(index >= 0 ? listPreference.getEntries()[index]
-                // : null);
 
             } else {
                 // For all other preferences, set the summary to the value's
@@ -219,15 +171,12 @@ public class SettingsActivity extends PreferenceActivity {
      */
     private void bindPreferenceSummaryToValue(final Preference preference) {
         // Set the listener to watch for value changes.
-        preference
-            .setOnPreferenceChangeListener(bindToValueListener);
+        preference.setOnPreferenceChangeListener(bindToValueListener);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        bindToValueListener.onPreferenceChange(
-                preference,
-                PreferenceManager.getDefaultSharedPreferences(
-                        preference.getContext()).getString(preference.getKey(),
-                        ""));
+        bindToValueListener.onPreferenceChange(preference, PreferenceManager
+                .getDefaultSharedPreferences(preference.getContext())
+                .getString(preference.getKey(), ""));
     }
 }

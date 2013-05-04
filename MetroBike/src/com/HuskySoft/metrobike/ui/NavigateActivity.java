@@ -22,7 +22,7 @@ import android.view.View;
  */
 
 public class NavigateActivity extends Activity {
-	
+
 	/**
      * Results from the search.
      */
@@ -61,15 +61,23 @@ public class NavigateActivity extends Activity {
     }
 
     /**
-     * Invoked when user click setting button in the menu.
+     * this method will be called when user click buttons in the setting menu.
      * 
-     * @param menuItem
-     *            the items in the menu bar
+     * @param item
+     *            the menu item that user will click
+     * @return true if user select an item
      */
-    public final void goToSettingsPage(final MenuItem menuItem) {
-        // start the settings activity
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+    @Override
+    public final boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.action_settings:
+            // user click the setting button, start the settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     /**

@@ -6,17 +6,19 @@ import android.os.Bundle;
 import android.app.Activity;
 
 /**
- * This is a about activity which shows the HuskySoft logo, copyright,
- * developer's name and more.
+ * This is a about activity which shows the HuskySoft logo, copyright
+ * information, developer's name and more.
  * 
  * @author Sam Wilson
  */
 public class AboutActivity extends Activity {
 
-    // incomplete class, more details will added in this about activity
+    // More details will added in this about activity in beta
+    // version
 
     /**
      * {@inheritDoc}
+     * @see android.app.Activity#onCreate(android.os.Bundle)
      */
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
