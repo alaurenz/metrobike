@@ -605,7 +605,7 @@ public final class DirectionsRequest implements Serializable {
     public String toString() {
         return "DirectionsRequest: "
                 + myParams.toString()
-                + "solutions: " + Utility.arrayListPrettyPrint(solutions);
+                + "solutions: " + Utility.listPrettyPrint(solutions, 0);
     }
 
     /**

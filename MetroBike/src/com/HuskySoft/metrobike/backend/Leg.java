@@ -47,6 +47,17 @@ public final class Leg implements Serializable {
      * The list of steps to complete this leg.
      */
     private List<Step> stepList;
+    
+    /**
+     * The amount to indent.
+     */
+    private final int indent = 2;
+    
+    /**
+     * The actual indented string.
+     */
+    private final String indentString = Utility.getIndentString() + Utility.getIndentString();
+    
 
     /**
      * Constructs an empty Leg.
@@ -201,8 +212,13 @@ public final class Leg implements Serializable {
 
     @Override
     public String toString() {
-        // TODO: Make this toString meaningful and easy to read (if possible).
-        return super.toString();
+        String extraIndent = indentString + Utility.getIndentString();
+        StringBuilder legString = new StringBuilder(Utility.getIndentString() + "Leg:\n");
+        legString.append(extraIndent + "startAddress: " + startAddress + "\n");
+        legString.append(extraIndent + "endAddress: " + endAddress + "\n");
+        legString.append(extraIndent + "stepList:\n");
+        legString.append(Utility.getSubstepsAsString(stepList, indent + 2));
+        return legString.toString();
     }
 
     /**

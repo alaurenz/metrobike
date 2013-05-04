@@ -70,6 +70,16 @@ public final class Step implements Serializable {
     private List<Step> substeps;
 
     /**
+     * The amount to indent.
+     */
+    private int indent = 0;
+
+    /**
+     * The actual indented string.
+     */
+    private String indentString = "";
+
+    /**
      * Constructs an empty Step.
      */
     public Step() {
@@ -92,39 +102,29 @@ public final class Step implements Serializable {
      * @throws JSONException
      * 
      */
-    public static Step buildStepFromJSON(final JSONObject jsonStep)
-            throws JSONException {
+    public static Step buildStepFromJSON(final JSONObject jsonStep) throws JSONException {
         Step newStep = new Step();
 
         // Set the distance.
-        JSONObject distance = jsonStep
-                .getJSONObject(WebRequestJSONKeys.DISTANCE.getLowerCase());
-        newStep.setDistanceInMeters(distance.getLong(WebRequestJSONKeys.VALUE
-                .getLowerCase()));
+        JSONObject distance = jsonStep.getJSONObject(WebRequestJSONKeys.DISTANCE.getLowerCase());
+        newStep.setDistanceInMeters(distance.getLong(WebRequestJSONKeys.VALUE.getLowerCase()));
 
         // Set the duration.
-        JSONObject duration = jsonStep
-                .getJSONObject(WebRequestJSONKeys.DURATION.getLowerCase());
-        newStep.setDurationInSeconds(duration.getLong(WebRequestJSONKeys.VALUE
-                .getLowerCase()));
+        JSONObject duration = jsonStep.getJSONObject(WebRequestJSONKeys.DURATION.getLowerCase());
+        newStep.setDurationInSeconds(duration.getLong(WebRequestJSONKeys.VALUE.getLowerCase()));
 
         // Set the start location.
-        JSONObject tempStartLocation = jsonStep
-                .getJSONObject(WebRequestJSONKeys.START_LOCATION
-                        .getLowerCase());
-        double startLat = tempStartLocation.getDouble(WebRequestJSONKeys.LAT
+        JSONObject tempStartLocation = jsonStep.getJSONObject(WebRequestJSONKeys.START_LOCATION
                 .getLowerCase());
-        double startLng = tempStartLocation.getDouble(WebRequestJSONKeys.LNG
-                .getLowerCase());
+        double startLat = tempStartLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase());
+        double startLng = tempStartLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase());
         newStep.setStartLocation(new Location(startLat, startLng));
 
         // Set the end location.
-        JSONObject tempEndLocation = jsonStep
-                .getJSONObject(WebRequestJSONKeys.END_LOCATION.getLowerCase());
-        double endLat = tempEndLocation.getDouble(WebRequestJSONKeys.LAT
+        JSONObject tempEndLocation = jsonStep.getJSONObject(WebRequestJSONKeys.END_LOCATION
                 .getLowerCase());
-        double endLng = tempEndLocation.getDouble(WebRequestJSONKeys.LNG
-                .getLowerCase());
+        double endLat = tempEndLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase());
+        double endLng = tempEndLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase());
         newStep.setEndLocation(new Location(endLat, endLng));
 
         // Set the substeps if they exist.
@@ -134,8 +134,7 @@ public final class Step implements Serializable {
             JSONArray substepsArray = jsonStep
                     .getJSONArray(WebRequestJSONKeys.STEPS.getLowerCase());
             for (int i = 0; i < substepsArray.length(); i++) {
-                Step currentSubstep = Step.buildStepFromJSON(substepsArray
-                        .getJSONObject(i));
+                Step currentSubstep = Step.buildStepFromJSON(substepsArray.getJSONObject(i));
                 substeps.add(currentSubstep);
             }
 
@@ -143,24 +142,22 @@ public final class Step implements Serializable {
         }
 
         // Set the travel mode.
-        String stringTravelMode = jsonStep
-                .getString(WebRequestJSONKeys.TRAVEL_MODE.getLowerCase());
+        String stringTravelMode = jsonStep.getString(WebRequestJSONKeys.TRAVEL_MODE.getLowerCase());
         newStep.setTravelMode(TravelMode.valueOf(stringTravelMode));
 
         // Set the HTMLInstructions
-        if (jsonStep.has(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase())){
-            String tempHtmlInstruction = jsonStep
-                    .getString(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase());
+        if (jsonStep.has(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase())) {
+            String tempHtmlInstruction = jsonStep.getString(WebRequestJSONKeys.HTML_INSTRUCTIONS
+                    .getLowerCase());
             newStep.setHtmlInstruction(tempHtmlInstruction);
         } else {
-            Log.w("","No HTML instructions in this step!");
+            Log.w("", "No HTML instructions in this step!");
         }
 
         // Set the PolyLine Points
         JSONObject tempPolyLine = jsonStep
                 .getJSONObject(WebRequestJSONKeys.POLYLINE.getLowerCase());
-        String tempPoints = tempPolyLine.getString(WebRequestJSONKeys.POINTS
-                .getLowerCase());
+        String tempPoints = tempPolyLine.getString(WebRequestJSONKeys.POINTS.getLowerCase());
         newStep.setPolyLinePoints(tempPoints);
 
         return newStep;
@@ -324,21 +321,30 @@ public final class Step implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder stepToString = new StringBuilder();
-        stepToString.append("Step\n");
-        stepToString.append("distanceInMeters: " + distanceInMeters + "\n");
-        stepToString.append("durationInSeconds: " + durationInSeconds + "\n");
-        stepToString.append("startLocation: " + startLocation.toString() + "\n");
-        stepToString.append("endLocation: " + endLocation.toString() + "\n");
-        stepToString.append("travelMode: " + travelMode.toString() + "\n");
-        stepToString.append("htmlInstruction: " + htmlInstruction + "\n");
-        stepToString.append("polyLinePoints: " + polyLinePoints + "\n");
-        stepToString.append(Utility.getSubstepsAsString(substeps) + "\n");
-        
-        
-        
-        
-        return stepToString.toString();
+        String extraIndent = indentString + Utility.getIndentString();
+        StringBuilder stepString = new StringBuilder();
+        stepString.append(indentString + "Step\n");
+        stepString.append(extraIndent + "distanceInMeters: " + distanceInMeters + "\n");
+        stepString.append(extraIndent + "durationInSeconds: " + durationInSeconds + "\n");
+        startLocation.setIndent(indent + 1);
+        stepString.append(extraIndent + "startLocation: " + startLocation.toString() + "\n");
+        endLocation.setIndent(indent + 1);
+        stepString.append(extraIndent + "endLocation: " + endLocation.toString() + "\n");
+        stepString.append(extraIndent + "travelMode: " + travelMode.toString() + "\n");
+        stepString.append(extraIndent + "htmlInstruction: " + htmlInstruction + "\n");
+        stepString.append(extraIndent + "polyLinePoints: " + polyLinePoints + "\n");
+        stepString.append(extraIndent + "substepList:\n");
+        stepString.append(Utility.getSubstepsAsString(substeps, indent + 2));
+
+        return stepString.toString();
+    }
+
+    public void setIndent(int indent) {
+        this.indent = indent;
+        indentString = "";
+        for (int i = 0; i < indent; i++) {
+            indentString = Utility.getIndentString();
+        }
     }
 
     /**
@@ -373,8 +379,7 @@ public final class Step implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
-    private void readObject(final ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
         // in future versions.

@@ -40,6 +40,16 @@ public final class Location implements Serializable {
     private double longitude;
 
     /**
+     * The amount to indent.
+     */
+    private int indent = 0;
+    
+    /**
+     * The actual indented string.
+     */
+    private String indentString = "";
+    
+    /**
      * Constructs a new (immutable) Location with the given coordinates.
      * 
      * @param lat
@@ -130,12 +140,26 @@ public final class Location implements Serializable {
                 one.longitude, two.longitude));
     }
     
+    /**
+     * Setter for the indent field.
+     * 
+     * @param indent the new indent value.
+     */
+    public void setIndent(int indent) {
+        this.indent = indent;
+        indentString = "";
+        for(int i = 0; i < indent; i++) {
+            indentString = Utility.getIndentString();
+        }
+    }
+    
     @Override
     public String toString() {
         StringBuilder locationString = new StringBuilder();
-        locationString.append("Location:\n");
-        locationString.append("Latitude: " + latitude + "\n");
-        locationString.append("Longitude: " + longitude + "\n");
+        String extraIndent = indentString + Utility.getIndentString();
+        locationString.append(indentString + "Location:\n");
+        locationString.append(extraIndent + "Latitude: " + latitude + "\n");
+        locationString.append(extraIndent + "Longitude: " + longitude + "\n");
         return locationString.toString();
     }
 

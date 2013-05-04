@@ -237,8 +237,16 @@ public final class Route implements Serializable {
 
     @Override
     public String toString() {
-        // TODO: Make this toString meaningful and easy to read (if possible).
-        return super.toString();
+        StringBuilder routeString = new StringBuilder("Route:\n");
+        routeString.append(Utility.getIndentString() + "neBound: " + neBound + "\n");
+        routeString.append(Utility.getIndentString() + "swBound: " + swBound + "\n");
+        routeString.append(Utility.getIndentString() + "polylinePoints: " + polylinePoints + "\n");
+        routeString.append(Utility.getIndentString() + "summary: " + summary + "\n");
+        routeString.append(Utility.getIndentString() + "Warnings:\n");
+        routeString.append(Utility.listPrettyPrint(warnings, 2));
+        routeString.append(Utility.getIndentString() + "legList:\n");
+        routeString.append(Utility.getLegsAsString(legList));
+        return routeString.toString();
     }
     
     /**

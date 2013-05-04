@@ -55,6 +55,11 @@ public class Utility {
     private static final String URL_ENCODING_CHARSET_NAME = "UTF-8";
 
     /**
+     * The default size for what a single indent is. (For the toString Methods)
+     */
+    private static final String INDENT_STRING = "    ";
+    
+    /**
      * 
      * @author Jaylen
      * 
@@ -283,15 +288,20 @@ public class Utility {
     }
 
     /**
-     * This pretty prints out an list as a String
+     * This pretty prints out a list as a String
      * 
-     * @param solutions a list of solutions.
-     * @return a String representation of the solutions.
+     * @param list the list to print.
+     * @return a String representation of the list.
      */
-    public static String arrayListPrettyPrint(List<Route> solutions) {
+    public static String listPrettyPrint(List<?> list, int indent) {        
+        String indentString = "";
+        for(int i = 0; i < indent; i++) {
+            indentString += INDENT_STRING;
+        }
+        
         StringBuilder listAsString = new StringBuilder();
-        for(int i = 0; i < solutions.size(); i++) {
-            listAsString.append(i + ": " + solutions.get(i) + "\n");
+        for(int i = 0; i < list.size(); i++) {
+            listAsString.append(indentString + i + ": " + list.get(i) + "\n");
         }
         return listAsString.toString();
     }
@@ -303,17 +313,42 @@ public class Utility {
      * @param substeps A list of substeps.
      * @return A String representation of the substeps.
      */
-    public static String getSubstepsAsString(List<Step> substeps) {
+    public static String getSubstepsAsString(List<Step> substeps, int indent) {
         if(substeps == null || substeps.size() == 0) {
             return "";
         }
         
         StringBuilder substepString = new StringBuilder();
         for(int i = 0; i < substeps.size(); i++) {
+            substeps.get(i).setIndent(indent);
             substepString.append(substeps.get(i).toString());
         }
         
         return substepString.toString();
+    }
+    
+    /**
+     * This recursively converts a list of substeps into a String 
+     * representation
+     * 
+     * @param legs A list of substeps.
+     * @return A String representation of the substeps.
+     */
+    public static String getLegsAsString(List<Leg> legs) {
+        if(legs == null || legs.size() == 0) {
+            return "";
+        }
+        
+        StringBuilder substepString = new StringBuilder();
+        for(int i = 0; i < legs.size(); i++) {
+            substepString.append(legs.get(i).toString());
+        }
+        
+        return substepString.toString();
+    }
+    
+    public static String getIndentString() {
+        return INDENT_STRING;
     }
 
 }
