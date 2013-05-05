@@ -160,8 +160,9 @@ public final class Step implements Serializable {
 
         // Parse the polyline!
         // TODO think about the kinds of errors we could get here
-        List<Location> polyList = com.jeffreysambells.polyline.Utility.decodePoly(tempPoints);
-        newStep.setPolyLinePoints(polyList);
+        // TODO figure out how to handle the sheer size of this
+        //List<Location> polyList = com.jeffreysambells.polyline.Utility.decodePoly(tempPoints);
+        newStep.setPolyLinePoints(new ArrayList<Location>());
 
         return newStep;
     }
