@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.GoogleMapsResponseStatusCodes;
 import com.HuskySoft.metrobike.backend.Route;
@@ -32,9 +33,25 @@ public abstract class AlgorithmWorker {
     private static final String TAG = "AlgorithmWorker(Abstract)";
 
     /**
+     * The maximum number of consecutive attempts to contact the Google server.
+     */
+    private static final int MAX_CONNECTION_ATTEMPTS = 5;
+
+    /**
+     * The time in milliseconds to wait between retries.
+     */
+    private static final long CONNECTION_RETRY_DELAY_MS = 500;
+
+    /**
      * Holds any error message(s) generated during algorithm execution.
      */
     private String errorMessages = null;
+
+    /**
+     * The most recent status of this request; multiple errors are ignored, only
+     * the most recent is stored here.
+     */
+    private DirectionsStatus mostRecentStatus = DirectionsStatus.NOT_YET_COMPLETE;
 
     /**
      * Holds the routes found/built by the worker.
@@ -46,9 +63,9 @@ public abstract class AlgorithmWorker {
      * 
      * @param toProcess
      *            the RequestParameters object describing the search to make
-     * 
+     * @return the final status of the findRoutes process
      */
-    public abstract void findRoutes(DirectionsRequest.RequestParameters toProcess);
+    public abstract DirectionsStatus findRoutes(DirectionsRequest.RequestParameters toProcess);
 
     /**
      * Returns true if there was an error, false otherwise.
@@ -56,7 +73,7 @@ public abstract class AlgorithmWorker {
      * @return true if there was an error, false otherwise
      */
     public final boolean hasErrors() {
-        return errorMessages != null;
+        return mostRecentStatus.isError();
     }
 
     /**
@@ -64,9 +81,11 @@ public abstract class AlgorithmWorker {
      * 
      * @param theError
      *            the message to add
+     * 
+     * @return the error that was passed in
      */
-    protected final void addError(final AlgorithmError theError) {
-        addError(theError, null);
+    protected final DirectionsStatus addError(final DirectionsStatus theError) {
+        return addError(theError, null);
     }
 
     /**
@@ -76,8 +95,10 @@ public abstract class AlgorithmWorker {
      *            the message to add
      * @param extraDetails
      *            any extra information
+     * @return the error that was passed in
      */
-    protected final void addError(final AlgorithmError theError, final String extraDetails) {
+    protected final DirectionsStatus addError(final DirectionsStatus theError,
+            final String extraDetails) {
         String toAdd = theError.getMessage();
         if (extraDetails != null) {
             toAdd += extraDetails;
@@ -87,6 +108,10 @@ public abstract class AlgorithmWorker {
         } else {
             errorMessages = errorMessages + "\n" + toAdd;
         }
+
+        mostRecentStatus = theError;
+
+        return theError;
     }
 
     /**
@@ -101,8 +126,21 @@ public abstract class AlgorithmWorker {
     /**
      * Clears all error messages generated during algorithm execution.
      */
-    public final void clearErrors() {
+    protected final void clearErrors() {
         errorMessages = null;
+        mostRecentStatus = DirectionsStatus.NOT_YET_COMPLETE;
+    }
+
+    /**
+     * The algorithm calls this to mark the findRoutes() process successful.
+     * 
+     * @return DirectionsStatus.REQUEST_SUCCESSFUL
+     */
+    protected final DirectionsStatus markSuccessful() {
+        mostRecentStatus = DirectionsStatus.REQUEST_SUCCESSFUL;
+        errorMessages = null;
+
+        return DirectionsStatus.REQUEST_SUCCESSFUL;
     }
 
     /**
@@ -139,6 +177,16 @@ public abstract class AlgorithmWorker {
     }
 
     /**
+     * Returns the mostRecentStatus. Meant for use by individual algorithm
+     * implementations.
+     * 
+     * @return the mostRecentStatus
+     */
+    protected final DirectionsStatus getMostRecentStatus() {
+        return mostRecentStatus;
+    }
+
+    /**
      * Completes the URL query, handling any likely exceptions.
      * 
      * @param queryURL
@@ -146,11 +194,27 @@ public abstract class AlgorithmWorker {
      * @return the response from the server, or null if there is an error
      */
     protected final String doQueryWithHandling(final String queryURL) {
-        String response;
-        try {
-            response = Utility.doQuery(queryURL);
-        } catch (IOException e) {
-            addError(AlgorithmError.CONNECTION_ERROR);
+        String response = null;
+
+        int tryNum = 0;
+
+        while (response == null && tryNum < MAX_CONNECTION_ATTEMPTS) {
+            try {
+                response = Utility.doQuery(queryURL);
+            } catch (IOException e) {
+                tryNum++;
+                Log.w(TAG, "Bad connection... retrying " + (MAX_CONNECTION_ATTEMPTS - tryNum)
+                        + " more times.");
+                try {
+                    Thread.sleep(CONNECTION_RETRY_DELAY_MS);
+                } catch (InterruptedException e1) {
+                    Log.v(TAG, "Connection retry interrupted (not a problem)");
+                }
+            }
+        }
+
+        if (response == null) {
+            addError(DirectionsStatus.CONNECTION_ERROR);
             return null;
         }
         return response;
@@ -174,13 +238,14 @@ public abstract class AlgorithmWorker {
             myJSON = new JSONObject(srcJSON);
             String statusString = myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase());
             if (!statusString.equalsIgnoreCase(GoogleMapsResponseStatusCodes.OK.toString())) {
-                // TODO: Find a way to let the calling algorithm handle this error
+                // TODO: Find a way to let the calling algorithm handle this
+                // error
                 // Could even be as simple as checking for this error
-                addError(AlgorithmError.NO_RESULTS_FOUND);
+                addError(DirectionsStatus.NO_RESULTS_FOUND);
                 return null;
             }
         } catch (JSONException e) {
-            addError(AlgorithmError.PARSING_ERROR);
+            addError(DirectionsStatus.PARSING_ERROR);
             return null;
         }
 
@@ -193,7 +258,7 @@ public abstract class AlgorithmWorker {
             }
             Log.v("JSON_TEST", "Processed " + routesArray.length() + " routes!");
         } catch (JSONException e1) {
-            addError(AlgorithmError.PARSING_ERROR);
+            addError(DirectionsStatus.PARSING_ERROR);
             return null;
         }
 

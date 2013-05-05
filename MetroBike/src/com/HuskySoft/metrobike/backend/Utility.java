@@ -295,7 +295,7 @@ public final class Utility {
             while (aLine != null) {
                 response.append(aLine);
                 aLine = in.readLine();
-                Log.w(TAG, "Got line: '" + aLine + "'");
+                //Log.w(TAG, "Got line: '" + aLine + "'");
             }
             in.close();
         } finally {

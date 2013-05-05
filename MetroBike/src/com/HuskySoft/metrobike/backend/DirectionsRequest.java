@@ -38,7 +38,8 @@ public final class DirectionsRequest implements Serializable {
     private static final String TAG = "MetroBikeDirectionsRequest";
 
     /**
-     * 
+     * The request parameters object for this request, which specifies all of
+     * the important request details.
      */
     private RequestParameters myParams;
 
@@ -49,19 +50,32 @@ public final class DirectionsRequest implements Serializable {
     private List<Route> solutions;
 
     /**
+     * Holds any error message(s) generated during execution.
+     */
+    private String errorMessages;
+
+    /**
      * Constructs a new DirectionsRequest object.
      */
     public DirectionsRequest() {
         myParams = new RequestParameters();
         solutions = null;
+        errorMessages = null;
     }
 
     /**
      * Initiates the request calculation. This is a blocking call. NOTE: This
      * method is currently under heavy testing and does not currently meet style
      * guidelines. //TODO replace this dummy method with the live code.
+     * 
+     * @return the final status of the doRequest process
      */
-    public void doRequest() {
+    public DirectionsStatus doRequest() {
+
+        // First, validate our parameters!
+        if (!myParams.validateParameters()) {
+            return DirectionsStatus.INVALID_REQUEST_PARAMS;
+        }
 
         Log.w(TAG, "RUNNING ON DUMMY JSON RESPONSE");
 
@@ -82,9 +96,8 @@ public final class DirectionsRequest implements Serializable {
                                 + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
             }
         } catch (JSONException e) {
-            Log.e("JSON_TEST", "Error parsing JSON");
-            e.printStackTrace();
-            return;
+            appendErrorMessage("Error parsing JSON.");
+            return DirectionsStatus.PARSING_ERROR;
         }
 
         JSONArray routesArray;
@@ -97,10 +110,8 @@ public final class DirectionsRequest implements Serializable {
             }
             Log.v("JSON_TEST", "Processed " + routesArray.length() + " routes!");
         } catch (JSONException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            Log.e("JSON_TEST", "Error getting JSON routes");
-            return;
+            appendErrorMessage("Error parsing JSON routes.");
+            return DirectionsStatus.PARSING_ERROR;
         }
 
         Log.v("TESTING", "Total trip duration is "
@@ -117,6 +128,7 @@ public final class DirectionsRequest implements Serializable {
                 + this.getSolutions().get(0).getLegList().get(0).getStepList().get(2)
                         .getHtmlInstruction() + "'");
 
+        return DirectionsStatus.REQUEST_SUCCESSFUL;
     }
 
     /**
@@ -124,13 +136,14 @@ public final class DirectionsRequest implements Serializable {
      * method is currently under heavy testing and does not currently meet style
      * guidelines.
      * 
-     * @throws IllegalStateException
-     *             if this method is called with invalid request parameters.
+     * @return the final status of the doRequest process
      */
-    public void doLiveRequest() throws IllegalStateException {
+    public DirectionsStatus doLiveRequest() {
 
         // First, validate our parameters!
-        myParams.validateParameters();
+        if (!myParams.validateParameters()) {
+            return DirectionsStatus.INVALID_REQUEST_PARAMS;
+        }
 
         solutions = new ArrayList<Route>();
 
@@ -142,12 +155,19 @@ public final class DirectionsRequest implements Serializable {
 
         // Query the simple algorithm first
         SimpleAlgorithm firstAlg = new SimpleAlgorithm();
-        firstAlg.findRoutes(myParams);
-        if (firstAlg.hasErrors()) {
-            Log.e(TAG, "Error running SimpleAlgorithm: " + firstAlg.getErrors());
-            return;
+        DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
+        if (firstStatus.isError()) {
+            appendErrorMessage(firstAlg.getErrors());
+            return firstStatus;
         } else {
             List<Route> firstRoutes = firstAlg.getResults();
+
+            if (firstRoutes == null) {
+                Log.e(TAG, "Got null from SimpleAlgorithm without an error");
+                appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
+                return DirectionsStatus.NO_RESULTS_FOUND;
+            }
+
             solutions.addAll(firstRoutes);
         }
 
@@ -164,6 +184,8 @@ public final class DirectionsRequest implements Serializable {
         Log.v("TESTING", "The third step of the first leg is '"
                 + this.getSolutions().get(0).getLegList().get(0).getStepList().get(2)
                         .getHtmlInstruction() + "'");
+
+        return DirectionsStatus.REQUEST_SUCCESSFUL;
     }
 
     /**
@@ -319,17 +341,21 @@ public final class DirectionsRequest implements Serializable {
         }
 
         /**
-         * Is responsible for validating all of the input parameters needed by
-         * the doRequest call.
+         * Returns whether the request parameters are valid. If they are not
+         * valid, also set errors indicating the problem.
+         * 
+         * @return true if parameters are valid, false otherwise
          */
-        public void validateParameters() {
+        public boolean validateParameters() {
 
-            if (startAddress == null) {
-                throw new IllegalStateException("Start address may not be null.");
+            if (startAddress == null || startAddress.trim().isEmpty()) {
+                appendErrorMessage("Origin address may not be empty.");
+                return false;
             }
 
-            if (endAddress == null) {
-                throw new IllegalStateException("Ending address may not be null.");
+            if (endAddress == null || endAddress.trim().isEmpty()) {
+                appendErrorMessage("Destination address may not be empty.");
+                return false;
             }
 
             switch (travelMode) {
@@ -340,24 +366,38 @@ public final class DirectionsRequest implements Serializable {
             case MIXED:
                 // Check to be sure we got a time!
                 if (departureTime == 0 && arrivalTime == 0) {
-                    throw new IllegalStateException(
-                            "Directions for transit must include a departure or arrival time.");
+                    appendErrorMessage("Directions for transit must include"
+                            + " a departure or arrival time.");
+                    return false;
                 }
                 break;
             default:
                 // Including walking since the Algorithm switch statements
                 // don't check for walking.
-                throw new IllegalStateException("Unsupported desired travel mode " + travelMode);
+                appendErrorMessage("Unsupported desired travel mode " + travelMode);
+                return false;
             }
 
             // Not checking if the departure time is valid (if set)
             // as google lets you set times in the past.
 
-            // Not really anyway to validate the optional parameters
-            // (Max and min bus transfers and max and min distance to bike)
-            
-            // TODO: check to be sure none of these optional parameters are
-            // negative
+            // Validate optional parameters
+            if (minDistanceToBikeInMeters < 0 || maxDistanceToBikeInMeters < 0
+                    || minNumberBusTransfers < 0 || maxDistanceToBikeInMeters < 0) {
+                appendErrorMessage("All optional parameters (biking distance and bus transfers)"
+                        + " must be greater than or equal to zero");
+                return false;
+            }
+
+            if (minDistanceToBikeInMeters > maxDistanceToBikeInMeters) {
+                appendErrorMessage("Min > Max for distance to bike.");
+                return false;
+            }
+
+            if (minNumberBusTransfers > maxNumberBusTransfers) {
+                appendErrorMessage("Min > Max for number of transfers");
+                return false;
+            }
 
             // Printing out the parameters for debug purposes
             Log.v(RP_TAG, "StartAddress: " + startAddress);
@@ -369,6 +409,8 @@ public final class DirectionsRequest implements Serializable {
             Log.v(RP_TAG, "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
             Log.v(RP_TAG, "MinNumberBusTransfers: " + minNumberBusTransfers);
             Log.v(RP_TAG, "MaxNumberBusTransfers: " + maxNumberBusTransfers);
+
+            return true;
         }
 
         /**
@@ -562,6 +604,25 @@ public final class DirectionsRequest implements Serializable {
     public DirectionsRequest setMaxNumberBusTransfers(final int newMaxNumberBusTransfers) {
         myParams.maxNumberBusTransfers = newMaxNumberBusTransfers;
         return this;
+    }
+
+    /**
+     * @return the errorMessages. Returns null if no messages have been set.
+     */
+    public String getErrorMessages() {
+        return errorMessages;
+    }
+
+    /**
+     * @param errorMessage
+     *            the errorMessage to add
+     */
+    private void appendErrorMessage(final String errorMessage) {
+        if (errorMessages == null) {
+            errorMessages = errorMessage;
+        } else {
+            errorMessages = errorMessages + "\n" + errorMessage;
+        }
     }
 
     /**

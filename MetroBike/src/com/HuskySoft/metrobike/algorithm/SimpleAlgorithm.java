@@ -3,6 +3,7 @@ package com.HuskySoft.metrobike.algorithm;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.DirectionsRequest.RequestParameters;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Utility;
@@ -17,13 +18,10 @@ import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
 public final class SimpleAlgorithm extends AlgorithmWorker {
 
     /**
-     * Runs the algorithm on the RequestParameters.
-     * 
-     * @param toProcess
-     *            the RequestParameters object describing the search to make
+     * {@inheritDoc}
      */
     @Override
-    public void findRoutes(final RequestParameters toProcess) {
+    public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
         clearResults();
 
@@ -40,14 +38,25 @@ public final class SimpleAlgorithm extends AlgorithmWorker {
                 addTransitResults(toProcess);
                 break;
             default:
-                addError(AlgorithmError.UNSUPPORTED_TRAVEL_MODE_ERROR, ": "
+                addError(DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR, ": "
                         + toProcess.getTravelMode().toString());
                 break;
             }
         } catch (UnsupportedEncodingException e) {
-            addError(AlgorithmError.UNSUPPORTED_CHARSET);
-            return;
+            return addError(DirectionsStatus.UNSUPPORTED_CHARSET);
         }
+
+        // If we got no results, return the appropriate status code
+        if (getResults() == null || getResults().size() == 0) {
+            if (!hasErrors()) {
+                // If we didn't notice not getting results somehow, add this
+                // error manually.
+                addError(DirectionsStatus.NO_RESULTS_FOUND);
+            }
+            return getMostRecentStatus();
+        }
+
+        return markSuccessful();
     }
 
     /**
@@ -63,8 +72,9 @@ public final class SimpleAlgorithm extends AlgorithmWorker {
             throws UnsupportedEncodingException {
         // Build the query string
         String queryString;
-        queryString = Utility.buildBicycleQueryString(
-                toProcess.getStartAddress(), toProcess.getEndAddress(), true);
+        queryString =
+                Utility.buildBicycleQueryString(toProcess.getStartAddress(),
+                        toProcess.getEndAddress(), true);
 
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
@@ -104,9 +114,9 @@ public final class SimpleAlgorithm extends AlgorithmWorker {
             routeTime = toProcess.getDepartureTime();
         }
 
-        String queryString = Utility.buildTransitQueryString(
-                toProcess.getStartAddress(), toProcess.getEndAddress(),
-                routeTime, timeMode, true);
+        String queryString =
+                Utility.buildTransitQueryString(toProcess.getStartAddress(),
+                        toProcess.getEndAddress(), routeTime, timeMode, true);
 
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
