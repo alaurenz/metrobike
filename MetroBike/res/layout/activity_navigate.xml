@@ -13,6 +13,7 @@
         android:layout_height="50dip"
         android:layout_gravity="bottom|left"
         android:layout_marginBottom="15dip"
+        android:layout_marginLeft="10dip"
         android:orientation="horizontal"
         android:weightSum="1.0" >
 
@@ -21,6 +22,8 @@
             style="@style/button"
             android:layout_weight=".33"
             android:onClick="goToSearchPage"
+            android:textSize="18sp"
+            android:padding="0dp"
             android:text="@string/button_go_to_search" />
 
         <Button
@@ -28,6 +31,8 @@
             style="@style/button"
             android:layout_weight=".34"
             android:onClick="goToDetail"
+            android:textSize="18sp"
+            android:padding="0dp"
             android:text="@string/button_go_to_detail" />
 
         <Button
@@ -35,6 +40,8 @@
             style="@style/button"
             android:layout_weight=".33"
             android:onClick="goToResults"
+            android:textSize="18sp"
+            android:padding="0dp"
             android:text="@string/button_go_to_results" />
     </LinearLayout>
 

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -70,24 +69,20 @@ public class ResultsActivity extends Activity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setTitle("Result");
 
         // get the solution from the search activity
         @SuppressWarnings("unchecked")
-        List<Route> recievedRoutes = (ArrayList<Route>) getIntent()
-                .getSerializableExtra("List of Routes");
+        List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(
+                "List of Routes");
 
         // set the default route to be the first route of the solution
 
         setContentView(R.layout.activity_results);
         if (recievedRoutes != null) {
             routes = (ArrayList<Route>) recievedRoutes;
-            currRoute = (Integer) getIntent().getSerializableExtra(
-                    "Current Route Index");
+            currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");
             addRouteButtons();
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(
-                    R.id.map)).getMap();
+            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
             drawRoute();
         }
     }
@@ -218,47 +213,45 @@ public class ResultsActivity extends Activity {
      */
     private void drawRoute() {
         if (currRoute >= 0 && currRoute < routes.size()) {
+            //clear the map drawing first
             mMap.clear();
+            
+            //get the source and destination
             List<Leg> legs = routes.get(currRoute).getLegList();
             Location start = legs.get(0).getStartLocation();
             Location end = legs.get(legs.size() - 1).getStepList()
-                    .get(legs.get(legs.size() - 1).getStepList().size() - 1)
-                    .getEndLocation();
+                    .get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
 
+            //draw Markers for starting and ending points
             mMap.addMarker(new MarkerOptions()
-                    .position(
-                            new LatLng(start.getLatitude(), start
-                                    .getLongitude()))
+                    .position(new LatLng(start.getLatitude(), start.getLongitude()))
                     .title("Start Here!")
-                    .icon(BitmapDescriptorFactory
-                            .fromResource(R.drawable.starting)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
 
             mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(end.getLatitude(), end.getLongitude()))
-                    .title("End Here!")
-                    .icon(BitmapDescriptorFactory
-                            .fromResource(R.drawable.ending)));
-
+                    .position(new LatLng(end.getLatitude(), end.getLongitude())).title("End Here!")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
+            
+            
+            //calculate the position that the camera should focus
             double cameraLatitude = (start.getLatitude() + end.getLatitude()) / 2;
             double cameraLongitude = (start.getLongitude() + end.getLongitude()) / 2;
-
+            
+            //draw Poly-line on the map
             PolylineOptions polylineOptions = new PolylineOptions();
             for (Leg l : legs) {
                 for (Step s : l.getStepList()) {
-                    polylineOptions = polylineOptions.add(new LatLng(s
-                            .getStartLocation().getLatitude(), s
-                            .getStartLocation().getLongitude()));
-                    polylineOptions = polylineOptions.add(new LatLng(s
-                            .getEndLocation().getLatitude(), s.getEndLocation()
-                            .getLongitude()));
+                    polylineOptions = polylineOptions.add(new LatLng(s.getStartLocation()
+                            .getLatitude(), s.getStartLocation().getLongitude()));
+                    polylineOptions = polylineOptions.add(new LatLng(s.getEndLocation()
+                            .getLatitude(), s.getEndLocation().getLongitude()));
                 }
             }
             mMap.addPolyline(polylineOptions.color(Color.RED));
 
-            mMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(new LatLng(
-                            cameraLatitude, cameraLongitude),
-                            FIXED_DEFAULT_ZOOM_LEVEL),
+            //set the camera to focus on the route
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude,
+                    cameraLongitude), FIXED_DEFAULT_ZOOM_LEVEL),
                     ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
         }
     }

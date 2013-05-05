@@ -8,7 +8,6 @@ import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.Route;
 
 import android.os.Bundle;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
@@ -44,16 +43,13 @@ public class NavigateActivity extends Activity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setTitle("Navigate");
 
         @SuppressWarnings("unchecked")
-        List<Route> recievedRoutes = (ArrayList<Route>) getIntent()
-                .getSerializableExtra("List of Routes");
+        List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(
+                "List of Routes");
         if (recievedRoutes != null) {
             routes = (ArrayList<Route>) recievedRoutes;
-            currRoute = (Integer) getIntent().getSerializableExtra(
-                    "Current Route Index");
+            currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");
         }
         setContentView(R.layout.activity_navigate);
     }
