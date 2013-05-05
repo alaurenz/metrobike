@@ -10,52 +10,92 @@ import android.widget.TextView;
 
 import com.HuskySoft.metrobike.R;
 
-public class HistoryAdapter extends ArrayAdapter<HistoryItem>{
+/**
+ * This class holds the History Item objects and connect to the text view in the
+ * search activity.
+ */
+public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
+    /**
+     * The context of this current activity.
+     */
+    private Context context;
+    /**
+     * The id of this current activity.
+     */
+    private int layoutResourceId;
+    /**
+     * The array of history item object.
+     */
+    private HistoryItem[] data;
 
-    Context context; 
-    int layoutResourceId;    
-    HistoryItem data[] = null;
-    
-    public HistoryAdapter(Context context, int layoutResourceId, HistoryItem[] data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.data = data;
+    /**
+     * Constructor to initialize the field.
+     * 
+     * @param contextView
+     *            this current activity.
+     * @param layoutId
+     *            this current activity id.
+     * @param historyData
+     *            the array of history items.
+     */
+    public HistoryAdapter(final Context contextView, final int layoutId,
+            final HistoryItem[] historyData) {
+        super(contextView, layoutId, historyData);
+        this.layoutResourceId = layoutId;
+        this.context = contextView;
+        this.data = historyData;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see android.widget.ArrayAdapter#getView(int, android.view.View,
+     *      android.view.ViewGroup)
+     */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public final View getView(final int position, final View convertView,
+            final ViewGroup parent) {
         View row = convertView;
         HistoryItemHolder holder = null;
-        
-        if(row == null)
-        {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
-            
+
             holder = new HistoryItemHolder();
-            holder.textViewIndex = (TextView)row.findViewById(R.id.textViewIndex);
-            holder.textViewFrom = (TextView)row.findViewById(R.id.textViewFrom);
-            holder.textViewTo = (TextView)row.findViewById(R.id.textViewTo);
+            holder.textViewIndex = (TextView) row
+                    .findViewById(R.id.textViewIndex);
+            holder.textViewFrom = (TextView) row
+                    .findViewById(R.id.textViewFrom);
+            holder.textViewTo = (TextView) row.findViewById(R.id.textViewTo);
             row.setTag(holder);
+        } else {
+            holder = (HistoryItemHolder) row.getTag();
         }
-        else
-        {
-            holder = (HistoryItemHolder)row.getTag();
-        }
-        
-        HistoryItem HistoryItem = data[position];
-        holder.textViewIndex.setText(""+HistoryItem.index);
-        holder.textViewFrom.setText(HistoryItem.from);
-        holder.textViewTo.setText(HistoryItem.to);
-        
+
+        HistoryItem historyItem = data[position];
+        holder.textViewIndex.setText("" + historyItem.getIndex());
+        holder.textViewFrom.setText(historyItem.getFrom());
+        holder.textViewTo.setText(historyItem.getTo());
+
         return row;
     }
-    
-    static class HistoryItemHolder
-    {
-        TextView textViewIndex;
-        TextView textViewFrom;
-        TextView textViewTo;
+
+    /**
+     * This inner class holds the textView objects.
+     */
+    static class HistoryItemHolder {
+        /**
+         * The position of text view.
+         */
+        private TextView textViewIndex;
+        /**
+         * The from address text view.
+         */
+        private TextView textViewFrom;
+        /**
+         * The to address text view.
+         */
+        private TextView textViewTo;
     }
 }

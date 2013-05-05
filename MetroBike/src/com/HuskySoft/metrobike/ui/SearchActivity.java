@@ -277,10 +277,13 @@ public class SearchActivity extends Activity {
         });
     }
 
+    /**
+     * Fill in the history section.
+     */
     private void setHistorySection() {
         historyItemData = new HistoryItem[] {
-                // new HistoryItem(R.drawable.ic_launcher, "History1: From",
-                // "To: University of Washington"),
+                // R.drawable.ic_launcher, "History1: From",
+                // "To: University of Washington"
                 new HistoryItem(1, "Point A", "University of Washington"),
                 new HistoryItem(2, "Point B", "University of Washington"),
                 new HistoryItem(3, "Point C", "University of Washington"),
@@ -294,19 +297,14 @@ public class SearchActivity extends Activity {
         HistoryAdapter adapter = new HistoryAdapter(this,
                 R.layout.listview_history_item_row, historyItemData);
 
-        // View header =
-        // (View)getLayoutInflater().inflate(R.layout.listview_header_row,
-        // null);
-        // listView1.addHeaderView(header);
-
         historyListView.setAdapter(adapter);
 
         historyListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-                startFromEditText.setText(historyItemData[position].from);
-                toEditText.setText(historyItemData[position].to);
+            public void onItemClick(final AdapterView<?> parent,
+                    final View view, final int position, final long id) {
+                startFromEditText.setText(historyItemData[position].getFrom());
+                toEditText.setText(historyItemData[position].getTo());
             }
         });
     }
