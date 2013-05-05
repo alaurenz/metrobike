@@ -44,6 +44,18 @@ public final class Leg implements Serializable {
     private String endAddress;
 
     /**
+     * For displaying this leg, this is the location of the Northeast corner of
+     * the viewing window.
+     */
+    private Location neBound;
+
+    /**
+     * For displaying this leg, this is the location of the Southwest corner of
+     * the viewing window.
+     */
+    private Location swBound;
+    
+    /**
      * The list of steps to complete this leg.
      */
     private List<Step> stepList;
@@ -103,6 +115,15 @@ public final class Leg implements Serializable {
      * @return the modified Leg, for Builder pattern purposes
      */
     public Leg addStep(final Step newStep) {
+        
+        // Update neBound
+        neBound = Location.makeNorthEastBound(neBound, newStep.getStartLocation());
+        neBound = Location.makeNorthEastBound(neBound, newStep.getEndLocation());
+
+        // Update swBound
+        swBound = Location.makeSouthWestBound(swBound, newStep.getStartLocation());
+        swBound = Location.makeSouthWestBound(swBound, newStep.getEndLocation());
+        
         stepList.add(newStep);
         return this;
     }
@@ -167,6 +188,24 @@ public final class Leg implements Serializable {
             return stepList.get(stepList.size() - 1).getEndLocation();
         }
         return null;
+    }
+
+    /**
+     * Returns the North-East bound for the route display area.
+     * 
+     * @return the North-East bound for the route display area.
+     */
+    public Location getNeBound() {
+        return neBound;
+    }
+
+    /**
+     * Returns the South-West bound for the route display area.
+     * 
+     * @return the South-West bound for the route display area.
+     */
+    public Location getSwBound() {
+        return swBound;
     }
 
     /**

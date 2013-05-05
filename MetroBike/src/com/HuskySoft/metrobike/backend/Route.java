@@ -117,13 +117,15 @@ public final class Route implements Serializable {
     public void addLeg(final Leg toAdd) {
 
         // Update neBound
-        neBound = Location.makeNorthEastBound(neBound, toAdd.getStartLocation());
-        neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
+        //neBound = Location.makeNorthEastBound(neBound, toAdd.getStartLocation());
+        //neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
+        neBound = Location.makeNorthEastBound(neBound, toAdd.getNeBound());
 
         // Update swBound
-        swBound = Location.makeSouthWestBound(swBound, toAdd.getStartLocation());
-        swBound = Location.makeSouthWestBound(swBound, toAdd.getEndLocation());
-
+        //swBound = Location.makeSouthWestBound(swBound, toAdd.getStartLocation());
+        //swBound = Location.makeSouthWestBound(swBound, toAdd.getEndLocation());
+        swBound = Location.makeSouthWestBound(swBound, toAdd.getSwBound());
+        
         // Add the leg to our list
         legList.add(toAdd);
 
