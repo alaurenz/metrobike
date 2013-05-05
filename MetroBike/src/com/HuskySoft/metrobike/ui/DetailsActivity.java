@@ -59,8 +59,9 @@ public class DetailsActivity extends Activity {
             routes = (ArrayList<Route>) recievedRoutes;
             currRoute = (Integer) getIntent().
             getSerializableExtra("Current Route Index");
+            // if there exists route, show the details
+            this.setDetails();
         }
-        this.setDetails();
 	}
 	
 	/**

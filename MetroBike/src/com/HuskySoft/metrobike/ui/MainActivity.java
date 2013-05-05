@@ -41,15 +41,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-        // the detail button
-        Button detailsButton = (Button) findViewById(R.id.buttonDetails);
-        detailsButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                Intent intent = new Intent(v.getContext(),
-                        DetailsActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     /**

@@ -18,13 +18,5 @@
         android:layout_below="@+id/textView1"
         android:layout_marginTop="114dp"
         android:text="@string/button_search" />
-
-    <Button
-        android:id="@+id/buttonDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/buttonSearch"
-        android:text="@string/button_details" />
-
+    
 </RelativeLayout>
