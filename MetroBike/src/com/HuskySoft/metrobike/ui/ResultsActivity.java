@@ -50,7 +50,7 @@ public class ResultsActivity extends Activity {
     /**
      * Results from the search.
      */
-    private ArrayList<Route> routes = null;
+    private ArrayList<Route> routes;
 
     /**
      * Current route that should be displayed on the map.
@@ -80,7 +80,7 @@ public class ResultsActivity extends Activity {
         if (recievedRoutes != null) {
             routes = (ArrayList<Route>) recievedRoutes;
             currRoute = (Integer) getIntent().
-                getSerializableExtra("Current Route Index");
+            		getSerializableExtra("Current Route Index");
             addRouteButtons();
             mMap = ((MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
