@@ -7,50 +7,40 @@
         android:layout_height="410dip"
         android:layout_marginLeft="5dp"
         android:background="@drawable/blue_border" />
-    
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  		android:layout_width="fill_parent"
-    	android:layout_height="wrap_content">
-       
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
         <LinearLayout
-        	android:orientation="vertical"
-        	android:layout_width="fill_parent"
-        	android:layout_height="fill_parent"
-        	android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical" >
 
             <TextView
-        		android:id="@+id/directionsStart"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:text="From: "
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="italic" />
-             
+                android:id="@+id/directionsStart"
+                style="@style/textview_style"
+                android:text="@string/history_from" />
+
             <TextView
-        		android:id="@+id/directions"
-        		android:layout_marginLeft="30dp"
-           		android:layout_marginRight="30dp"
-        		android:layout_width="fill_parent"
-        		android:textSize="18sp"
-        		android:layout_height="wrap_content" />
-       		
-              
+                android:id="@+id/directions"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:textSize="18sp" />
+
             <TextView
-        		android:id="@+id/directionsDest"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content" 
-        		android:text="To: "
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="italic"
-                android:layout_marginTop="10dp" /> 
-   		 </LinearLayout>
-    </ScrollView>  
-      
+                android:id="@+id/directionsDest"
+                style="@style/textview_style"
+                android:layout_marginTop="10dp"
+                android:text="@string/history_to" />
+        </LinearLayout>
+    </ScrollView>
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:layout_alignParentBottom="true"
@@ -60,30 +50,24 @@
 
         <Button
             android:id="@+id/button_go_to_search"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            style="@style/button_style_details"
             android:layout_weight=".33"
             android:onClick="goToSearchPage"
-            android:text="@string/button_go_to_search"
-            android:textSize="18sp" />
+            android:text="@string/button_go_to_search" />
 
         <Button
             android:id="@+id/button_go_to_result"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            style="@style/button_style_details"
             android:layout_weight=".34"
             android:onClick="goToResults"
-            android:text="@string/button_go_to_results"
-            android:textSize="18sp" />
+            android:text="@string/button_go_to_results" />
 
         <Button
             android:id="@+id/button_navigate"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            style="@style/button_style_details"
             android:layout_weight=".33"
             android:onClick="goToNavigate"
-            android:text="@string/button_navigate"
-            android:textSize="18sp" />
+            android:text="@string/button_navigate" />
     </LinearLayout>
 
 </RelativeLayout>

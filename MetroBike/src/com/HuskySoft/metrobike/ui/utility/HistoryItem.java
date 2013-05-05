@@ -30,7 +30,6 @@ public class HistoryItem {
      */
     public HistoryItem(final int indexPos, final String fromAddress,
             final String endAddress) {
-        super();
         this.index = indexPos;
         this.from = fromAddress;
         this.to = endAddress;

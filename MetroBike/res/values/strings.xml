@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MetroBike</string>
+   <string name="app_name">MetroBike</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_details">DetailsActivity</string>
@@ -54,7 +54,10 @@
     <string name="button_find">Find</string>
     <string name="textview_departure_time">Departure Time</string>
     <string name="textview_history">History</string>
-
+	<string name="history_from">From:\t</string>
+	<string name="history_to">To:\t</string>
+	  
+    
     <!-- Result Activity -->
     <string name="route1">Route1</string>
     <string name="route2">Route2</string>
@@ -62,4 +65,5 @@
     <string name="all4">All4</string>
     <string name="all5">All5</string>
 
+    
 </resources>
