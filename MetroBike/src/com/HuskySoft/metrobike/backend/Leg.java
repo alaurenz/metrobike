@@ -47,17 +47,16 @@ public final class Leg implements Serializable {
      * The list of steps to complete this leg.
      */
     private List<Step> stepList;
-    
+
     /**
      * The amount to indent.
      */
     private final int indent = 2;
-    
+
     /**
      * The actual indented string.
      */
     private final String indentString = Utility.getIndentString() + Utility.getIndentString();
-    
 
     /**
      * Constructs an empty Leg.
@@ -76,25 +75,20 @@ public final class Leg implements Serializable {
      * @return A Leg based on the passed json_src
      * @throws JSONException
      */
-    public static Leg buildLegFromJSON(final JSONObject jsonLeg)
-            throws JSONException {
+    public static Leg buildLegFromJSON(final JSONObject jsonLeg) throws JSONException {
         Leg newLeg = new Leg();
 
         // Set the start address
-        newLeg.setStartAddress(jsonLeg
-                .getString(WebRequestJSONKeys.START_ADDRESS.getLowerCase()));
+        newLeg.setStartAddress(jsonLeg.getString(WebRequestJSONKeys.START_ADDRESS.getLowerCase()));
 
         // Set the end address
-        newLeg.setEndAddress(jsonLeg.getString(WebRequestJSONKeys.END_ADDRESS
-                .getLowerCase()));
+        newLeg.setEndAddress(jsonLeg.getString(WebRequestJSONKeys.END_ADDRESS.getLowerCase()));
 
         // Set the steps list
-        JSONArray stepsArray = jsonLeg.getJSONArray(WebRequestJSONKeys.STEPS
-                .getLowerCase());
+        JSONArray stepsArray = jsonLeg.getJSONArray(WebRequestJSONKeys.STEPS.getLowerCase());
 
         for (int i = 0; i < stepsArray.length(); i++) {
-            Step currentStep = Step.buildStepFromJSON(stepsArray
-                    .getJSONObject(i));
+            Step currentStep = Step.buildStepFromJSON(stepsArray.getJSONObject(i));
             newLeg.addStep(currentStep);
         }
 
@@ -210,6 +204,29 @@ public final class Leg implements Serializable {
         return Collections.unmodifiableList(stepList);
     }
 
+    /**
+     * Returns a list of step-by-step text directions for this Leg.
+     * 
+     * @return a list of step-by-step text directions for this Leg.
+     */
+    public List<String> directionStepsText() {
+        List<String> toReturn = new ArrayList<String>();
+
+        if (stepList == null || stepList.size() == 0) {
+            return toReturn;
+        }
+
+        for (Step s : stepList) {
+            String stepText = s.getHtmlInstruction();
+            if (stepText == null) {
+                toReturn.add("<step missing directions>");
+            } else {
+                toReturn.add(stepText);
+            }
+        }
+        return toReturn;
+    }
+
     @Override
     public String toString() {
         String extraIndent = indentString + Utility.getIndentString();
@@ -250,8 +267,7 @@ public final class Leg implements Serializable {
      *             if a class is not found
      */
     @SuppressWarnings("unchecked")
-    private void readObject(final ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
         // in future versions.
