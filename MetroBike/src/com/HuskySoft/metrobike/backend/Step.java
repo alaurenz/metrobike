@@ -26,7 +26,7 @@ public final class Step implements Serializable {
      * or writeObject() methods, so we don't have old-version Step objects (ex:
      * from the log) being made into new-version Step objects.
      */
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The distance of this step in meters.
@@ -61,7 +61,7 @@ public final class Step implements Serializable {
     /**
      * String-stored list of points for plotting the step on a map.
      */
-    private String polyLinePoints;
+    private List<Location> polyLinePoints;
 
     /**
      * A List of substeps. If there are no substeps for the current step then
@@ -89,7 +89,7 @@ public final class Step implements Serializable {
         endLocation = null;
         travelMode = TravelMode.UNKNOWN;
         htmlInstruction = "";
-        polyLinePoints = "";
+        polyLinePoints = null;
         substeps = null;
     }
 
@@ -99,8 +99,7 @@ public final class Step implements Serializable {
      * @param jsonStep
      *            the JSON to parse into a Step object
      * @return A Step based on the passed json_src
-     * @throws JSONException
-     * 
+     * @throws JSONException if there is a problem parsing the JSON
      */
     public static Step buildStepFromJSON(final JSONObject jsonStep) throws JSONException {
         Step newStep = new Step();
@@ -114,15 +113,15 @@ public final class Step implements Serializable {
         newStep.setDurationInSeconds(duration.getLong(WebRequestJSONKeys.VALUE.getLowerCase()));
 
         // Set the start location.
-        JSONObject tempStartLocation = jsonStep.getJSONObject(WebRequestJSONKeys.START_LOCATION
-                .getLowerCase());
+        JSONObject tempStartLocation =
+                jsonStep.getJSONObject(WebRequestJSONKeys.START_LOCATION.getLowerCase());
         double startLat = tempStartLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase());
         double startLng = tempStartLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase());
         newStep.setStartLocation(new Location(startLat, startLng));
 
         // Set the end location.
-        JSONObject tempEndLocation = jsonStep.getJSONObject(WebRequestJSONKeys.END_LOCATION
-                .getLowerCase());
+        JSONObject tempEndLocation =
+                jsonStep.getJSONObject(WebRequestJSONKeys.END_LOCATION.getLowerCase());
         double endLat = tempEndLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase());
         double endLng = tempEndLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase());
         newStep.setEndLocation(new Location(endLat, endLng));
@@ -131,8 +130,8 @@ public final class Step implements Serializable {
         if (jsonStep.has(WebRequestJSONKeys.STEPS.getLowerCase())) {
             List<Step> substeps = new ArrayList<Step>();
 
-            JSONArray substepsArray = jsonStep
-                    .getJSONArray(WebRequestJSONKeys.STEPS.getLowerCase());
+            JSONArray substepsArray =
+                    jsonStep.getJSONArray(WebRequestJSONKeys.STEPS.getLowerCase());
             for (int i = 0; i < substepsArray.length(); i++) {
                 Step currentSubstep = Step.buildStepFromJSON(substepsArray.getJSONObject(i));
                 substeps.add(currentSubstep);
@@ -147,18 +146,22 @@ public final class Step implements Serializable {
 
         // Set the HTMLInstructions
         if (jsonStep.has(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase())) {
-            String tempHtmlInstruction = jsonStep.getString(WebRequestJSONKeys.HTML_INSTRUCTIONS
-                    .getLowerCase());
+            String tempHtmlInstruction =
+                    jsonStep.getString(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase());
             newStep.setHtmlInstruction(tempHtmlInstruction);
         } else {
             Log.w("", "No HTML instructions in this step!");
         }
 
         // Set the PolyLine Points
-        JSONObject tempPolyLine = jsonStep
-                .getJSONObject(WebRequestJSONKeys.POLYLINE.getLowerCase());
+        JSONObject tempPolyLine =
+                jsonStep.getJSONObject(WebRequestJSONKeys.POLYLINE.getLowerCase());
         String tempPoints = tempPolyLine.getString(WebRequestJSONKeys.POINTS.getLowerCase());
-        newStep.setPolyLinePoints(tempPoints);
+
+        // Parse the polyline!
+        // TODO think about the kinds of errors we could get here
+        List<Location> polyList = com.jeffreysambells.polyline.Utility.decodePoly(tempPoints);
+        newStep.setPolyLinePoints(polyList);
 
         return newStep;
     }
@@ -280,7 +283,7 @@ public final class Step implements Serializable {
     /**
      * @return the polyLinePoints
      */
-    public String getPolyLinePoints() {
+    public List<Location> getPolyLinePoints() {
         return polyLinePoints;
     }
 
@@ -291,7 +294,7 @@ public final class Step implements Serializable {
      *            the polyLinePoints to set
      * @return the modified Step, for Builder pattern purposes
      */
-    public Step setPolyLinePoints(final String newPolyLinePoints) {
+    public Step setPolyLinePoints(final List<Location> newPolyLinePoints) {
         this.polyLinePoints = newPolyLinePoints;
         return this;
     }
@@ -379,6 +382,7 @@ public final class Step implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
+    @SuppressWarnings("unchecked")
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
@@ -390,6 +394,6 @@ public final class Step implements Serializable {
         endLocation = (Location) in.readObject();
         travelMode = (TravelMode) in.readObject();
         htmlInstruction = (String) in.readObject();
-        polyLinePoints = (String) in.readObject();
+        polyLinePoints = (List<Location>) in.readObject();
     }
 }

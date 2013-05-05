@@ -265,6 +265,27 @@ public final class Leg implements Serializable {
         }
         return toReturn;
     }
+    
+    /**
+     * Returns the full polyline for this Leg.
+     * 
+     * @return the full polyline for this Leg
+     */
+    public List<Location> getPolyLinePoints() {
+        List<Location> toReturn = new ArrayList<Location>();
+
+        if (stepList == null || stepList.size() == 0) {
+            return toReturn;
+        }
+
+        for (Step s : stepList) {
+            List<Location> stepPolyline = s.getPolyLinePoints();
+            if (stepPolyline != null) {
+                toReturn.addAll(stepPolyline);
+            }
+        }
+        return toReturn;
+    }
 
     @Override
     public String toString() {

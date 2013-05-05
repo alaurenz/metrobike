@@ -32,7 +32,7 @@ public final class Route implements Serializable {
      * or writeObject() methods, so we don't have old-version Route objects (ex:
      * from the log) being made into new-version Route objects.
      */
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default value for the route summary.
@@ -57,11 +57,6 @@ public final class Route implements Serializable {
     private List<Leg> legList;
 
     /**
-     * String-stored list of points for plotting the entire route on a map.
-     */
-    private String polylinePoints;
-
-    /**
      * A short summary-descriptor for the route.
      */
     private String summary;
@@ -78,7 +73,6 @@ public final class Route implements Serializable {
         neBound = null;
         swBound = null;
         legList = new ArrayList<Leg>();
-        polylinePoints = "";
         summary = DEFAULT_ROUTE_SUMMARY;
     }
 
@@ -226,15 +220,6 @@ public final class Route implements Serializable {
     }
 
     /**
-     * Returns the polyline points string for plotting the Route on the map.
-     * 
-     * @return the polyline points string for plotting the Route on the map.
-     */
-    public String getPolylinePoints() {
-        return polylinePoints;
-    }
-
-    /**
      * Returns a list of step-by-step text directions for this Route.
      * 
      * @return a list of step-by-step text directions for this Route.
@@ -253,12 +238,32 @@ public final class Route implements Serializable {
         return toReturn;
     }
 
+    /**
+     * Returns the full polyline for this Route.
+     * 
+     * @return the full polyline for this Route
+     */
+    public List<Location> getPolyLinePoints() {
+        List<Location> toReturn = new ArrayList<Location>();
+
+        if (legList == null || legList.size() == 0) {
+            return toReturn;
+        }
+
+        for (Leg l : legList) {
+            List<Location> legPolyline = l.getPolyLinePoints();
+            if (legPolyline != null) {
+                toReturn.addAll(legPolyline);
+            }
+        }
+        return toReturn;
+    }
+    
     @Override
     public String toString() {
         StringBuilder routeString = new StringBuilder("Route:\n");
         routeString.append(Utility.getIndentString() + "neBound: " + neBound + "\n");
         routeString.append(Utility.getIndentString() + "swBound: " + swBound + "\n");
-        routeString.append(Utility.getIndentString() + "polylinePoints: " + polylinePoints + "\n");
         routeString.append(Utility.getIndentString() + "summary: " + summary + "\n");
         routeString.append(Utility.getIndentString() + "Warnings:\n");
         routeString.append(Utility.listPrettyPrint(warnings, 2));
@@ -283,7 +288,6 @@ public final class Route implements Serializable {
         out.writeObject(neBound);
         out.writeObject(swBound);
         out.writeObject(legList);
-        out.writeObject(polylinePoints);
         out.writeObject(summary);
         out.writeObject(warnings);
     }
@@ -307,7 +311,6 @@ public final class Route implements Serializable {
         neBound = (Location) in.readObject();
         swBound = (Location) in.readObject();
         legList = (List<Leg>) in.readObject();
-        polylinePoints = (String) in.readObject();
         summary = (String) in.readObject();
         warnings = (List<String>) in.readObject();
     }
