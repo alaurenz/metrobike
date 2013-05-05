@@ -56,12 +56,17 @@ public class ResultsActivity extends Activity {
      * Current route that should be displayed on the map.
      */
     private int currRoute = -1;
-    
+
     /**
      * default camera zoom level.
      */
     private static final float FIXED_DEFAULT_ZOOM_LEVEL = 13.0f;
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,23 +76,30 @@ public class ResultsActivity extends Activity {
         // get the solution from the search activity
         @SuppressWarnings("unchecked")
         List<Route> recievedRoutes = (ArrayList<Route>) getIntent()
-            .getSerializableExtra("List of Routes");
-        
-        
+                .getSerializableExtra("List of Routes");
+
         // set the default route to be the first route of the solution
 
         setContentView(R.layout.activity_results);
         if (recievedRoutes != null) {
             routes = (ArrayList<Route>) recievedRoutes;
-            currRoute = (Integer) getIntent().
-            		getSerializableExtra("Current Route Index");
+            currRoute = (Integer) getIntent().getSerializableExtra(
+                    "Current Route Index");
             addRouteButtons();
-            mMap = ((MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map)).getMap();
+            mMap = ((MapFragment) getFragmentManager().findFragmentById(
+                    R.id.map)).getMap();
             drawRoute();
         }
     }
 
+    /**
+     * Show the menu bar when the setting button is clicked.
+     * 
+     * @param menu
+     *            The options menu in which you place your items.
+     * @return true if the menu to be displayed.
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public final boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -96,19 +108,28 @@ public class ResultsActivity extends Activity {
     }
 
     /**
-     * Invoked when user click setting button in the menu.
+     * this method will be called when user click buttons in the setting menu.
      * 
-     * @param menuItem
-     *            the items in the menu bar
+     * @param item
+     *            the menu item that user will click
+     * @return true if user select an item
      */
-    public final void goToSettingsPage(final MenuItem menuItem) {
-        // start the settings activity
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+    @Override
+    public final boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.action_settings:
+            // user click the setting button, start the settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
      * Go to the Navigate Page.
+     * 
      * @param view
      *            : the view of the button onClick function of the go to
      *            Navigate button
@@ -122,9 +143,10 @@ public class ResultsActivity extends Activity {
     }
 
     /**
+     * Direct to search page.
      * 
      * @param view
-     *            : the view of the button onClick function of the return to
+     *            the view of the button onClick function of the return to
      *            search page button
      */
     public final void goToSearchPage(final View view) {
@@ -134,6 +156,7 @@ public class ResultsActivity extends Activity {
     }
 
     /**
+     * Direct to detail page.
      * 
      * @param view
      *            : the view of the button onClick function of the go to details
@@ -151,8 +174,7 @@ public class ResultsActivity extends Activity {
      * add the selecting route buttons to the scroll bar on left.
      */
     private void addRouteButtons() {
-        LinearLayout main = (LinearLayout) findViewById(
-            R.id.linearLayoutForRouteSelection);
+        LinearLayout main = (LinearLayout) findViewById(R.id.linearLayoutForRouteSelection);
         for (int i = 0; i < routes.size(); i++) {
             Button selectRouteBtn = new Button(this);
             selectRouteBtn.setText("Route" + (i + 1));
@@ -161,41 +183,42 @@ public class ResultsActivity extends Activity {
             main.addView(selectRouteBtn);
         }
     }
-    
+
     /**
      * Implemented onClickListener in order to passed in parameter.
+     * 
      * @author mengwan
-     *
+     * 
      */
     private class MyOnClickListener implements OnClickListener {
-    	/**
-    	 * stores the routeNumber gets passed in.
-    	 */
-    	private int routeNumber;
-    	
-    	/**
-    	 * Create a MyOnClickListener object.
-    	 * @param routeSelectionNumber
-    	 * 		Route number that is passed in.
-    	 */
-    	public MyOnClickListener(final int routeSelectionNumber) {       
-    		this.routeNumber = routeSelectionNumber;
-		}
-		
-		@Override
-		public void onClick(final View v) {
-			currRoute = routeNumber;
-			drawRoute();
-		}
+        /**
+         * stores the routeNumber gets passed in.
+         */
+        private int routeNumber;
+
+        /**
+         * Create a MyOnClickListener object.
+         * 
+         * @param routeSelectionNumber
+         *            Route number that is passed in.
+         */
+        public MyOnClickListener(final int routeSelectionNumber) {
+            this.routeNumber = routeSelectionNumber;
+        }
+
+        @Override
+        public void onClick(final View v) {
+            currRoute = routeNumber;
+            drawRoute();
+        }
     };
-    
-    
+
     /**
      * draw the current route on the map.
      */
     private void drawRoute() {
         if (currRoute >= 0 && currRoute < routes.size()) {
-        	mMap.clear();
+            mMap.clear();
             List<Leg> legs = routes.get(currRoute).getLegList();
             Location start = legs.get(0).getStartLocation();
             Location end = legs.get(legs.size() - 1).getStepList()
@@ -216,10 +239,8 @@ public class ResultsActivity extends Activity {
                     .icon(BitmapDescriptorFactory
                             .fromResource(R.drawable.ending)));
 
-            double cameraLatitude = (start.getLatitude() 
-            		+ end.getLatitude()) / 2;
-            double cameraLongitude = (start.getLongitude()
-            		+ end.getLongitude()) / 2;
+            double cameraLatitude = (start.getLatitude() + end.getLatitude()) / 2;
+            double cameraLongitude = (start.getLongitude() + end.getLongitude()) / 2;
 
             PolylineOptions polylineOptions = new PolylineOptions();
             for (Leg l : legs) {
@@ -233,9 +254,11 @@ public class ResultsActivity extends Activity {
                 }
             }
             mMap.addPolyline(polylineOptions.color(Color.RED));
-            
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-                    cameraLatitude, cameraLongitude), FIXED_DEFAULT_ZOOM_LEVEL),
+
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(new LatLng(
+                            cameraLatitude, cameraLongitude),
+                            FIXED_DEFAULT_ZOOM_LEVEL),
                     ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
         }
     }

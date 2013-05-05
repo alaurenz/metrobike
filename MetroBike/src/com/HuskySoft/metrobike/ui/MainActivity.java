@@ -11,24 +11,40 @@ import android.widget.Button;
 
 import com.HuskySoft.metrobike.R;
 
+/**
+ * This is a home screen which will show the map, search and detail button.
+ * 
+ * @author Sam Wilson
+ * 
+ */
 public class MainActivity extends Activity {
 
+    /*
+     * Feature added in Beta version: Google map on this screen. Rearrange
+     * buttons. Create android life cycle methods such as onBackPressed().
+     */
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // the search button
         Button searchButton = (Button) findViewById(R.id.buttonSearch);
         searchButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 Intent intent = new Intent(v.getContext(), SearchActivity.class);
                 startActivity(intent);
             }
         });
-
-        Button DetailsButton = (Button) findViewById(R.id.buttonDetails);
-        DetailsButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
+        // the detail button
+        Button detailsButton = (Button) findViewById(R.id.buttonDetails);
+        detailsButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
                 Intent intent = new Intent(v.getContext(),
                         DetailsActivity.class);
                 startActivity(intent);
@@ -36,6 +52,14 @@ public class MainActivity extends Activity {
         });
     }
 
+    /**
+     * Show the menu bar when the setting button is clicked.
+     * 
+     * @param menu
+     *            The options menu in which you place your items.
+     * @return true if the menu to be displayed.
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public final boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -44,15 +68,22 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Invoked when user click setting button in the menu.
+     * this method will be called when user click buttons in the setting menu.
      * 
-     * @param menuItem
-     *            the items in the menu bar
+     * @param item
+     *            the menu item that user will click
+     * @return true if user select an item
      */
-    public final void goToSettingsPage(final MenuItem menuItem) {
-        // start the settings activity
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+    @Override
+    public final boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.action_settings:
+            // user click the setting button, start the settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
-
 }

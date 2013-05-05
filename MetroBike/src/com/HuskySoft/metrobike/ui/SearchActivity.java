@@ -24,10 +24,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
+import com.HuskySoft.metrobike.ui.utility.HistoryAdapter;
+import com.HuskySoft.metrobike.ui.utility.HistoryItem;
 
 public class SearchActivity extends Activity {
 
@@ -124,8 +125,13 @@ public class SearchActivity extends Activity {
     private HistoryItem historyItemData[];
     private ProgressDialog pd;
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
@@ -135,6 +141,14 @@ public class SearchActivity extends Activity {
         setHistorySection();
     }
 
+    /**
+     * Show the menu bar when the setting button is clicked.
+     * 
+     * @param menu
+     *            The options menu in which you place your items.
+     * @return true if the menu to be displayed.
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public final boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -143,15 +157,23 @@ public class SearchActivity extends Activity {
     }
 
     /**
-     * Invoked when user click setting button in the menu.
+     * this method will be called when user click buttons in the setting menu.
      * 
-     * @param menuItem
-     *            the items in the menu bar
+     * @param item
+     *            the menu item that user will click
+     * @return true if user select an item
      */
-    public final void goToSettingsPage(final MenuItem menuItem) {
-        // start the settings activity
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+    @Override
+    public final boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.action_settings:
+            // user click the setting button, start the settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setInitialText() {
@@ -302,7 +324,7 @@ public class SearchActivity extends Activity {
     private void requestForRoutes() {
         DirectionsRequest dReq = new DirectionsRequest();
         dReq.doRequest();
-		
+
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
         intent.putExtra("Current Route Index", 0);

@@ -1,4 +1,4 @@
-package com.HuskySoft.metrobike.ui;
+package com.HuskySoft.metrobike.ui.utility;
 
 public class HistoryItem {
     public int index;

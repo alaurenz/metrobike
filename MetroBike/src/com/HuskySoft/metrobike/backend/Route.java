@@ -88,27 +88,26 @@ public final class Route implements Serializable {
      * @param jsonRoute
      *            the JSON to parse into a route object
      * @return A route based on the passed json_src
-     * @throws JSONException 
+     * @throws JSONException
      */
-    public static Route buildRouteFromJSON(final JSONObject jsonRoute) throws JSONException {  
+    public static Route buildRouteFromJSON(final JSONObject jsonRoute) throws JSONException {
         Route newRoute = new Route();
-        
+
         JSONArray legsArray = jsonRoute.getJSONArray(WebRequestJSONKeys.LEGS.getLowerCase());
-        
-        for(int i = 0; i < legsArray.length(); i++) {
+
+        for (int i = 0; i < legsArray.length(); i++) {
             Leg currentLeg = Leg.buildLegFromJSON(legsArray.getJSONObject(i));
             newRoute.addLeg(currentLeg);
-        }     
-        
-        JSONArray warningsArray = jsonRoute.getJSONArray(WebRequestJSONKeys.WARNINGS.getLowerCase());
-        
-        newRoute.setWarnings(Utility.jsonArrayToStringList(warningsArray)); 
-        
+        }
+
+        JSONArray warningsArray =
+                jsonRoute.getJSONArray(WebRequestJSONKeys.WARNINGS.getLowerCase());
+
+        newRoute.setWarnings(Utility.jsonArrayToStringList(warningsArray));
+
         return newRoute;
     }
 
-
-    
     /**
      * Add a new leg to this route.
      * 
@@ -118,15 +117,15 @@ public final class Route implements Serializable {
     public void addLeg(final Leg toAdd) {
 
         // Update neBound
-        neBound = Location
-                .makeNorthEastBound(neBound, toAdd.getStartLocation());
-        neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
+        //neBound = Location.makeNorthEastBound(neBound, toAdd.getStartLocation());
+        //neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
+        neBound = Location.makeNorthEastBound(neBound, toAdd.getNeBound());
 
         // Update swBound
-        swBound = Location
-                .makeSouthWestBound(swBound, toAdd.getStartLocation());
-        swBound = Location.makeSouthWestBound(swBound, toAdd.getEndLocation());
-
+        //swBound = Location.makeSouthWestBound(swBound, toAdd.getStartLocation());
+        //swBound = Location.makeSouthWestBound(swBound, toAdd.getEndLocation());
+        swBound = Location.makeSouthWestBound(swBound, toAdd.getSwBound());
+        
         // Add the leg to our list
         legList.add(toAdd);
 
@@ -190,7 +189,7 @@ public final class Route implements Serializable {
     public Location getSwBound() {
         return swBound;
     }
-    
+
     /**
      * Returns the Route's current total distance in meters.
      * 
@@ -235,6 +234,25 @@ public final class Route implements Serializable {
         return polylinePoints;
     }
 
+    /**
+     * Returns a list of step-by-step text directions for this Route.
+     * 
+     * @return a list of step-by-step text directions for this Route.
+     */
+    public List<String> directionStepsText() {
+        List<String> toReturn = new ArrayList<String>();
+
+        if (legList == null || legList.size() == 0) {
+            return toReturn;
+        }
+
+        for (Leg l : legList) {
+            toReturn.addAll(l.directionStepsText());
+        }
+
+        return toReturn;
+    }
+
     @Override
     public String toString() {
         StringBuilder routeString = new StringBuilder("Route:\n");
@@ -248,7 +266,7 @@ public final class Route implements Serializable {
         routeString.append(Utility.getLegsAsString(legList));
         return routeString.toString();
     }
-    
+
     /**
      * Implements a custom serialization of a Route object.
      * 
@@ -281,8 +299,7 @@ public final class Route implements Serializable {
      *             if a class is not found
      */
     @SuppressWarnings("unchecked")
-    private void readObject(final ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
         // in future versions.

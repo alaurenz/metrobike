@@ -1,4 +1,4 @@
-package com.HuskySoft.metrobike.ui;
+package com.HuskySoft.metrobike.ui.utility;
 
 import android.app.Activity;
 import android.content.Context;
