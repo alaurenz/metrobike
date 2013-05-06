@@ -542,8 +542,12 @@ public class SearchActivity extends Activity {
         HistoryAdapter adapter = new HistoryAdapter(this, R.layout.listview_history_item_row,
                 historyItemData);
 
+        // Add title row to the history list
         View titleRow = (View) getLayoutInflater().inflate(R.layout.listview_title_row, null);
-        historyListView.addHeaderView(titleRow);
+        
+        // set false to make titleRow not clickable
+        // NOTE: The index of titleRow is still 0 even false
+        historyListView.addHeaderView(titleRow, null, false);
         
         historyListView.setAdapter(adapter);
 
@@ -552,6 +556,9 @@ public class SearchActivity extends Activity {
             public void onItemClick(final AdapterView<?> parent, final View view,
                     final int position, final long id) {
                 // The first row (with index of 0) is the title row
+                if (position < 1) {
+                    return;
+                }
                 startFromEditText.setText(historyItemData[position - 1].getFrom());
                 toEditText.setText(historyItemData[position - 1].getTo());
             }
