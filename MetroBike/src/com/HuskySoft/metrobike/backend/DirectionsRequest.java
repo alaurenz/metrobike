@@ -70,7 +70,7 @@ public final class DirectionsRequest implements Serializable {
      * 
      * @return the final status of the doRequest process
      */
-    public DirectionsStatus doRequest() {
+    public DirectionsStatus doDummyRequest() {
 
         // First, validate our parameters!
         if (!myParams.validateParameters()) {
@@ -132,13 +132,11 @@ public final class DirectionsRequest implements Serializable {
     }
 
     /**
-     * Initiates the request calculation. This is a blocking call. NOTE: This
-     * method is currently under heavy testing and does not currently meet style
-     * guidelines.
+     * Initiates the request calculation. This is a blocking call.
      * 
      * @return the final status of the doRequest process
      */
-    public DirectionsStatus doLiveRequest() {
+    public DirectionsStatus doRequest() {
 
         // First, validate our parameters!
         if (!myParams.validateParameters()) {
