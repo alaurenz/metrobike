@@ -114,20 +114,6 @@ public final class DirectionsRequest implements Serializable {
             return DirectionsStatus.PARSING_ERROR;
         }
 
-        Log.v("TESTING", "Total trip duration is "
-                + this.getSolutions().get(0).getDurationInSeconds() + " seconds!");
-        Log.v("TESTING", "Total trip distance is "
-                + this.getSolutions().get(0).getDistanceInMeters() + " meters!");
-        Log.v("TESTING", "The first step of the first leg is '"
-                + this.getSolutions().get(0).getLegList().get(0).getStepList().get(0)
-                        .getHtmlInstruction() + "'");
-        Log.v("TESTING", "The second step of the first leg is '"
-                + this.getSolutions().get(0).getLegList().get(0).getStepList().get(1)
-                        .getHtmlInstruction() + "'");
-        Log.v("TESTING", "The third step of the first leg is '"
-                + this.getSolutions().get(0).getLegList().get(0).getStepList().get(2)
-                        .getHtmlInstruction() + "'");
-
         return DirectionsStatus.REQUEST_SUCCESSFUL;
     }
 
@@ -168,20 +154,6 @@ public final class DirectionsRequest implements Serializable {
 
             solutions.addAll(firstRoutes);
         }
-
-        Log.v("TESTING", "Total trip duration is "
-                + this.getSolutions().get(0).getDurationInSeconds() + " seconds!");
-        Log.v("TESTING", "Total trip distance is "
-                + this.getSolutions().get(0).getDistanceInMeters() + " meters!");
-        Log.v("TESTING", "The first step of the first leg is '"
-                + this.getSolutions().get(0).getLegList().get(0).getStepList().get(0)
-                        .getHtmlInstruction() + "'");
-        Log.v("TESTING", "The second step of the first leg is '"
-                + this.getSolutions().get(0).getLegList().get(0).getStepList().get(1)
-                        .getHtmlInstruction() + "'");
-        Log.v("TESTING", "The third step of the first leg is '"
-                + this.getSolutions().get(0).getLegList().get(0).getStepList().get(2)
-                        .getHtmlInstruction() + "'");
 
         return DirectionsStatus.REQUEST_SUCCESSFUL;
     }
