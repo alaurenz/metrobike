@@ -54,7 +54,7 @@
         <EditText
             android:id="@+id/editTextTo"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_alignRight="@+id/editTextStartFrom"
             android:layout_below="@+id/editTextStartFrom"
             android:layout_marginLeft="5dp"
@@ -81,61 +81,53 @@
             android:src="@drawable/reverse" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <RadioGroup
+        android:id="@+id/radioGroupStartingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" >
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
 
-        <RadioGroup
-            android:id="@+id/radioGroupStartingTime"
+        <RadioButton
+            android:id="@+id/radioButtonLeaveNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical" >
+            android:checked="true"
+            android:text="@string/radio_button_leave_now" />
 
-            <RadioButton
-                android:id="@+id/radioButtonLeaveNow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/radio_button_leave_now" />
+        <RadioButton
+            android:id="@+id/radioButtonDepartAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_button_depart_at" />
+    </RadioGroup>
 
-            <RadioButton
-                android:id="@+id/radioButtonDepartAt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_button_depart_at" />
+	<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="date" />
 
-                <EditText
-                    android:id="@+id/editTextDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:inputType="date" />
-
-                <EditText
-                    android:id="@+id/editTextTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:inputType="time" />
-            </LinearLayout>
-        </RadioGroup>
-
+        <EditText
+            android:id="@+id/editTextTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="time" />
+    </LinearLayout>
         
-    </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -144,26 +136,12 @@
         <Button
             android:id="@+id/buttonFind"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dip"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:drawableLeft="@drawable/search"
             android:text="@string/button_find" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/History"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/textview_history"
-            android:textSize="25sp" />
     </RelativeLayout>
 
     <RelativeLayout

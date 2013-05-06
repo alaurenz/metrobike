@@ -526,30 +526,34 @@ public class SearchActivity extends Activity {
     private void setHistorySection() {
         historyItemData = new HistoryItem[] {
                 new HistoryItem(1, "Paul G. Allen Center for Computer Science & Engineering (CSE)",
-                        "University of Washington"),
-                new HistoryItem(2, "Guggenheim Hall (GUG)", "University of Washington"),
-                new HistoryItem(3, "Schmitz Hall (SMZ)", "University of Washington"),
-                new HistoryItem(4, "85 Pike St, Seattle, Washington", "University of Washington"),
+                        "4311 11th Ave NE, Seattle, WA"),
+                new HistoryItem(2, "Guggenheim Hall (GUG)", "4311 11th Ave NE, Seattle, WA"),
+                new HistoryItem(3, "Schmitz Hall (SMZ)", "4311 11th Ave NE, Seattle, WA"),
+                new HistoryItem(4, "85 Pike St, Seattle, Washington", "4311 11th Ave NE, Seattle, WA"),
                 new HistoryItem(5, "Mount Rainier National Park, Washington 98304",
-                        "University of Washington"),
+                        "4311 11th Ave NE, Seattle, WA"),
                 new HistoryItem(6, "7201 East Green Lake Dr N, Seattle, WA",
-                        "University of Washington"),
-                new HistoryItem(7, "601 N 59th St, Seattle, WA", "University of Washington"),
-                new HistoryItem(8, "400 Broad St, Seattle, WA", "University of Washington"),
+                        "4311 11th Ave NE, Seattle, WA"),
+                new HistoryItem(7, "601 N 59th St, Seattle, WA", "4311 11th Ave NE, Seattle, WA"),
+                new HistoryItem(8, "400 Broad St, Seattle, WA", "4311 11th Ave NE, Seattle, WA"),
                 new HistoryItem(9, "2623 NE University Village St #7, Seattle, WA",
-                        "University of Washington"), };
+                        "4311 11th Ave NE, Seattle, WA"), };
 
         HistoryAdapter adapter = new HistoryAdapter(this, R.layout.listview_history_item_row,
                 historyItemData);
 
+        View titleRow = (View) getLayoutInflater().inflate(R.layout.listview_title_row, null);
+        historyListView.addHeaderView(titleRow);
+        
         historyListView.setAdapter(adapter);
 
         historyListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
                     final int position, final long id) {
-                startFromEditText.setText(historyItemData[position].getFrom());
-                toEditText.setText(historyItemData[position].getTo());
+                // The first row (with index of 0) is the title row
+                startFromEditText.setText(historyItemData[position - 1].getFrom());
+                toEditText.setText(historyItemData[position - 1].getTo());
             }
         });
     }
