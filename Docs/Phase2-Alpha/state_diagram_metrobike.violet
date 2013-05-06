@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.6.0_27" class="java.beans.XMLDecoder">
+ <object class="com.horstmann.violet.StateDiagramGraph">
+  <void method="addNode">
+   <object id="CircularInitialStateNode0" class="com.horstmann.violet.CircularStateNode"/>
+   <object class="java.awt.geom.Point2D$Double">
+    <void method="setLocation">
+     <double>118.0</double>
+     <double>198.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object id="StateNode0" class="com.horstmann.violet.StateNode">
+    <void property="name">
+     <void property="text">
+      <string>Search</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double">
+    <void method="setLocation">
+     <double>219.0</double>
+     <double>190.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object id="StateNode1" class="com.horstmann.violet.StateNode">
+    <void property="name">
+     <void property="text">
+      <string>Calculating Directions</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double">
+    <void method="setLocation">
+     <double>519.0</double>
+     <double>200.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object id="StateNode2" class="com.horstmann.violet.StateNode">
+    <void property="name">
+     <void property="text">
+      <string>Displaying Routes</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double">
+    <void method="setLocation">
+     <double>583.0</double>
+     <double>383.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object id="StateNode3" class="com.horstmann.violet.StateNode">
+    <void property="name">
+     <void property="text">
+      <string>Google Directions API Error</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double">
+    <void method="setLocation">
+     <double>964.0</double>
+     <double>206.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object id="StateNode4" class="com.horstmann.violet.StateNode">
+    <void property="name">
+     <void property="text">
+      <string>User Input Error</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double">
+    <void method="setLocation">
+     <double>310.0</double>
+     <double>361.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object id="CircularFinalStateNode0" class="com.horstmann.violet.product.diagram.state.CircularFinalStateNode"/>
+   <object class="java.awt.geom.Point2D$Double">
+    <void method="setLocation">
+     <double>752.0</double>
+     <double>408.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge">
+    <void property="label">
+     <string>User enters trip details</string>
+    </void>
+   </object>
+   <object idref="StateNode0"/>
+   <object idref="StateNode1"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge"/>
+   <object idref="CircularInitialStateNode0"/>
+   <object idref="StateNode0"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge">
+    <void property="label">
+     <string>User input invalid</string>
+    </void>
+   </object>
+   <object idref="StateNode1"/>
+   <object idref="StateNode4"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge">
+    <void property="label">
+     <string>Back / display error</string>
+    </void>
+   </object>
+   <object idref="StateNode4"/>
+   <object idref="StateNode0"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge">
+    <void property="label">
+     <string>Problem retrieving directions</string>
+    </void>
+   </object>
+   <object idref="StateNode1"/>
+   <object idref="StateNode3"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge">
+    <void property="label">
+     <string>Retry request</string>
+    </void>
+   </object>
+   <object idref="StateNode3"/>
+   <object idref="StateNode1"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge">
+    <void property="label">
+     <string>Routes generated successfully</string>
+    </void>
+   </object>
+   <object idref="StateNode1"/>
+   <object idref="StateNode2"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.StateTransitionEdge"/>
+   <object idref="StateNode2"/>
+   <object idref="CircularFinalStateNode0"/>
+  </void>
+ </object>
+</java>
