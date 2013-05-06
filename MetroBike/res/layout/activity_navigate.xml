@@ -23,7 +23,6 @@
             android:layout_weight=".33"
             android:onClick="goToSearchPage"
             android:textSize="18sp"
-            android:padding="0dp"
             android:text="@string/button_go_to_search" />
 
         <Button
@@ -32,7 +31,6 @@
             android:layout_weight=".34"
             android:onClick="goToDetail"
             android:textSize="18sp"
-            android:padding="0dp"
             android:text="@string/button_go_to_detail" />
 
         <Button
@@ -41,7 +39,6 @@
             android:layout_weight=".33"
             android:onClick="goToResults"
             android:textSize="18sp"
-            android:padding="0dp"
             android:text="@string/button_go_to_results" />
     </LinearLayout>
 
