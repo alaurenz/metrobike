@@ -2,6 +2,7 @@ package com.HuskySoft.metrobike.ui.utility;
 
 /**
  * This class is immutable to store the history details.
+ * @author CoolCapri, sw11
  */
 public class HistoryItem {
     /**

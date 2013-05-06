@@ -13,6 +13,8 @@ import com.HuskySoft.metrobike.R;
 /**
  * This class holds the History Item objects and connect to the text view in the
  * search activity.
+ * 
+ * @author CoolCapri, sw11
  */
 public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
     /**
