@@ -59,9 +59,9 @@ public final class Step implements Serializable {
     private String htmlInstruction;
 
     /**
-     * String-stored list of points for plotting the step on a map.
+     * String encoding points for plotting the step on a map.
      */
-    private List<Location> polyLinePoints;
+    private String polyLine;
 
     /**
      * A List of substeps. If there are no substeps for the current step then
@@ -89,7 +89,7 @@ public final class Step implements Serializable {
         endLocation = null;
         travelMode = TravelMode.UNKNOWN;
         htmlInstruction = "";
-        polyLinePoints = null;
+        polyLine = "";
         substeps = null;
     }
 
@@ -157,12 +157,13 @@ public final class Step implements Serializable {
         JSONObject tempPolyLine =
                 jsonStep.getJSONObject(WebRequestJSONKeys.POLYLINE.getLowerCase());
         String tempPoints = tempPolyLine.getString(WebRequestJSONKeys.POINTS.getLowerCase());
-
-        // Parse the polyline!
+        newStep.setPolyLine(tempPoints);
+        
+        // Parse the polyline (OLD CODE)
         // TODO think about the kinds of errors we could get here
         // TODO figure out how to handle the sheer size of this
         //List<Location> polyList = com.jeffreysambells.polyline.Utility.decodePoly(tempPoints);
-        newStep.setPolyLinePoints(new ArrayList<Location>());
+        //newStep.setPolyLinePoints(new ArrayList<Location>());
 
         return newStep;
     }
@@ -282,21 +283,29 @@ public final class Step implements Serializable {
     }
 
     /**
-     * @return the polyLinePoints
+     * @return list of Locations for this step obtained by decoding its polyLine
      */
     public List<Location> getPolyLinePoints() {
+        List<Location> polyLinePoints = com.jeffreysambells.polyline.Utility.decodePoly(polyLine);
         return polyLinePoints;
+    }
+    
+    /**
+     * @return the polyLine
+     */
+    public String getPolyLine() {
+        return polyLine;
     }
 
     /**
-     * Set the polyline points for the step.
+     * Set the polyline String for the step.
      * 
-     * @param newPolyLinePoints
-     *            the polyLinePoints to set
+     * @param newPolyLine
+     *            the polyLine to set
      * @return the modified Step, for Builder pattern purposes
      */
-    public Step setPolyLinePoints(final List<Location> newPolyLinePoints) {
-        this.polyLinePoints = newPolyLinePoints;
+    public Step setPolyLine(final String newPolyLine) {
+        this.polyLine = newPolyLine;
         return this;
     }
 
@@ -336,7 +345,7 @@ public final class Step implements Serializable {
         stepString.append(extraIndent + "endLocation: " + endLocation.toString() + "\n");
         stepString.append(extraIndent + "travelMode: " + travelMode.toString() + "\n");
         stepString.append(extraIndent + "htmlInstruction: " + htmlInstruction + "\n");
-        stepString.append(extraIndent + "polyLinePoints: " + polyLinePoints + "\n");
+        stepString.append(extraIndent + "polyLine: " + polyLine + "\n");
         stepString.append(extraIndent + "substepList:\n");
         stepString.append(Utility.getSubstepsAsString(substeps, indent + 2));
 
@@ -370,7 +379,7 @@ public final class Step implements Serializable {
         out.writeObject(endLocation);
         out.writeObject(travelMode);
         out.writeObject(htmlInstruction);
-        out.writeObject(polyLinePoints);
+        out.writeObject(polyLine);
     }
 
     /**
@@ -395,6 +404,6 @@ public final class Step implements Serializable {
         endLocation = (Location) in.readObject();
         travelMode = (TravelMode) in.readObject();
         htmlInstruction = (String) in.readObject();
-        polyLinePoints = (List<Location>) in.readObject();
+        polyLine = (String) in.readObject();
     }
 }

@@ -241,10 +241,14 @@ public class ResultsActivity extends Activity {
             PolylineOptions polylineOptions = new PolylineOptions();
             for (Leg l : legs) {
                 for (Step s : l.getStepList()) {
-                    polylineOptions = polylineOptions.add(new LatLng(s.getStartLocation()
+                    for (Location loc : s.getPolyLinePoints()) {
+                        polylineOptions = polylineOptions.add(new LatLng(loc.getLatitude(), 
+                                loc.getLongitude()));
+                    }
+                    /*polylineOptions = polylineOptions.add(new LatLng(s.getStartLocation()
                             .getLatitude(), s.getStartLocation().getLongitude()));
                     polylineOptions = polylineOptions.add(new LatLng(s.getEndLocation()
-                            .getLatitude(), s.getEndLocation().getLongitude()));
+                            .getLatitude(), s.getEndLocation().getLongitude()));*/
                 }
             }
             mMap.addPolyline(polylineOptions.color(Color.RED));

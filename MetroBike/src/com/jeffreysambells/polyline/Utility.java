@@ -40,7 +40,7 @@ public final class Utility {
      *            the polyline string to decode
      * @return the list of Location objects in the line
      */
-    public static List<Location> decodePoly(String encoded) {
+    public static List<Location> decodePoly(final String encoded) {
 
         List<Location> poly = new ArrayList<Location>();
         int index = 0, len = encoded.length();
@@ -67,9 +67,13 @@ public final class Utility {
             lng += dlng;
 
             Location p =
-                    new Location((int) (((double) lat / 1E5) * 1E6),
-                            (int) (((double) lng / 1E5) * 1E6));
+                    new Location(((double) lat / 1E5), ((double) lng / 1E5));
+            // OLD PROBLEMATIC CODE 
+            //Location p =
+            //        new Location((int) (((double) lat / 1E5) * 1E6),
+            //                (int) (((double) lng / 1E5) * 1E6));*/
             poly.add(p);
+            
         }
 
         return poly;
