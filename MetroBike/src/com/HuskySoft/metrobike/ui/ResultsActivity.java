@@ -148,6 +148,7 @@ public class ResultsActivity extends Activity {
     public final void goToSearchPage(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, SearchActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

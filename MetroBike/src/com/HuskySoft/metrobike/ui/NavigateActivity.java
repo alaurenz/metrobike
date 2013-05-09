@@ -99,6 +99,7 @@ public class NavigateActivity extends Activity {
     public final void goToDetail(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, DetailsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.putExtra("List of Routes", (Serializable) routes);
         intent.putExtra("Current Route Index", currRoute);
         startActivity(intent);
@@ -114,6 +115,7 @@ public class NavigateActivity extends Activity {
     public final void goToSearchPage(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, SearchActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
@@ -128,6 +130,7 @@ public class NavigateActivity extends Activity {
     public final void goToResults(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, ResultsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("List of Routes", (Serializable) routes);
         intent.putExtra("Current Route Index", currRoute);
         startActivity(intent);
