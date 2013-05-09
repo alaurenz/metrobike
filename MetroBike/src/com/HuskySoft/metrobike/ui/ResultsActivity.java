@@ -20,6 +20,7 @@ import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
+import com.HuskySoft.metrobike.backend.TravelMode;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -238,20 +239,21 @@ public class ResultsActivity extends Activity {
             double cameraLongitude = (start.getLongitude() + end.getLongitude()) / 2;
             
             //draw Poly-line on the map
-            PolylineOptions polylineOptions = new PolylineOptions();
+            
             for (Leg l : legs) {
                 for (Step s : l.getStepList()) {
-                    for (Location loc : s.getPolyLinePoints()) {
-                        polylineOptions = polylineOptions.add(new LatLng(loc.getLatitude(), 
-                                loc.getLongitude()));
+                    PolylineOptions polylineOptions = new PolylineOptions();
+                    for (LatLng ll : com.HuskySoft.metrobike.ui.utility.Utility.convertLocationList(s.getPolyLinePoints())) {
+                        polylineOptions = polylineOptions.add(ll);
                     }
-                    /*polylineOptions = polylineOptions.add(new LatLng(s.getStartLocation()
-                            .getLatitude(), s.getStartLocation().getLongitude()));
-                    polylineOptions = polylineOptions.add(new LatLng(s.getEndLocation()
-                            .getLatitude(), s.getEndLocation().getLongitude()));*/
+                    if (s.getTravelMode() == TravelMode.TRANSIT) {
+                        mMap.addPolyline(polylineOptions.color(Color.argb(200, 255, 0, 0)).width(12f));
+                    } else {
+                        mMap.addPolyline(polylineOptions.color(Color.argb(200, 0, 0, 255)).width(8f).zIndex(1));
+                    }
                 }
             }
-            mMap.addPolyline(polylineOptions.color(Color.RED));
+            
 
             //set the camera to focus on the route
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude,
