@@ -11,8 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.HuskySoft.metrobike.algorithm.SimpleAlgorithm;
 
 /**
@@ -77,7 +75,7 @@ public final class DirectionsRequest implements Serializable {
             return DirectionsStatus.INVALID_REQUEST_PARAMS;
         }
 
-        Log.w(TAG, "RUNNING ON DUMMY JSON RESPONSE");
+        System.err.println(TAG + "RUNNING ON DUMMY JSON RESPONSE");
 
         solutions = new ArrayList<Route>();
 
@@ -88,7 +86,7 @@ public final class DirectionsRequest implements Serializable {
             // myJSON = new JSONObject(jsonResponse);
             if (!myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()).equalsIgnoreCase(
                     GoogleMapsResponseStatusCodes.OK.toString())) {
-                Log.e(TAG,
+                System.err.println(TAG + 
                         "JSON Response returned: "
                                 + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
             }
@@ -105,7 +103,7 @@ public final class DirectionsRequest implements Serializable {
                 Route currentLeg = Route.buildRouteFromJSON(routesArray.getJSONObject(i));
                 solutions.add(currentLeg);
             }
-            Log.v("JSON_TEST", "Processed " + routesArray.length() + " routes!");
+            System.err.println("JSON_TEST" + "Processed " + routesArray.length() + " routes!");
         } catch (JSONException e1) {
             appendErrorMessage("Error parsing JSON routes.");
             return DirectionsStatus.PARSING_ERROR;
@@ -144,7 +142,7 @@ public final class DirectionsRequest implements Serializable {
             List<Route> firstRoutes = firstAlg.getResults();
 
             if (firstRoutes == null) {
-                Log.e(TAG, "Got null from SimpleAlgorithm without an error");
+               System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
                 appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
                 return DirectionsStatus.NO_RESULTS_FOUND;
             }
@@ -367,15 +365,15 @@ public final class DirectionsRequest implements Serializable {
             }
 
             // Printing out the parameters for debug purposes
-            Log.v(RP_TAG, "StartAddress: " + startAddress);
-            Log.v(RP_TAG, "EndAddress: " + endAddress);
-            Log.v(RP_TAG, "ArrivalTime: " + arrivalTime);
-            Log.v(RP_TAG, "DepartureTime: " + departureTime);
-            Log.v(RP_TAG, "TravelMode: " + travelMode);
-            Log.v(RP_TAG, "MinDistanceToBikeInMeters: " + minDistanceToBikeInMeters);
-            Log.v(RP_TAG, "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
-            Log.v(RP_TAG, "MinNumberBusTransfers: " + minNumberBusTransfers);
-            Log.v(RP_TAG, "MaxNumberBusTransfers: " + maxNumberBusTransfers);
+            System.err.println(RP_TAG + "StartAddress: " + startAddress);
+            System.err.println(RP_TAG + "EndAddress: " + endAddress);
+            System.err.println(RP_TAG + "ArrivalTime: " + arrivalTime);
+            System.err.println(RP_TAG + "DepartureTime: " + departureTime);
+            System.err.println(RP_TAG + "TravelMode: " + travelMode);
+            System.err.println(RP_TAG + "MinDistanceToBikeInMeters: " + minDistanceToBikeInMeters);
+            System.err.println(RP_TAG + "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
+            System.err.println(RP_TAG + "MinNumberBusTransfers: " + minNumberBusTransfers);
+            System.err.println(RP_TAG + "MaxNumberBusTransfers: " + maxNumberBusTransfers);
 
             return true;
         }

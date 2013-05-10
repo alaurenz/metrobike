@@ -13,8 +13,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.util.Log;
-
 /**
  * @author coreyh3
  * 
@@ -285,7 +283,7 @@ public final class Utility {
          */
 
         StringBuilder response = new StringBuilder();
-        Log.v(TAG, "About to make query to this url: [" + theURL + "]");
+        System.err.println(TAG + "About to make query to this url: [" + theURL + "]");
         URL url = new URL(theURL);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {

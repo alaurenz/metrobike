@@ -11,8 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 /**
  * @author coreyh3
  * @author dutchscout Represents the shortest portion of a route.
@@ -150,7 +148,7 @@ public final class Step implements Serializable {
                     jsonStep.getString(WebRequestJSONKeys.HTML_INSTRUCTIONS.getLowerCase());
             newStep.setHtmlInstruction(tempHtmlInstruction);
         } else {
-            Log.w("", "No HTML instructions in this step!");
+            System.err.println("No HTML instructions in this step!");
         }
 
         // Set the PolyLine Points
@@ -392,7 +390,6 @@ public final class Step implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
-    @SuppressWarnings("unchecked")
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems

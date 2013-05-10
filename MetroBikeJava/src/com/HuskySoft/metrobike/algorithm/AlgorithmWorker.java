@@ -8,8 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.GoogleMapsResponseStatusCodes;
@@ -203,12 +201,12 @@ public abstract class AlgorithmWorker {
                 response = Utility.doQuery(queryURL);
             } catch (IOException e) {
                 tryNum++;
-                Log.w(TAG, "Bad connection... retrying " + (MAX_CONNECTION_ATTEMPTS - tryNum)
+                System.err.println(TAG + "Bad connection... retrying " + (MAX_CONNECTION_ATTEMPTS - tryNum)
                         + " more times.");
                 try {
                     Thread.sleep(CONNECTION_RETRY_DELAY_MS);
                 } catch (InterruptedException e1) {
-                    Log.v(TAG, "Connection retry interrupted (not a problem)");
+                    System.err.println(TAG + "Connection retry interrupted (not a problem)");
                 }
             }
         }
@@ -256,7 +254,7 @@ public abstract class AlgorithmWorker {
                 Route currentRoute = Route.buildRouteFromJSON(routesArray.getJSONObject(i));
                 routesList.add(currentRoute);
             }
-            Log.v("JSON_TEST", "Processed " + routesArray.length() + " routes!");
+            System.err.println("JSON_TEST" + "Processed " + routesArray.length() + " routes!");
         } catch (JSONException e1) {
             addError(DirectionsStatus.PARSING_ERROR);
             return null;
