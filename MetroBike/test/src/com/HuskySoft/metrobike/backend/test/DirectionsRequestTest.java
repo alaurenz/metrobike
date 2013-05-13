@@ -38,9 +38,5 @@ public class DirectionsRequestTest extends TestCase {
 		DirectionsRequest myRequest = new DirectionsRequest();
 		assertNotNull(myRequest);
 	}
-	
-	public void test_simple_dummy_test_fail(){
-	    assertNotNull("\n\n*** THIS DUMMY TEST SHOULD FAIL! ***\n\n", null);
-	}
 
 }
