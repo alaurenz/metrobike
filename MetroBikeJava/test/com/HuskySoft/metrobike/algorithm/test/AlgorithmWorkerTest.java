@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.HuskySoft.metrobike.algorithm.SimpleAlgorithm;
+
 /**
  * @author Hate Malice Revenge
  *
@@ -47,7 +49,13 @@ public class AlgorithmWorkerTest {
 
     @Test
     public void test() {
-        fail("Not yet implemented");
+        //fail("Not yet implemented");
     }
 
+    @Test
+    public void test_default_constructor() {
+    	SimpleAlgorithm myAlg = new SimpleAlgorithm();
+    	assertNotNull(myAlg);
+    }
+    
 }

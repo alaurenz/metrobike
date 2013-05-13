@@ -1,8 +1,5 @@
 /**
- * 
- */
-/**
- * @author Hate Malice Revenge
+ * @author 
  *
  */
 package com.jeffreysambells.polyline.test;
