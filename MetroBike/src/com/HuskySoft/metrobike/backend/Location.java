@@ -40,15 +40,10 @@ public final class Location implements Serializable {
     private double longitude;
 
     /**
-     * The amount to indent.
-     */
-    private int indent = 0;
-    
-    /**
      * The actual indented string.
      */
     private String indentString = "";
-    
+
     /**
      * Constructs a new (immutable) Location with the given coordinates.
      * 
@@ -73,8 +68,7 @@ public final class Location implements Serializable {
      *            the second Location to bound
      * @return a Location that is a North-East bound on the passed Locations
      */
-    public static Location makeNorthEastBound(final Location one,
-            final Location two) {
+    public static Location makeNorthEastBound(final Location one, final Location two) {
         // TODO: Consider the case where two locations are on opposite sides of
         // the Prime Meridian.
 
@@ -88,8 +82,8 @@ public final class Location implements Serializable {
             return one;
         }
 
-        return new Location(Math.max(one.latitude, two.latitude), Math.max(
-                one.longitude, two.longitude));
+        return new Location(Math.max(one.latitude, two.latitude), Math.max(one.longitude,
+                two.longitude));
     }
 
     /**
@@ -100,7 +94,7 @@ public final class Location implements Serializable {
     public double getLatitude() {
         return latitude;
     }
-    
+
     /**
      * Getter for the longitude field.
      * 
@@ -109,7 +103,7 @@ public final class Location implements Serializable {
     public double getLongitude() {
         return longitude;
     }
-    
+
     /**
      * Returns a Location that is a South-West bound on the passed Locations. If
      * one location is null, the non-null location will be returned. If both
@@ -121,8 +115,7 @@ public final class Location implements Serializable {
      *            the second Location to bound
      * @return a Location that is a South-West bound on the passed Locations
      */
-    public static Location makeSouthWestBound(final Location one,
-            final Location two) {
+    public static Location makeSouthWestBound(final Location one, final Location two) {
         // TODO: Consider the case where two locations are on opposite sides of
         // the Prime Meridian.
 
@@ -136,23 +129,24 @@ public final class Location implements Serializable {
             return one;
         }
 
-        return new Location(Math.min(one.latitude, two.latitude), Math.min(
-                one.longitude, two.longitude));
+        return new Location(Math.min(one.latitude, two.latitude), Math.min(one.longitude,
+                two.longitude));
     }
-    
+
     /**
-     * Setter for the indent field.
+     * Setter for the indent field. Affects the amount of indentation used in
+     * the toString() method.
      * 
-     * @param indent the new indent value.
+     * @param indent
+     *            the new indent value.
      */
-    public void setIndent(int indent) {
-        this.indent = indent;
+    public void setIndent(final int indent) {
         indentString = "";
-        for(int i = 0; i < indent; i++) {
+        for (int i = 0; i < indent; i++) {
             indentString = Utility.getIndentString();
         }
     }
-    
+
     @Override
     public String toString() {
         StringBuilder locationString = new StringBuilder();
@@ -168,15 +162,13 @@ public final class Location implements Serializable {
         // We can use instanceof because Location is 'final'
         if (other instanceof Location) {
             Location oth = (Location) other;
-            return (this.latitude == oth.latitude)
-                    && (this.longitude == oth.latitude);
+            return (this.latitude == oth.latitude) && (this.longitude == oth.latitude);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        // TODO: double check if this is the best code for hashCode;
         int latInt = (int) Math.floor(HASH_SCALE * latitude);
         int longInt = (int) Math.floor(HASH_SCALE * longitude);
         return (latInt * longInt);
@@ -209,8 +201,7 @@ public final class Location implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
-    private void readObject(final ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
         // in future versions.

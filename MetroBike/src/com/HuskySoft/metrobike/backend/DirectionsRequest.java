@@ -53,12 +53,18 @@ public final class DirectionsRequest implements Serializable {
     private String errorMessages;
 
     /**
+     * Holds any extra information about errors.
+     */
+    private String extendedErrors;
+
+    /**
      * Constructs a new DirectionsRequest object.
      */
     public DirectionsRequest() {
         myParams = new RequestParameters();
         solutions = null;
         errorMessages = null;
+        extendedErrors = null;
     }
 
     /**
@@ -86,9 +92,8 @@ public final class DirectionsRequest implements Serializable {
             // myJSON = new JSONObject(jsonResponse);
             if (!myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()).equalsIgnoreCase(
                     GoogleMapsResponseStatusCodes.OK.toString())) {
-                System.err.println(TAG + 
-                        "JSON Response returned: "
-                                + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
+                System.err.println(TAG + "JSON Response returned: "
+                        + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
             }
         } catch (JSONException e) {
             appendErrorMessage("Error parsing JSON.");
@@ -136,13 +141,13 @@ public final class DirectionsRequest implements Serializable {
         SimpleAlgorithm firstAlg = new SimpleAlgorithm();
         DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
         if (firstStatus.isError()) {
-            appendErrorMessage(firstAlg.getErrors());
+            extendedErrors = firstAlg.getErrors();
             return firstStatus;
         } else {
             List<Route> firstRoutes = firstAlg.getResults();
 
             if (firstRoutes == null) {
-               System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
+                System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
                 appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
                 return DirectionsStatus.NO_RESULTS_FOUND;
             }
@@ -576,6 +581,14 @@ public final class DirectionsRequest implements Serializable {
      */
     public String getErrorMessages() {
         return errorMessages;
+    }
+
+    /**
+     * @return the extended error messages. Returns null if no messages have
+     *         been set.
+     */
+    public String getExtendedErrorMessages() {
+        return extendedErrors;
     }
 
     /**

@@ -85,7 +85,7 @@ public final class Leg implements Serializable {
      * @param jsonLeg
      *            the JSON to parse into a Leg object
      * @return A Leg based on the passed json_src
-     * @throws JSONException
+     * @throws JSONException If parsing the JSON fails
      */
     public static Leg buildLegFromJSON(final JSONObject jsonLeg) throws JSONException {
         Leg newLeg = new Leg();

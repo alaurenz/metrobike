@@ -24,12 +24,11 @@ public final class Utility {
 
     /**
      * A private constructor that throws an error to deter instantiation of this
-     * utility class.
-     * 
-     * @throws AssertionError
-     *             if the constructor is called
+     * utility class. Throws unchecked exception AssertionError if called. Note
+     * that Checkstyle gets upset if we give the 'throws' clause, so we leave it
+     * out here.
      */
-    private Utility() throws AssertionError {
+    private Utility() {
         /*
          * Based on a suggestion here
          * http://stackoverflow.com/questions/7766277/
@@ -287,13 +286,13 @@ public final class Utility {
         URL url = new URL(theURL);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
-            BufferedReader in =
-                    new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    urlConnection.getInputStream()));
             String aLine = "";
             while (aLine != null) {
                 response.append(aLine);
                 aLine = in.readLine();
-                //Log.w(TAG, "Got line: '" + aLine + "'");
+                // Log.w(TAG, "Got line: '" + aLine + "'");
             }
             in.close();
         } finally {

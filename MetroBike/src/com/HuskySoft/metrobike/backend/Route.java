@@ -82,7 +82,7 @@ public final class Route implements Serializable {
      * @param jsonRoute
      *            the JSON to parse into a route object
      * @return A route based on the passed json_src
-     * @throws JSONException
+     * @throws JSONException If parsing the JSON fails
      */
     public static Route buildRouteFromJSON(final JSONObject jsonRoute) throws JSONException {
         Route newRoute = new Route();
