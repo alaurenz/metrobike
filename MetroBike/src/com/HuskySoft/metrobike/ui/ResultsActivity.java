@@ -211,7 +211,6 @@ public class ResultsActivity extends Activity {
      * draw the current route on the map.
      */
     private void drawRoute() {
-        Toast.makeText(getApplicationContext(), "" + com.HuskySoft.metrobike.ui.utility.Utility.getCameraZoomLevel(routes.get(currRoute)), Toast.LENGTH_SHORT).show();
         if (currRoute >= 0 && currRoute < routes.size()) {
             //clear the map drawing first
             mMap.clear();
