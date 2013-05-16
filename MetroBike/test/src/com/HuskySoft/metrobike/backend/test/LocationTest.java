@@ -35,97 +35,108 @@ public class LocationTest extends TestCase {
      * @throws Exception
      */
     //@Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // Seattle
         loc = new Location(latitude, longitude);
     }
 
     /**
-     * This tests the getLatitude method.
+     * WhiteBox: This tests the getLatitude method.
+     * @throws Exception 
      */
     //@Test
-    public void test_getLatitudeTest() {
+    public void test_getLatitudeTest() throws Exception {
+        setUp();
         double expected = latitude;
         double actual = loc.getLatitude();
         double delta = .001;
 
-        Assert.assertEquals(expected, actual, delta);
+        Assert.assertEquals("Actual value of loc.getLatitude() was: " + actual, expected, actual, delta);
     }
 
     /**
-     * This tests the getLongitude method.
+     * WhiteBox: This tests the getLongitude method.
      */
     //@Test
     public void test_getLongitudeTest() {
+        setUp();
         double expected = longitude;
         double actual = loc.getLongitude();
         double delta = .001;
 
-        Assert.assertEquals(expected, actual, delta);
+        Assert.assertEquals("Actual value of loc.getLongitude() was: " + actual, expected, actual, delta);
     }
 
     /**
-     * This tests the hashCode method.
+     * WhiteBox: This tests the hashCode method.
      */
     //@Test
     public void test_hashCodeTest() {
+        setUp();
         int expected = -1529164004;
         int actual = loc.hashCode();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of loc.hashCode() was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the equals method.
+     * WhiteBox: This tests the equals method.
      */
     //@Test
     public void test_equalsTest() {
-        Assert.assertTrue(loc.equals(loc));
+        setUp();
+        Assert.assertTrue("Actual value of loc.equals(loc) was: false", loc.equals(loc));
     }
 
     /**
-     * This tests that the equals method returns false on different objects.
+     * WhiteBox: This tests that the equals method returns false on different objects.
      */
     //@Test
     public void test_equalsDiffObjectTest() {
-        Assert.assertFalse(loc.equals(new LinkedList<String>()));
+        setUp();
+        Assert.assertFalse("Actual value of loc.equals(new LinkedList<String>()) was: true", loc.equals(new LinkedList<String>()));
     }
 
     /**
-     * This tests that the equals method returns false when the longitude is incorrect.
+     * WhiteBox: This tests that the equals method returns false when the longitude is incorrect.
      */
     //@Test
     public void test_equalsWrongLatTest() {
-        Assert.assertFalse(loc.equals(new Location(latitude, 20.0)));
+        setUp();
+        Assert.assertFalse("Actual value of loc.equals(new Location(latitude, latitude)) was: true", loc.equals(new Location(latitude, latitude)));
     }
 
     /**
-     * This tests that the equals method returns false when the latitude is incorrect.
+     * WhiteBox: This tests that the equals method returns false when the latitude is incorrect.
+     * https://github.com/alaurenz/metrobike/issues/94
      */
     //@Test
     public void test_equalsWrongLongTest() {
-        Assert.assertTrue(!loc.equals(new Location(20.00, longitude)));
+        setUp();
+        Assert.assertTrue("Actual value of loc.equals(new Location(longitude, longitude)) was: false", !loc.equals(new Location(longitude, longitude)));
     }
 
     /**
-     * This tests the toString method.
+     * WhiteBox: This tests the toString method.
      */
     //@Test
     public void test_toStringTest() {
+        setUp();
         String expected = "    Location:\n        Latitude: 47.61\n        Longitude: -122.33\n";
         loc.setIndent(2);
         String actual = loc.toString();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of loc.toString() was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the getIndent method.
+     * WhiteBox: This tests the getIndent method.
      */
     //@Test
     public void test_getIndentTest() {
+        setUp();
         int expected = 2;
         loc.setIndent(expected);
         int actual = loc.getIndent();
 
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of loc.getIndent() was: " + actual, expected, actual);
     }
 }

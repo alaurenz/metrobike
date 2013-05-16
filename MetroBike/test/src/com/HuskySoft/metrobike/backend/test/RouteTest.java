@@ -6,6 +6,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.HuskySoft.metrobike.backend.Leg;
@@ -27,33 +28,38 @@ public class RouteTest extends TestCase {
 
     /**
      * This initializes the route variable for each test.
+     * @throws JSONException 
      * 
      * @throws Exception
      */
     //@Before
-    public void setUp() throws Exception {
+    public void setUp() throws JSONException  {
         JSONObject myJSON = new JSONObject(dummyBicycleJSON);
         JSONArray routesArray = myJSON.getJSONArray(WebRequestJSONKeys.ROUTES.getLowerCase());
         route = Route.buildRouteFromJSON(routesArray.getJSONObject(0));
     }
 
     /**
-     * This tests the setSummary method.
+     * WhiteBox: This tests the setSummary method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_setSummaryTest() {
+    public void test_setSummaryTest() throws JSONException {
+        setUp();
         String summary = "This is a summary";
         String expected = summary;
         route.setSummary(summary);
         String actual = route.getSummary();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.getSummary was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the getWarnings method.
+     * WhiteBox: This tests the getWarnings method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getWarningsTest() {
+    public void test_getWarningsTest() throws JSONException {
+        setUp();
         String expected = "Bicycling directions are in beta. Use caution – " 
                 + "This route may contain streets that aren't suited for bicycling.";
         List<String> warnings = route.getWarnings();
@@ -62,74 +68,93 @@ public class RouteTest extends TestCase {
             actual += warnings.get(i);
         }
 
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.getWarnings() (Note:concatenated " 
+                + "the list together) was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the getNeBound method.
+     * WhiteBox: This tests the getNeBound method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getNEBoundTest() {
+    public void test_getNEBoundTest() throws JSONException {
+        setUp();
         Location expected = new Location(47.67604, -122.31325);
         Location actual = route.getNeBound();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.getNeBound() was: " + actual.toString(), expected, actual);
     }
 
     /**
-     * This tests the get SwBound method.
+     * WhiteBox: This tests the get SwBound method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getSWBoundTest() {
+    public void test_getSWBoundTest() throws JSONException {
+        setUp();
         Location expected = new Location(47.65358000000001, -122.32582);
         Location actual = route.getSwBound();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.getSwBound() was: " + actual.toString(), expected, actual);
     }
 
     /**
-     * This tests the getDistanceInMeters() method.
+     * WhiteBox: This tests the getDistanceInMeters() method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getdistanceInMetersTest() {
+    public void test_getdistanceInMetersTest() throws JSONException {
+        setUp();
         long expected = 3402;
         long actual = route.getDistanceInMeters();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.getDistanceInMeters() was: " + actual,
+                expected, actual);
     }
 
     /**
-     * This tests the getDurationInSeconds method.
+     * WhiteBox: This tests the getDurationInSeconds method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getDurationInSecondsTest() {
+    public void test_getDurationInSecondsTest() throws JSONException {
+        setUp();
         long expected = 761;
         long actual = route.getDurationInSeconds();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.getDurationInSeconds() was: " + actual,
+                expected, actual);
     }
 
     /**
-     * This tests the getLegList method and verifies that the returned list is not null.
+     * WhiteBox: This tests the getLegList method and verifies that the returned list is not null.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getLegListListIsNotNullTest() {
+    public void test_getLegListListIsNotNullTest() throws JSONException {
+        setUp();
         List<Leg> expected = null;
         List<Leg> actual = route.getLegList();
-        Assert.assertFalse(actual.equals(expected));
+        Assert.assertFalse("Actual value for route.getLegList() was: " 
+                + actual, actual.equals(expected));
     }
 
     /**
-     * This tests the getLegList method and verifies that the returned list is not size zero.
+     * WhiteBox: This tests the getLegList method and verifies that the returned list is not size zero.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getLegListListIsNotSizeZeroTest() {
+    public void test_getLegListListIsNotSizeZeroTest() throws JSONException {
+        setUp();
         int expected = 0;
         int actual = route.getLegList().size();
-        Assert.assertFalse(expected == actual);
+        Assert.assertFalse("Actual value for route.getLegList().size() was: " 
+                + actual, expected == actual);
     }
 
     /**
-     * This tests the getDirectionsStepsText method.
+     * WhiteBox: This tests the getDirectionsStepsText method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getDirectionsStepsTextTest() {
+    public void test_getDirectionsStepsTextTest() throws JSONException {
+        setUp();
         String expected = "Head <b>southeast</b> on <b>Latona Ave NE</b> toward <b>NE 65th St</b>"
                 + "Turn <b>left</b> onto <b>NE 65th St</b>Turn <b>right</b> onto "
                 + "<b>NE Ravenna Blvd</b>Turn <b>right</b> onto <b>Roosevelt Way NE</b>Turn "
@@ -143,37 +168,44 @@ public class RouteTest extends TestCase {
             actual += text.get(i);
         }
 
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.directionsStepsText() " 
+                + "(concatenated the list for testing) was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the getPolyLinePoints method and checks that it is not null.
+     * WhiteBox: This tests the getPolyLinePoints method and checks that it is not null.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getPolyLinePointsNotNullTest() {
+    public void test_getPolyLinePointsNotNullTest() throws JSONException {
+        setUp();
         List<Location> expected = null;
         List<Location> actual = route.getPolyLinePoints();
-        Assert.assertFalse(actual.equals(expected));
+        Assert.assertFalse("Actual value for route.getPolyLinePoints() was: " + actual, actual.equals(expected));
     }
 
     /**
-     * This tests the getPolyLinePoints method and checks that it is not size zero.
+     * WhiteBox: This tests the getPolyLinePoints method and checks that it is not size zero.
+     * @throws JSONException 
      */
     //@Test
-    public void test_getPolyLinePointsNotSizeZeroTest() {
+    public void test_getPolyLinePointsNotSizeZeroTest() throws JSONException {
+        setUp();
         int expected = 0;
         int actual = route.getPolyLinePoints().size();
-        Assert.assertFalse(expected == actual);
+        Assert.assertFalse("Actual value for route.getPolyLinePoints().size() was: " + actual, expected == actual);
     }
 
     /**
-     * This tests the toString method.
+     * WhiteBox: This tests the toString method.
+     * @throws JSONException 
      */
     //@Test
-    public void test_toStringTest() {
+    public void test_toStringTest() throws JSONException {
+        setUp();
         String expected = dummyBicycleJSONToString;
         String actual = route.toString();
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value for route.toString() was: " + actual, expected, actual);
     }
 
     /**

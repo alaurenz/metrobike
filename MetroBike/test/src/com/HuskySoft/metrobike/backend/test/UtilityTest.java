@@ -67,7 +67,7 @@ public class UtilityTest extends TestCase {
             + "departure_time=1000&" + "mode=transit&" + "alternatives=false";
 
     /**
-     * This tests the jsonArrayToStringList method.
+     * WhiteBox: This tests the jsonArrayToStringList method.
      * 
      * @throws JSONException
      */
@@ -75,11 +75,11 @@ public class UtilityTest extends TestCase {
     public void test_jsonArrayToStringListTest() throws JSONException {
         JSONArray testArray = new JSONArray(jsonArrayToStringListTestString);
         List<String> testValue = Utility.jsonArrayToStringList(testArray);
-        Assert.assertEquals("List was not the expected size", 3, testValue.size());
+        Assert.assertEquals("List's actual size was: " + testValue.size(), 3, testValue.size());
     }
 
     /**
-     * This tests the buildBicycleQueryString method with multiple routes.
+     * WhiteBox: This tests the buildBicycleQueryString method with multiple routes.
      * 
      * @throws UnsupportedEncodingException
      */
@@ -89,11 +89,12 @@ public class UtilityTest extends TestCase {
         String expected = buildBicycleQueryString_MultipleRoutesTestString;
         String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual, 
+                expected, actual);
     }
 
     /**
-     * This tests the buildBicycleQueryString method with a single route.
+     * WhiteBox: This tests the buildBicycleQueryString method with a single route.
      * 
      * @throws UnsupportedEncodingException
      */
@@ -103,11 +104,12 @@ public class UtilityTest extends TestCase {
         String expected = buildBicycleQueryString_SingleRouteTestString;
         String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual, 
+                expected, actual);
     }
 
     /**
-     * This tests the buildTransitQueryString method with multi-Routes and arrival set.
+     * WhiteBox: This tests the buildTransitQueryString method with multi-Routes and arrival set.
      * 
      * @throws UnsupportedEncodingException
      */
@@ -120,11 +122,12 @@ public class UtilityTest extends TestCase {
         String expected = buildTransitQueryString_MultipleRoutes_ArrivalTestString;
         String actual = Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual, 
+                expected, actual);
     }
 
     /**
-     * This tests the buildTransitQueryString method with a single Routes and arrival set.
+     * WhiteBox: This tests the buildTransitQueryString method with a single Routes and arrival set.
      * 
      * @throws UnsupportedEncodingException
      */
@@ -137,11 +140,12 @@ public class UtilityTest extends TestCase {
         String expected = buildTransitQueryString_SingleRoute_DepartureTestString;
         String actual = Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual, 
+                expected, actual);
     }
 
     /**
-     * This tests the listPrettyPrint method.
+     * WhiteBox: This tests the listPrettyPrint method.
      */
     //@Test
     public void test_listPrettyPrintTest() {
@@ -152,11 +156,11 @@ public class UtilityTest extends TestCase {
         list.add("second");
         list.add("third");
         String actual = Utility.listPrettyPrint(list, indent);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.listPrettyPrint() was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the listPrettyPrint method with a null list.
+     * WhiteBox: This tests the listPrettyPrint method with a null list.
      */
     //@Test
     public void test_listPrettyPrintNullTest() {
@@ -164,11 +168,11 @@ public class UtilityTest extends TestCase {
         String expected = null;
         List<String> list = null;
         String actual = Utility.listPrettyPrint(list, indent);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.listPrettyPrint() was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the listPrettyPrint method with a null response.
+     * WhiteBox: This tests the listPrettyPrint method with a null response.
      */
     //@Test
     public void test_listPrettyPrintZeroSizeNullTest() {
@@ -176,21 +180,21 @@ public class UtilityTest extends TestCase {
         String expected = null;
         List<String> list = new LinkedList<String>();
         String actual = Utility.listPrettyPrint(list, indent);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.listPrettyPrint() was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the getIndentString method.
+     * WhiteBox: This tests the getIndentString method.
      */
     //@Test
     public void test_getIndentStringTest() {
         String expected = "    ";
         String actual = Utility.getIndentString();
-        Assert.assertEquals("IndentString was not the expected value", expected, actual);
+        Assert.assertEquals("Actual value of Utility.getIndentString() was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the getSubstepsAsString method and passes the method a null value.
+     * WhiteBox: This tests the getSubstepsAsString method and passes the method a null value.
      * 
      * @throws JSONException
      */
@@ -199,11 +203,11 @@ public class UtilityTest extends TestCase {
         String expected = "";
         int indent = 0;
         String actual = Utility.getSubstepsAsString(null, indent);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.getSubstepsAsString() was: " + actual, expected, actual);
     }
 
     /**
-     * This tests the getSubstepsAsString method and passes the method an empty string.
+     * WhiteBox: This tests the getSubstepsAsString method and passes the method an empty string.
      * 
      * @throws JSONException
      */
@@ -212,6 +216,6 @@ public class UtilityTest extends TestCase {
         int indent = 1;
         String expected = "";
         String actual = Utility.getSubstepsAsString(new LinkedList<Step>(), indent);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals("Actual value of Utility.getSubstepsAsString() was: " + actual, expected, actual);
     }
 }
