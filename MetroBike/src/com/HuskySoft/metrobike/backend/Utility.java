@@ -312,6 +312,10 @@ public final class Utility {
      * @return a String representation of the list
      */
     public static String listPrettyPrint(final List<?> list, final int indent) {
+        if(list == null || list.size() == 0) {
+            return null;
+        }
+        
         String indentString = "";
         for (int i = 0; i < indent; i++) {
             indentString += INDENT_STRING;
