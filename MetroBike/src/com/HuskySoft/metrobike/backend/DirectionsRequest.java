@@ -144,46 +144,36 @@ public final class DirectionsRequest implements Serializable {
         
         //DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
         DirectionsStatus comboStatus = comboAlg.findRoutes(myParams);
-        if (comboStatus.isError()) { // || firstStatus.isError()
-            /*if(firstStatus.isError()) {
-                appendErrorMessage(firstAlg.getErrors());
-                return firstStatus;
-            }*/
-            if (comboStatus.isError()) {
-                //appendErrorMessage(comboAlg.getErrors());
-                extendedErrors = comboAlg.getErrors();
-                return comboStatus;
-            }
-
-//        SimpleAlgorithm firstAlg = new SimpleAlgorithm();
-//        DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
-            /*
-        if (firstStatus.isError()) {
+        
+        /*if(firstStatus.isError()) {
             extendedErrors = firstAlg.getErrors();
             return firstStatus;
-        } else {*/
-            //List<Route> firstRoutes = firstAlg.getResults();
-            List<Route> comboRoutes = comboAlg.getResults();
-
-            /*if (firstRoutes == null) {
-                System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
-                appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
-                return DirectionsStatus.NO_RESULTS_FOUND;
-            }*/
-            if (comboRoutes == null) {
-                System.err.println(TAG + "Got null from SimpleComboAlgorithm without an error");
-//            if (firstRoutes == null) {
-//                System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
-                appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
-                return DirectionsStatus.NO_RESULTS_FOUND;
-            }
-
-            // TODO: temp for testing
-            //solutions.add(firstRoutes.get(0));
-            //solutions.add(comboRoutes.get(0));
-            solutions.addAll(comboRoutes);
+        }*/
+        if (comboStatus.isError()) {
+            //appendErrorMessage(comboAlg.getErrors());
+            extendedErrors = comboAlg.getErrors();
+            return comboStatus;
         }
 
+        //List<Route> firstRoutes = firstAlg.getResults();
+        List<Route> comboRoutes = comboAlg.getResults();
+
+        /*if (firstRoutes == null) {
+            System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
+            appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
+            return DirectionsStatus.NO_RESULTS_FOUND;
+        }*/
+        if (comboRoutes == null) {
+            System.err.println(TAG + "Got null from SimpleComboAlgorithm without an error");
+            appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
+            return DirectionsStatus.NO_RESULTS_FOUND;
+        }
+
+        // TODO: temp for testing
+        //solutions.add(firstRoutes.get(0));
+        //solutions.add(comboRoutes.get(0));
+        solutions.addAll(comboRoutes);
+        
         return DirectionsStatus.REQUEST_SUCCESSFUL;
     }
 
