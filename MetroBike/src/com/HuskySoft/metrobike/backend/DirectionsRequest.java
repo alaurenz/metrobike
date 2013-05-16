@@ -54,12 +54,18 @@ public final class DirectionsRequest implements Serializable {
     private String errorMessages;
 
     /**
+     * Holds any extra information about errors.
+     */
+    private String extendedErrors;
+
+    /**
      * Constructs a new DirectionsRequest object.
      */
     public DirectionsRequest() {
         myParams = new RequestParameters();
         solutions = null;
         errorMessages = null;
+        extendedErrors = null;
     }
 
     /**
@@ -87,9 +93,8 @@ public final class DirectionsRequest implements Serializable {
             // myJSON = new JSONObject(jsonResponse);
             if (!myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()).equalsIgnoreCase(
                     GoogleMapsResponseStatusCodes.OK.toString())) {
-                System.err.println(TAG + 
-                        "JSON Response returned: "
-                                + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
+                System.err.println(TAG + "JSON Response returned: "
+                        + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
             }
         } catch (JSONException e) {
             appendErrorMessage("Error parsing JSON.");
@@ -145,10 +150,18 @@ public final class DirectionsRequest implements Serializable {
                 return firstStatus;
             }*/
             if (comboStatus.isError()) {
-                appendErrorMessage(comboAlg.getErrors());
+                //appendErrorMessage(comboAlg.getErrors());
+                extendedErrors = comboAlg.getErrors();
                 return comboStatus;
             }
-        } else {
+
+//        SimpleAlgorithm firstAlg = new SimpleAlgorithm();
+//        DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
+            /*
+        if (firstStatus.isError()) {
+            extendedErrors = firstAlg.getErrors();
+            return firstStatus;
+        } else {*/
             //List<Route> firstRoutes = firstAlg.getResults();
             List<Route> comboRoutes = comboAlg.getResults();
 
@@ -159,6 +172,8 @@ public final class DirectionsRequest implements Serializable {
             }*/
             if (comboRoutes == null) {
                 System.err.println(TAG + "Got null from SimpleComboAlgorithm without an error");
+//            if (firstRoutes == null) {
+//                System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
                 appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
                 return DirectionsStatus.NO_RESULTS_FOUND;
             }
@@ -367,7 +382,7 @@ public final class DirectionsRequest implements Serializable {
 
             // Validate optional parameters
             if (minDistanceToBikeInMeters < 0 || maxDistanceToBikeInMeters < 0
-                    || minNumberBusTransfers < 0 || maxDistanceToBikeInMeters < 0) {
+                    || minNumberBusTransfers < 0 || maxNumberBusTransfers < 0) {
                 appendErrorMessage("All optional parameters (biking distance and bus transfers)"
                         + " must be greater than or equal to zero");
                 return false;
@@ -595,6 +610,14 @@ public final class DirectionsRequest implements Serializable {
      */
     public String getErrorMessages() {
         return errorMessages;
+    }
+
+    /**
+     * @return the extended error messages. Returns null if no messages have
+     *         been set.
+     */
+    public String getExtendedErrorMessages() {
+        return extendedErrors;
     }
 
     /**

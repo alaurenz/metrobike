@@ -249,9 +249,15 @@ public class SearchActivity extends Activity {
             // display an AlertDialog to let user to (re)start
             // a new request
             if (retVal.isError()) {
+                
                 // Generates and displays error message
-                final CharSequence errorMessage = "Error getting directions: "
-                        + dReq.getErrorMessages();
+                String errorMessageString = dReq.getErrorMessages();
+                // Check if there is extended error message
+                if (dReq.getExtendedErrorMessages() != null) { 
+                    errorMessageString += "\n\n" + dReq.getExtendedErrorMessages();
+                }
+                
+                final CharSequence errorMessage = errorMessageString;
 
                 // Must call runOnUiThread if want to display a Toast or a
                 // Dialog within a thread
@@ -481,7 +487,7 @@ public class SearchActivity extends Activity {
             public void onClick(final View v) {
                 dateEditText.setEnabled(true);
                 timeEditText.setEnabled(true);
-                dateEditText.requestFocus();
+                // dateEditText.requestFocus();
             }
         });
 

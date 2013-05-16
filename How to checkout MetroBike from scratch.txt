@@ -1,0 +1,85 @@
+----------------------------------------
+To checkout our repository from scratch:
+----------------------------------------
+(new clone, new Eclipse workspace)
+
+1) Create a directory to hold the repo
+
+2) On command line, inside the directory:
+   
+   git clone git@github.com:alaurenz/metrobike.git
+   (assumes you have ssh keys set up with GitHub)
+
+3) Open Eclipse/ADT to a new workspace
+
+4) File->Import->Android->Existing Android Code Into Workspace
+
+5) Select your metrobike folder and all projects except HelloMetroBike
+   (Uncheck HelloMetroBike for now, to avoid naming conflicts)
+
+6) Leave 'Copy projects into workspace' *unchecked*
+
+7) Refactor->rename MainActivity to MetroBike
+
+8) Refactor->rename test to MetroBikeTest
+
+9) MetroBikeTest->Properties->Java Build Path, Projects tab. Add MetroBike
+
+
+------------------------------------------------
+Add + configure checkstyle tools to Eclipse/ADT:
+------------------------------------------------
+(modified from email instructions)
+
+1) Eclipse top menu bar->Help->Install New Software
+
+2) Work with: http://eclipse-cs.sf.net/update/
+   This is the repo where the checkstyle plugin lives
+   The site: http://eclipse-cs.sourceforge.net/
+
+3) Name the site something like 'Checkstyle'
+
+4) Select the topmost software option 'Checkstyle'
+
+5) Next, next, read+accept, Finish
+
+6) Ok, Yes to restart Eclipse/ADT
+
+7) Window-> Preferences, select 'Checkstyle'
+
+8) New...
+    Type:     External Configuration
+    Name:     MetroBikeCheckStyle
+    Location: (your metrobike folder)/MetroBike/MetroBikeCheckStyle.xml
+
+9) Select the new configuration and click 'Set as Default'
+
+10) Ok to save/close
+
++ To run Checkstyle on a file:
+  Right click -> Checkstyle -> Check Code with Checkstyle
+
++ To clear/reset Checkstyle warnings on a file:
+  Right click -> Checkstyle -> Clear Checkstyle violations
+
+
+----------------------------
+Configure Eclipse Formatter:
+----------------------------
+
+1) Eclipse to bar -> Window -> Preferences
+
+2) In left bar, expand Java -> Code Style -> Formatter
+
+3) Import... (your metrobike folder)/MetroBikeEclipseFormatter.xml
+
+4) Be sure 'MetroBike' is selected as the active profile
+
+5) Apply
+
+6) Ok
+
++ To run the formatter on a file:
+  Open the file, click into the editor and hit Ctrl+Shift+F
+  -or-
+  Right-click->Source->Format

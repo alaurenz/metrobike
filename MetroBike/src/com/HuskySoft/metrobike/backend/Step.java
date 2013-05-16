@@ -350,8 +350,15 @@ public final class Step implements Serializable {
         return stepString.toString();
     }
 
-    public void setIndent(int indent) {
-        this.indent = indent;
+    /**
+     * Setter for the indent field. Affects the amount of indentation used in
+     * the toString() method.
+     * 
+     * @param newIndent
+     *            the new indent value.
+     */
+    public void setIndent(final int newIndent) {
+        this.indent = newIndent;
         indentString = "";
         for (int i = 0; i < indent; i++) {
             indentString = Utility.getIndentString();

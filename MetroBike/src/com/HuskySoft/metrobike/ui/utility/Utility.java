@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.HuskySoft.metrobike.backend.Location;
+import com.HuskySoft.metrobike.backend.Route;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -54,5 +55,30 @@ public final class Utility {
             toReturn.add(convertLocation(l));
         }
         return toReturn;
+    }
+    
+    /**
+     * Get the center of the route to let the camera center there
+     * @param r route to be process
+     * @return a LatLng representation of the geographical point on the map
+     */
+    public static LatLng getCameraCenter(Route route) {
+        double latitude = (route.getNeBound().getLatitude() + route.getSwBound().getLatitude()) /2;
+        double longitude = (route.getNeBound().getLongitude() + route.getSwBound().getLongitude()) /2;
+        return new LatLng(latitude, longitude);
+    }
+    
+    
+    /**
+     * Get the appropriate zoom level of the given route
+     * @param route: the route object to be process
+     * @return a float number representation of the level
+     */
+    public static float getCameraZoomLevel(Route route) {
+        double latitudeDif = route.getNeBound().getLatitude() - route.getSwBound().getLatitude();
+        double longitudeDif = route.getNeBound().getLongitude() - route.getSwBound().getLongitude();
+        double maxOfTwo = Math.max(latitudeDif, longitudeDif * 1.5);
+        double E = 259.6656;
+        return Math.round(Math.log(E/maxOfTwo)/Math.log(2)+1);
     }
 }

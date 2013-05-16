@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.Leg;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -56,11 +58,6 @@ public class ResultsActivity extends Activity {
      * Current route that should be displayed on the map.
      */
     private int currRoute = -1;
-
-    /**
-     * default camera zoom level.
-     */
-    private static final float FIXED_DEFAULT_ZOOM_LEVEL = 13.0f;
 
     /**
      * {@inheritDoc}
@@ -226,18 +223,20 @@ public class ResultsActivity extends Activity {
 
             //draw Markers for starting and ending points
             mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(start.getLatitude(), start.getLongitude()))
+                    .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
                     .title("Start Here!")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
 
             mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(end.getLatitude(), end.getLongitude())).title("End Here!")
+                    .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(end)).title("End Here!")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
             
+            mMap.addCircle(new CircleOptions()
+            .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
+            .radius(4)
+            .strokeColor(Color.BLACK).strokeWidth(3)
+            .fillColor(Color.WHITE).zIndex(2));
             
-            //calculate the position that the camera should focus
-            double cameraLatitude = (start.getLatitude() + end.getLatitude()) / 2;
-            double cameraLongitude = (start.getLongitude() + end.getLongitude()) / 2;
             
             //draw Poly-line on the map
             
@@ -252,13 +251,19 @@ public class ResultsActivity extends Activity {
                     } else {
                         mMap.addPolyline(polylineOptions.color(Color.argb(200, 0, 0, 255)).width(8f).zIndex(1));
                     }
+                    mMap.addCircle(new CircleOptions()
+                    .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s.getEndLocation()))
+                    .radius(4)
+                    .strokeColor(Color.BLACK).strokeWidth(3)
+                    .fillColor(Color.WHITE).zIndex(2));
                 }
             }
             
 
             //set the camera to focus on the route
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude,
-                    cameraLongitude), FIXED_DEFAULT_ZOOM_LEVEL),
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    com.HuskySoft.metrobike.ui.utility.Utility.getCameraCenter(routes.get(currRoute)), 
+                    com.HuskySoft.metrobike.ui.utility.Utility.getCameraZoomLevel(routes.get(currRoute))),
                     ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
         }
     }
