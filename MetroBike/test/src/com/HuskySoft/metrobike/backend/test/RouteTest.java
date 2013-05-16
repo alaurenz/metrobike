@@ -7,9 +7,6 @@ import junit.framework.TestCase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-//import org.junit.Assert;
-//import org.junit.Before;
-//import org.junit.Test;
 
 import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Location;
@@ -57,8 +54,8 @@ public class RouteTest extends TestCase {
      */
     //@Test
     public void test_getWarningsTest() {
-        String expected = "Bicycling directions are in beta. Use caution – " +
-                "This route may contain streets that aren't suited for bicycling.";
+        String expected = "Bicycling directions are in beta. Use caution – " 
+                + "This route may contain streets that aren't suited for bicycling.";
         List<String> warnings = route.getWarnings();
         String actual = "";
         for (int i = 0; i < warnings.size(); i++) {

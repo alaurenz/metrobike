@@ -12,8 +12,6 @@ import junit.framework.TestCase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-//import org.junit.Assert;
-//import org.junit.Test;
 
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.Utility;

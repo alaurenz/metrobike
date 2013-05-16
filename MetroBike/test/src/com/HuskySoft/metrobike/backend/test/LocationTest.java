@@ -5,10 +5,6 @@ import java.util.LinkedList;
 import junit.framework.TestCase;
 import junit.framework.Assert;
 
-//import org.junit.Assert;
-//import org.junit.Before;
-//import org.junit.Test;
-
 import com.HuskySoft.metrobike.backend.Location;
 
 /**

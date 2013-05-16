@@ -17,7 +17,7 @@ import com.HuskySoft.metrobike.backend.TravelMode;
  * @author coreyh3
  *
  */
-public class DirectionsRequestTest extends TestCase{
+public final class DirectionsRequestTest extends TestCase {
 
     /**
      * This holds a directionsRequest object for use by other testing methods.
@@ -71,6 +71,9 @@ public class DirectionsRequestTest extends TestCase{
     public void test_doRequestTest() {
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
+        request.setArrivalTime(0);
+        request.setDepartureTime(4000000);
+        
         DirectionsStatus actual = request.doRequest();
         Assert.assertEquals(expected, actual);
     }
