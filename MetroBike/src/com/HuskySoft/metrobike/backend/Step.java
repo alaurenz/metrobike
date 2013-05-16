@@ -24,7 +24,7 @@ public final class Step implements Serializable {
      * or writeObject() methods, so we don't have old-version Step objects (ex:
      * from the log) being made into new-version Step objects.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * The distance of this step in meters.

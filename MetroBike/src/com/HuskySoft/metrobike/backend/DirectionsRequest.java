@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.HuskySoft.metrobike.algorithm.SimpleAlgorithm;
+import com.HuskySoft.metrobike.algorithm.SimpleComboAlgorithm;
 
 /**
  * @author coreyh3
@@ -133,21 +134,39 @@ public final class DirectionsRequest implements Serializable {
          */
 
         // Query the simple algorithm first
-        SimpleAlgorithm firstAlg = new SimpleAlgorithm();
-        DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
-        if (firstStatus.isError()) {
-            appendErrorMessage(firstAlg.getErrors());
-            return firstStatus;
+        //SimpleAlgorithm firstAlg = new SimpleAlgorithm();
+        SimpleComboAlgorithm comboAlg = new SimpleComboAlgorithm();
+        
+        //DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
+        DirectionsStatus comboStatus = comboAlg.findRoutes(myParams);
+        if (comboStatus.isError()) { // || firstStatus.isError()
+            /*if(firstStatus.isError()) {
+                appendErrorMessage(firstAlg.getErrors());
+                return firstStatus;
+            }*/
+            if (comboStatus.isError()) {
+                appendErrorMessage(comboAlg.getErrors());
+                return comboStatus;
+            }
         } else {
-            List<Route> firstRoutes = firstAlg.getResults();
+            //List<Route> firstRoutes = firstAlg.getResults();
+            List<Route> comboRoutes = comboAlg.getResults();
 
-            if (firstRoutes == null) {
-               System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
+            /*if (firstRoutes == null) {
+                System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
+                appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
+                return DirectionsStatus.NO_RESULTS_FOUND;
+            }*/
+            if (comboRoutes == null) {
+                System.err.println(TAG + "Got null from SimpleComboAlgorithm without an error");
                 appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
                 return DirectionsStatus.NO_RESULTS_FOUND;
             }
 
-            solutions.addAll(firstRoutes);
+            // TODO: temp for testing
+            //solutions.add(firstRoutes.get(0));
+            //solutions.add(comboRoutes.get(0));
+            solutions.addAll(comboRoutes);
         }
 
         return DirectionsStatus.REQUEST_SUCCESSFUL;

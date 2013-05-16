@@ -111,6 +111,15 @@ public final class Location implements Serializable {
     }
     
     /**
+     * Returns a string representation of this location
+     * 
+     * @return this location in format: latitude,longitude
+     */
+    public String getLocationAsString() {
+        return latitude + "," + longitude;
+    }
+    
+    /**
      * Returns a Location that is a South-West bound on the passed Locations. If
      * one location is null, the non-null location will be returned. If both
      * locations are null, null will be returned.

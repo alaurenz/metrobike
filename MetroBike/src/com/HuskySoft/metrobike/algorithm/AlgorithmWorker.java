@@ -241,6 +241,10 @@ public abstract class AlgorithmWorker {
                 // Could even be as simple as checking for this error
                 addError(DirectionsStatus.NO_RESULTS_FOUND);
                 return null;
+            } else if (statusString.equalsIgnoreCase(
+                    GoogleMapsResponseStatusCodes.OVER_QUERY_LIMIT.toString())) {
+                addError(DirectionsStatus.OVER_QUERY_LIMIT);
+                return null;
             }
         } catch (JSONException e) {
             addError(DirectionsStatus.PARSING_ERROR);

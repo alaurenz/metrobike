@@ -54,7 +54,13 @@ public enum DirectionsStatus {
      * No results found. Probably a problem with location or travel time.
      */
     NO_RESULTS_FOUND("Found no results.  Please check to be sure your addresses"
-            + " and travel options are correct!", true);
+            + " and travel options are correct!", true),
+    
+    /**
+     * Over query limit. Google Directions says we have exceeded the query limit (for the day)
+     */
+    OVER_QUERY_LIMIT("Over query limit. App has exceeded maximum number of daily"
+            + " directions request queries from Google.", true);
 
     /**
      * The human-readable message to store.
