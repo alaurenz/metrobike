@@ -353,7 +353,7 @@ public final class DirectionsRequest implements Serializable {
 
             // Validate optional parameters
             if (minDistanceToBikeInMeters < 0 || maxDistanceToBikeInMeters < 0
-                    || minNumberBusTransfers < 0 || maxDistanceToBikeInMeters < 0) {
+                    || minNumberBusTransfers < 0 || maxNumberBusTransfers < 0) {
                 appendErrorMessage("All optional parameters (biking distance and bus transfers)"
                         + " must be greater than or equal to zero");
                 return false;

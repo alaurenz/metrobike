@@ -40,6 +40,11 @@ public final class Location implements Serializable {
     private double longitude;
 
     /**
+     * The amount to indent the toString call.
+     */
+    int indent = 0;
+    
+    /**
      * The actual indented string.
      */
     private String indentString = "";
@@ -141,10 +146,21 @@ public final class Location implements Serializable {
      *            the new indent value.
      */
     public void setIndent(final int indent) {
+        this.indent = indent;
         indentString = "";
         for (int i = 0; i < indent; i++) {
             indentString = Utility.getIndentString();
         }
+    }
+    
+    
+    /**
+     * This is the getter for the indent field.
+     * 
+     * @return the amount to indent.
+     */
+    public int getIndent() {
+        return indent;
     }
 
     @Override
@@ -162,7 +178,7 @@ public final class Location implements Serializable {
         // We can use instanceof because Location is 'final'
         if (other instanceof Location) {
             Location oth = (Location) other;
-            return (this.latitude == oth.latitude) && (this.longitude == oth.latitude);
+            return (this.latitude == oth.latitude) && (this.longitude == oth.longitude);
         }
         return false;
     }
