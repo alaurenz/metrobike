@@ -2,11 +2,14 @@ package com.HuskySoft.metrobike.backend.test;
 
 import java.util.List;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+//import org.junit.Assert;
+//import org.junit.Before;
+//import org.junit.Test;
 
 import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Location;
@@ -19,7 +22,7 @@ import com.HuskySoft.metrobike.backend.WebRequestJSONKeys;
  * @author coreyh3
  *
  */
-public class RouteTest {
+public class RouteTest extends TestCase {
     /**
      * This is a route variable that is used for testing this class.
      */
@@ -30,7 +33,7 @@ public class RouteTest {
      * 
      * @throws Exception
      */
-    @Before
+    //@Before
     public void setUp() throws Exception {
         JSONObject myJSON = new JSONObject(dummyBicycleJSON);
         JSONArray routesArray = myJSON.getJSONArray(WebRequestJSONKeys.ROUTES.getLowerCase());
@@ -40,8 +43,8 @@ public class RouteTest {
     /**
      * This tests the setSummary method.
      */
-    @Test
-    public void setSummaryTest() {
+    //@Test
+    public void test_setSummaryTest() {
         String summary = "This is a summary";
         String expected = summary;
         route.setSummary(summary);
@@ -52,8 +55,8 @@ public class RouteTest {
     /**
      * This tests the getWarnings method.
      */
-    @Test
-    public void getWarningsTest() {
+    //@Test
+    public void test_getWarningsTest() {
         String expected = "Bicycling directions are in beta. Use caution – " +
                 "This route may contain streets that aren't suited for bicycling.";
         List<String> warnings = route.getWarnings();
@@ -68,8 +71,8 @@ public class RouteTest {
     /**
      * This tests the getNeBound method.
      */
-    @Test
-    public void getNEBoundTest() {
+    //@Test
+    public void test_getNEBoundTest() {
         Location expected = new Location(47.67604, -122.31325);
         Location actual = route.getNeBound();
         Assert.assertEquals(expected, actual);
@@ -78,8 +81,8 @@ public class RouteTest {
     /**
      * This tests the get SwBound method.
      */
-    @Test
-    public void getSWBoundTest() {
+    //@Test
+    public void test_getSWBoundTest() {
         Location expected = new Location(47.65358000000001, -122.32582);
         Location actual = route.getSwBound();
         Assert.assertEquals(expected, actual);
@@ -88,8 +91,8 @@ public class RouteTest {
     /**
      * This tests the getDistanceInMeters() method.
      */
-    @Test
-    public void getdistanceInMetersTest() {
+    //@Test
+    public void test_getdistanceInMetersTest() {
         long expected = 3402;
         long actual = route.getDistanceInMeters();
         Assert.assertEquals(expected, actual);
@@ -98,8 +101,8 @@ public class RouteTest {
     /**
      * This tests the getDurationInSeconds method.
      */
-    @Test
-    public void getDurationInSecondsTest() {
+    //@Test
+    public void test_getDurationInSecondsTest() {
         long expected = 761;
         long actual = route.getDurationInSeconds();
         Assert.assertEquals(expected, actual);
@@ -108,8 +111,8 @@ public class RouteTest {
     /**
      * This tests the getLegList method and verifies that the returned list is not null.
      */
-    @Test
-    public void getLegListListIsNotNullTest() {
+    //@Test
+    public void test_getLegListListIsNotNullTest() {
         List<Leg> expected = null;
         List<Leg> actual = route.getLegList();
         Assert.assertFalse(actual.equals(expected));
@@ -118,8 +121,8 @@ public class RouteTest {
     /**
      * This tests the getLegList method and verifies that the returned list is not size zero.
      */
-    @Test
-    public void getLegListListIsNotSizeZeroTest() {
+    //@Test
+    public void test_getLegListListIsNotSizeZeroTest() {
         int expected = 0;
         int actual = route.getLegList().size();
         Assert.assertFalse(expected == actual);
@@ -128,8 +131,8 @@ public class RouteTest {
     /**
      * This tests the getDirectionsStepsText method.
      */
-    @Test
-    public void getDirectionsStepsTextTest() {
+    //@Test
+    public void test_getDirectionsStepsTextTest() {
         String expected = "Head <b>southeast</b> on <b>Latona Ave NE</b> toward <b>NE 65th St</b>"
                 + "Turn <b>left</b> onto <b>NE 65th St</b>Turn <b>right</b> onto "
                 + "<b>NE Ravenna Blvd</b>Turn <b>right</b> onto <b>Roosevelt Way NE</b>Turn "
@@ -149,8 +152,8 @@ public class RouteTest {
     /**
      * This tests the getPolyLinePoints method and checks that it is not null.
      */
-    @Test
-    public void getPolyLinePointsNotNullTest() {
+    //@Test
+    public void test_getPolyLinePointsNotNullTest() {
         List<Location> expected = null;
         List<Location> actual = route.getPolyLinePoints();
         Assert.assertFalse(actual.equals(expected));
@@ -159,8 +162,8 @@ public class RouteTest {
     /**
      * This tests the getPolyLinePoints method and checks that it is not size zero.
      */
-    @Test
-    public void getPolyLinePointsNotSizeZeroTest() {
+    //@Test
+    public void test_getPolyLinePointsNotSizeZeroTest() {
         int expected = 0;
         int actual = route.getPolyLinePoints().size();
         Assert.assertFalse(expected == actual);
@@ -169,8 +172,8 @@ public class RouteTest {
     /**
      * This tests the toString method.
      */
-    @Test
-    public void toStringTest() {
+    //@Test
+    public void test_toStringTest() {
         String expected = dummyBicycleJSONToString;
         String actual = route.toString();
         Assert.assertEquals(expected, actual);

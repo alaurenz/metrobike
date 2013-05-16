@@ -7,10 +7,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.junit.Assert;
-import org.junit.Test;
+//import org.junit.Assert;
+//import org.junit.Test;
 
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.Utility;
@@ -22,7 +25,7 @@ import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
  * @author coreyh3
  * 
  */
-public class UtilityTest {
+public class UtilityTest extends TestCase {
 
     /**
      * This is a simple jsonArray to test with.
@@ -70,8 +73,8 @@ public class UtilityTest {
      * 
      * @throws JSONException
      */
-    @Test
-    public void jsonArrayToStringListTest() throws JSONException {
+    //@Test
+    public void test_jsonArrayToStringListTest() throws JSONException {
         JSONArray testArray = new JSONArray(jsonArrayToStringListTestString);
         List<String> testValue = Utility.jsonArrayToStringList(testArray);
         Assert.assertEquals("List was not the expected size", 3, testValue.size());
@@ -82,8 +85,8 @@ public class UtilityTest {
      * 
      * @throws UnsupportedEncodingException
      */
-    @Test
-    public void buildBicycleQueryStringMultipleRoutesTest() throws UnsupportedEncodingException {
+    //@Test
+    public void test_buildBicycleQueryStringMultipleRoutesTest() throws UnsupportedEncodingException {
         boolean multipleRoutes = true;
         String expected = buildBicycleQueryString_MultipleRoutesTestString;
         String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
@@ -96,8 +99,8 @@ public class UtilityTest {
      * 
      * @throws UnsupportedEncodingException
      */
-    @Test
-    public void buildBicycleQueryStringSingleRouteTest() throws UnsupportedEncodingException {
+    //@Test
+    public void test_buildBicycleQueryStringSingleRouteTest() throws UnsupportedEncodingException {
         boolean multipleRoutes = false;
         String expected = buildBicycleQueryString_SingleRouteTestString;
         String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
@@ -110,8 +113,8 @@ public class UtilityTest {
      * 
      * @throws UnsupportedEncodingException
      */
-    @Test
-    public void buildTransitQueryStringMultipleRoutes_ArrivalTest()
+    //@Test
+    public void test_buildTransitQueryStringMultipleRoutes_ArrivalTest()
             throws UnsupportedEncodingException {
         boolean multipleRoutes = true;
         long routeTime = 100;
@@ -127,8 +130,8 @@ public class UtilityTest {
      * 
      * @throws UnsupportedEncodingException
      */
-    @Test
-    public void buildTransitQueryStringSingleRoute_DepartureTest()
+    //@Test
+    public void test_buildTransitQueryStringSingleRoute_DepartureTest()
             throws UnsupportedEncodingException {
         boolean multipleRoutes = false;
         long routeTime = 1000;
@@ -142,8 +145,8 @@ public class UtilityTest {
     /**
      * This tests the listPrettyPrint method.
      */
-    @Test
-    public void listPrettyPrintTest() {
+    //@Test
+    public void test_listPrettyPrintTest() {
         int indent = 1;
         String expected = "    0: first\n    1: second\n    2: third\n";
         List<String> list = new LinkedList<String>();
@@ -157,8 +160,8 @@ public class UtilityTest {
     /**
      * This tests the listPrettyPrint method with a null list.
      */
-    @Test
-    public void listPrettyPrintNullTest() {
+    //@Test
+    public void test_listPrettyPrintNullTest() {
         int indent = 1;
         String expected = null;
         List<String> list = null;
@@ -169,8 +172,8 @@ public class UtilityTest {
     /**
      * This tests the listPrettyPrint method with a null response.
      */
-    @Test
-    public void listPrettyPrintZeroSizeNullTest() {
+    //@Test
+    public void test_listPrettyPrintZeroSizeNullTest() {
         int indent = 1;
         String expected = null;
         List<String> list = new LinkedList<String>();
@@ -181,8 +184,8 @@ public class UtilityTest {
     /**
      * This tests the getIndentString method.
      */
-    @Test
-    public void getIndentStringTest() {
+    //@Test
+    public void test_getIndentStringTest() {
         String expected = "    ";
         String actual = Utility.getIndentString();
         Assert.assertEquals("IndentString was not the expected value", expected, actual);
@@ -193,8 +196,8 @@ public class UtilityTest {
      * 
      * @throws JSONException
      */
-    @Test
-    public void getSubstepsAsStringNullTest() throws JSONException {
+    //@Test
+    public void test_getSubstepsAsStringNullTest() throws JSONException {
         String expected = "";
         int indent = 0;
         String actual = Utility.getSubstepsAsString(null, indent);
@@ -206,8 +209,8 @@ public class UtilityTest {
      * 
      * @throws JSONException
      */
-    @Test
-    public void getSubstepsAsString0sizeTest() throws JSONException {
+    //@Test
+    public void test_getSubstepsAsString0sizeTest() throws JSONException {
         int indent = 1;
         String expected = "";
         String actual = Utility.getSubstepsAsString(new LinkedList<Step>(), indent);
