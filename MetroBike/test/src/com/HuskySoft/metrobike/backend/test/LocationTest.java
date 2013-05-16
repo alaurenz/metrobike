@@ -2,9 +2,12 @@ package com.HuskySoft.metrobike.backend.test;
 
 import java.util.LinkedList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import junit.framework.TestCase;
+import junit.framework.Assert;
+
+//import org.junit.Assert;
+//import org.junit.Before;
+//import org.junit.Test;
 
 import com.HuskySoft.metrobike.backend.Location;
 
@@ -14,7 +17,7 @@ import com.HuskySoft.metrobike.backend.Location;
  * @author coreyh3
  *
  */
-public class LocationTest {
+public class LocationTest extends TestCase {
     /**
      * This field holds a location object for use by the test methods.
      */
@@ -35,7 +38,7 @@ public class LocationTest {
      * 
      * @throws Exception
      */
-    @Before
+    //@Before
     public void setUp() throws Exception {
         // Seattle
         loc = new Location(latitude, longitude);
@@ -44,8 +47,8 @@ public class LocationTest {
     /**
      * This tests the getLatitude method.
      */
-    @Test
-    public void getLatitudeTest() {
+    //@Test
+    public void test_getLatitudeTest() {
         double expected = latitude;
         double actual = loc.getLatitude();
         double delta = .001;
@@ -56,8 +59,8 @@ public class LocationTest {
     /**
      * This tests the getLongitude method.
      */
-    @Test
-    public void getLongitudeTest() {
+    //@Test
+    public void test_getLongitudeTest() {
         double expected = longitude;
         double actual = loc.getLongitude();
         double delta = .001;
@@ -68,8 +71,8 @@ public class LocationTest {
     /**
      * This tests the hashCode method.
      */
-    @Test
-    public void hashCodeTest() {
+    //@Test
+    public void test_hashCodeTest() {
         int expected = -1529164004;
         int actual = loc.hashCode();
         Assert.assertEquals(expected, actual);
@@ -78,40 +81,40 @@ public class LocationTest {
     /**
      * This tests the equals method.
      */
-    @Test
-    public void equalsTest() {
+    //@Test
+    public void test_equalsTest() {
         Assert.assertTrue(loc.equals(loc));
     }
 
     /**
      * This tests that the equals method returns false on different objects.
      */
-    @Test
-    public void equalsDiffObjectTest() {
+    //@Test
+    public void test_equalsDiffObjectTest() {
         Assert.assertFalse(loc.equals(new LinkedList<String>()));
     }
 
     /**
      * This tests that the equals method returns false when the longitude is incorrect.
      */
-    @Test
-    public void equalsWrongLatTest() {
+    //@Test
+    public void test_equalsWrongLatTest() {
         Assert.assertFalse(loc.equals(new Location(latitude, 20.0)));
     }
 
     /**
      * This tests that the equals method returns false when the latitude is incorrect.
      */
-    @Test
-    public void equalsWrongLongTest() {
+    //@Test
+    public void test_equalsWrongLongTest() {
         Assert.assertTrue(!loc.equals(new Location(20.00, longitude)));
     }
 
     /**
      * This tests the toString method.
      */
-    @Test
-    public void toStringTest() {
+    //@Test
+    public void test_toStringTest() {
         String expected = "    Location:\n        Latitude: 47.61\n        Longitude: -122.33\n";
         loc.setIndent(2);
         String actual = loc.toString();
@@ -121,8 +124,8 @@ public class LocationTest {
     /**
      * This tests the getIndent method.
      */
-    @Test
-    public void getIndentTest() {
+    //@Test
+    public void test_getIndentTest() {
         int expected = 2;
         loc.setIndent(expected);
         int actual = loc.getIndent();
