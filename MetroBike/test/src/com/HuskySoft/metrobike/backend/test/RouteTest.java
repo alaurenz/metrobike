@@ -1,4 +1,4 @@
-package com.HuskySoft.metrobike.backend.test;
+ï»¿package com.HuskySoft.metrobike.backend.test;
 
 import java.util.List;
 
@@ -238,7 +238,7 @@ public class RouteTest extends TestCase {
             + "Latitude: 47.67604\n    Longitude: -122.31325\n\n    swBound: Location:\n    "
             + "Latitude: 47.65358000000001\n    Longitude: -122.32582\n\n    "
             + "summary: no summary\n    Warnings:\n        "
-            + "0: Bicycling directions are in beta. Use caution – This route may contain streets "
+            + "0: Bicycling directions are in beta. Use caution - This route may contain streets "
             + "that aren't suited for bicycling.\n    legList:\n    Leg:\n            "
             + "startAddress: 6504 Latona Avenue Northeast, Seattle, WA 98115, USA\n            "
             + "endAddress: 3801 Brooklyn Avenue Northeast, University of Washington, Seattle, "
