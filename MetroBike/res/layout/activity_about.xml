@@ -3,20 +3,119 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background_shape_blue"
     tools:context=".AboutActivity" >
 
+    
     <!-- The HuskySoft logo -->
 
     <ImageView
-        android:id="@+id/husky_soft_logo"
+        android:id="@+id/huskySoftLogo"
         android:layout_width="wrap_content"
-        android:layout_height="100dip"
+        android:layout_height="60dip"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/huskysoft_description"
-        android:src="@drawable/huskysoft" />
+        android:src="@drawable/about_logo" />
+    
+	<TextView
+            android:id="@+id/textViewVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/huskySoftLogo"
+            android:textIsSelectable="false"
+            android:text="@string/version"
+            android:textSize="18sp"
+            android:gravity="center"/>
 
     <!-- Will add more details in this page -->
+
+	<LinearLayout 
+	    android:id="@+id/linearLayoutAbout"
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:isScrollContainer="true"
+    	android:orientation="vertical"
+    	android:layout_marginTop="20dp"
+    	android:layout_below="@+id/textViewVersion"
+    	 >
+    	
+	    <TextView
+            android:id="@+id/textViewDevBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_dev_by"
+            android:textSize="24sp"
+            android:textColor="#1B84E0"
+            android:gravity="center"/>
+	   	
+	   	<TextView
+            android:id="@+id/textViewJaylen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_jaylen"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"/>
+	   	
+	   	<TextView
+            android:id="@+id/textViewXinyun"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_xinyun"
+            android:textSize="18sp"
+            android:gravity="center"/>
+	   	
+	   	<TextView
+            android:id="@+id/textViewCorey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_corey"
+            android:textSize="18sp"
+            android:gravity="center"/>
+	   	
+	   	<TextView
+            android:id="@+id/textViewAdrian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_adrian"
+            android:textSize="18sp"
+            android:gravity="center"/>
+	   	
+	   	<TextView
+            android:id="@+id/textViewQinyuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_qinyuan"
+            android:textSize="18sp"
+            android:gravity="center"/>
+	   	
+	   	<TextView
+            android:id="@+id/textViewShuo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_shuo"
+            android:textSize="18sp"
+            android:gravity="center"/>
+	   	
+	   	<TextView
+            android:id="@+id/textViewSam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/textview_sam"
+            android:textSize="18sp"
+            android:gravity="center"/>
+	    
+	</LinearLayout>
 
 </RelativeLayout>

@@ -2,21 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background_shape_blue"
     tools:context=".MainActivity" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
+    	
     <Button
         android:id="@+id/buttonSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="114dp"
-        android:text="@string/button_search" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/button_search_main" />
+
+    <TextView
+        android:id="@+id/textViewDevBy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonSearch"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="14dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:text="@string/textView_hint"
+        android:textColor="#1B84E0"
+        android:textIsSelectable="false" />
     
 </RelativeLayout>

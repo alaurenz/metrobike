@@ -36,7 +36,7 @@ public class SettingsActivity extends PreferenceActivity {
     /**
      * the xml key of locate tab.
      */
-    private static final String LOCATE = "locate_key";
+    private static final String LOCALE = "locale_key";
 
     /**
      * the xml key of clear history tab.
@@ -78,7 +78,7 @@ public class SettingsActivity extends PreferenceActivity {
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(VERSION));
-        bindPreferenceSummaryToValue(findPreference(LOCATE));
+        bindPreferenceSummaryToValue(findPreference(LOCALE));
         // this is binding the button
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));

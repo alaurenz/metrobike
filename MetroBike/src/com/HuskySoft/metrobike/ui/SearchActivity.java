@@ -52,7 +52,6 @@ public class SearchActivity extends Activity {
      * A Fragment that contains a date picker to let user select a date of
      * departure/arrival.
      */
-    
     public static class DatePickerFragment extends DialogFragment implements
             DatePickerDialog.OnDateSetListener {
         
