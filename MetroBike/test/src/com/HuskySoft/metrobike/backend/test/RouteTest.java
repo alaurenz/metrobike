@@ -61,21 +61,21 @@ public class RouteTest extends TestCase {
      * @throws JSONException
      */
     // @Test
-//    public void test_getWarningsTest() throws JSONException {
-//        setUp();
-//        String expected = "Bicycling directions are in beta. Use caution - "
-//                + "This route may contain streets that aren't suited for bicycling.";
-//        List<String> warnings = route.getWarnings();
-//        String actual = "";
-//        for (int i = 0; i < warnings.size(); i++) {
-//            actual += warnings.get(i);
-//        }
-//        System.err.println("Expected:\n" + expected + "\n");
-//        System.err.println("Actual:\n" + actual + "\n");
-//        
-//        Assert.assertEquals("Actual value for route.getWarnings() (Note:concatenated "
-//                + "the list together) was: " + actual, expected, actual);
-//    }
+    public void test_getWarningsTest() throws JSONException {
+        setUp();
+        String expected = "Bicycling directions are in beta. Use caution - "
+                + "This route may contain streets that aren't suited for bicycling.";
+        List<String> warnings = route.getWarnings();
+        String actual = "";
+        for (int i = 0; i < warnings.size(); i++) {
+            actual += warnings.get(i);
+        }
+        System.err.println("Expected:\n" + expected + "\n");
+        System.err.println("Actual:\n" + actual + "\n");
+        
+        Assert.assertEquals("Actual value for route.getWarnings() (Note:concatenated "
+                + "the list together) was: " + actual, expected, actual);
+    }
 
     /**
      * WhiteBox: This tests the getNeBound method.
@@ -224,12 +224,12 @@ public class RouteTest extends TestCase {
      * @throws JSONException
      */
     // @Test
-//    public void test_toStringTest() throws JSONException {
-//        setUp();
-//        String expected = dummyBicycleJSONToString;
-//        String actual = route.toString();
-//        Assert.assertEquals("Actual value for route.toString() was: " + actual, expected, actual);
-//    }
+    public void test_toStringTest() throws JSONException {
+        setUp();
+        String expected = dummyBicycleJSONToString;
+        String actual = route.toString();
+        Assert.assertEquals("Actual value for route.toString() was: " + actual, expected, actual);
+    }
 
     /**
      * This is the value to compare the toString test to.
