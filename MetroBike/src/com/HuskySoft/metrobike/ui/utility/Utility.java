@@ -77,7 +77,7 @@ public final class Utility {
      * @param r route to be process
      * @return a LatLng representation of the geographical point on the map
      */
-    public static LatLng getCameraCenter(Route route) {
+    public static LatLng getCameraCenter(final Route route) {
         double latitude = (route.getNeBound().getLatitude() + route.getSwBound().getLatitude()) /2;
         double longitude = (route.getNeBound().getLongitude() + route.getSwBound().getLongitude()) /2;
         return new LatLng(latitude, longitude);
@@ -91,7 +91,7 @@ public final class Utility {
      * @param screenWidth: the screen width of the device
      * @return a float number representation of the level
      */
-    public static float getCameraZoomLevel(Route route, float screenHeight, float screenWidth) {
+    public static float getCameraZoomLevel(final Route route, final float screenHeight, final float screenWidth) {
         double latitudeDif = route.getNeBound().getLatitude() - route.getSwBound().getLatitude();
         double longitudeDif = route.getNeBound().getLongitude() - route.getSwBound().getLongitude();
         double comparedLatitudeDif = latitudeDif * NEXUS7_SCREEN_HEIGHT / screenHeight;
