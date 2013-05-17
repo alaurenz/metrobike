@@ -11,19 +11,19 @@ import com.HuskySoft.metrobike.backend.Location;
  * This class tests the Location class.
  * 
  * @author coreyh3
- *
+ * 
  */
 public class LocationTest extends TestCase {
     /**
      * This field holds a location object for use by the test methods.
      */
     private Location loc = null;
-    
+
     /**
      * The latitude of Seattle.
      */
     private double latitude = 47.61;
-    
+
     /**
      * The longitude of Seattle.
      */
@@ -34,7 +34,7 @@ public class LocationTest extends TestCase {
      * 
      * @throws Exception
      */
-    //@Before
+    // @Before
     public void setUp() {
         // Seattle
         loc = new Location(latitude, longitude);
@@ -42,35 +42,38 @@ public class LocationTest extends TestCase {
 
     /**
      * WhiteBox: This tests the getLatitude method.
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
-    //@Test
+    // @Test
     public void test_getLatitudeTest() throws Exception {
         setUp();
         double expected = latitude;
         double actual = loc.getLatitude();
         double delta = .001;
 
-        Assert.assertEquals("Actual value of loc.getLatitude() was: " + actual, expected, actual, delta);
+        Assert.assertEquals("Actual value of loc.getLatitude() was: " + actual, expected, actual,
+                delta);
     }
 
     /**
      * WhiteBox: This tests the getLongitude method.
      */
-    //@Test
+    // @Test
     public void test_getLongitudeTest() {
         setUp();
         double expected = longitude;
         double actual = loc.getLongitude();
         double delta = .001;
 
-        Assert.assertEquals("Actual value of loc.getLongitude() was: " + actual, expected, actual, delta);
+        Assert.assertEquals("Actual value of loc.getLongitude() was: " + actual, expected, actual,
+                delta);
     }
 
     /**
      * WhiteBox: This tests the hashCode method.
      */
-    //@Test
+    // @Test
     public void test_hashCodeTest() {
         setUp();
         int expected = -1529164004;
@@ -81,44 +84,51 @@ public class LocationTest extends TestCase {
     /**
      * WhiteBox: This tests the equals method.
      */
-    //@Test
+    // @Test
     public void test_equalsTest() {
         setUp();
         Assert.assertTrue("Actual value of loc.equals(loc) was: false", loc.equals(loc));
     }
 
     /**
-     * WhiteBox: This tests that the equals method returns false on different objects.
+     * WhiteBox: This tests that the equals method returns false on different
+     * objects.
      */
-    //@Test
+    // @Test
     public void test_equalsDiffObjectTest() {
         setUp();
-        Assert.assertFalse("Actual value of loc.equals(new LinkedList<String>()) was: true", loc.equals(new LinkedList<String>()));
+        Assert.assertFalse("Actual value of loc.equals(new LinkedList<String>()) was: true",
+                loc.equals(new LinkedList<String>()));
     }
 
     /**
-     * WhiteBox: This tests that the equals method returns false when the longitude is incorrect.
+     * WhiteBox: This tests that the equals method returns false when the
+     * longitude is incorrect.
      */
-    //@Test
+    // @Test
     public void test_equalsWrongLatTest() {
         setUp();
-        Assert.assertFalse("Actual value of loc.equals(new Location(latitude, latitude)) was: true", loc.equals(new Location(latitude, latitude)));
+        Assert.assertFalse(
+                "Actual value of loc.equals(new Location(latitude, latitude)) was: true",
+                loc.equals(new Location(latitude, latitude)));
     }
 
     /**
-     * WhiteBox: This tests that the equals method returns false when the latitude is incorrect.
-     * https://github.com/alaurenz/metrobike/issues/94
+     * WhiteBox: This tests that the equals method returns false when the
+     * latitude is incorrect. https://github.com/alaurenz/metrobike/issues/94
      */
-    //@Test
+    // @Test
     public void test_equalsWrongLongTest() {
         setUp();
-        Assert.assertTrue("Actual value of loc.equals(new Location(longitude, longitude)) was: false", !loc.equals(new Location(longitude, longitude)));
+        Assert.assertTrue(
+                "Actual value of loc.equals(new Location(longitude, longitude)) was: false",
+                !loc.equals(new Location(longitude, longitude)));
     }
 
     /**
      * WhiteBox: This tests the toString method.
      */
-    //@Test
+    // @Test
     public void test_toStringTest() {
         setUp();
         String expected = "    Location:\n        Latitude: 47.61\n        Longitude: -122.33\n";
@@ -130,7 +140,7 @@ public class LocationTest extends TestCase {
     /**
      * WhiteBox: This tests the getIndent method.
      */
-    //@Test
+    // @Test
     public void test_getIndentTest() {
         setUp();
         int expected = 2;
