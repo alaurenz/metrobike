@@ -14,12 +14,27 @@ import com.google.android.gms.maps.model.LatLng;
 public final class Utility {
 
     /**
+     * naxus7's screen height
+     */
+    private static final float NEXUS7_SCREEN_HEIGHT = 905.16425f;
+    
+    /**
+     * naxus7's screen width
+     */
+    private static final float NEXUS7_SCREEN_WIDTH = 600.93896f;
+    
+    /**
+     * zoom level constant helps to get the appropriate zoom level of the camera
+     */
+    private static final double NEXUS7_ZOOM_CONSTANT = 259.6656;
+    
+    /**
      * A private constructor that throws an error to deter instantiation of this
      * utility class.
      * 
      * @throws AssertionError
      *             if the constructor is called
-     */
+     */    
     private Utility() throws AssertionError {
         /*
          * Based on a suggestion here
@@ -72,13 +87,18 @@ public final class Utility {
     /**
      * Get the appropriate zoom level of the given route
      * @param route: the route object to be process
+     * @param screenHeight: the screen height of the device
+     * @param screenWidth: the screen width of the device
      * @return a float number representation of the level
      */
-    public static float getCameraZoomLevel(Route route) {
+    public static float getCameraZoomLevel(Route route, float screenHeight, float screenWidth) {
         double latitudeDif = route.getNeBound().getLatitude() - route.getSwBound().getLatitude();
         double longitudeDif = route.getNeBound().getLongitude() - route.getSwBound().getLongitude();
-        double maxOfTwo = Math.max(latitudeDif, longitudeDif * 1.5);
-        double E = 259.6656;
-        return Math.round(Math.log(E/maxOfTwo)/Math.log(2) + 1);
+        double comparedLatitudeDif = latitudeDif * NEXUS7_SCREEN_HEIGHT / screenHeight;
+        double comparedLongitudeDif = longitudeDif * NEXUS7_SCREEN_WIDTH / screenWidth;
+        double maxOfTwo = Math.max(comparedLatitudeDif, comparedLongitudeDif * 
+                NEXUS7_SCREEN_HEIGHT / NEXUS7_SCREEN_WIDTH);
+        
+        return Math.round(Math.log(NEXUS7_ZOOM_CONSTANT/maxOfTwo)/Math.log(2) + 1);
     }
 }

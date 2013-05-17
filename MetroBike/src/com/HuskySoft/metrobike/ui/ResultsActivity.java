@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,7 +80,23 @@ public class ResultsActivity extends Activity {
     /**
      * Highlight color of the button text.
      */
-    private int BUTTON_TEXT_COLOR_HIGHLIGTH = -16711936;    
+    private int BUTTON_TEXT_COLOR_HIGHLIGTH = -16711936;
+    
+    /**
+     * Toast object in this page.
+     */
+    private Toast currToast;
+    
+    /**
+     * Current Device's screen height.
+     */
+    private float DP_HEIGHT;
+    
+    /**
+     * Current Device's screen width.
+     */
+    private float DP_WIDTH;
+    
     
     /**
      * {@inheritDoc}
@@ -88,7 +106,14 @@ public class ResultsActivity extends Activity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics ();
+        display.getMetrics(outMetrics);
 
+        float density  = getResources().getDisplayMetrics().density;
+        DP_HEIGHT = outMetrics.heightPixels / density;
+        DP_WIDTH = outMetrics.widthPixels / density;
         // get the solution from the search activity
         @SuppressWarnings("unchecked")
         List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(
@@ -235,6 +260,7 @@ public class ResultsActivity extends Activity {
      * draw the current route on the map.
      */
     private void drawRoute() {
+        
         if (currRoute >= 0 && currRoute < routes.size()) {
             //clear the map drawing first
             mMap.clear();
@@ -291,13 +317,17 @@ public class ResultsActivity extends Activity {
                 }
             }
             
-            Toast.makeText(getApplicationContext(), "Route length: " + routes.get(currRoute).getDistanceInMeters() 
-                    + " meters\nDuration: " +  routes.get(currRoute).getDurationInSeconds() + " s" , Toast.LENGTH_LONG).show();
+            if (currToast != null) {
+                currToast.cancel();
+            }
+            currToast = Toast.makeText(getApplicationContext(), "Route length: " + routes.get(currRoute).getDistanceInMeters() 
+                    + " meters\nDuration: " +  routes.get(currRoute).getDurationInSeconds() + " s" , Toast.LENGTH_LONG);
+            currToast.show();
             
             //set the camera to focus on the route
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     com.HuskySoft.metrobike.ui.utility.Utility.getCameraCenter(routes.get(currRoute)), 
-                    com.HuskySoft.metrobike.ui.utility.Utility.getCameraZoomLevel(routes.get(currRoute))),
+                    com.HuskySoft.metrobike.ui.utility.Utility.getCameraZoomLevel(routes.get(currRoute), DP_HEIGHT, DP_WIDTH)),
                     ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);   
             
             //enable the buttons after the drawing is done
