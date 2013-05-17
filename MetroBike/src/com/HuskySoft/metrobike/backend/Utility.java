@@ -315,11 +315,13 @@ public final class Utility {
         if(list == null || list.size() == 0) {
             return null;
         }
-        
-        String indentString = "";
+
+        StringBuilder indentBuilder = new StringBuilder();
         for (int i = 0; i < indent; i++) {
-            indentString += INDENT_STRING;
+            indentBuilder.append(INDENT_STRING);
         }
+
+        String indentString = indentBuilder.toString();
 
         StringBuilder listAsString = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
