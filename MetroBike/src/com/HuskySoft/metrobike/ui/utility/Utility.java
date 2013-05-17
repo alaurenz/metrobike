@@ -79,6 +79,6 @@ public final class Utility {
         double longitudeDif = route.getNeBound().getLongitude() - route.getSwBound().getLongitude();
         double maxOfTwo = Math.max(latitudeDif, longitudeDif * 1.5);
         double E = 259.6656;
-        return Math.round(Math.log(E/maxOfTwo)/Math.log(2)+1);
+        return Math.round(Math.log(E/maxOfTwo)/Math.log(2) + 1);
     }
 }

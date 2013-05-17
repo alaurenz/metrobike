@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,7 +59,27 @@ public class ResultsActivity extends Activity {
      * Current route that should be displayed on the map.
      */
     private int currRoute = -1;
+    
+    /**
+     * List of all the buttons used for selecting different routes.
+     */
+    private ArrayList<Button> buttons;
+    
+    /**
+     * Color integer of the button background color.
+     */
+    private int BUTTON_BACKGROUND_COLOR = 0xdf888888;
+    
+    /**
+     * Default color of the button text.
+     */
+    private int BUTTON_TEXT_COLOR_DEFAULT = -16777216;
 
+    /**
+     * Highlight color of the button text.
+     */
+    private int BUTTON_TEXT_COLOR_HIGHLIGTH = -16711936;    
+    
     /**
      * {@inheritDoc}
      * 
@@ -168,13 +189,16 @@ public class ResultsActivity extends Activity {
      * add the selecting route buttons to the scroll bar on left.
      */
     private void addRouteButtons() {
+        buttons = new ArrayList<Button>();
         LinearLayout main = (LinearLayout) findViewById(R.id.linearLayoutForRouteSelection);
         for (int i = 0; i < routes.size(); i++) {
             Button selectRouteBtn = new Button(this);
             selectRouteBtn.setText("Route" + (i + 1));
             selectRouteBtn.setPadding(0, 0, 0, 0);
             selectRouteBtn.setOnClickListener(new MyOnClickListener(i));
-            main.addView(selectRouteBtn);
+            main.addView(selectRouteBtn);            
+            selectRouteBtn.getBackground().setColorFilter(BUTTON_BACKGROUND_COLOR, PorterDuff.Mode.MULTIPLY);
+            buttons.add(selectRouteBtn);
         }
     }
 
@@ -214,6 +238,14 @@ public class ResultsActivity extends Activity {
         if (currRoute >= 0 && currRoute < routes.size()) {
             //clear the map drawing first
             mMap.clear();
+            
+            //disable the buttons before the drawing taking place
+            for (Button button : buttons) {
+                button.setTextColor(BUTTON_TEXT_COLOR_DEFAULT);
+                button.setEnabled(false);
+            }
+            
+            buttons.get(currRoute).setTextColor(BUTTON_TEXT_COLOR_HIGHLIGTH);            
             
             //get the source and destination
             List<Leg> legs = routes.get(currRoute).getLegList();
@@ -259,12 +291,19 @@ public class ResultsActivity extends Activity {
                 }
             }
             
-
+            Toast.makeText(getApplicationContext(), "Route length: " + routes.get(currRoute).getDistanceInMeters() 
+                    + " meters\nDuration: " +  routes.get(currRoute).getDurationInSeconds() + " s" , Toast.LENGTH_LONG).show();
+            
             //set the camera to focus on the route
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     com.HuskySoft.metrobike.ui.utility.Utility.getCameraCenter(routes.get(currRoute)), 
                     com.HuskySoft.metrobike.ui.utility.Utility.getCameraZoomLevel(routes.get(currRoute))),
-                    ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
+                    ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);   
+            
+            //enable the buttons after the drawing is done
+            for (Button button : buttons) {
+                button.setEnabled(true);
+            }
         }
     }
 }
