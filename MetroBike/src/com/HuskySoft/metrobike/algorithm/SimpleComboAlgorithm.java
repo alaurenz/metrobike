@@ -61,26 +61,28 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
 
         // TODO uncomment for comparing combo to normal transit
         // addResults(transitRoutes);
-
-        List<Route> comboResults = new ArrayList<Route>();
-        for (Route curRoute : transitRoutes) {
-
-            Route comboRoute = replaceWalkingWithBicycling(
-                    curRoute, toProcess.getDepartureTime());
-
-            if (comboRoute != null && comboRoute.getLegList().size() > 0) {
-                comboResults.add(comboRoute);
+        
+        if(transitRoutes != null) {
+            List<Route> comboResults = new ArrayList<Route>();
+            for (Route curRoute : transitRoutes) {
+    
+                Route comboRoute = replaceWalkingWithBicycling(
+                        curRoute, toProcess.getDepartureTime());
+    
+                if (comboRoute != null && comboRoute.getLegList().size() > 0) {
+                    comboResults.add(comboRoute);
+                }
+    
+                // TODO make this more elegant?
+                // For preventing exceeding query request limit
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-
-            // TODO make this more elegant?
-            // For preventing exceeding query request limit
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            addResults(comboResults);
         }
-        addResults(comboResults);
 
         // If we got no results, return the appropriate status code
         if (getResults() == null || getResults().size() == 0) {
