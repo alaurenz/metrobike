@@ -466,7 +466,7 @@ public class RouteTest extends TestCase {
             + "JhJF`A@RDHBDSBS@eEB{EBaJ@qB^BfFFzBBzA@M`@Yr@IHQJOTUn@Un@p@@L?\""
             + "\n         },\n         \"summary\" : \"Roosevelt Way NE\",\n  "
             + "       \"warnings\" : [\n            \"Bicycling directions are"
-            + " in beta. Use caution \u2013 This route may contain streets tha"
+            + " in beta. Use caution - This route may contain streets tha"
             + "t aren\'t suited for bicycling.\"\n         ],\n         \"wayp"
             + "oint_order\" : []\n      }\n   ],\n   \"status\" : \"OK\"\n}";
 
