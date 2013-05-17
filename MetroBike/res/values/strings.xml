@@ -41,7 +41,7 @@
     <!-- Details Activity -->
     <string name="button_go_to_search">Search</string>
     <string name="button_go_to_results">Routes</string>
-    <string name="button_navigate">Navigate</string>
+    <string name="button_go_to_next">Next</string><string name="button_go_to_previous">Previous</string><string name="button_navigate">Navigate</string>
 
     <!-- Navigate Activity -->
     <string name="button_go_to_detail">Details</string>
@@ -86,5 +86,7 @@
 	<!-- Main Activity -->
 	<string name="button_search_main">Search</string>
 	<string name="textView_hint">Click "Search" to Start Searching for Biking Routes</string>
+	
+	
     
 </resources>
