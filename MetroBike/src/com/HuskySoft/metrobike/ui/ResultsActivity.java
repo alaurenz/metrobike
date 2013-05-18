@@ -73,17 +73,17 @@ public class ResultsActivity extends Activity {
     /**
      * Color integer of the button background color.
      */
-    private int BUTTON_BACKGROUND_COLOR = 0xdf888888;
+    private static final int BUTTON_BACKGROUND_COLOR = 0xdf888888;
     
     /**
      * Default color of the button text.
      */
-    private int BUTTON_TEXT_COLOR_DEFAULT = -16777216;
+    private static final int BUTTON_TEXT_COLOR_DEFAULT = -16777216;
 
     /**
      * Highlight color of the button text.
      */
-    private int BUTTON_TEXT_COLOR_HIGHLIGTH = -16711936;
+    private static final int BUTTON_TEXT_COLOR_HIGHLIGTH = -16711936;
     
     /**
      * Toast object in this page.
@@ -93,13 +93,42 @@ public class ResultsActivity extends Activity {
     /**
      * Current Device's screen height.
      */
-    private float DP_HEIGHT;
+    private float dpHeight;
     
     /**
      * Current Device's screen width.
      */
-    private float DP_WIDTH;
+    private float dpWidth;
     
+    /**
+     * Map circle radius.
+     */
+    private static final int MAP_CIRCLE_RADIUS = 4;
+    
+    /**
+     * Stroke width in the map.
+     */
+    private static final int MAP_STROKE_WIDTH = 3;
+    
+    /**
+     * Transparent rate of the poly-line.
+     */
+    private static final int POLYLINE_TRANSPARENT = 200;
+    
+    /**
+     * poly-line color integer.
+     */
+    private static final int POLYLINE_COLOR = 255;
+    
+    /**
+     * Thick poly-line width.
+     */
+    private static final float POLYLINE_THICK = 12f;
+    
+    /**
+     * Thin poly-line width.
+     */
+    private static final float POLYLINE_THIN = 8f;
     
     /**
      * {@inheritDoc}
@@ -116,12 +145,12 @@ public class ResultsActivity extends Activity {
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#99000000")));
         
         Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
         float density  = getResources().getDisplayMetrics().density;
-        DP_HEIGHT = outMetrics.heightPixels / density;
-        DP_WIDTH = outMetrics.widthPixels / density;
+        dpHeight = outMetrics.heightPixels / density;
+        dpWidth = outMetrics.widthPixels / density;
         // get the solution from the search activity
         @SuppressWarnings("unchecked")
         List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(
@@ -230,7 +259,8 @@ public class ResultsActivity extends Activity {
             selectRouteBtn.setPadding(0, 0, 0, 0);
             selectRouteBtn.setOnClickListener(new MyOnClickListener(i));
             main.addView(selectRouteBtn);            
-            selectRouteBtn.getBackground().setColorFilter(BUTTON_BACKGROUND_COLOR, PorterDuff.Mode.MULTIPLY);
+            selectRouteBtn.getBackground().setColorFilter(BUTTON_BACKGROUND_COLOR, 
+                    PorterDuff.Mode.MULTIPLY);
             buttons.add(selectRouteBtn);
         }
     }
@@ -294,14 +324,15 @@ public class ResultsActivity extends Activity {
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
 
             mMap.addMarker(new MarkerOptions()
-                    .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(end)).title("End Here!")
+                    .position(com.HuskySoft.metrobike.ui.utility.Utility.
+                            convertLocation(end)).title("End Here!")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
             
             mMap.addCircle(new CircleOptions()
-            .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
-            .radius(4)
-            .strokeColor(Color.BLACK).strokeWidth(3)
-            .fillColor(Color.WHITE).zIndex(2));
+                .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
+                .radius(MAP_CIRCLE_RADIUS)
+                .strokeColor(Color.BLACK).strokeWidth(MAP_STROKE_WIDTH)
+                .fillColor(Color.WHITE).zIndex(2));
             
             
             //draw Poly-line on the map
@@ -309,18 +340,24 @@ public class ResultsActivity extends Activity {
             for (Leg l : legs) {
                 for (Step s : l.getStepList()) {
                     PolylineOptions polylineOptions = new PolylineOptions();
-                    for (LatLng ll : com.HuskySoft.metrobike.ui.utility.Utility.convertLocationList(s.getPolyLinePoints())) {
+                    for (LatLng ll : com.HuskySoft.metrobike.ui.utility.Utility.
+                            convertLocationList(s.getPolyLinePoints())) {
                         polylineOptions = polylineOptions.add(ll);
                     }
                     if (s.getTravelMode() == TravelMode.TRANSIT) {
-                        mMap.addPolyline(polylineOptions.color(Color.argb(200, 255, 0, 0)).width(12f));
+                        mMap.addPolyline(polylineOptions.
+                                color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
+                                .width(POLYLINE_THICK));
                     } else {
-                        mMap.addPolyline(polylineOptions.color(Color.argb(200, 0, 0, 255)).width(8f).zIndex(1));
+                        mMap.addPolyline(polylineOptions.
+                                color(Color.argb(POLYLINE_TRANSPARENT, 0, 0, POLYLINE_COLOR))
+                                .width(POLYLINE_THIN).zIndex(1));
                     }
                     mMap.addCircle(new CircleOptions()
-                    .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s.getEndLocation()))
-                    .radius(4)
-                    .strokeColor(Color.BLACK).strokeWidth(3)
+                    .center(com.HuskySoft.metrobike.ui.utility.Utility.
+                            convertLocation(s.getEndLocation()))
+                    .radius(MAP_CIRCLE_RADIUS)
+                    .strokeColor(Color.BLACK).strokeWidth(MAP_STROKE_WIDTH)
                     .fillColor(Color.WHITE).zIndex(2));
                 }
             }
@@ -328,14 +365,18 @@ public class ResultsActivity extends Activity {
             if (currToast != null) {
                 currToast.cancel();
             }
-            currToast = Toast.makeText(getApplicationContext(), "Route length: " + routes.get(currRoute).getDistanceInMeters() 
-                    + " meters\nDuration: " +  routes.get(currRoute).getDurationInSeconds() + " s" , Toast.LENGTH_LONG);
+            currToast = Toast.makeText(getApplicationContext(), "Route length: " 
+                    + routes.get(currRoute).getDistanceInMeters() 
+                    + " meters\nDuration: " +  routes.get(currRoute).getDurationInSeconds() 
+                    + " s" , Toast.LENGTH_LONG);
             currToast.show();
             
             //set the camera to focus on the route
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    com.HuskySoft.metrobike.ui.utility.Utility.getCameraCenter(routes.get(currRoute)), 
-                    com.HuskySoft.metrobike.ui.utility.Utility.getCameraZoomLevel(routes.get(currRoute), DP_HEIGHT, DP_WIDTH)),
+                    com.HuskySoft.metrobike.ui.utility.Utility.
+                    getCameraCenter(routes.get(currRoute)), 
+                    com.HuskySoft.metrobike.ui.utility.Utility.
+                    getCameraZoomLevel(routes.get(currRoute), dpHeight, dpWidth)),
                     ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);   
             
             //enable the buttons after the drawing is done

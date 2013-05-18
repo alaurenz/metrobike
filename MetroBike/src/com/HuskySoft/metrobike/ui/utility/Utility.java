@@ -14,17 +14,17 @@ import com.google.android.gms.maps.model.LatLng;
 public final class Utility {
 
     /**
-     * naxus7's screen height
+     * naxus7's screen height.
      */
     private static final float NEXUS7_SCREEN_HEIGHT = 905.16425f;
 
     /**
-     * naxus7's screen width
+     * naxus7's screen width.
      */
     private static final float NEXUS7_SCREEN_WIDTH = 600.93896f;
 
     /**
-     * zoom level constant helps to get the appropriate zoom level of the camera
+     * zoom level constant helps to get the appropriate zoom level of the camera.
      */
     private static final double NEXUS7_ZOOM_CONSTANT = 259.6656;
 
@@ -78,20 +78,22 @@ public final class Utility {
     }
 
     /**
-     * Get the center of the route to let the camera center there
+     * Get the center of the route to let the camera center there.
      * 
-     * @param r
-     *            route to be process
-     * @return a LatLng representation of the geographical point on the map
+     * @param route
+     *             : route to be process
+     * @return a LatLng representation of the geographical point on the map.
      */
     public static LatLng getCameraCenter(final Route route) {
-        double latitude = (route.getNeBound().getLatitude() + route.getSwBound().getLatitude()) / 2;
-        double longitude = (route.getNeBound().getLongitude() + route.getSwBound().getLongitude()) / 2;
+        double latitude = (route.getNeBound().getLatitude() 
+                + route.getSwBound().getLatitude()) / 2;
+        double longitude = (route.getNeBound().getLongitude() 
+                + route.getSwBound().getLongitude()) / 2;
         return new LatLng(latitude, longitude);
     }
 
     /**
-     * Get the appropriate zoom level of the given route
+     * Get the appropriate zoom level of the given route.
      * 
      * @param route
      *            : the route object to be process
