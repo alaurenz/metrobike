@@ -49,12 +49,14 @@
     <!-- Search Activity -->
     <string name="radio_button_leave_now">Leave Now</string>
     <string name="radio_button_depart_at">Depart At:</string>
+    <string name="radio_button_arrive_at">Arrive At:</string>
     <string name="dialogbox_date">Select a Date</string>
     <string name="dialogbox_time">Select a Time</string>
     <string name="button_history">History</string>
     <string name="button_find">Find Routes</string>
     <string name="textview_departure_time">Departure Time</string>
     <string name="textview_history">History</string>
+    <string name="textview_travel_mode">Select a Travel Mode:</string>
 	<string name="history_from">From:\t</string>
 	<string name="history_to">To:\t</string>
 	  

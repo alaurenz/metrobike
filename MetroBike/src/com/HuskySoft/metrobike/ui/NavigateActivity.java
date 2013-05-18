@@ -97,6 +97,7 @@ public class NavigateActivity extends Activity {
         instr = (TextView) findViewById(R.id.direction_instr);
         next = (Button)findViewById(R.id.button_next);
         prev = (Button)findViewById(R.id.button_previous);
+        prev.setEnabled(false);
         if (recievedRoutes != null) {
             routes = (ArrayList<Route>) recievedRoutes;
             currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");
@@ -106,36 +107,54 @@ public class NavigateActivity extends Activity {
         
         next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	updatePlus();
+            	updateNext();
             	drawRoute();
             }
         });
         
         prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	updateMinus();
+            	updatePrev();
             	drawRoute();
             }
         });
     }
     
-    private void updateMinus() {
+    private void updatePrev() {
+    	// re-enable the "next" button
+    	if (currentStep + 1 == legs.get(currentLeg).getStepList().size()
+    			&& currentLeg + 1 == legs.size()) {
+    		next.setEnabled(true);
+    	}
     	if (currentStep > 0) {
     		currentStep--;
     	} else if (currentLeg > 0) {
     		currentLeg--;
     		currentStep = legs.get(currentLeg).getStepList().size()-1;
     	}
+    	// disable the "previous" button when at the start of the steps 
+    	if (currentStep == 0 && currentLeg == 0) {
+    		prev.setEnabled(false);
+    	}
     }
     
-    private void updatePlus() {
+    private void updateNext() {
     	int legsize = legs.size();
     	int stepsize = legs.get(currentLeg).getStepList().size();
+    	// re-enable the "previous" button
+    	if (currentStep == 0 && currentLeg == 0) {
+    		prev.setEnabled(true);
+    	}
     	if (stepsize > currentStep + 1) {
     		currentStep++;
     	} else if (currentLeg < legsize - 1) {
     		currentStep = 0;
     		currentLeg++;
+    	}
+    	// disable the "next" button when get to the end of the steps 
+    	if (currentStep + 1 == legs.get(currentLeg).getStepList().size()
+    			&& currentLeg + 1 == legs.size()) {
+    		next.setEnabled(false);
     	}
     }
 
