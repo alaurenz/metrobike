@@ -35,12 +35,12 @@ public final class Utility {
      * @throws AssertionError
      *             if the constructor is called
      */
-    private Utility() throws AssertionError {
+    private void Utility() throws AssertionError {
         /*
          * Based on a suggestion here
          * http://stackoverflow.com/questions/7766277/
          * why-am-i-getting-this-warning-about-utility-classes-in-java about
-         * utility classes, throw an error here to prevent instatiation.
+         * utility classes, throw an error here to prevent instantiation.
          */
         throw new AssertionError("Never instantiate utility classes!");
     }
@@ -53,8 +53,10 @@ public final class Utility {
      * @return the new LatLng object, or null if the passed Location is null
      */
     public static LatLng convertLocation(final Location toConvert) {
-        if (toConvert == null)
+        if (toConvert == null) {
             return null;
+        }
+            
         return new LatLng(toConvert.getLatitude(), toConvert.getLongitude());
     }
 
@@ -68,8 +70,10 @@ public final class Utility {
      *         null
      */
     public static List<LatLng> convertLocationList(final List<Location> toConvert) {
-        if (toConvert == null)
+        if (toConvert == null) {
             return null;
+        }
+
         List<LatLng> toReturn = new ArrayList<LatLng>();
         for (Location l : toConvert) {
             toReturn.add(convertLocation(l));

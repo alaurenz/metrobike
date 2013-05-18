@@ -42,8 +42,7 @@ public class HistoryAdapter extends ArrayAdapter<String> {
      */
     public HistoryAdapter(final Context contextView, final int layoutId,
             final History historyData) {
-    	
-    	super(contextView, layoutId, historyData.getHistory());
+        super(contextView, layoutId, historyData.getHistory());
         this.layoutResourceId = layoutId;
         this.context = contextView;
         this.data = historyData;
