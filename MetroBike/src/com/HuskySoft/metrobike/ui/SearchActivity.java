@@ -20,12 +20,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.HuskySoft.metrobike.R;
@@ -173,7 +176,7 @@ public class SearchActivity extends Activity {
      * An inner class that generates a request for routes and allows the backend
      * request to run on its own thread.
      * 
-     * @author dutchscout, Shuo Wang(modification)
+     * @author dutchscout, Shuo Wang (modification)
      */
     private class DirThread implements Runnable {
         
@@ -202,6 +205,7 @@ public class SearchActivity extends Activity {
          */
         private static final int SEC_TO_MILLISEC = 1000;
         
+        
         /**
          * {@inheritDoc}
          */
@@ -212,7 +216,7 @@ public class SearchActivity extends Activity {
 
             int month, dayOfMonth, year, hourOfDay, minute, second = 0;
 
-            Time timeDeparture = new Time();
+            Time time = new Time();
             if (leaveNowButton.isChecked()) {
                 hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
                 minute = calendar.get(Calendar.MINUTE);
@@ -233,15 +237,22 @@ public class SearchActivity extends Activity {
                 minute = Integer.parseInt(timeString.substring(DIGIT_FOURTH, DIGIT_SIXTH));
             }
 
-            timeDeparture.set(second, minute, hourOfDay, dayOfMonth, month, year);
-            long timeDepartureToSend = timeDeparture.toMillis(false) / SEC_TO_MILLISEC;
+            time.set(second, minute, hourOfDay, dayOfMonth, month, year);
+            long timeToSend = time.toMillis(false) / SEC_TO_MILLISEC;
 
             // Generate a direction request
             DirectionsRequest dReq = (new DirectionsRequest())
                     .setStartAddress(startFromEditText.getText().toString())
-                    .setEndAddress(toEditText.getText().toString()).setTravelMode(TravelMode.MIXED)
-                    .setDepartureTime(timeDepartureToSend);
-
+                    .setEndAddress(toEditText.getText().toString()).setTravelMode(tm);
+            
+            // Determine time mode
+            if (arriveAtButton.isChecked()) {
+                dReq.setArrivalTime(timeToSend);
+            } else {
+                dReq.setDepartureTime(timeToSend);
+            }
+                
+                    
             DirectionsStatus retVal = dReq.doRequest();
 
             // If an error happens to the direction request
@@ -294,6 +305,28 @@ public class SearchActivity extends Activity {
         }
     }
 
+    
+    
+    /**
+     * First Position in travelModeData.
+     */
+    private static final int TRAVEL_MODE_DATA_POSITION_FIRST = 0;
+    
+    /**
+     * Second Position in travelModeData.
+     */
+    private static final int TRAVEL_MODE_DATA_POSITION_SECOND = 1;
+    
+    /**
+     * Third Position in travelModeData.
+     */
+    private static final int TRAVEL_MODE_DATA_POSITION_THIRD = 2;
+    
+    /**
+     * Fourth Position in travelModeData.
+     */
+    private static final int TRAVEL_MODE_DATA_POSITION_FOURTH = 3;
+    
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
      * Calendar subclass instance is set to the current date and time in the
@@ -310,6 +343,11 @@ public class SearchActivity extends Activity {
      * "Depart At" radio button.
      */
     private RadioButton departAtButton;
+    
+    /**
+     * "Arrive At" radio button.
+     */
+    private RadioButton arriveAtButton;
 
     /**
      * "Start from" EditText for starting address.
@@ -350,7 +388,24 @@ public class SearchActivity extends Activity {
      * Keeps an array of history entries.
      */
     private HistoryItem[] historyItemData;
+    
+    
+    /**
+     * A Spinner for listing typing Travel Mode.
+     */
+    private Spinner travelModeSpinner;  
+    
+    /**
+     * Keeps an array of travel mode entries.
+     */
+    private static final String[] TRAVEL_MODE_DATA = 
+        {"Bicycling", "Transit", "Walking", "Mixed", "Unknown"}; 
 
+    /**
+     * Keeps selected travelMode.
+     */
+    private TravelMode tm;
+    
     /**
      * A progress dialog indicating the searching status of this activity.
      */
@@ -452,8 +507,9 @@ public class SearchActivity extends Activity {
      * Find and establish all UI components from xml to this activity.
      */
     private void establishViewsAndOtherNecessaryComponents() {
-        departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
         leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
+        departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
+        arriveAtButton = (RadioButton) findViewById(R.id.radioButtonArriveAt);
         startFromEditText = (EditText) findViewById(R.id.editTextStartFrom);
         toEditText = (EditText) findViewById(R.id.editTextTo);
         dateEditText = (EditText) findViewById(R.id.editTextDate);
@@ -461,6 +517,16 @@ public class SearchActivity extends Activity {
         findButton = (Button) findViewById(R.id.buttonFind);
         reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
         historyListView = (ListView) findViewById(R.id.listViewHistory);
+        
+        // Travel Mode Related setup
+        travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
+        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this, 
+                android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
+        travelModeSpinnerAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item); 
+        travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
+        // Default Travel Mode: Mixed
+        tm = TravelMode.MIXED;
     }
 
     /**
@@ -486,7 +552,13 @@ public class SearchActivity extends Activity {
             public void onClick(final View v) {
                 dateEditText.setEnabled(true);
                 timeEditText.setEnabled(true);
-                // dateEditText.requestFocus();
+            }
+        });
+        
+        arriveAtButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                dateEditText.setEnabled(true);
+                timeEditText.setEnabled(true);
             }
         });
 
@@ -512,6 +584,35 @@ public class SearchActivity extends Activity {
         // a time)
         timeEditText.setKeyListener(null);
 
+        travelModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            
+            @Override
+            public void onItemSelected(final AdapterView<?> parent, 
+                                    final View view, final int position, final long id) {
+                // travelModeData = {"Bicycling", "Transit", "Walking", "Mixed", "Unknown"}
+                
+                // Since there is no switch/case syntax in Android,
+                // only use if/else statements
+                if (position == TRAVEL_MODE_DATA_POSITION_FIRST) {
+                    tm = TravelMode.BICYCLING;
+                } else if (position == TRAVEL_MODE_DATA_POSITION_SECOND) {
+                    tm = TravelMode.TRANSIT;
+                } else if (position == TRAVEL_MODE_DATA_POSITION_THIRD) {
+                    tm = TravelMode.WALKING;
+                } else if (position == TRAVEL_MODE_DATA_POSITION_FOURTH) {
+                    tm = TravelMode.MIXED;
+                } else {  // position == TRAVEL_MODE_DATA_POSITION_FIFTH
+                    tm = TravelMode.UNKNOWN;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(final AdapterView<?> arg0) {
+                // Default Value: Bicycling Mode
+                tm = TravelMode.BICYCLING;
+            }
+        });
+        
         findButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -526,7 +627,7 @@ public class SearchActivity extends Activity {
     /**
      * Fill in the history section. TODO: currently hard-coded, creating a live
      * version in next phases. Since the data is dummy, I keep all the numbers
-     * even if they are marked as magic numbers.
+     * even if they are marked as magic numbers by Check-Style.
      */
     private void setHistorySection() {
         historyItemData = new HistoryItem[] {

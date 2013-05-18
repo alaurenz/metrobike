@@ -39,10 +39,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="15dp"
             android:layout_toLeftOf="@+id/imageButtonReverse"
             android:layout_toRightOf="@+id/imageViewA"
-            android:background="@drawable/blue_border"
+            android:background="@drawable/edittext_border"
             android:ems="10"
             android:hint="@string/edittext_hint_startfrom"
             android:padding="10dp"
@@ -57,7 +58,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/imageViewB"
-            android:background="@drawable/blue_border"
+            android:background="@drawable/edittext_border"
             android:ems="10"
             android:hint="@string/edittext_hint_to"
             android:padding="10dp"
@@ -70,6 +71,7 @@
             android:layout_alignBottom="@+id/editTextTo"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="20dp"
+            android:layout_marginRight="10dp"
             android:adjustViewBounds="true"
             android:background="@null"
             android:contentDescription="@string/button_reverse_desc"
@@ -98,6 +100,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/radio_button_depart_at" />
+        
+        <RadioButton
+            android:id="@+id/radioButtonArriveAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_button_arrive_at" />
     </RadioGroup>
 
 	<LinearLayout
@@ -124,7 +132,21 @@
             android:gravity="center"
             android:inputType="time" />
     </LinearLayout>
-        
+    
+	<TextView
+           android:id="@+id/textViewTravelMode"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:textIsSelectable="false"
+           android:text="@string/textview_travel_mode"
+           android:textSize="15sp"
+           android:textColor="#1B84E0"
+           android:gravity="center"/>
+		
+    <Spinner android:id="@+id/spinnerTravelMode"   
+       	android:layout_width="match_parent"  
+       	android:layout_height="wrap_content"></Spinner>  
+       
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -137,7 +159,7 @@
             android:textSize="22sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:background="#0D8BD9"
+            android:background="#54BF83"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
@@ -159,5 +181,5 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
     </RelativeLayout>
-
+    
 </LinearLayout>
