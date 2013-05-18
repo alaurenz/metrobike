@@ -454,7 +454,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         String expected = null;
         request.doDummyRequest();
-        String actual = request.getErrorMessages();
+        String actual = request.getVerboseErrorMessages();
         Assert.assertEquals("Actual error messages from request.getErrorMessages() is: " + actual,
                 expected, actual);
     }
