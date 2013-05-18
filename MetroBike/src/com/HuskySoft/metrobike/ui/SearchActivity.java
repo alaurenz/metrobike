@@ -525,8 +525,8 @@ public class SearchActivity extends Activity {
         travelModeSpinnerAdapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item); 
         travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
-        // Default Travel Mode: Mixed
-        tm = TravelMode.MIXED;
+        // Default Travel Mode: Bicycling
+        tm = TravelMode.BICYCLING;
     }
 
     /**
