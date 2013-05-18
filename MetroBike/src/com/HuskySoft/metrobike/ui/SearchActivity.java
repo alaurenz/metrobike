@@ -18,13 +18,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 
@@ -32,8 +31,7 @@ import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.TravelMode;
-import com.HuskySoft.metrobike.ui.utility.HistoryAdapter;
-import com.HuskySoft.metrobike.ui.utility.HistoryItem;
+import com.HuskySoft.metrobike.ui.utility.History;
 
 /**
  * An activity that receives and handle's users' requests for routes.
@@ -237,9 +235,11 @@ public class SearchActivity extends Activity {
             long timeDepartureToSend = timeDeparture.toMillis(false) / SEC_TO_MILLISEC;
 
             // Generate a direction request
+            String from = fromEditText.getText().toString();
+            String to = toEditText.getText().toString();
             DirectionsRequest dReq = (new DirectionsRequest())
-                    .setStartAddress(startFromEditText.getText().toString())
-                    .setEndAddress(toEditText.getText().toString()).setTravelMode(TravelMode.MIXED)
+                    .setStartAddress(from)
+                    .setEndAddress(to).setTravelMode(TravelMode.MIXED)
                     .setDepartureTime(timeDepartureToSend);
 
             DirectionsStatus retVal = dReq.doRequest();
@@ -281,8 +281,11 @@ public class SearchActivity extends Activity {
                 pd.dismiss();
                 return;
             }
-
-            // If no errors, send the result to ResultsActivity
+            // if no errors, store the address into history
+            historyItem.addAddress(from);
+            historyItem.addAddress(to);
+            
+            // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
             intent.putExtra("Current Route Index", 0);
@@ -314,13 +317,12 @@ public class SearchActivity extends Activity {
     /**
      * "Start from" EditText for starting address.
      */
-    private EditText startFromEditText;
+    private AutoCompleteTextView fromEditText;
 
     /**
      * "To" EditText for destination address.
      */
-    private EditText toEditText;
-
+    private AutoCompleteTextView toEditText;
     /**
      * EditText for user to pick a date.
      */
@@ -342,15 +344,10 @@ public class SearchActivity extends Activity {
     private ImageButton reverseButton;
 
     /**
-     * A listView for showing typing history.
-     */
-    private ListView historyListView;
-
-    /**
      * Keeps an array of history entries.
      */
-    private HistoryItem[] historyItemData;
-
+    private History historyItem;
+    
     /**
      * A progress dialog indicating the searching status of this activity.
      */
@@ -454,23 +451,23 @@ public class SearchActivity extends Activity {
     private void establishViewsAndOtherNecessaryComponents() {
         departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
         leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
-        startFromEditText = (EditText) findViewById(R.id.editTextStartFrom);
-        toEditText = (EditText) findViewById(R.id.editTextTo);
         dateEditText = (EditText) findViewById(R.id.editTextDate);
         timeEditText = (EditText) findViewById(R.id.editTextTime);
         findButton = (Button) findViewById(R.id.buttonFind);
         reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
-        historyListView = (ListView) findViewById(R.id.listViewHistory);
+        fromEditText = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
+        toEditText = (AutoCompleteTextView) findViewById(R.id.editTextTo);
     }
 
     /**
      * Attach all listeners to corresponding UI widgets.
      */
     private void setListeners() {
+        
         reverseButton.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-                String temp = startFromEditText.getText().toString();
-                startFromEditText.setText(toEditText.getText().toString());
+                String temp = fromEditText.getText().toString();
+                fromEditText.setText(toEditText.getText().toString());
                 toEditText.setText(temp);
             }
         });
@@ -529,45 +526,16 @@ public class SearchActivity extends Activity {
      * even if they are marked as magic numbers.
      */
     private void setHistorySection() {
-        historyItemData = new HistoryItem[] {
-                new HistoryItem(1, "Paul G. Allen Center for Computer Science & Engineering (CSE)",
-                        "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(2, "Guggenheim Hall (GUG)", "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(3, "Schmitz Hall (SMZ)", "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(4, "85 Pike St, Seattle, Washington", "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(5, "Mount Rainier National Park, Washington 98304",
-                        "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(6, "7201 East Green Lake Dr N, Seattle, WA",
-                        "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(7, "601 N 59th St, Seattle, WA", "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(8, "400 Broad St, Seattle, WA", "4311 11th Ave NE, Seattle, WA"),
-                new HistoryItem(9, "2623 NE University Village St #7, Seattle, WA",
-                        "4311 11th Ave NE, Seattle, WA"), };
-
-        HistoryAdapter adapter = new HistoryAdapter(this, R.layout.listview_history_item_row,
-                historyItemData);
-
-        // Add title row to the history list
-        View titleRow = (View) getLayoutInflater().inflate(R.layout.listview_title_row, null);
+        historyItem = History.getInstance();
+        // *********** bug *****************
+        // if user delete the history and click back button to go back to the search activity, 
+        // it will still show the history that has already been deleted.
+        String[] f = historyItem.getHistory().toArray(new String[0]);
         
-        // set false to make titleRow not clickable
-        // NOTE: The index of titleRow is still 0 even false
-        historyListView.addHeaderView(titleRow, null, false);
-        
-        historyListView.setAdapter(adapter);
-
-        historyListView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
-                // The first row (with index of 0) is the title row
-                if (position < 1) {
-                    return;
-                }
-                startFromEditText.setText(historyItemData[position - 1].getFrom());
-                toEditText.setText(historyItemData[position - 1].getTo());
-            }
-        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, f);
+        fromEditText.setAdapter(adapter);
+        toEditText.setAdapter(adapter);
+       
     }
 
 }

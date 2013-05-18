@@ -16,7 +16,7 @@ import com.HuskySoft.metrobike.R;
  * 
  * @author CoolCapri, sw11
  */
-public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
+public class HistoryAdapter extends ArrayAdapter<String> {
     /**
      * The context of this current activity.
      */
@@ -28,7 +28,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
     /**
      * The array of history item object.
      */
-    private HistoryItem[] data;
+    private History data;
 
     /**
      * Constructor to initialize the field.
@@ -41,8 +41,9 @@ public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
      *            the array of history items.
      */
     public HistoryAdapter(final Context contextView, final int layoutId,
-            final HistoryItem[] historyData) {
-        super(contextView, layoutId, historyData);
+            final History historyData) {
+    	
+    	super(contextView, layoutId, historyData.getHistory());
         this.layoutResourceId = layoutId;
         this.context = contextView;
         this.data = historyData;
@@ -65,20 +66,22 @@ public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new HistoryItemHolder();
-            holder.textViewIndex = (TextView) row
-                    .findViewById(R.id.textViewIndex);
+           // holder.textViewIndex = (TextView) row
+            //        .findViewById(R.id.textViewIndex);
             holder.textViewFrom = (TextView) row
                     .findViewById(R.id.textViewFrom);
-            holder.textViewTo = (TextView) row.findViewById(R.id.textViewTo);
+            //holder.textViewTo = (TextView) row.findViewById(R.id.textViewTo);
             row.setTag(holder);
         } else {
             holder = (HistoryItemHolder) row.getTag();
         }
 
-        HistoryItem historyItem = data[position];
-        holder.textViewIndex.setText("" + historyItem.getIndex());
-        holder.textViewFrom.setText(historyItem.getFrom());
-        holder.textViewTo.setText(historyItem.getTo());
+        String historyItem = data.getAddress(position);
+        //holder.textViewIndex.setText("" + historyItem.getIndex());
+        //holder.textViewFrom.setText(historyItem.getFrom());
+        //holder.textViewTo.setText(historyItem.getTo());
+        //holder.textViewIndex.setText("" + position);
+        holder.textViewFrom.setText(historyItem);
 
         return row;
     }

@@ -1,5 +1,8 @@
 package com.HuskySoft.metrobike.ui;
 
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -9,6 +12,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
 import com.HuskySoft.metrobike.R;
+import com.HuskySoft.metrobike.ui.utility.History;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -52,7 +56,12 @@ public class SettingsActivity extends PreferenceActivity {
      * the xml key of about tab.
      */
     private static final String ABOUT = "about_key";
-
+    
+    /**
+     * Keeps an array of history entries.
+     */
+    private History historyItem;
+    
     /**
      * {@inheritDoc}
      * 
@@ -82,6 +91,8 @@ public class SettingsActivity extends PreferenceActivity {
         // this is binding the button
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));
+        
+        historyItem = History.getInstance();
     }
 
     /**
@@ -105,6 +116,7 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public boolean onPreferenceClick(final Preference preference) {
             String key = preference.getKey();
+            
             boolean isClick = true;
             // I don't use switch statement because it didn't support java 6 or
             // below
@@ -113,7 +125,27 @@ public class SettingsActivity extends PreferenceActivity {
                 startActivity(new Intent(preference.getContext(),
                         AboutActivity.class));
             } else if (key.equals(CLR_HISTORY)) {
-                // TODO something for clear the history
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(preference.getContext());
+                alertDialog.setTitle("Warning");
+                alertDialog.setMessage("Are you sure want to delete all histories");
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                        int which) {
+                                                            // may be we need a toast message?
+                                                            historyItem.deleteAll();
+                                                        }
+                                                });
+                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                        int which) {
+                                                            // cancel this dialog    
+                                                            dialog.cancel();
+                                                        }
+                                                });
+                // show this dialog on the screen
+                alertDialog.create().show();
             } else if (key.equals(VIEW_HISTORY)) {
                 // TODO something for viewing the history
             } else {
