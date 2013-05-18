@@ -42,7 +42,9 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-        Log.v("MetroBike","Finished launching main activity!");
+        
+        // Showing log in console for debugging. To be removed for formal release.
+        Log.v("MetroBike", "Finished launching main activity!");
     }
 
     /**

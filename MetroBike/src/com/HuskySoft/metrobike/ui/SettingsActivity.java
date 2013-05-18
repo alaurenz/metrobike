@@ -127,27 +127,29 @@ public class SettingsActivity extends PreferenceActivity {
             } else if (key.equals(CLR_HISTORY)) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(preference.getContext());
                 alertDialog.setTitle("Warning");
-                alertDialog.setMessage("Are you sure want to delete all histories");
+                alertDialog.setMessage("Are you sure want to delete all histories?");
                 alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                            // may be we need a toast message?
-                                                            historyItem.deleteAll();
-                                                        }
-                                                });
+                        @Override
+                        public void onClick(final DialogInterface dialog,
+                                        final int which) {
+                            // may be we need a toast message?
+                            historyItem.deleteAll();
+                        }
+                    });
                 alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                            // cancel this dialog    
-                                                            dialog.cancel();
-                                                        }
-                                                });
+                            @Override
+                            public void onClick(final DialogInterface dialog,
+                                            final int which) {
+                                // cancel this dialog    
+                                dialog.cancel();
+                            }
+                    });
                 // show this dialog on the screen
                 alertDialog.create().show();
             } else if (key.equals(VIEW_HISTORY)) {
                 // TODO something for viewing the history
+                // Currently just return isClick. To be Changed.
+                return isClick;
             } else {
                 isClick = false;
             }

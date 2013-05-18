@@ -624,7 +624,8 @@ public class SearchActivity extends Activity {
         // it will still show the history that has already been deleted.
         String[] f = historyItem.getHistory().toArray(new String[0]);
         
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, f);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+                android.R.layout.select_dialog_item, f);
         fromEditText.setAdapter(adapter);
         toEditText.setAdapter(adapter);
        
