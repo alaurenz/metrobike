@@ -54,18 +54,12 @@ public final class DirectionsRequest implements Serializable {
     private String errorMessages;
 
     /**
-     * Holds any extra information about errors.
-     */
-    private String extendedErrors;
-
-    /**
      * Constructs a new DirectionsRequest object.
      */
     public DirectionsRequest() {
         myParams = new RequestParameters();
         solutions = null;
         errorMessages = null;
-        extendedErrors = null;
     }
 
     /**
@@ -139,30 +133,30 @@ public final class DirectionsRequest implements Serializable {
          */
 
         // Query the simple algorithm first
-        //SimpleAlgorithm firstAlg = new SimpleAlgorithm();
+        // SimpleAlgorithm firstAlg = new SimpleAlgorithm();
         SimpleComboAlgorithm comboAlg = new SimpleComboAlgorithm();
-        
-        //DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
+
+        // DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
         DirectionsStatus comboStatus = comboAlg.findRoutes(myParams);
-        
-        /*if(firstStatus.isError()) {
-            extendedErrors = firstAlg.getErrors();
-            return firstStatus;
-        }*/
+
+        /*
+         * if(firstStatus.isError()) { extendedErrors = firstAlg.getErrors();
+         * return firstStatus; }
+         */
         if (comboStatus.isError()) {
-            //appendErrorMessage(comboAlg.getErrors());
-            extendedErrors = comboAlg.getErrors();
+            appendErrorMessage(comboAlg.getErrors());
             return comboStatus;
         }
 
-        //List<Route> firstRoutes = firstAlg.getResults();
+        // List<Route> firstRoutes = firstAlg.getResults();
         List<Route> comboRoutes = comboAlg.getResults();
 
-        /*if (firstRoutes == null) {
-            System.err.println(TAG + "Got null from SimpleAlgorithm without an error");
-            appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
-            return DirectionsStatus.NO_RESULTS_FOUND;
-        }*/
+        /*
+         * if (firstRoutes == null) { System.err.println(TAG +
+         * "Got null from SimpleAlgorithm without an error");
+         * appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
+         * return DirectionsStatus.NO_RESULTS_FOUND; }
+         */
         if (comboRoutes == null) {
             System.err.println(TAG + "Got null from SimpleComboAlgorithm without an error");
             appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
@@ -170,10 +164,10 @@ public final class DirectionsRequest implements Serializable {
         }
 
         // TODO: temp for testing
-        //solutions.add(firstRoutes.get(0));
-        //solutions.add(comboRoutes.get(0));
+        // solutions.add(firstRoutes.get(0));
+        // solutions.add(comboRoutes.get(0));
         solutions.addAll(comboRoutes);
-        
+
         return DirectionsStatus.REQUEST_SUCCESSFUL;
     }
 
@@ -350,6 +344,7 @@ public final class DirectionsRequest implements Serializable {
             switch (travelMode) {
             case BICYCLING:
                 // This mode requires no extra checks.
+                // TODO: Be sure no bus transfer options are set
                 break;
             case TRANSIT:
             case MIXED:
@@ -596,18 +591,15 @@ public final class DirectionsRequest implements Serializable {
     }
 
     /**
-     * @return the errorMessages. Returns null if no messages have been set.
+     * Returns the verbose error messages. This may contain repeated error
+     * messages, and so may not be suitable for displaying to users. To display
+     * user-friendly error messages, call .getMessage() on the return value of
+     * doRequest().
+     * 
+     * @return the verbose errorMessages. Returns null if no messages have been set.
      */
-    public String getErrorMessages() {
+    public String getVerboseErrorMessages() {
         return errorMessages;
-    }
-
-    /**
-     * @return the extended error messages. Returns null if no messages have
-     *         been set.
-     */
-    public String getExtendedErrorMessages() {
-        return extendedErrors;
     }
 
     /**

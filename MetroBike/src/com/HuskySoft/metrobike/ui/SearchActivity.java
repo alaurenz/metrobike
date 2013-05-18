@@ -259,14 +259,7 @@ public class SearchActivity extends Activity {
             // a new request
             if (retVal.isError()) {
                 
-                // Generates and displays error message
-                String errorMessageString = dReq.getErrorMessages();
-                // Check if there is extended error message
-                if (dReq.getExtendedErrorMessages() != null) { 
-                    errorMessageString += "\n\n" + dReq.getExtendedErrorMessages();
-                }
-                
-                final CharSequence errorMessage = errorMessageString;
+                final CharSequence errorMessage = retVal.getMessage();
 
                 // Must call runOnUiThread if want to display a Toast or a
                 // Dialog within a thread
