@@ -9,7 +9,7 @@ import android.app.Activity;
  * This is a about activity which shows the HuskySoft logo, copyright
  * information, developer's name and more.
  * 
- * @author Sam Wilson
+ * @author Sam Wilson, Shuo Wang
  */
 public class AboutActivity extends Activity {
 
