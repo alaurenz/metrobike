@@ -4,14 +4,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background_shape_blue"
     tools:context=".MainActivity" >
-    	
-    <Button
-        android:id="@+id/buttonSearch"
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/button_search_main" />
+        android:layout_height="fill_parent" />
 
     <TextView
         android:id="@+id/textViewDevBy"
@@ -20,10 +18,20 @@
         android:layout_above="@+id/buttonSearch"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="14dp"
-        android:textSize="20sp"
         android:gravity="center"
         android:text="@string/textView_hint"
         android:textColor="#1B84E0"
-        android:textIsSelectable="false" />
-    
+        android:textIsSelectable="false"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/buttonSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/button_search_main" />
+
 </RelativeLayout>

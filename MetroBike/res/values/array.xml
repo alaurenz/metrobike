@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="array_map_type">
+        <item>RoadMap</item>
+        <item>Satellite</item>
+        <item>Hybrid</item>
+        <item>Terrain</item>
+    </string-array>
+    <string-array name="value_map_type">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="switch_button">
+        <item>Enable</item>
+        <item>Disable</item>
+    </string-array>
+    <string-array name="true_false">
+        <item>true</item>
+        <item>false</item>
+    </string-array>
+
+</resources>

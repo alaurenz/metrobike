@@ -35,7 +35,7 @@ public final class Utility {
      * @throws AssertionError
      *             if the constructor is called
      */
-    private void Utility() throws AssertionError {
+    private Utility() throws AssertionError {
         /*
          * Based on a suggestion here
          * http://stackoverflow.com/questions/7766277/

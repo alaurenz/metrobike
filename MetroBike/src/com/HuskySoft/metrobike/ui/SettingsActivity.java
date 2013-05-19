@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.ui.utility.History;
+import com.HuskySoft.metrobike.ui.utility.MapSetting;
+import com.google.android.gms.maps.GoogleMap;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -60,9 +63,35 @@ public class SettingsActivity extends PreferenceActivity {
     private static final String ABOUT = "about_key";
 
     /**
+     * the xml key of map type tab.
+     */
+    private static final String MAP_TYPE = "map_type";
+
+    /**
+     * the xml key of traffic tab
+     */
+    private static final String TRAFFIC_TYPE = "traffic_type";
+    
+    /**
+     * the xml key of current_type
+     */
+    private static final String CURRENT_TYPE = "current_type";
+    
+    /**
      * Keeps an array of history entries.
      */
     private History historyItem;
+
+    /**
+     * The map setting object.
+     */
+    private MapSetting map;
+
+    /**
+     * The 4 types of map.
+     */
+    private static final int[] mapType = { GoogleMap.MAP_TYPE_NORMAL, GoogleMap.MAP_TYPE_SATELLITE,
+            GoogleMap.MAP_TYPE_HYBRID, GoogleMap.MAP_TYPE_TERRAIN };
 
     /**
      * {@inheritDoc}
@@ -82,6 +111,10 @@ public class SettingsActivity extends PreferenceActivity {
      */
     @SuppressWarnings("deprecation")
     private void setupSimplePreferencesScreen() {
+        historyItem = History.getInstance();
+        // noted that it should not crash if passing null.
+        // Since setting activity is not the first class to be called.
+        map = MapSetting.getInstance(null);
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
 
@@ -94,8 +127,9 @@ public class SettingsActivity extends PreferenceActivity {
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));
         bindPreferenceToClick(findPreference(VIEW_HISTORY));
-
-        historyItem = History.getInstance();
+        bindPreferenceToClick(findPreference(MAP_TYPE));
+        bindPreferenceToClick(findPreference(TRAFFIC_TYPE));
+        bindPreferenceToClick(findPreference(CURRENT_TYPE));
     }
 
     /**
@@ -113,8 +147,7 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value click listener that react the preference's clicked by
      * user.
      */
-    private Preference.OnPreferenceClickListener preferenceOnClick = 
-            new OnPreferenceClickListener() {
+    private Preference.OnPreferenceClickListener preferenceOnClick = new OnPreferenceClickListener() {
 
         @Override
         public boolean onPreferenceClick(final Preference preference) {
@@ -127,41 +160,116 @@ public class SettingsActivity extends PreferenceActivity {
                 // start a new about activity
                 startActivity(new Intent(preference.getContext(), AboutActivity.class));
             } else if (key.equals(CLR_HISTORY)) {
-                // show the alertDialog to make sure user want to delete all history
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(preference.getContext());
-                // set title warning and red color
-                alertDialog.setTitle(Html.fromHtml("<font color='red'>Warning</font>"));
-                alertDialog.setMessage("Are you sure want to delete all histories?");
-                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        historyItem.deleteAll();
-                    }
-                });
-                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        // cancel this dialog
-                        dialog.cancel();
-                    }
-                });
-                // show this dialog on the screen
-                alertDialog.create().show();
+                deleteAllHistory(preference);
             } else if (key.equals(VIEW_HISTORY)) {
-                if (historyItem.getSize() > 0) {
-                    // show the history activity if there are some history
-                    Intent i = new Intent(preference.getContext(), HistoryActivity.class);
-                    startActivity(i);
-                } else {
-                    // no history, show the toast
-                    Context context = preference.getContext();
-                    int emptyHistory = R.string.empty_history;
-                    Toast.makeText(context, emptyHistory, Toast.LENGTH_SHORT).show();
-                }
-            } else {
+                viewHistory(preference);
+            } else if (key.equals(MAP_TYPE)) {
+                changeTheMapType(preference);
+            } else if (key.equals(TRAFFIC_TYPE)) {
+                switchMode(preference, key);
+            } else if (key.equals(CURRENT_TYPE)){
+                switchMode(preference, key);
+            }
+            else {
                 isClick = false;
             }
             return isClick;
+        }
+
+        /**
+         * Invoke when user click change traffic.
+         * 
+         * @param preference
+         */
+        private void switchMode(Preference preference, final String key) {
+            ((ListPreference) preference)
+                    .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            boolean isClick = true;
+                            boolean show = ((String) newValue).equals("true");
+                            if (key.equals(TRAFFIC_TYPE)) {
+                                map.setTraffic(show);
+                            } else if (key.equals(CURRENT_TYPE)){
+                                map.setCurrentLocationButton(show);
+                            } else {
+                                isClick = false;
+                            }
+                            return isClick;
+                        }
+                    });
+        }
+
+        /**
+         * Invoke when user click view history.
+         * 
+         * @param preference
+         */
+        private void viewHistory(final Preference preference) {
+            if (historyItem.getSize() > 0) {
+                // show the history activity if there are some history
+                Intent i = new Intent(preference.getContext(), HistoryActivity.class);
+                startActivity(i);
+            } else {
+                // no history, show the toast
+                Context context = preference.getContext();
+                int emptyHistory = R.string.empty_history;
+                Toast.makeText(context, emptyHistory, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        /**
+         * Invoke when user click clear history.
+         * 
+         * @param preference
+         */
+        private void deleteAllHistory(final Preference preference) {
+            // show the alertDialog to make sure user want to delete all
+            // history
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(preference.getContext());
+            // set title warning and red color
+            alertDialog.setTitle(Html.fromHtml("<font color='red'>Warning</font>"));
+            alertDialog.setMessage("Are you sure want to delete all histories?");
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+                    historyItem.deleteAll();
+                }
+            });
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+                    // cancel this dialog
+                    dialog.cancel();
+                }
+            });
+            // show this dialog on the screen
+            alertDialog.create().show();
+        }
+
+        /**
+         * Invoke when user want to change the map type.
+         * 
+         * @param preference
+         */
+        private void changeTheMapType(final Preference preference) {
+            // ****** bug *******
+            // the default value does not match!
+            ((ListPreference) preference)
+                    .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            try {
+                                int value = Integer.parseInt((String) newValue);
+                                map.setMapDisplay(mapType[value]);
+                                return true;
+                            } catch (Exception e) {
+                                // Defensive programming even though it
+                                // should not be crashed
+                                return false;
+                            }
+                        }
+                    });
         }
     };
 
@@ -169,8 +277,7 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private Preference.OnPreferenceChangeListener bindToVal = 
-            new Preference.OnPreferenceChangeListener() {
+    private Preference.OnPreferenceChangeListener bindToVal = new Preference.OnPreferenceChangeListener() {
 
         @Override
         public boolean onPreferenceChange(final Preference preference, final Object value) {

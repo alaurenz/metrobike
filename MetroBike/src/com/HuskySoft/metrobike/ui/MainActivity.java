@@ -11,6 +11,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.HuskySoft.metrobike.R;
+import com.HuskySoft.metrobike.ui.utility.MapSetting;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * This is a home screen which will show the map, search and detail button.
@@ -20,10 +25,27 @@ import com.HuskySoft.metrobike.R;
  */
 public class MainActivity extends Activity {
 
-    /*
-     * Feature added in Beta version: Google map on this screen. Rearrange
-     * buttons. Create android life cycle methods such as onBackPressed().
+    /**
+     * The latitude value of University of Washington.
      */
+    private static final double LATITUDE = 47.65555089999999;
+    /**
+     * The longitude value of University of Washington.
+     */
+    private static final double LONGITUDE = -122.30906219999997;
+    /**
+     * Zoom level.<br>
+     * 2.0 the highest zoom out and 21.0 the lowest zoom in
+     */
+    private static final float ZOOM = 15.0f;
+    /**
+     * GoogleMap object stored here to be modified.
+     */
+    private MapSetting mMap;
+    /**
+     * The actual GoogleMap object.
+     */
+    private GoogleMap googleMap;
 
     /**
      * {@inheritDoc}
@@ -42,9 +64,25 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-        
-        // Showing log in console for debugging. To be removed for formal release.
+        // initialize the background map
+        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        createMap();
+        // Showing log in console for debugging. To be removed for formal
+        // release.
         Log.v("MetroBike", "Finished launching main activity!");
+    }
+
+    /**
+     * Create the Google map as a background.
+     */
+    private void createMap() {
+        // Noted: mMap.getMyLocation() return null
+        mMap = MapSetting.getInstance(googleMap);
+        // the top right hand button
+        mMap.setCurrentLocationButton(true);
+        // the latlng of university of Washington
+        LatLng ll = new LatLng(LATITUDE, LONGITUDE);
+        mMap.moveCameraTo(CameraUpdateFactory.newLatLngZoom(ll, ZOOM));
     }
 
     /**
@@ -80,5 +118,16 @@ public class MainActivity extends Activity {
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Update the map setting.
+     * 
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected final void onResume() {
+        mMap = MapSetting.getInstance(googleMap);
+        super.onResume();
     }
 }
