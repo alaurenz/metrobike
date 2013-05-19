@@ -45,9 +45,9 @@ public class DetailsActivity extends Activity {
     private TextView start;
     
     /**
-     * TextView to show destinastion address.
+     * TextView to show destination address.
      */
-    private TextView destnation;
+    private TextView destination;
 
     /**
      * onCreate function of DetailsActivity class Display the details of metroBike search.
@@ -61,7 +61,7 @@ public class DetailsActivity extends Activity {
         setContentView(R.layout.activity_details);
         directions = (TextView) findViewById(R.id.directions);
         start = (TextView) findViewById(R.id.directionsStart);
-        destnation = (TextView) findViewById(R.id.directionsDest);
+        destination = (TextView) findViewById(R.id.directionsDest);
         ActionBar actionBar = this.getActionBar();
         actionBar.setTitle("Details");
         @SuppressWarnings("unchecked")
@@ -158,15 +158,18 @@ public class DetailsActivity extends Activity {
         // sets up details
         Route displayRoute = routes.get(currRoute);
         List<Leg> legs = displayRoute.getLegList();
+        int count = 1;
+        start.append(legs.get(0).getStartAddress());
         for (int i = 0; i < legs.size(); i++) {
             Leg curLeg = legs.get(i);
             List<Step> steps = curLeg.getStepList();
-            start.append(legs.get(i).getStartAddress());
             for (int j = 0; j < steps.size(); j++) {
                 Step s = steps.get(j);
-                directions.append("\nStep " + (j + 1) + "   " + s.getHtmlInstruction());
+                String ss = s.getHtmlInstruction().replaceAll("\\<.*?>","");
+                directions.append("\nStep " + count + "   " + ss);
+                count++;
             }
-            destnation.append(legs.get(i).getEndAddress());
         }
+        destination.append(legs.get(legs.size()-1).getEndAddress());
     }
 }

@@ -10,7 +10,6 @@
     <string name="title_activity_search">Search</string>
     <string name="button_details">Details</string>
     <string name="button_search">Search</string>
-    <string name="button_reverse_desc">Reverse Button</string>
     <string name="button_search_desc">Search Button</string>
     <string name="edittext_hint_to">To</string>
     <string name="edittext_hint_startfrom">Start from</string>
@@ -57,6 +56,9 @@
     <string name="dialogbox_time">Select a Time</string>
     <string name="button_history">History</string>
     <string name="button_find">Find Routes</string>
+    <string name="button_reverse_desc">Reverse Button</string>
+    <string name="button_clear_from_desc">Clear Button (From)</string>
+    <string name="button_clear_to_desc">Clear Button (To)</string>
     <string name="textview_departure_time">Departure Time</string>
     <string name="textview_history">History</string>
     <string name="textview_travel_mode">Select a Travel Mode:</string>

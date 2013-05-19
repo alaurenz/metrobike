@@ -13,22 +13,31 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.text.format.Time;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
@@ -48,19 +57,19 @@ public class SearchActivity extends Activity {
      * Minimum two digit number.
      */
     private static final int MIN_TWO_DIGIT_NUMBER = 10;
-    
+
     /**
      * A Fragment that contains a date picker to let user select a date of
      * departure/arrival.
      */
     public static class DatePickerFragment extends DialogFragment implements
             DatePickerDialog.OnDateSetListener {
-        
+
         /**
          * Minimum two digit number.
          */
         private static final int MIN_TWO_DIGIT_NUMBER = 10;
-        
+
         @Override
         public final Dialog onCreateDialog(final Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
@@ -78,19 +87,18 @@ public class SearchActivity extends Activity {
 
         /**
          * Update the date EditText widget after an user picks a date.
+         * 
          * @param view
-         *            The DatePicker view whose date is set by user 
-         * @param year 
+         *            The DatePicker view whose date is set by user
+         * @param year
          *            The year of the date picked
          * @param month
          *            The month of the date picked (1-12 as Jan. to Dec.)
          * @param day
          *            The day of month of the date picked
          */
-        public final void onDateSet(final DatePicker view, 
-                                    final int year, 
-                                    final int month, 
-                                    final int day) {
+        public final void onDateSet(final DatePicker view, final int year, final int month,
+                final int day) {
             EditText dateEditText = (EditText) getActivity().findViewById(R.id.editTextDate);
 
             // Formatting string be displayed
@@ -120,12 +128,12 @@ public class SearchActivity extends Activity {
      */
     public static class TimePickerFragment extends DialogFragment implements
             TimePickerDialog.OnTimeSetListener {
-        
+
         /**
          * Minimum two digit number.
          */
         private static final int MIN_TWO_DIGIT_NUMBER = 10;
-        
+
         @Override
         public final Dialog onCreateDialog(final Bundle savedInstanceState) {
             // Use the current time as the default values for the picker
@@ -142,8 +150,9 @@ public class SearchActivity extends Activity {
 
         /**
          * Update the date EditText widget after an user picks a date.
+         * 
          * @param view
-         *            The TimePicker view whose date is set by user 
+         *            The TimePicker view whose date is set by user
          * @param hourOfDay
          *            The hour of a day of the time picked
          * @param minute
@@ -177,33 +186,32 @@ public class SearchActivity extends Activity {
      * @author dutchscout, Shuo Wang (modification)
      */
     private class DirThread implements Runnable {
-        
+
         /**
          * Fourth digit in a date/time.
          */
         private static final int DIGIT_FOURTH = 3;
-        
+
         /**
          * Sixth digit in a date/time.
          */
         private static final int DIGIT_SIXTH = 5;
-        
+
         /**
          * Seventh digit in a date/time.
          */
         private static final int DIGIT_SEVENTH = 6;
-        
+
         /**
          * Eleventh digit in a date/time.
          */
         private static final int DIGIT_ELEVENTH = 10;
-        
+
         /**
          * 1 second = 1000 milliseconds.
          */
         private static final int SEC_TO_MILLISEC = 1000;
-        
-        
+
         /**
          * {@inheritDoc}
          */
@@ -239,26 +247,25 @@ public class SearchActivity extends Activity {
             long timeToSend = time.toMillis(false) / SEC_TO_MILLISEC;
 
             // Generate a direction request
-            String from = fromEditText.getText().toString();
-            String to = toEditText.getText().toString();
-            DirectionsRequest dReq = (new DirectionsRequest())
-                    .setStartAddress(from.toString())
+            String from = fromAutoCompleteTextView.getText().toString();
+            String to = toAutoCompleteTextView.getText().toString();
+            DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from.toString())
                     .setEndAddress(to).setTravelMode(tm);
-            
+
             // Determine time mode
             if (arriveAtButton.isChecked()) {
                 dReq.setArrivalTime(timeToSend);
             } else {
                 dReq.setDepartureTime(timeToSend);
             }
-                
+
             DirectionsStatus retVal = dReq.doRequest();
 
             // If an error happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
             if (retVal.isError()) {
-                
+
                 final CharSequence errorMessage = retVal.getMessage();
 
                 // Must call runOnUiThread if want to display a Toast or a
@@ -266,15 +273,17 @@ public class SearchActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-                        builder.setMessage(errorMessage).setTitle("Error")
-                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(final DialogInterface dialog, 
-                                                        final int id) {
-                                        // Do nothing here currently since we
-                                        // only need to
-                                        // stay in SearchActvity page
-                                    }
-                                });
+                        builder.setMessage(errorMessage);
+                        builder.setTitle(Html.fromHtml("<font color='red'>Error</font>"));
+                        // we can set the onClickListener parameter as null
+                        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            
+                            @Override
+                            public void onClick(final DialogInterface dialog, final int which) {
+                                // cancel this dialog
+                                dialog.cancel();
+                            }
+                        });
                         // Create the AlertDialog object and return it
                         builder.create().show();
                     }
@@ -287,7 +296,7 @@ public class SearchActivity extends Activity {
             // if no errors, store the address into history
             historyItem.addAddress(from);
             historyItem.addAddress(to);
-            
+
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
@@ -300,28 +309,22 @@ public class SearchActivity extends Activity {
         }
     }
 
-    
-    
     /**
      * First Position in travelModeData.
      */
     private static final int TRAVEL_MODE_DATA_POSITION_FIRST = 0;
-    
+
     /**
      * Second Position in travelModeData.
      */
     private static final int TRAVEL_MODE_DATA_POSITION_SECOND = 1;
-    
+
     /**
-     * Third Position in travelModeData.
+     * Keeps an array of travel mode entries.
      */
-    private static final int TRAVEL_MODE_DATA_POSITION_THIRD = 2;
-    
-    /**
-     * Fourth Position in travelModeData.
-     */
-    private static final int TRAVEL_MODE_DATA_POSITION_FOURTH = 3;
-    
+    private static final String[] TRAVEL_MODE_DATA = { "Bicycling", "Transit",
+            "Mixed (Bicycle and Transit)" };
+
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
      * Calendar subclass instance is set to the current date and time in the
@@ -338,21 +341,37 @@ public class SearchActivity extends Activity {
      * "Depart At" radio button.
      */
     private RadioButton departAtButton;
-    
+
     /**
      * "Arrive At" radio button.
      */
     private RadioButton arriveAtButton;
 
     /**
-     * "Start from" EditText for starting address.
+     * "Start from" AutoCompleteTextView for starting address.
      */
-    private AutoCompleteTextView fromEditText;
+    private AutoCompleteTextView fromAutoCompleteTextView;
 
     /**
-     * "To" EditText for destination address.
+     * "To" AutoCompleteTextView for destination address.
      */
-    private AutoCompleteTextView toEditText;
+    private AutoCompleteTextView toAutoCompleteTextView;
+
+    /**
+     * Delete button for user to clear text in fromAutoCompleteTextView.
+     */
+    private ImageButton fromClearButton;
+
+    /**
+     * Delete button for user to clear text in toAutoCompleteTextView.
+     */
+    private ImageButton toClearButton;
+
+    /**
+     * Reverse button for user to switch starting and destination address.
+     */
+    private ImageButton reverseButton;
+
     /**
      * EditText for user to pick a date.
      */
@@ -369,31 +388,20 @@ public class SearchActivity extends Activity {
     private Button findButton;
 
     /**
-     * Reverse button for user to switch starting and destination address.
-     */
-    private ImageButton reverseButton;
-
-    /**
      * Keeps an array of history entries.
      */
     private History historyItem;
-    
+
     /**
      * A Spinner for listing typing Travel Mode.
      */
-    private Spinner travelModeSpinner;  
-    
-    /**
-     * Keeps an array of travel mode entries.
-     */
-    private static final String[] TRAVEL_MODE_DATA = 
-        {"Bicycling", "Transit", "Walking", "Mixed", "Unknown"}; 
+    private Spinner travelModeSpinner;
 
     /**
      * Keeps selected travelMode.
      */
     private TravelMode tm;
-    
+
     /**
      * A progress dialog indicating the searching status of this activity.
      */
@@ -443,6 +451,7 @@ public class SearchActivity extends Activity {
         case R.id.action_settings:
             // user click the setting button, start the settings activity
             Intent intent = new Intent(this, SettingsActivity.class);
+            intent.putExtra("parent", "Search");
             startActivity(intent);
             return true;
         default:
@@ -498,36 +507,35 @@ public class SearchActivity extends Activity {
         leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
         departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
         arriveAtButton = (RadioButton) findViewById(R.id.radioButtonArriveAt);
+
         dateEditText = (EditText) findViewById(R.id.editTextDate);
         timeEditText = (EditText) findViewById(R.id.editTextTime);
+
         findButton = (Button) findViewById(R.id.buttonFind);
+
+        fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
+        toAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextTo);
         reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
-        fromEditText = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
-        toEditText = (AutoCompleteTextView) findViewById(R.id.editTextTo);
-        
+        fromClearButton = (ImageButton) findViewById(R.id.imageButtonClearFrom);
+        toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
+
         // Travel Mode Related setup
         travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
-        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this, 
+        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
-        travelModeSpinnerAdapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item); 
+        travelModeSpinnerAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
-        // Default Travel Mode: Bicycling
-        tm = TravelMode.BICYCLING;
+        // Default Travel Mode: Mixed
+        travelModeSpinner.setSelection(2);
+        tm = TravelMode.MIXED;
     }
 
     /**
      * Attach all listeners to corresponding UI widgets.
      */
     private void setListeners() {
-        
-        reverseButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                String temp = fromEditText.getText().toString();
-                fromEditText.setText(toEditText.getText().toString());
-                toEditText.setText(temp);
-            }
-        });
+        setAddressRelatedListeners();
 
         leaveNowButton.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
@@ -542,7 +550,7 @@ public class SearchActivity extends Activity {
                 timeEditText.setEnabled(true);
             }
         });
-        
+
         arriveAtButton.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
                 dateEditText.setEnabled(true);
@@ -573,34 +581,33 @@ public class SearchActivity extends Activity {
         timeEditText.setKeyListener(null);
 
         travelModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-            
+
             @Override
-            public void onItemSelected(final AdapterView<?> parent, 
-                                    final View view, final int position, final long id) {
-                // travelModeData = {"Bicycling", "Transit", "Walking", "Mixed", "Unknown"}
-                
+            public void onItemSelected(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
+                // travelModeData = {"Bicycling", "Transit",
+                // "Mixed (Bicycle and Transit)"}
+
                 // Since there is no switch/case syntax in Android,
                 // only use if/else statements
                 if (position == TRAVEL_MODE_DATA_POSITION_FIRST) {
                     tm = TravelMode.BICYCLING;
                 } else if (position == TRAVEL_MODE_DATA_POSITION_SECOND) {
                     tm = TravelMode.TRANSIT;
-                } else if (position == TRAVEL_MODE_DATA_POSITION_THIRD) {
-                    tm = TravelMode.WALKING;
-                } else if (position == TRAVEL_MODE_DATA_POSITION_FOURTH) {
+                } else {
                     tm = TravelMode.MIXED;
-                } else {  // position == TRAVEL_MODE_DATA_POSITION_FIFTH
-                    tm = TravelMode.UNKNOWN;
                 }
             }
 
             @Override
             public void onNothingSelected(final AdapterView<?> arg0) {
                 // Default Value: Bicycling Mode
-                tm = TravelMode.BICYCLING;
+                tm = TravelMode.MIXED;
+                travelModeSpinner.setSelection(2);
+                Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
             }
         });
-        
+
         findButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -613,6 +620,128 @@ public class SearchActivity extends Activity {
     }
 
     /**
+     * Attach address-related listeners to corresponding UI widgets.
+     */
+    private void setAddressRelatedListeners() {
+        // Determine whether to show clear button for fromAutoCompleteTextView
+        // when it is focused
+        fromAutoCompleteTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (hasFocus) {
+                    if (fromAutoCompleteTextView.getText().toString().isEmpty()) {
+                        fromClearButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        fromClearButton.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    fromClearButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        // Determine whether to show clear button for fromAutoCompleteTextView
+        // when it is being edited
+        fromAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(final Editable s) {
+                if (!fromAutoCompleteTextView.hasFocus()
+                        || fromAutoCompleteTextView.getText().toString().isEmpty()) {
+                    fromClearButton.setVisibility(View.INVISIBLE);
+                } else {
+                    fromClearButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            public void beforeTextChanged(final CharSequence s, final int start, final int count,
+                    final int after) {
+                // Do nothing
+            }
+
+            public void onTextChanged(final CharSequence s, final int start, final int before,
+                    final int count) {
+                // Do nothing
+            }
+        });
+
+        // Handle Event when user press "Next" on Keyboard:
+        // Jump from fromAutoCompleteTextView to toAutoCompleteTextView
+        fromAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(final TextView v, final int actionId, 
+                    final KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    toAutoCompleteTextView.requestFocus();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+        // Determine whether to show clear button for toAutoCompleteTextView
+        // when it is focused
+        toAutoCompleteTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (hasFocus) {
+                    if (toAutoCompleteTextView.getText().toString().isEmpty()) {
+                        toClearButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        toClearButton.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    toClearButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        // Determine whether to show clear button for fromAutoCompleteTextView
+        // when it is being edited
+        toAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(final Editable s) {
+                if (!toAutoCompleteTextView.hasFocus()
+                        || toAutoCompleteTextView.getText().toString().isEmpty()) {
+                    toClearButton.setVisibility(View.INVISIBLE);
+                } else {
+                    toClearButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            public void beforeTextChanged(final CharSequence s, final int start, final int count,
+                    final int after) {
+                // Do nothing
+            }
+
+            public void onTextChanged(final CharSequence s, final int start, final int before,
+                    final int count) {
+                // Do nothing
+            }
+        });
+
+        reverseButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                String temp = fromAutoCompleteTextView.getText().toString();
+                fromAutoCompleteTextView.setText(toAutoCompleteTextView.getText().toString());
+                toAutoCompleteTextView.setText(temp);
+            }
+        });
+
+        fromClearButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                fromAutoCompleteTextView.clearComposingText();
+                fromAutoCompleteTextView.setText("");
+            }
+        });
+
+        toClearButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                toAutoCompleteTextView.clearComposingText();
+                toAutoCompleteTextView.setText("");
+            }
+        });
+    }
+
+    /**
      * Fill in the history section. TODO: currently hard-coded, creating a live
      * version in next phases. Since the data is dummy, I keep all the numbers
      * even if they are marked as magic numbers by Check-Style.
@@ -620,15 +749,25 @@ public class SearchActivity extends Activity {
     private void setHistorySection() {
         historyItem = History.getInstance();
         // *********** bug *****************
-        // if user delete the history and click back button to go back to the search activity, 
+        // if user delete the history and click back button to go back to the
+        // search activity,
         // it will still show the history that has already been deleted.
         String[] f = historyItem.getHistory().toArray(new String[0]);
-        
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.select_dialog_item, f);
-        fromEditText.setAdapter(adapter);
-        toEditText.setAdapter(adapter);
-       
+        fromAutoCompleteTextView.setAdapter(adapter);
+        toAutoCompleteTextView.setAdapter(adapter);
+
+    }
+
+    /**
+     * Refresh the history list.
+     */
+    @Override
+    protected final void onResume() {
+        setHistorySection();
+        super.onResume();
     }
 
 }
