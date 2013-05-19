@@ -13,12 +13,15 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.Time;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -354,6 +357,22 @@ public class SearchActivity extends Activity {
      * "To" AutoCompleteTextView for destination address.
      */
     private AutoCompleteTextView toAutoCompleteTextView;
+    
+    /**
+     * Delete button for user to clear text in fromAutoCompleteTextView.
+     */
+    private ImageButton fromClearButton;
+    
+    /**
+     * Delete button for user to clear text in toAutoCompleteTextView.
+     */
+    private ImageButton toClearButton;
+    
+    /**
+     * Reverse button for user to switch starting and destination address.
+     */
+    private ImageButton reverseButton;
+    
     /**
      * EditText for user to pick a date.
      */
@@ -368,11 +387,6 @@ public class SearchActivity extends Activity {
      * "Find" to start searching.
      */
     private Button findButton;
-
-    /**
-     * Reverse button for user to switch starting and destination address.
-     */
-    private ImageButton reverseButton;
 
     /**
      * Keeps an array of history entries.
@@ -493,12 +507,17 @@ public class SearchActivity extends Activity {
         leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
         departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
         arriveAtButton = (RadioButton) findViewById(R.id.radioButtonArriveAt);
+        
         dateEditText = (EditText) findViewById(R.id.editTextDate);
         timeEditText = (EditText) findViewById(R.id.editTextTime);
+        
         findButton = (Button) findViewById(R.id.buttonFind);
-        reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
+        
         fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
         toAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextTo);
+        reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
+        fromClearButton = (ImageButton) findViewById(R.id.imageButtonClearFrom);
+        toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
         
         // Travel Mode Related setup
         travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
@@ -516,27 +535,8 @@ public class SearchActivity extends Activity {
      * Attach all listeners to corresponding UI widgets.
      */
     private void setListeners() {
-        
-        // Handle Event when user press "Next" on Keyboard
-        fromAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    toAutoCompleteTextView.requestFocus();
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-        
-        reverseButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                String temp = fromAutoCompleteTextView.getText().toString();
-                fromAutoCompleteTextView.setText(toAutoCompleteTextView.getText().toString());
-                toAutoCompleteTextView.setText(temp);
-            }
-        });
+        setAddressRelatedListeners();
+
 
         leaveNowButton.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
@@ -615,6 +615,138 @@ public class SearchActivity extends Activity {
 
                 Thread dirThread = new Thread(new DirThread());
                 dirThread.start();
+            }
+        });
+    }
+    
+    /**
+     * Attach address-related listeners to corresponding UI widgets.
+     */
+    private void setAddressRelatedListeners() {
+        // Determine whether to show clear button for fromAutoCompleteTextView
+        // when it is focused
+        fromAutoCompleteTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (hasFocus) {
+                    if (fromAutoCompleteTextView.getText().toString().isEmpty()) {
+                        fromClearButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        fromClearButton.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    fromClearButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        
+        // Determine whether to show clear button for fromAutoCompleteTextView
+        // when it is being edited
+        fromAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(final Editable s) {
+                if (!fromAutoCompleteTextView.hasFocus() 
+                        || fromAutoCompleteTextView.getText().toString().isEmpty()) {
+                    fromClearButton.setVisibility(View.INVISIBLE);
+                } else {
+                    fromClearButton.setVisibility(View.VISIBLE);
+                }
+            }
+            
+            public void beforeTextChanged(final CharSequence s, 
+                                            final int start, 
+                                            final int count, 
+                                            final int after) {
+                // Do nothing
+            }
+            
+            public void onTextChanged(final CharSequence s, 
+                                        final int start, 
+                                        final int before, 
+                                        final int count) {
+                // Do nothing
+            }
+        }); 
+        
+        // Handle Event when user press "Next" on Keyboard:
+        // Jump from fromAutoCompleteTextView to toAutoCompleteTextView
+        fromAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(final TextView v, 
+                                            final int actionId, 
+                                            final KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    toAutoCompleteTextView.requestFocus();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+        
+        // Determine whether to show clear button for toAutoCompleteTextView
+        // when it is focused
+        toAutoCompleteTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (hasFocus) {
+                    if (toAutoCompleteTextView.getText().toString().isEmpty()) {
+                        toClearButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        toClearButton.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    toClearButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        
+        // Determine whether to show clear button for fromAutoCompleteTextView
+        // when it is being edited
+        toAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(final Editable s) {
+                if (!toAutoCompleteTextView.hasFocus() 
+                    || toAutoCompleteTextView.getText().toString().isEmpty()) {
+                    toClearButton.setVisibility(View.INVISIBLE);
+                } else {
+                    toClearButton.setVisibility(View.VISIBLE);
+                }
+            }
+            
+            public void beforeTextChanged(final CharSequence s, 
+                    final int start, 
+                    final int count, 
+                    final int after) {
+                // Do nothing
+            }
+            
+            public void onTextChanged(final CharSequence s, 
+                            final int start, 
+                            final int before, 
+                            final int count) {
+                // Do nothing
+            }
+        }); 
+        
+        reverseButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                String temp = fromAutoCompleteTextView.getText().toString();
+                fromAutoCompleteTextView.setText(toAutoCompleteTextView.getText().toString());
+                toAutoCompleteTextView.setText(temp);   
+            }
+        });
+        
+        fromClearButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                fromAutoCompleteTextView.clearComposingText();
+                fromAutoCompleteTextView.setText("");
+            }
+        });
+        
+        
+        toClearButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                toAutoCompleteTextView.clearComposingText();
+                toAutoCompleteTextView.setText("");
             }
         });
     }
