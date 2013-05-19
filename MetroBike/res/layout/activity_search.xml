@@ -14,11 +14,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
+        <!-- android:layout_marginTop="10dp"
+            android:layout_alignTop="@+id/editTextStartFrom"
+            is to set the image proper -->
         <ImageView
             android:id="@+id/imageViewA"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/editTextStartFrom"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignTop="@+id/editTextStartFrom"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:contentDescription="@string/image_desc"
@@ -27,15 +31,18 @@
 
         <ImageView
             android:id="@+id/imageViewB"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/editTextTo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@+id/editTextTo"
+            android:layout_marginTop="10dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:contentDescription="@string/image_desc"
             android:padding="0dp"
             android:src="@drawable/b" />
 
+        <!-- android:imeOptions="actionNext" is to set the blue button 
+        	of soft keyboard to be "Next" -->
         <AutoCompleteTextView
             android:id="@+id/editTextStartFrom"
             android:layout_width="fill_parent"
@@ -46,15 +53,16 @@
             android:layout_toLeftOf="@+id/imageButtonReverse"
             android:layout_toRightOf="@+id/imageViewA"
             android:background="@drawable/edittext_border"
-            android:ems="10"
             android:hint="@string/edittext_hint_startfrom"
             android:padding="10dp"
             android:singleLine="true"
-            android:completionThreshold="1"/>
-
-            <requestFocus />
+            android:completionThreshold="1"
+            android:imeOptions="actionNext"/>
        
-             <AutoCompleteTextView
+        <!-- android:imeOptions="actionDone" is to set the blue button 
+        	of soft keyboard to be "Done" and hide soft keyboard 
+        	after user hit "Done" -->
+        <AutoCompleteTextView
             android:id="@+id/editTextTo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -64,19 +72,19 @@
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/imageViewB"
             android:background="@drawable/edittext_border"
-            android:ems="10"
             android:hint="@string/edittext_hint_to"
             android:padding="10dp"
             android:singleLine="true"
-            android:completionThreshold="1"/>
+            android:completionThreshold="1"
+            android:imeOptions="actionDone"/>
   
         <ImageButton
             android:id="@+id/imageButtonReverse"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignBottom="@+id/editTextTo"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:layout_marginRight="10dp"
             android:adjustViewBounds="true"
             android:background="@null"
@@ -85,37 +93,36 @@
             android:scaleType="fitCenter"
             android:src="@drawable/reverse" />
 
-        
+	</RelativeLayout>
 
-    </RelativeLayout>
+	<RadioGroup
+	    android:id="@+id/radioGroupSpecificTime"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:layout_gravity="center"
+	    android:layout_marginTop="5dp" >
 
-    <RadioGroup
-        android:id="@+id/radioGroupStartingTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:layout_gravity="center" >
-
-        <RadioButton
-            android:id="@+id/radioButtonLeaveNow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/radio_button_leave_now" />
-
-        <RadioButton
-            android:id="@+id/radioButtonDepartAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_button_depart_at" />
-        
-        <RadioButton
-            android:id="@+id/radioButtonArriveAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_button_arrive_at" />
-    </RadioGroup>
+		<RadioButton
+		    android:id="@+id/radioButtonLeaveNow"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:checked="true"
+		    android:text="@string/radio_button_leave_now" />
+		
+		<RadioButton
+			android:id="@+id/radioButtonDepartAt"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/radio_button_depart_at" />
+	     
+	    <RadioButton
+	        android:id="@+id/radioButtonArriveAt"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/radio_button_arrive_at" />
+	    
+   </RadioGroup>
 
 	<LinearLayout
         android:layout_width="wrap_content"
@@ -148,7 +155,7 @@
            android:layout_height="wrap_content"
            android:textIsSelectable="false"
            android:text="@string/textview_travel_mode"
-           android:textSize="15sp"
+           android:textSize="18sp"
            android:textColor="#1B84E0"
            android:gravity="center"/>
 		

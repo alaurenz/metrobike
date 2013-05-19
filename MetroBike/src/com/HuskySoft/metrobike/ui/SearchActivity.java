@@ -14,21 +14,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
@@ -239,8 +244,8 @@ public class SearchActivity extends Activity {
             long timeToSend = time.toMillis(false) / SEC_TO_MILLISEC;
 
             // Generate a direction request
-            String from = fromEditText.getText().toString();
-            String to = toEditText.getText().toString();
+            String from = fromAutoCompleteTextView.getText().toString();
+            String to = toAutoCompleteTextView.getText().toString();
             DirectionsRequest dReq = (new DirectionsRequest())
                     .setStartAddress(from.toString())
                     .setEndAddress(to).setTravelMode(tm);
@@ -313,14 +318,10 @@ public class SearchActivity extends Activity {
     private static final int TRAVEL_MODE_DATA_POSITION_SECOND = 1;
     
     /**
-     * Third Position in travelModeData.
+     * Keeps an array of travel mode entries.
      */
-    private static final int TRAVEL_MODE_DATA_POSITION_THIRD = 2;
-    
-    /**
-     * Fourth Position in travelModeData.
-     */
-    private static final int TRAVEL_MODE_DATA_POSITION_FOURTH = 3;
+    private static final String[] TRAVEL_MODE_DATA = 
+        {"Bicycling", "Transit", "Mixed (Bicycle and Transit)"}; 
     
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
@@ -345,14 +346,14 @@ public class SearchActivity extends Activity {
     private RadioButton arriveAtButton;
 
     /**
-     * "Start from" EditText for starting address.
+     * "Start from" AutoCompleteTextView for starting address.
      */
-    private AutoCompleteTextView fromEditText;
+    private AutoCompleteTextView fromAutoCompleteTextView;
 
     /**
-     * "To" EditText for destination address.
+     * "To" AutoCompleteTextView for destination address.
      */
-    private AutoCompleteTextView toEditText;
+    private AutoCompleteTextView toAutoCompleteTextView;
     /**
      * EditText for user to pick a date.
      */
@@ -383,12 +384,6 @@ public class SearchActivity extends Activity {
      */
     private Spinner travelModeSpinner;  
     
-    /**
-     * Keeps an array of travel mode entries.
-     */
-    private static final String[] TRAVEL_MODE_DATA = 
-        {"Bicycling", "Transit", "Walking", "Mixed", "Unknown"}; 
-
     /**
      * Keeps selected travelMode.
      */
@@ -502,8 +497,8 @@ public class SearchActivity extends Activity {
         timeEditText = (EditText) findViewById(R.id.editTextTime);
         findButton = (Button) findViewById(R.id.buttonFind);
         reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
-        fromEditText = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
-        toEditText = (AutoCompleteTextView) findViewById(R.id.editTextTo);
+        fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
+        toAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextTo);
         
         // Travel Mode Related setup
         travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
@@ -512,8 +507,9 @@ public class SearchActivity extends Activity {
         travelModeSpinnerAdapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item); 
         travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
-        // Default Travel Mode: Bicycling
-        tm = TravelMode.BICYCLING;
+        // Default Travel Mode: Mixed
+        travelModeSpinner.setSelection(2);
+        tm = TravelMode.MIXED;
     }
 
     /**
@@ -521,11 +517,24 @@ public class SearchActivity extends Activity {
      */
     private void setListeners() {
         
+        // Handle Event when user press "Next" on Keyboard
+        fromAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    toAutoCompleteTextView.requestFocus();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+        
         reverseButton.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-                String temp = fromEditText.getText().toString();
-                fromEditText.setText(toEditText.getText().toString());
-                toEditText.setText(temp);
+                String temp = fromAutoCompleteTextView.getText().toString();
+                fromAutoCompleteTextView.setText(toAutoCompleteTextView.getText().toString());
+                toAutoCompleteTextView.setText(temp);
             }
         });
 
@@ -577,7 +586,7 @@ public class SearchActivity extends Activity {
             @Override
             public void onItemSelected(final AdapterView<?> parent, 
                                     final View view, final int position, final long id) {
-                // travelModeData = {"Bicycling", "Transit", "Walking", "Mixed", "Unknown"}
+                // travelModeData = {"Bicycling", "Transit", "Mixed (Bicycle and Transit)"}
                 
                 // Since there is no switch/case syntax in Android,
                 // only use if/else statements
@@ -585,19 +594,17 @@ public class SearchActivity extends Activity {
                     tm = TravelMode.BICYCLING;
                 } else if (position == TRAVEL_MODE_DATA_POSITION_SECOND) {
                     tm = TravelMode.TRANSIT;
-                } else if (position == TRAVEL_MODE_DATA_POSITION_THIRD) {
-                    tm = TravelMode.WALKING;
-                } else if (position == TRAVEL_MODE_DATA_POSITION_FOURTH) {
+                } else {
                     tm = TravelMode.MIXED;
-                } else {  // position == TRAVEL_MODE_DATA_POSITION_FIFTH
-                    tm = TravelMode.UNKNOWN;
                 }
             }
 
             @Override
             public void onNothingSelected(final AdapterView<?> arg0) {
                 // Default Value: Bicycling Mode
-                tm = TravelMode.BICYCLING;
+                tm = TravelMode.MIXED;
+                travelModeSpinner.setSelection(2);
+                Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
             }
         });
         
@@ -626,8 +633,8 @@ public class SearchActivity extends Activity {
         
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
                 android.R.layout.select_dialog_item, f);
-        fromEditText.setAdapter(adapter);
-        toEditText.setAdapter(adapter);
+        fromAutoCompleteTextView.setAdapter(adapter);
+        toAutoCompleteTextView.setAdapter(adapter);
        
     }
 

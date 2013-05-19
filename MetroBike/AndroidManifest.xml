@@ -62,9 +62,13 @@
             android:label="@string/title_activity_navigate"
             android:screenOrientation="portrait" >
         </activity>
+        
+        <!-- set android:windowSoftInputMode to prevent this 
+        		activity from showing soft keyboard automatically-->
         <activity
             android:name="com.HuskySoft.metrobike.ui.SearchActivity"
             android:label="@string/title_activity_search"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity
