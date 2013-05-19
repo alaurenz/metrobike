@@ -36,7 +36,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.HuskySoft.metrobike.ui.MainActivity"
             android:label="@string/app_name"
@@ -82,6 +82,12 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCLfZrMn6hJIiduzSHqK0n-QCc2k8DBnTM" />
+
+        <activity
+            android:name="com.HuskySoft.metrobike.ui.HistoryActivity"
+            android:label="@string/title_activity_history" 
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

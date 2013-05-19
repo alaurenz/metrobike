@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This xml shows the list of history addresses -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <!-- The history title header -->
+
+    <TextView
+        android:id="@+id/textViewIndex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5CCCCC"
+        android:gravity="center"
+        android:text="@string/textview_history"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/history_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>

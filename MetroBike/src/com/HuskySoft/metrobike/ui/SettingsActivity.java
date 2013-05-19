@@ -1,7 +1,7 @@
 package com.HuskySoft.metrobike.ui;
 
-
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.ui.utility.History;
@@ -56,12 +58,12 @@ public class SettingsActivity extends PreferenceActivity {
      * the xml key of about tab.
      */
     private static final String ABOUT = "about_key";
-    
+
     /**
      * Keeps an array of history entries.
      */
     private History historyItem;
-    
+
     /**
      * {@inheritDoc}
      * 
@@ -91,7 +93,8 @@ public class SettingsActivity extends PreferenceActivity {
         // this is binding the button
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));
-        
+        bindPreferenceToClick(findPreference(VIEW_HISTORY));
+
         historyItem = History.getInstance();
     }
 
@@ -116,40 +119,45 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public boolean onPreferenceClick(final Preference preference) {
             String key = preference.getKey();
-            
+
             boolean isClick = true;
             // I don't use switch statement because it didn't support java 6 or
             // below
             if (key.equals(ABOUT)) {
                 // start a new about activity
-                startActivity(new Intent(preference.getContext(),
-                        AboutActivity.class));
+                startActivity(new Intent(preference.getContext(), AboutActivity.class));
             } else if (key.equals(CLR_HISTORY)) {
+                // show the alertDialog to make sure user want to delete all history
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(preference.getContext());
-                alertDialog.setTitle("Warning");
+                // set title warning and red color
+                alertDialog.setTitle(Html.fromHtml("<font color='red'>Warning</font>"));
                 alertDialog.setMessage("Are you sure want to delete all histories?");
                 alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog,
-                                        final int which) {
-                            // may be we need a toast message?
-                            historyItem.deleteAll();
-                        }
-                    });
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        historyItem.deleteAll();
+                    }
+                });
                 alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog,
-                                            final int which) {
-                                // cancel this dialog    
-                                dialog.cancel();
-                            }
-                    });
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        // cancel this dialog
+                        dialog.cancel();
+                    }
+                });
                 // show this dialog on the screen
                 alertDialog.create().show();
             } else if (key.equals(VIEW_HISTORY)) {
-                // TODO something for viewing the history
-                // Currently just return isClick. To be Changed.
-                return isClick;
+                if (historyItem.getSize() > 0) {
+                    // show the history activity if there are some history
+                    Intent i = new Intent(preference.getContext(), HistoryActivity.class);
+                    startActivity(i);
+                } else {
+                    // no history, show the toast
+                    Context context = preference.getContext();
+                    int emptyHistory = R.string.empty_history;
+                    Toast.makeText(context, emptyHistory, Toast.LENGTH_SHORT).show();
+                }
             } else {
                 isClick = false;
             }
@@ -161,12 +169,11 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private Preference.OnPreferenceChangeListener bindToValueListener = 
+    private Preference.OnPreferenceChangeListener bindToVal = 
             new Preference.OnPreferenceChangeListener() {
 
         @Override
-        public boolean onPreferenceChange(final Preference preference,
-                final Object value) {
+        public boolean onPreferenceChange(final Preference preference, final Object value) {
             String stringValue = value.toString();
 
             if (preference instanceof ListPreference) {
@@ -201,16 +208,17 @@ public class SettingsActivity extends PreferenceActivity {
      * 
      * @param preference
      *            the setting preference in the view list
-     * @see #bindToValueListener
+     * @see #bindToVal
      */
     private void bindPreferenceSummaryToValue(final Preference preference) {
         // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(bindToValueListener);
+        preference.setOnPreferenceChangeListener(bindToVal);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        bindToValueListener.onPreferenceChange(preference, PreferenceManager
-                .getDefaultSharedPreferences(preference.getContext())
-                .getString(preference.getKey(), ""));
+        bindToVal.onPreferenceChange(
+                preference,
+                PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(
+                        preference.getKey(), ""));
     }
 }

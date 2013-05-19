@@ -1,5 +1,6 @@
 package com.HuskySoft.metrobike.ui.utility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,10 +11,16 @@ import java.util.List;
  * @author Sam Wilson
  * 
  */
-public final class History {
+public final class History implements Serializable {
 
-    // this class may need to serialize
-
+    /**
+     * Part of serializability, this id tracks if a serialized object can be
+     * deserialized using this version of the class.
+     * 
+     * NOTE: Please add 1 to this number every time you change the readObject()
+     * or writeObject() methods.
+     */
+    private static final long serialVersionUID = 1L;
     /** The object of this class. */
     private static History hist;
     /** List that stores all the history. */
@@ -50,18 +57,33 @@ public final class History {
      * This method should be called from search activity
      * 
      * @precondition the address should be valid address
-     * @param address the address to be added
+     * @param address
+     *            the address to be added
      */
     public void addAddress(final String address) {
         // only added if no duplicate history
         if (!historyList.contains(address)) {
             historyList.add(address);
-        } 
+        }
+    }
+
+    /**
+     * Add all address into this history list.
+     * 
+     * @param addresses
+     *            list of addresses
+     */
+    public void addAddress(final String[] addresses) {
+        for (int i = 0; i < addresses.length; i++) {
+            addAddress(addresses[i]);
+        }
     }
 
     /**
      * Get address from the list.
-     * @param index the address from list
+     * 
+     * @param index
+     *            the address from list
      * @return a string for address
      */
     public String getAddress(final int index) {
@@ -75,7 +97,7 @@ public final class History {
     public void deleteAll() {
         historyList = new ArrayList<String>();
         // I leave this method call is just for testing.
-        hardCodeAddress();
+        // hardCodeAddress();
     }
 
     /**
@@ -97,16 +119,24 @@ public final class History {
      * Remove the address by given the index.
      * 
      * @param index
-     *            the index of the address
+     *            the index of the address.
      */
     public void deleteAddress(final int index) {
         historyList.remove(index);
     }
 
     /**
-     * Hardcoded address for testing.
-     * Will delete this method in version 1 phase.
-     * TODO: Remove this in V1 phase.
+     * Show how many history address left.
+     * 
+     * @return the size of this list
+     */
+    public int getSize() {
+        return historyList.size();
+    }
+
+    /**
+     * Hardcoded address for testing. Will delete this method in version 1
+     * phase. TODO: Remove this in V1 phase.
      */
     private void hardCodeAddress() {
         historyList.add("Paul G. Allen Center for Computer Science & Engineering (CSE)");

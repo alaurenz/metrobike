@@ -37,11 +37,14 @@
     <string name="pref_header_history">History</string>
     <string name="clear_history">Clear History</string>
     <string name="view_history">View History</string>
+    <string name="empty_history">History is empty</string>
 
     <!-- Details Activity -->
     <string name="button_go_to_search">Search</string>
     <string name="button_go_to_results">Routes</string>
-    <string name="button_go_to_next">Next</string><string name="button_go_to_previous">Previous</string><string name="button_navigate">Navigate</string>
+    <string name="button_go_to_next">Next</string>
+    <string name="button_go_to_previous">Previous</string>
+    <string name="button_navigate">Navigate</string>
 
     <!-- Navigate Activity -->
     <string name="button_go_to_detail">Details</string>
@@ -57,38 +60,35 @@
     <string name="textview_departure_time">Departure Time</string>
     <string name="textview_history">History</string>
     <string name="textview_travel_mode">Select a Travel Mode:</string>
-	<string name="history_from">From:\t</string>
-	<string name="history_to">To:\t</string>
-	  
-    
+    <string name="history_from">From:\t</string>
+    <string name="history_to">To:\t</string>
+
     <!-- Result Activity -->
     <string name="route1">Route1</string>
     <string name="route2">Route2</string>
     <string name="route3">Route3</string>
     <string name="all4">All4</string>
     <string name="all5">All5</string>
-    
+
     <!-- About Activity -->
-	<string name="textview_dev_by">Developed By</string>
-	<string name="textview_ui">UI</string>
-	<string name="textview_backend">Backend</string>
-	<string name="textview_algorithm">Algorithm</string>
-	<string name="textview_developers">
-	    Jaylen VanOrden, Xinyun Chen, Corey Harmon,
-	    Adrian Laurenzi, Qinyuan Wan, Shuo Wang, Sam Wilson
-	</string>
-	<string name="textview_jaylen">Jaylen VanOrden</string>
-	<string name="textview_xinyun">Xinyun Chen</string>
-	<string name="textview_corey">Corey Harmon</string>
-	<string name="textview_adrian">Adrian Laurenzi</string>
-	<string name="textview_qinyuan">Qinyuan Wan</string>
-	<string name="textview_shuo">Shuo Wang</string>
-	<string name="textview_sam">Sam Wilson</string>
-	
-	<!-- Main Activity -->
-	<string name="button_search_main">Search</string>
-	<string name="textView_hint">Click "Search" to Start Searching for Biking Routes</string>
-	
-	
-    
+    <string name="textview_dev_by">Developed By</string>
+    <string name="textview_ui">UI</string>
+    <string name="textview_backend">Backend</string>
+    <string name="textview_algorithm">Algorithm</string>
+    <string name="textview_developers">	    Jaylen VanOrden, Xinyun Chen, Corey Harmon,
+	    Adrian Laurenzi, Qinyuan Wan, Shuo Wang, Sam Wilson</string>
+    <string name="textview_jaylen">Jaylen VanOrden</string>
+    <string name="textview_xinyun">Xinyun Chen</string>
+    <string name="textview_corey">Corey Harmon</string>
+    <string name="textview_adrian">Adrian Laurenzi</string>
+    <string name="textview_qinyuan">Qinyuan Wan</string>
+    <string name="textview_shuo">Shuo Wang</string>
+    <string name="textview_sam">Sam Wilson</string>
+
+    <!-- Main Activity -->
+    <string name="button_search_main">Search</string>
+    <string name="textView_hint">Click "Search" to Start Searching for Biking Routes</string>
+    <string name="title_activity_history">HistoryActivity</string>
+    <string name="menu_settings">Settings</string>
+
 </resources>

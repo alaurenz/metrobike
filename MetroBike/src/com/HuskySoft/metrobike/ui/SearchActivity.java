@@ -39,7 +39,7 @@ import com.HuskySoft.metrobike.ui.utility.History;
 /**
  * An activity that receives and handle's users' requests for routes.
  * 
- * @author Shuo Wang
+ * @author Shuo Wang, Sam Wilson
  */
 
 public class SearchActivity extends Activity {

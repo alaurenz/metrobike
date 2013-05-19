@@ -45,7 +45,7 @@
 
         <!-- Second preference (view history) -->
         <Preference
-            android:key="view_history"
+            android:key="view_history_key"
             android:selectable="true"
             android:title="@string/view_history" />
     </PreferenceCategory>
