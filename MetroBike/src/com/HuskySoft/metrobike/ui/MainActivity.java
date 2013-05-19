@@ -1,16 +1,12 @@
 package com.HuskySoft.metrobike.ui;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -147,7 +143,7 @@ public class MainActivity extends Activity {
     }
     
     /**
-     * Destroy Map Related parameters such as map settings
+     * Destroy Map Related parameters such as map settings.
      * 
      * @see android.app.Activity#onDestroy()
      */
