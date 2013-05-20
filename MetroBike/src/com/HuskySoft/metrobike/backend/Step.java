@@ -480,6 +480,7 @@ public final class Step implements Serializable {
         out.writeObject(travelMode);
         out.writeObject(htmlInstruction);
         out.writeObject(polyLine);
+        out.writeObject(transitDetails);
     }
 
     /**
@@ -504,5 +505,6 @@ public final class Step implements Serializable {
         travelMode = (TravelMode) in.readObject();
         htmlInstruction = (String) in.readObject();
         polyLine = (String) in.readObject();
+        transitDetails = (TransitDetails) in.readObject();
     }
 }
