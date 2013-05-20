@@ -38,10 +38,6 @@ public class SettingsActivity extends PreferenceActivity {
      * also need to change them in the string_activity_setting.xml
      */
     /**
-     * DON'T CHANGE THIS NUMBER! It represent this main activity for the map.
-     */
-    // private static final int SETTING = 0;
-    /**
      * the xml key of version tab.
      */
     private static final String VERSION = "version_key";
@@ -80,7 +76,22 @@ public class SettingsActivity extends PreferenceActivity {
      * the xml key of current_type.
      */
     private static final String CURRENT_TYPE = "current_type";
-
+    
+    /**
+     * the mapType list preference.
+     */
+    private ListPreference mapType;
+    
+    /**
+     * the traffic list preference.
+     */
+    private ListPreference trafficType;
+    
+    /**
+     * the current list preference. 
+     */
+    private ListPreference currentType;
+    
     /**
      * Keeps an array of history entries.
      */
@@ -131,9 +142,14 @@ public class SettingsActivity extends PreferenceActivity {
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));
         bindPreferenceToClick(findPreference(VIEW_HISTORY));
-        bindPreferenceToClick(findPreference(MAP_TYPE));
-        bindPreferenceToClick(findPreference(TRAFFIC_TYPE));
-        bindPreferenceToClick(findPreference(CURRENT_TYPE));
+        
+        mapType = (ListPreference) findPreference(MAP_TYPE);
+        trafficType = (ListPreference) findPreference(TRAFFIC_TYPE);
+        currentType = (ListPreference) findPreference(CURRENT_TYPE);
+        
+        bindPreferenceToClick(mapType);
+        bindPreferenceToClick(trafficType);
+        bindPreferenceToClick(currentType);
     }
 
     /**
@@ -335,5 +351,24 @@ public class SettingsActivity extends PreferenceActivity {
                 preference,
                 PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(
                         preference.getKey(), ""));
+    }
+    
+    /**
+     * update the value of the list preference.
+     */
+    @Override
+    protected final void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        int temp = map.getMapDisplay();
+        int value = 0;
+        for (; value < MAP_ARRAYS.length; value++) {
+            if (temp == MAP_ARRAYS[value]) {
+                break;
+            }
+        }
+        mapType.setValueIndex(value);
+        trafficType.setValue(map.getTrafficDisplay() + "");
+        currentType.setValue(map.getMyCurrentLocation() + "");
     }
 }
