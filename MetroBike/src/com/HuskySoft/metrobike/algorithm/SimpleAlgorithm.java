@@ -34,8 +34,8 @@ public final class SimpleAlgorithm extends AlgorithmWorker {
                 addTransitResults(toProcess);
                 break;
             case MIXED:
+                //Travel Mode Mix also needs the bicycle only routes
                 addBicycleResults(toProcess);
-                addTransitResults(toProcess);
                 break;
             default:
                 addError(DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR, ": "

@@ -4,12 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -17,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -28,6 +25,7 @@ import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
+import com.HuskySoft.metrobike.ui.utility.MapSetting;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -139,10 +137,11 @@ public class ResultsActivity extends Activity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Set ActionBar to be translucent
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        ActionBar actionBar = getActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#99000000")));
+//      Set ActionBar to be translucent and overlaying the map
+//      Currently not using this. 
+//      getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+//      ActionBar actionBar = getActionBar();
+//      actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#99000000")));
         
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -164,7 +163,6 @@ public class ResultsActivity extends Activity {
             currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");
             addRouteButtons();
             mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-            drawRoute();
         }
     }
 
@@ -348,11 +346,16 @@ public class ResultsActivity extends Activity {
                         mMap.addPolyline(polylineOptions.
                                 color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
                                 .width(POLYLINE_THICK));
-                    } else {
+                    } else if (s.getTravelMode() == TravelMode.BICYCLING) {
                         mMap.addPolyline(polylineOptions.
                                 color(Color.argb(POLYLINE_TRANSPARENT, 0, 0, POLYLINE_COLOR))
                                 .width(POLYLINE_THIN).zIndex(1));
+                    } else {
+                        mMap.addPolyline(polylineOptions.
+                                color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
+                                .width(POLYLINE_THIN).zIndex(1));
                     }
+                    
                     mMap.addCircle(new CircleOptions()
                     .center(com.HuskySoft.metrobike.ui.utility.Utility.
                             convertLocation(s.getEndLocation()))
@@ -384,5 +387,17 @@ public class ResultsActivity extends Activity {
                 button.setEnabled(true);
             }
         }
+    }
+    
+    /**
+     * Update the map setting.
+     * 
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected final void onResume() {
+        super.onResume();
+        MapSetting.updateStatus(mMap);
+        drawRoute();
     }
 }

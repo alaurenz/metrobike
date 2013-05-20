@@ -38,6 +38,10 @@ public class SettingsActivity extends PreferenceActivity {
      * also need to change them in the string_activity_setting.xml
      */
     /**
+     * DON'T CHANGE THIS NUMBER! It represent this main activity for the map.
+     */
+    // private static final int SETTING = 0;
+    /**
      * the xml key of version tab.
      */
     private static final String VERSION = "version_key";
@@ -68,15 +72,15 @@ public class SettingsActivity extends PreferenceActivity {
     private static final String MAP_TYPE = "map_type";
 
     /**
-     * the xml key of traffic tab
+     * the xml key of traffic tab.
      */
     private static final String TRAFFIC_TYPE = "traffic_type";
-    
+
     /**
-     * the xml key of current_type
+     * the xml key of current_type.
      */
     private static final String CURRENT_TYPE = "current_type";
-    
+
     /**
      * Keeps an array of history entries.
      */
@@ -90,8 +94,8 @@ public class SettingsActivity extends PreferenceActivity {
     /**
      * The 4 types of map.
      */
-    private static final int[] mapType = { GoogleMap.MAP_TYPE_NORMAL, GoogleMap.MAP_TYPE_SATELLITE,
-            GoogleMap.MAP_TYPE_HYBRID, GoogleMap.MAP_TYPE_TERRAIN };
+    private static final int[] MAP_ARRAYS = { GoogleMap.MAP_TYPE_NORMAL,
+            GoogleMap.MAP_TYPE_SATELLITE, GoogleMap.MAP_TYPE_HYBRID, GoogleMap.MAP_TYPE_TERRAIN };
 
     /**
      * {@inheritDoc}
@@ -147,7 +151,8 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value click listener that react the preference's clicked by
      * user.
      */
-    private Preference.OnPreferenceClickListener preferenceOnClick = new OnPreferenceClickListener() {
+    private Preference.OnPreferenceClickListener preferenceOnClick = 
+            new OnPreferenceClickListener() {
 
         @Override
         public boolean onPreferenceClick(final Preference preference) {
@@ -167,10 +172,9 @@ public class SettingsActivity extends PreferenceActivity {
                 changeTheMapType(preference);
             } else if (key.equals(TRAFFIC_TYPE)) {
                 switchMode(preference, key);
-            } else if (key.equals(CURRENT_TYPE)){
+            } else if (key.equals(CURRENT_TYPE)) {
                 switchMode(preference, key);
-            }
-            else {
+            } else {
                 isClick = false;
             }
             return isClick;
@@ -180,17 +184,19 @@ public class SettingsActivity extends PreferenceActivity {
          * Invoke when user click change traffic.
          * 
          * @param preference
+         * @param key
          */
-        private void switchMode(Preference preference, final String key) {
+        private void switchMode(final Preference preference, final String key) {
             ((ListPreference) preference)
                     .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                         @Override
-                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        public boolean onPreferenceChange(final Preference preference,
+                                final Object newValue) {
                             boolean isClick = true;
                             boolean show = ((String) newValue).equals("true");
                             if (key.equals(TRAFFIC_TYPE)) {
                                 map.setTraffic(show);
-                            } else if (key.equals(CURRENT_TYPE)){
+                            } else if (key.equals(CURRENT_TYPE)) {
                                 map.setCurrentLocationButton(show);
                             } else {
                                 isClick = false;
@@ -258,10 +264,11 @@ public class SettingsActivity extends PreferenceActivity {
             ((ListPreference) preference)
                     .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                         @Override
-                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        public boolean onPreferenceChange(final Preference preference,
+                                final Object newValue) {
                             try {
                                 int value = Integer.parseInt((String) newValue);
-                                map.setMapDisplay(mapType[value]);
+                                map.setMapDisplay(MAP_ARRAYS[value]);
                                 return true;
                             } catch (Exception e) {
                                 // Defensive programming even though it
@@ -277,7 +284,8 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private Preference.OnPreferenceChangeListener bindToVal = new Preference.OnPreferenceChangeListener() {
+    private Preference.OnPreferenceChangeListener bindToVal = 
+            new Preference.OnPreferenceChangeListener() {
 
         @Override
         public boolean onPreferenceChange(final Preference preference, final Object value) {

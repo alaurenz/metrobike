@@ -165,11 +165,11 @@ public class DetailsActivity extends Activity {
             List<Step> steps = curLeg.getStepList();
             for (int j = 0; j < steps.size(); j++) {
                 Step s = steps.get(j);
-                String ss = s.getHtmlInstruction().replaceAll("\\<.*?>","");
+                String ss = s.getHtmlInstruction().replaceAll("\\<.*?>", "");
                 directions.append("\nStep " + count + "   " + ss);
                 count++;
             }
         }
-        destination.append(legs.get(legs.size()-1).getEndAddress());
+        destination.append(legs.get(legs.size() - 1).getEndAddress());
     }
 }
