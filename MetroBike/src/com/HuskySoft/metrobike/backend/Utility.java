@@ -383,5 +383,41 @@ public final class Utility {
     public static String getIndentString() {
         return INDENT_STRING;
     }
+    
+    /**
+     * Returns the given duration in seconds in the following format:
+     * "XX days, XX hours, XX minutes"
+     * 
+     * @param duration
+     *            Number of seconds to convert to human-readable String.
+     * @return the given duration as a human-readable String
+     */
+    public static String secondsToHumanReadableDuration(final long durationSeconds) {
+        int durationMinutesRounded = (int) Math.floor(((float) durationSeconds / 60) + 0.5f);
+        int minutes = (int) (durationMinutesRounded % 60);
+        int hours = (int) ((durationMinutesRounded / 60) % 24);
+        int days = (int) (durationMinutesRounded / (60 * 24));
+        
+        String output = "";
+        if(days > 0) {
+            output += days + " day";
+            if(days > 1)
+                output += "s";
+            output += ", ";
+        }
+        if(hours > 0) {
+            output += hours + " hour";
+            if(hours > 1)
+                output += "s";
+            output += ", ";
+        }
+        if(minutes > 0) {
+            output += minutes + " minute";
+            if(minutes > 1)
+                output += "s";
+            output += ", ";
+        }
+        return output.substring(0, output.length() - 2);
+    }
 
 }

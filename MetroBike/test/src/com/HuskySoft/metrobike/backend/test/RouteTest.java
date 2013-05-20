@@ -230,6 +230,20 @@ public class RouteTest extends TestCase {
         String actual = route.toString();
         Assert.assertEquals("Actual value for route.toString() was: " + actual, expected, actual);
     }
+    
+    /**
+     * Test-Driven Development: This tests the getDurationHumanReadable method.
+     * 
+     * @throws JSONException
+     */
+    // @Test
+    public void test_getDurationHumanReadable() throws JSONException {
+        setUp();
+        String expected = "13 minutes";
+        String actual = route.getDurationHumanReadable();
+        Assert.assertEquals("Actual value for route.getDurationHumanReadable() was: " + actual,
+                expected, actual);
+    }
 
     /**
      * This is the value to compare the toString test to.

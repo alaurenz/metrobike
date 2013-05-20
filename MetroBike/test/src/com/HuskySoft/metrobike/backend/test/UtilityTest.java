@@ -232,4 +232,43 @@ public class UtilityTest extends TestCase {
         Assert.assertEquals("Actual value of Utility.getSubstepsAsString() was: " + actual,
                 expected, actual);
     }
+    
+    /**
+     * Test-Driven Development: This tests the test_secondsToHumanReadableDuration
+     * given a short duration.
+     * 
+     */
+    // @Test
+    public void test_secondsToHumanReadableDurationShort() {
+        String expected = "17 minutes";
+        String actual = Utility.secondsToHumanReadableDuration(1000);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(1000) was: " + actual,
+                expected, actual);
+    }
+    
+    /**
+     * Test-Driven Development: This tests the test_secondsToHumanReadableDuration
+     * given a medium duration.
+     * 
+     */
+    // @Test
+    public void test_secondsToHumanReadableDurationMedium() {
+        String expected = "1 hour, 42 minutes";
+        String actual = Utility.secondsToHumanReadableDuration(6100);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(6100) was: " + actual,
+                expected, actual);
+    }
+    
+    /**
+     * Test-Driven Development: This tests the test_secondsToHumanReadableDuration
+     * given a long duration.
+     * 
+     */
+    // @Test
+    public void test_secondsToHumanReadableDurationLong() {
+        String expected = "3 days, 11 hours, 20 minutes";
+        String actual = Utility.secondsToHumanReadableDuration(300000);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(300000) was: " + actual,
+                expected, actual);
+    }
 }
