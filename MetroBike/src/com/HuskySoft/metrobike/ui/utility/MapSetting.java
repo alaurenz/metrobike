@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 /**
  * This class holds the setting of the display map.
  * 
- * @author Sam Wilson
+ * @author Sam Wilson, Shuo Wang
  * 
  */
 public final class MapSetting {
@@ -107,9 +107,11 @@ public final class MapSetting {
      * 
      * @param update
      *            The change that should be applied to the camera
+     * @param durationMs duration of animation.
+     * @param callback CancelableCallback
      */
-    public void cameraAnimation(CameraUpdate update, int durationMs,
-            GoogleMap.CancelableCallback callback) {
+    public void cameraAnimation(final CameraUpdate update, final int durationMs,
+            final GoogleMap.CancelableCallback callback) {
         map.animateCamera(update, durationMs, callback);
     }
 
@@ -128,7 +130,7 @@ public final class MapSetting {
      *            Polyline.
      * @return The Polyline object that was added to the map.
      */
-    public final Polyline addPolyline(PolylineOptions options) {
+    public Polyline addPolyline(final PolylineOptions options) {
         return map.addPolyline(options);
     }
 
@@ -139,7 +141,7 @@ public final class MapSetting {
      *            A circle options object that defines how to render the Circle
      * @return The Circle object that is added to the map
      */
-    public final Circle addCircle(CircleOptions options) {
+    public Circle addCircle(final CircleOptions options) {
         return map.addCircle(options);
     }
 
@@ -151,7 +153,18 @@ public final class MapSetting {
      *            the details of the marker options
      * @return the added marker
      */
-    public Marker addMarkerOptions(MarkerOptions options) {
+    public Marker addMarkerOptions(final MarkerOptions options) {
         return map.addMarker(options);
+    }
+    
+    /**
+     * Reset MapSettings to be null.
+     * Useful when the Google Map this setting attached to
+     * is destroyed.
+     * WARNING: this method resets MapSettings to null.
+     * Use with caution.
+     */
+    public static void resetMapSetting() {
+        mapSetting = null;
     }
 }

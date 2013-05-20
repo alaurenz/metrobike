@@ -164,6 +164,10 @@ public class NavigateActivity extends Activity {
             routes = (ArrayList<Route>) recievedRoutes;
             currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");
             mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+            
+            // Display my current location.
+            mMap.setMyLocationEnabled(true);
+            
             drawRoute();
         }
 

@@ -68,12 +68,12 @@ public class SettingsActivity extends PreferenceActivity {
     private static final String MAP_TYPE = "map_type";
 
     /**
-     * the xml key of traffic tab
+     * the xml key of traffic tab.
      */
     private static final String TRAFFIC_TYPE = "traffic_type";
     
     /**
-     * the xml key of current_type
+     * the xml key of current_type.
      */
     private static final String CURRENT_TYPE = "current_type";
     
@@ -147,7 +147,8 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value click listener that react the preference's clicked by
      * user.
      */
-    private Preference.OnPreferenceClickListener preferenceOnClick = new OnPreferenceClickListener() {
+    private Preference.OnPreferenceClickListener preferenceOnClick = 
+            new OnPreferenceClickListener() {
 
         @Override
         public boolean onPreferenceClick(final Preference preference) {
@@ -167,10 +168,9 @@ public class SettingsActivity extends PreferenceActivity {
                 changeTheMapType(preference);
             } else if (key.equals(TRAFFIC_TYPE)) {
                 switchMode(preference, key);
-            } else if (key.equals(CURRENT_TYPE)){
+            } else if (key.equals(CURRENT_TYPE)) {
                 switchMode(preference, key);
-            }
-            else {
+            } else {
                 isClick = false;
             }
             return isClick;
@@ -180,17 +180,19 @@ public class SettingsActivity extends PreferenceActivity {
          * Invoke when user click change traffic.
          * 
          * @param preference
+         * @param key
          */
-        private void switchMode(Preference preference, final String key) {
+        private void switchMode(final Preference preference, final String key) {
             ((ListPreference) preference)
                     .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                         @Override
-                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        public boolean onPreferenceChange(final Preference preference, 
+                                                            final Object newValue) {
                             boolean isClick = true;
                             boolean show = ((String) newValue).equals("true");
                             if (key.equals(TRAFFIC_TYPE)) {
                                 map.setTraffic(show);
-                            } else if (key.equals(CURRENT_TYPE)){
+                            } else if (key.equals(CURRENT_TYPE)) {
                                 map.setCurrentLocationButton(show);
                             } else {
                                 isClick = false;
@@ -258,7 +260,8 @@ public class SettingsActivity extends PreferenceActivity {
             ((ListPreference) preference)
                     .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                         @Override
-                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        public boolean onPreferenceChange(final Preference preference, 
+                                                            final Object newValue) {
                             try {
                                 int value = Integer.parseInt((String) newValue);
                                 map.setMapDisplay(mapType[value]);
@@ -277,7 +280,8 @@ public class SettingsActivity extends PreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private Preference.OnPreferenceChangeListener bindToVal = new Preference.OnPreferenceChangeListener() {
+    private Preference.OnPreferenceChangeListener bindToVal = 
+            new Preference.OnPreferenceChangeListener() {
 
         @Override
         public boolean onPreferenceChange(final Preference preference, final Object value) {

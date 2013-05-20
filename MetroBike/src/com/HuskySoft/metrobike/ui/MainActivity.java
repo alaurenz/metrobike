@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * This is a home screen which will show the map, search and detail button.
  * 
- * @author Sam Wilson
+ * @author Sam Wilson, Shuo Wang
  * 
  */
 public class MainActivity extends Activity {
@@ -55,6 +55,13 @@ public class MainActivity extends Activity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+//        Set ActionBar to be translucent and overlaying the map
+//        Currently not using this. 
+//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+//        ActionBar actionBar = getActionBar();
+//        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#99000000")));
+        
         setContentView(R.layout.activity_main);
         // the search button
         Button searchButton = (Button) findViewById(R.id.buttonSearch);
@@ -79,10 +86,13 @@ public class MainActivity extends Activity {
         // Noted: mMap.getMyLocation() return null
         mMap = MapSetting.getInstance(googleMap);
         // the top right hand button
+        // Also shows the blue dot of your current location if enabled.
+        
         mMap.setCurrentLocationButton(true);
         // the latlng of university of Washington
         LatLng ll = new LatLng(LATITUDE, LONGITUDE);
         mMap.moveCameraTo(CameraUpdateFactory.newLatLngZoom(ll, ZOOM));
+        Log.v("MetroBike", "Finished launching main activity! -- create map");
     }
 
     /**
@@ -129,5 +139,17 @@ public class MainActivity extends Activity {
     protected final void onResume() {
         mMap = MapSetting.getInstance(googleMap);
         super.onResume();
+        Log.v("MetroBike", "Finished launching main activity--onResume!");
+    }
+    
+    /**
+     * Destroy Map Related parameters such as map settings.
+     * 
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected final void onDestroy() {
+        super.onDestroy();
+        MapSetting.resetMapSetting();
     }
 }
