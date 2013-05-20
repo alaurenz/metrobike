@@ -17,6 +17,7 @@ import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
+import com.HuskySoft.metrobike.backend.TravelMode;
 
 /**
  * @author mengwan, Xinyun Chen
@@ -166,6 +167,11 @@ public class DetailsActivity extends Activity {
             for (int j = 0; j < steps.size(); j++) {
                 Step s = steps.get(j);
                 String ss = s.getHtmlInstruction().replaceAll("\\<.*?>", "");
+                if (s.getTravelMode() == TravelMode.TRANSIT) {
+                	// Use dummy route number to represent bus number.
+                	// This will be fixed when this part in backend is completed.
+                	ss = "(Bus #49) " + ss;
+                }
                 directions.append("\nStep " + count + "   " + ss);
                 count++;
             }
