@@ -6,15 +6,15 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Represents the transit details for a single [transit] Step
- * 
+ * Represents the transit details for a single [transit] Step.
+ *
  * @author Adrian Laurenzi
  */
 public final class TransitDetails implements Serializable {
     /**
      * Part of serializability, this id tracks if a serialized object can be
      * deserialized using this version of the class.
-     * 
+     *
      * NOTE: Please add 1 to this number every time you change the readObject()
      * or writeObject() methods, so we don't have old-version Location objects
      * (ex: from the log) being made into new-version Location objects.
@@ -30,7 +30,7 @@ public final class TransitDetails implements Serializable {
      * The departure transit stop location.
      */
     private Location departureStop;
-    
+
     /**
      * The transit arrival time (in 24-hour time).
      */
@@ -66,29 +66,24 @@ public final class TransitDetails implements Serializable {
      * An icon to display for this item.
      */
     private String vehicleIconURL;
-    
+
     /**
      * Number of stops to stay aboard transit.
      */
     private int numStops;
-    
+
     /**
      * The amount to indent the toString call.
      */
-    int indent = 0;
-    
+    private int indent = 0;
+
     /**
      * The actual indented string.
      */
     private String indentString = "";
 
     /**
-     * Constructs a new (immutable) Location with the given coordinates.
-     * 
-     * @param lat
-     *            the latitude for the new Location
-     * @param lng
-     *            the longitude for the new Location
+     * Constructs a new and empty TransitDetails object.
      */
     public TransitDetails() {
         arrivalStop = null;
@@ -102,55 +97,55 @@ public final class TransitDetails implements Serializable {
         vehicleIconURL = "";
         numStops = 0;
     }
-    
+
     /**
      * Getter for the arrivalStop field.
-     * 
+     *
      * @return the arrival stop
      */
     public Location getArrivalStop() {
         return arrivalStop;
     }
-    
+
     /**
      * Getter for the departureStop field.
-     * 
+     *
      * @return the departure stop
      */
     public Location getDepartureStop() {
         return departureStop;
     }
-    
+
     /**
      * Getter for the getArrivalTime field.
-     * 
+     *
      * @return the arrival time
      */
     public String getArrivalTime() {
         return arrivalTime;
     }
-    
+
     /**
      * Getter for the departureTime field.
-     * 
+     *
      * @return the departure time
      */
     public String getDepartureTime() {
         return departureTime;
     }
-    
+
     /**
      * Getter for the agencyName field.
-     * 
+     *
      * @return the agency name of the transit line
      */
     public String getAgencyName() {
         return agencyName;
     }
-    
+
     /**
      * Getter for the headsign field.
-     * 
+     *
      * @return the headsign of the transit line
      */
     public String getHeadsign() {
@@ -159,34 +154,34 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the lineShortName field.
-     * 
+     *
      * @return the short name of the transit line
      */
     public String getLineShortName() {
         return lineShortName;
     }
-    
+
     /**
      * Getter for the vehicleType field.
-     * 
+     *
      * @return the vehicle type (i.e. bus)
      */
     public String getVehicleType() {
         return vehicleType;
     }
-    
+
     /**
      * Getter for the vehicleIconURL field.
-     * 
+     *
      * @return the vehicle icon URL
      */
     public String getVehicleIconURL() {
         return vehicleIconURL;
     }
-    
+
     /**
      * Getter for the numStops field.
-     * 
+     *
      * @return the number of stops
      */
     public int getNumStops() {
@@ -194,8 +189,8 @@ public final class TransitDetails implements Serializable {
     }
 
     /**
-     * Set the arrival stop location
-     * 
+     * Sets the arrival stop location.
+     *
      * @param lat
      *            the latitude for the arrival stop Location
      * @param lng
@@ -206,10 +201,10 @@ public final class TransitDetails implements Serializable {
         this.arrivalStop = new Location(lat, lng);
         return this;
     }
-    
+
     /**
-     * Set the departure stop location
-     * 
+     * Sets the departure stop location.
+     *
      * @param lat
      *            the latitude for the departure stop Location
      * @param lng
@@ -220,121 +215,121 @@ public final class TransitDetails implements Serializable {
         this.departureStop = new Location(lat, lng);
         return this;
     }
-    
+
     /**
-     * Set the arrival time
-     * 
-     * @param arrivalTime
+     * Sets the arrival time.
+     *
+     * @param newArrivalTime
      *            the transit arrival time
      * @return the modified TransitDetails, for Builder pattern purposes
      */
-    public TransitDetails setArrivalTime(final String arrivalTime) {
-        this.arrivalTime = arrivalTime;
-        return this;
-    }
-    
-    /**
-     * Set the departure time
-     * 
-     * @param arrivalTime
-     *            the transit departure time
-     * @return the modified TransitDetails, for Builder pattern purposes
-     */
-    public TransitDetails setDepartureTime(final String departureTime) {
-        this.departureTime = departureTime;
-        return this;
-    }
-    
-    /**
-     * Set the transit agency name
-     * 
-     * @param agencyName
-     *            the agency name of transit line
-     * @return the modified TransitDetails, for Builder pattern purposes
-     */
-    public TransitDetails setAgencyName(final String agencyName) {
-        this.agencyName = agencyName;
-        return this;
-    }
-    
-    /**
-     * Set the transit headsign
-     * 
-     * @param headsign
-     *            the headsign of transit line
-     * @return the modified TransitDetails, for Builder pattern purposes
-     */
-    public TransitDetails setHeadsign(final String headsign) {
-        this.headsign = headsign;
-        return this;
-    }
-    
-    /**
-     * Set the transit line short name
-     * 
-     * @param lineShortName
-     *            the short name of transit line
-     * @return the modified TransitDetails, for Builder pattern purposes
-     */
-    public TransitDetails setLineShortName(final String lineShortName) {
-        this.lineShortName = lineShortName;
+    public TransitDetails setArrivalTime(final String newArrivalTime) {
+        this.arrivalTime = newArrivalTime;
         return this;
     }
 
     /**
-     * Set the transit vehicle type
-     * 
-     * @param vehicleType
+     * Sets the departure time.
+     *
+     * @param newDepartureTime
+     *            the transit departure time
+     * @return the modified TransitDetails, for Builder pattern purposes
+     */
+    public TransitDetails setDepartureTime(final String newDepartureTime) {
+        this.departureTime = newDepartureTime;
+        return this;
+    }
+
+    /**
+     * Sets the transit agency name.
+     *
+     * @param newAgencyName
+     *            the agency name of transit line
+     * @return the modified TransitDetails, for Builder pattern purposes
+     */
+    public TransitDetails setAgencyName(final String newAgencyName) {
+        this.agencyName = newAgencyName;
+        return this;
+    }
+
+    /**
+     * Sets the transit line headsign.
+     *
+     * @param newHeadsign
+     *            the headsign of transit line
+     * @return the modified TransitDetails, for Builder pattern purposes
+     */
+    public TransitDetails setHeadsign(final String newHeadsign) {
+        this.headsign = newHeadsign;
+        return this;
+    }
+
+    /**
+     * Sets the transit line short name.
+     *
+     * @param newLineShortName
+     *            the short name of transit line
+     * @return the modified TransitDetails, for Builder pattern purposes
+     */
+    public TransitDetails setLineShortName(final String newLineShortName) {
+        this.lineShortName = newLineShortName;
+        return this;
+    }
+
+    /**
+     * Sets the transit vehicle type.
+     *
+     * @param newVehicleType
      *            the vehicle type of transit line
      * @return the modified TransitDetails, for Builder pattern purposes
      */
-    public TransitDetails setVehicleType(final String vehicleType) {
-        this.vehicleType = vehicleType;
+    public TransitDetails setVehicleType(final String newVehicleType) {
+        this.vehicleType = newVehicleType;
         return this;
     }
-    
+
     /**
-     * Set the transit vehicle icon URL
-     * 
-     * @param vehicleIconURL
+     * Sets the transit vehicle icon URL.
+     *
+     * @param newVehicleIconURL
      *            the transit vehicle icon URL
      * @return the modified TransitDetails, for Builder pattern purposes
      */
-    public TransitDetails setVehicleIconURL(final String vehicleIconURL) {
-        this.vehicleIconURL = vehicleIconURL;
+    public TransitDetails setVehicleIconURL(final String newVehicleIconURL) {
+        this.vehicleIconURL = newVehicleIconURL;
         return this;
     }
-    
+
     /**
-     * Set the number of stops
-     * 
-     * @param numStops
+     * Sets the number of stops.
+     *
+     * @param newNumStops
      *            the number of stops
      * @return the modified TransitDetails, for Builder pattern purposes
      */
-    public TransitDetails setNumStops(final int numStops) {
-        this.numStops = numStops;
+    public TransitDetails setNumStops(final int newNumStops) {
+        this.numStops = newNumStops;
         return this;
     }
-    
+
     /**
      * Setter for the indent field. Affects the amount of indentation used in
      * the toString() method.
-     * 
-     * @param indent
+     *
+     * @param newIndent
      *            the new indent value.
      */
-    public void setIndent(final int indent) {
-        this.indent = indent;
+    public void setIndent(final int newIndent) {
+        this.indent = newIndent;
         indentString = "";
         for (int i = 0; i < indent; i++) {
             indentString = Utility.getIndentString();
         }
     }
-    
+
     /**
      * This is the getter for the indent field.
-     * 
+     *
      * @return the amount to indent.
      */
     public int getIndent() {
@@ -347,21 +342,27 @@ public final class TransitDetails implements Serializable {
         String extraIndent = indentString + Utility.getIndentString();
         transitDetailsString.append(indentString + "Transit Details:\n");
         transitDetailsString.append(extraIndent + "Arrival Stop: "
-                + arrivalStop.toString() + "\n");
-        transitDetailsString.append(extraIndent + "Departure Stop: " 
-                + departureStop.toString() + "\n");
-        transitDetailsString.append(extraIndent + "Agency Name: " + agencyName + "\n");
-        transitDetailsString.append(extraIndent + "Headsign: " + headsign + "\n");
-        transitDetailsString.append(extraIndent + "Line Short Name: " + lineShortName + "\n");
-        transitDetailsString.append(extraIndent + "Vehicle Type: " + vehicleType + "\n");
-        transitDetailsString.append(extraIndent + "Vehicle Icon URL: " + vehicleIconURL + "\n");
-        transitDetailsString.append(extraIndent + "Number of Stops: " + numStops + "\n");
+        + arrivalStop.toString() + "\n");
+        transitDetailsString.append(extraIndent + "Departure Stop: "
+        + departureStop.toString() + "\n");
+        transitDetailsString.append(extraIndent + "Agency Name: "
+                + agencyName + "\n");
+        transitDetailsString.append(extraIndent + "Headsign: "
+                + headsign + "\n");
+        transitDetailsString.append(extraIndent + "Line Short Name: "
+                + lineShortName + "\n");
+        transitDetailsString.append(extraIndent + "Vehicle Type: "
+                + vehicleType + "\n");
+        transitDetailsString.append(extraIndent + "Vehicle Icon URL: "
+                + vehicleIconURL + "\n");
+        transitDetailsString.append(extraIndent + "Number of Stops: "
+                + numStops + "\n");
         return transitDetailsString.toString();
     }
 
     /**
      * Implements a custom serialization of a TransitDetails object.
-     * 
+     *
      * @param out
      *            the ObjectOutputStream to write to
      * @throws IOException
@@ -384,7 +385,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Implements a custom deserialization of a TransitDetails object.
-     * 
+     *
      * @param in
      *            the ObjectInputStream to read from
      * @throws IOException
@@ -392,7 +393,8 @@ public final class TransitDetails implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
-    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
         // in future versions.
