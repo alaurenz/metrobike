@@ -14,12 +14,12 @@ import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
 
 /**
- * This class tests the Algorithm Worker class.
+ * This class tests the Algorithm Worker with only simple algorithm class.
  * 
  * @author mengwan
  * 
  */
-public class SimpleComboAlgorithmTest extends TestCase {
+public class SimpleAlgorithmTest extends TestCase {
     
     /**
      * This holds a directionsRequest object for use by other testing methods.
@@ -41,7 +41,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setDepartureTime(1371427200);
-        request.setTravelMode(TravelMode.MIXED);
+        request.setTravelMode(TravelMode.TRANSIT);
     }
     
     /**
@@ -59,7 +59,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setDepartureTime(1371427200);
-        request.setTravelMode(TravelMode.MIXED);
+        request.setTravelMode(TravelMode.BICYCLING);
     }
     
     /**
@@ -74,7 +74,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setDepartureTime(1371168000);
-        request.setTravelMode(TravelMode.MIXED);
+        request.setTravelMode(TravelMode.BICYCLING);
     }
     
     /**
@@ -96,9 +96,9 @@ public class SimpleComboAlgorithmTest extends TestCase {
         for (Route r : routes) {
             for (Leg l : r.getLegList()) {
                 for (Step s : l.getStepList()) {
-                    boolean allTransitBicycle = s.getTravelMode() == TravelMode.TRANSIT 
-                            || s.getTravelMode() == TravelMode.BICYCLING;
-                    Assert.assertTrue(allTransitBicycle);
+                    boolean allTransitWalk = s.getTravelMode() == TravelMode.TRANSIT 
+                            || s.getTravelMode() == TravelMode.WALKING;
+                    Assert.assertTrue(allTransitWalk);
                 }
             }
         }
@@ -123,9 +123,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
         for (Route r : routes) {
             for (Leg l : r.getLegList()) {
                 for (Step s : l.getStepList()) {
-                    boolean allTransitBicycle = s.getTravelMode() == TravelMode.TRANSIT 
-                            || s.getTravelMode() == TravelMode.BICYCLING;
-                    Assert.assertTrue(allTransitBicycle);
+                    Assert.assertEquals(TravelMode.BICYCLING, s.getTravelMode());
                 }
             }
         }
@@ -141,6 +139,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doRequest();
+        
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
                 actual);
@@ -168,107 +167,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
         }
     }
     
-    /**
-     * Black Box test: Test if all the steps started with the same location as the previous steps
-     */
-    //@Test
-    public void test_allStepStartEndStevensToQinyuan() {
-        setUpStevensToQinyuan();
-
-        DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
-
-        DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
-        List<Route> routes = request.getSolutions();
-        Assert.assertTrue(routes.size() > 0);
-        for (Route r : routes) {
-            Location legStart = null;
-            Location stepStart = null;
-            Location stepEnd = null;
-            for (int i = 0; i < r.getLegList().size(); i ++) {
-                legStart = r.getLegList().get(i).getStartLocation();
-                
-                for (int j = 0; j < r.getLegList().get(i).getStepList().size(); j ++) {
-                    stepStart = r.getLegList().get(i).getStepList().get(j).getStartLocation();                   
-                    if (j == 0) {
-                        Assert.assertEquals(stepStart.getLatitude(), legStart.getLatitude());
-                        Assert.assertEquals(stepStart.getLongitude(), legStart.getLongitude());
-                    }
-                    if (j != 0 && i != 0) {
-                        Assert.assertEquals(stepStart.getLatitude(), stepEnd.getLatitude());
-                        Assert.assertEquals(stepStart.getLongitude(), stepEnd.getLongitude());
-                    }
-                    stepEnd = r.getLegList().get(i).getStepList().get(j).getEndLocation();
-                }
-            }
-        }
-    }
-    
-    /**
-     * Black Box test: test if every route's duration consists the sum of its legs and steps
-     */
-    //@Test
-    public void test_timeAdrainToStevens() {
-        setUpAdrainToStevens();
-
-        DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
-
-        DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
-        List<Route> routes = request.getSolutions();
-        Assert.assertTrue(routes.size() > 0);
-        for (Route r : routes) {
-            long routeTimeForLeg = r.getDurationInSeconds();
-            long routeTimeForSteps = r.getDurationInSeconds();
-            for (Leg l : r.getLegList()) {
-                long legTimeForSteps = l.getDurationInSeconds();
-                routeTimeForLeg -= l.getDurationInSeconds();
-                for (Step s : l.getStepList()) {
-                    routeTimeForSteps -= s.getDurationInSeconds();
-                    legTimeForSteps -= s.getDurationInSeconds();
-                }
-                Assert.assertEquals(0, legTimeForSteps);
-            }
-            Assert.assertEquals(0, routeTimeForLeg);
-            Assert.assertEquals(0, routeTimeForSteps);
-        }
-    }
-    
-    /**
-     * Black Box test: test if every route's duration consists the sum of its legs and steps
-     */
-    //@Test
-    public void test_timeStevensToQinyuan() {
-        setUpStevensToQinyuan();
-
-        DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
-
-        DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
-        List<Route> routes = request.getSolutions();
-        Assert.assertTrue(routes.size() > 0);
-        for (Route r : routes) {
-            long routeTimeForLeg = r.getDurationInSeconds();
-            long routeTimeForSteps = r.getDurationInSeconds();
-            for (Leg l : r.getLegList()) {
-                long legTimeForSteps = l.getDurationInSeconds();
-                routeTimeForLeg -= l.getDurationInSeconds();
-                for (Step s : l.getStepList()) {
-                    routeTimeForSteps -= s.getDurationInSeconds();
-                    legTimeForSteps -= s.getDurationInSeconds();
-                }
-                Assert.assertEquals(0, legTimeForSteps);
-            }
-            Assert.assertEquals(0, routeTimeForLeg);
-            Assert.assertEquals(0, routeTimeForSteps);
-        }
-    }
+   
     
     /**
      * Black Box test: the result will be all bicycling if the route is too long
