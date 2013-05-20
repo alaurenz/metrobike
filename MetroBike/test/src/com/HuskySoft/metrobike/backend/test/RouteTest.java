@@ -325,7 +325,9 @@ public class RouteTest extends TestCase {
         ByteArrayInputStream byte_in = new ByteArrayInputStream(toDeSerialize);
         ObjectInputStream object_in = new ObjectInputStream(byte_in);
         return (Route) object_in.readObject();
-=======
+    }
+
+    /**
      * Test-Driven Development: This tests the getDurationHumanReadable method.
      * 
      * @throws JSONException
@@ -337,7 +339,6 @@ public class RouteTest extends TestCase {
         String actual = route.getDurationHumanReadable();
         Assert.assertEquals("Actual value for route.getDurationHumanReadable() was: " + actual,
                 expected, actual);
->>>>>>> 540aed0ce5242e01e0f522494f6d0da27346afca
     }
 
     /**
