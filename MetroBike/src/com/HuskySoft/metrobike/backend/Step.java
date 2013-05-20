@@ -307,6 +307,17 @@ public final class Step implements Serializable {
         this.durationInSeconds = newDurationInSeconds;
         return this;
     }
+    
+    /**
+     * Returns the Step's total duration in the following format:
+     * "XX days, XX hours, XX minutes".
+     * 
+     * @return the Step's duration as a human-readable String
+     */
+    public String getDurationHumanReadable() {
+        long durationSeconds = getDurationInSeconds();
+        return Utility.secondsToHumanReadableDuration(durationSeconds);
+    }
 
     /**
      * @return the startLocation
