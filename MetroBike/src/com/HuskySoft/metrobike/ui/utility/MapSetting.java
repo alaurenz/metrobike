@@ -61,6 +61,15 @@ public final class MapSetting {
     }
 
     /**
+     * Update the traffic availability.
+     * 
+     * @return true if traffic is enable.
+     */
+    public boolean getTrafficDisplay() {
+        return mMap.isTrafficEnabled();
+    }
+
+    /**
      * Sets the type of map tiles that should be displayed.
      * 
      * @param mapType
@@ -103,6 +112,15 @@ public final class MapSetting {
     }
 
     /**
+     * Check if the current location button available.
+     * 
+     * @return true if my current location enable.
+     */
+    public boolean getMyCurrentLocation() {
+        return mMap.isMyLocationEnabled();
+    }
+
+    /**
      * Static method in order to update the settings status to all maps.
      * 
      * @param googleMap
@@ -113,13 +131,11 @@ public final class MapSetting {
         googleMap.setMyLocationEnabled(mMap.isMyLocationEnabled());
         googleMap.setTrafficEnabled(mMap.isTrafficEnabled());
     }
-    
+
     /**
-     * Reset MapSettings to be null.
-     * Useful when the Google Map this setting attached to
-     * is destroyed.
-     * WARNING: this method resets MapSettings to null.
-     * Use with caution.
+     * Reset MapSettings to be null. Useful when the Google Map this setting
+     * attached to is destroyed. WARNING: this method resets MapSettings to
+     * null. Use with caution.
      */
     public static void resetMapSetting() {
         mSet = null;

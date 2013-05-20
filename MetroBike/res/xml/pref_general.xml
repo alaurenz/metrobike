@@ -35,21 +35,18 @@
     <!-- Map setting category -->
     <PreferenceCategory android:title="@string/pref_header_map" >
         <ListPreference
-            android:defaultValue="0"
             android:entries="@array/array_map_type"
             android:entryValues="@array/value_map_type"
             android:key="map_type"
             android:title="@string/pref_map_type" />
         <!-- Traffic switch -->
         <ListPreference
-            android:defaultValue="false"
             android:entries="@array/switch_button"
             android:entryValues="@array/true_false"
             android:key="traffic_type"
             android:title="@string/pref_traffic" />
         <!-- Current location switch -->
         <ListPreference
-            android:defaultValue="true"
             android:entries="@array/switch_button"
             android:entryValues="@array/true_false"
             android:key="current_type"
