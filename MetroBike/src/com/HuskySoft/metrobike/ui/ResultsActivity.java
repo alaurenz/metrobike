@@ -28,6 +28,7 @@ import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
+import com.HuskySoft.metrobike.ui.utility.MapSetting;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -164,7 +165,7 @@ public class ResultsActivity extends Activity {
             currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");
             addRouteButtons();
             mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-            drawRoute();
+//            drawRoute();
         }
     }
 
@@ -384,5 +385,17 @@ public class ResultsActivity extends Activity {
                 button.setEnabled(true);
             }
         }
+    }
+    
+    /**
+     * Update the map setting.
+     * 
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected final void onResume() {
+        super.onResume();
+        MapSetting.updateStatus(mMap);
+        drawRoute();
     }
 }

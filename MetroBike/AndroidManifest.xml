@@ -60,7 +60,8 @@
         <activity
             android:name="com.HuskySoft.metrobike.ui.NavigateActivity"
             android:label="@string/title_activity_navigate"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            >
         </activity>
         
         <!-- set android:windowSoftInputMode to prevent this 

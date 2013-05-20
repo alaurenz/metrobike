@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Menu;
@@ -22,9 +22,11 @@ import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
+import com.HuskySoft.metrobike.ui.utility.MapSetting;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,52 +34,54 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
+ * This class shows the detail of the routes step by step.
  * 
- * @author Xinyun Chen
+ * @author Xinyun Chen, Sam Wilson
  * 
  */
 
-public class NavigateActivity extends Activity {
+public class NavigateActivity extends FragmentActivity {
+
     /**
      * Duration of the animated camera in the map.
      */
     private static final int ANIMATED_CAMERA_DURATION_IN_MILLISECOND = 3000;
-    
+
     /**
      * Alpha value for argb for drawing paths.
      */
     private static final int DRAW_STEPS_ARGB_ALPHA = 200;
-    
+
     /**
      * Full value (255) for argb for drawing paths.
      */
     private static final int DRAW_STEPS_ARGB_FULL_VALUE = 255;
-    
+
     /**
      * Another value for argb for drawing paths.
      */
     private static final int DRAW_STEPS_ARGB_105 = 105;
-    
+
     /**
      * Width value 1 for paths.
      */
     private static final float DRAW_STEPS_WIDTH_12 = 12f;
-    
+
     /**
      * Width value 2 for paths.
      */
     private static final float DRAW_STEPS_WIDTH_8 = 8f;
-    
+
     /**
      * Radius for drawing paths.
      */
     private static final int DRAW_STEPS_RADIUS = 4;
-    
+
     /**
      * Stroke width.
      */
     private static final int DRAW_STEPS_STROKE_WIDTH = 3;
-    
+
     /**
      * Results from the search.
      */
@@ -96,7 +100,7 @@ public class NavigateActivity extends Activity {
     /**
      * GoogleMap object stored here to be modified.
      */
-    private GoogleMap mMap;
+    private GoogleMap googleMap;
 
     /**
      * Keeps a list of legs used for map.
@@ -144,7 +148,6 @@ public class NavigateActivity extends Activity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
@@ -163,10 +166,10 @@ public class NavigateActivity extends Activity {
         if (recievedRoutes != null) {
             routes = (ArrayList<Route>) recievedRoutes;
             currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-            drawRoute();
+            googleMap = ((SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map)).getMap();
+            // let onResume to update the google Map object
         }
-
         next.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 updateNext();
@@ -182,7 +185,6 @@ public class NavigateActivity extends Activity {
         });
     }
 
-    
     /**
      * Update the state of the navigation for previous step.
      */
@@ -315,8 +317,7 @@ public class NavigateActivity extends Activity {
     private void drawRoute() {
         if (currRoute >= 0 && currRoute < routes.size()) {
             // clear the map drawing first
-            mMap.clear();
-
+            googleMap.clear();
             // get the source and destination
             legs = routes.get(currRoute).getLegList();
             Location start = legs.get(0).getStartLocation();
@@ -324,22 +325,25 @@ public class NavigateActivity extends Activity {
                     .get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
 
             // draw Markers for starting and ending points
-            mMap.addMarker(new MarkerOptions()
+            MarkerOptions markerFrom = new MarkerOptions()
                     .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
                     .title("Start Here!")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting));
+            googleMap.addMarker(markerFrom);
 
-            mMap.addMarker(new MarkerOptions()
+            MarkerOptions markerTo = new MarkerOptions()
                     .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(end))
                     .title("End Here!")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending));
+            googleMap.addMarker(markerTo);
+
             drawSteps();
             // set the camera to focus on the route
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(
                     com.HuskySoft.metrobike.ui.utility.Utility.getCameraCenter(routes
                             .get(currRoute)), com.HuskySoft.metrobike.ui.utility.Utility
-                            .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth)),
-                    ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
+                            .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth));
+            googleMap.animateCamera(update, ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
         }
     }
 
@@ -363,41 +367,52 @@ public class NavigateActivity extends Activity {
 
                 if (i == currentLeg && j == currentStep) {
                     if (s.getTravelMode() == TravelMode.TRANSIT) {
-                        mMap.addPolyline(polylineOptions.color(
-                                            Color.argb(DRAW_STEPS_ARGB_ALPHA, 
-                                                        DRAW_STEPS_ARGB_FULL_VALUE, 0, 0))
-                            .width(DRAW_STEPS_WIDTH_12));
+
+                        googleMap.addPolyline(polylineOptions
+                                .color(Color.argb(DRAW_STEPS_ARGB_ALPHA,
+                                        DRAW_STEPS_ARGB_FULL_VALUE, 0, 0)).width(
+                                        DRAW_STEPS_WIDTH_12));
                     } else {
-                        mMap.addPolyline(polylineOptions.color(
-                                            Color.argb(DRAW_STEPS_ARGB_ALPHA, 0, 0, 
-                                                        DRAW_STEPS_ARGB_FULL_VALUE))
-                            .width(DRAW_STEPS_WIDTH_8).zIndex(1));
+                        googleMap.addPolyline(polylineOptions
+                                .color(Color.argb(DRAW_STEPS_ARGB_ALPHA, 0, 0,
+                                        DRAW_STEPS_ARGB_FULL_VALUE)).width(DRAW_STEPS_WIDTH_8)
+                                .zIndex(1));
                     }
                 } else {
 
                     if (s.getTravelMode() == TravelMode.TRANSIT) {
-                        mMap.addPolyline(polylineOptions.color(
-                                            Color.argb(DRAW_STEPS_ARGB_ALPHA, 
-                                                        DRAW_STEPS_ARGB_105, 
-                                                        DRAW_STEPS_ARGB_105, 
-                                                        DRAW_STEPS_ARGB_105))
-                            .width(DRAW_STEPS_WIDTH_12));
+
+                        googleMap.addPolyline(polylineOptions.color(
+                                Color.argb(DRAW_STEPS_ARGB_ALPHA, DRAW_STEPS_ARGB_105,
+                                        DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105)).width(
+                                DRAW_STEPS_WIDTH_12));
                     } else {
-                        mMap.addPolyline(polylineOptions.color(
-                                            Color.argb(DRAW_STEPS_ARGB_ALPHA, 
-                                                    DRAW_STEPS_ARGB_105, 
-                                                    DRAW_STEPS_ARGB_105, 
-                                                    DRAW_STEPS_ARGB_105))
-                            .width(DRAW_STEPS_WIDTH_8).zIndex(1));
+                        googleMap.addPolyline(polylineOptions
+                                .color(Color.argb(DRAW_STEPS_ARGB_ALPHA, DRAW_STEPS_ARGB_105,
+                                        DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
+                                .width(DRAW_STEPS_WIDTH_8).zIndex(1));
                     }
                 }
-                mMap.addCircle(new CircleOptions()
+                googleMap.addCircle(new CircleOptions()
                         .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
-                                .getEndLocation()))
-                        .radius(DRAW_STEPS_RADIUS)
-                        .strokeColor(Color.BLACK)
-                        .strokeWidth(DRAW_STEPS_STROKE_WIDTH).fillColor(Color.WHITE).zIndex(2));
+                                .getEndLocation())).radius(DRAW_STEPS_RADIUS)
+                        .strokeColor(Color.BLACK).strokeWidth(DRAW_STEPS_STROKE_WIDTH)
+                        .fillColor(Color.WHITE).zIndex(2));
             }
         }
     }
+
+    /**
+     * Update the map setting.
+     * 
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected final void onResume() {
+        super.onResume();
+        // update this map status and redraw
+        MapSetting.updateStatus(googleMap);
+        drawRoute();
+    }
+
 }

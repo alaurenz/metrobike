@@ -1,8 +1,9 @@
 package com.HuskySoft.metrobike.ui;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +15,7 @@ import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.ui.utility.MapSetting;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -23,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
  * @author Sam Wilson
  * 
  */
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     /**
      * The latitude value of University of Washington.
@@ -38,10 +39,7 @@ public class MainActivity extends Activity {
      * 2.0 the highest zoom out and 21.0 the lowest zoom in
      */
     private static final float ZOOM = 15.0f;
-    /**
-     * GoogleMap object stored here to be modified.
-     */
-    private MapSetting mMap;
+
     /**
      * The actual GoogleMap object.
      */
@@ -65,24 +63,15 @@ public class MainActivity extends Activity {
             }
         });
         // initialize the background map
-        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        createMap();
+        googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                .getMap();
+        // only initialize the map setting
+        MapSetting.getInstance(googleMap);
+        // onResume should be called so it can update the map
+
         // Showing log in console for debugging. To be removed for formal
         // release.
         Log.v("MetroBike", "Finished launching main activity!");
-    }
-
-    /**
-     * Create the Google map as a background.
-     */
-    private void createMap() {
-        // Noted: mMap.getMyLocation() return null
-        mMap = MapSetting.getInstance(googleMap);
-        // the top right hand button
-        mMap.setCurrentLocationButton(true);
-        // the latlng of university of Washington
-        LatLng ll = new LatLng(LATITUDE, LONGITUDE);
-        mMap.moveCameraTo(CameraUpdateFactory.newLatLngZoom(ll, ZOOM));
     }
 
     /**
@@ -121,13 +110,34 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Update the map setting.
+     * Update the map setting. Refresh the map.
      * 
      * @see android.app.Activity#onResume()
      */
     @Override
     protected final void onResume() {
-        mMap = MapSetting.getInstance(googleMap);
         super.onResume();
+        // update or initialize the map
+        MapSetting.updateStatus(googleMap);
+        // try to get the current location
+        Location loc = googleMap.getMyLocation();
+        LatLng latLng = null;
+        if (loc == null) {
+            latLng = new LatLng(LATITUDE, LONGITUDE);
+        } else {
+            latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+        }
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
     }
+
+    /**
+     * Override the back button to act like home button. Do this in order to
+     * restore back to the current or default (UW) location.
+     */
+    @Override
+    public final void onBackPressed() {
+        // call this to act like home button
+        moveTaskToBack(true);
+    }
+
 }
