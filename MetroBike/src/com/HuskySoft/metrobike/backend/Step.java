@@ -179,23 +179,27 @@ public final class Step implements Serializable {
                 JSONObject tempTransitDetails =
                         jsonStep.getJSONObject(WebRequestJSONKeys.TRANSIT_DETAILS.getLowerCase());
                 
-                JSONObject tempArrivalStopLocation =
+                JSONObject tempArrivalStop =
                         tempTransitDetails.getJSONObject(WebRequestJSONKeys.ARRIVAL_STOP.getLowerCase());
+                JSONObject tempArrivalStopLocation = 
+                        tempArrivalStop.getJSONObject(WebRequestJSONKeys.LOCATION.getLowerCase());
                 newStepTransitDetails.setArrivalStop(
                         tempArrivalStopLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase()),
                         tempArrivalStopLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase()));
-                JSONObject tempDepartureStopLocation =
+                JSONObject tempDepartureStop =
                         tempTransitDetails.getJSONObject(WebRequestJSONKeys.DEPARTURE_STOP.getLowerCase());
+                JSONObject tempDepartureStopLocation = 
+                        tempDepartureStop.getJSONObject(WebRequestJSONKeys.LOCATION.getLowerCase());
                 newStepTransitDetails.setDepartureStop(
                         tempDepartureStopLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase()),
                         tempDepartureStopLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase()));
                 
                 JSONObject tempArrivalTime = tempTransitDetails.getJSONObject(WebRequestJSONKeys.ARRIVAL_TIME.getLowerCase());
                 newStepTransitDetails.setArrivalTime(
-                        tempArrivalTime.getLong(WebRequestJSONKeys.VALUE.getLowerCase()));
+                        tempArrivalTime.getString(WebRequestJSONKeys.TEXT.getLowerCase()));
                 JSONObject tempDepartureTime = tempTransitDetails.getJSONObject(WebRequestJSONKeys.DEPARTURE_TIME.getLowerCase());
                 newStepTransitDetails.setDepartureTime(
-                        tempDepartureTime.getLong(WebRequestJSONKeys.VALUE.getLowerCase()));
+                        tempDepartureTime.getString(WebRequestJSONKeys.TEXT.getLowerCase()));
                 
                 String tempHeadsign = tempTransitDetails.getString(WebRequestJSONKeys.HEADSIGN.getLowerCase());
                 newStepTransitDetails.setHeadsign(tempHeadsign);
@@ -207,15 +211,14 @@ public final class Step implements Serializable {
                 
                 // NOTE: uses the first agency only
                 JSONArray tempAgenciesArray =
-                        tempTransitDetails.getJSONArray(WebRequestJSONKeys.AGENCIES.getLowerCase());
-                    // if(tempAgenciesArray.length() > 1) { ... }
+                        tempTransitLine.getJSONArray(WebRequestJSONKeys.AGENCIES.getLowerCase());
+                // TODO: if(tempAgenciesArray.length() > 1) { ... }
                 JSONObject tempFirstAgency = tempAgenciesArray.getJSONObject(0);
                 newStepTransitDetails.setAgencyName(
                 tempFirstAgency.getString(WebRequestJSONKeys.NAME.getLowerCase()));
                 
                 newStepTransitDetails.setLineShortName(
                         tempTransitLine.getString(WebRequestJSONKeys.SHORT_NAME.getLowerCase()));
-                
                 
                 JSONObject tempVehicle = tempTransitLine.getJSONObject(
                         WebRequestJSONKeys.VEHICLE.getLowerCase());
@@ -237,9 +240,15 @@ public final class Step implements Serializable {
     }
     
     /**
+     * @throws IllegalStateException
+     *             if the step is not a transit step
      * @return the transitDetails
      */
     public TransitDetails getTransitDetails() {
+        if(!this.getTravelMode().equals(TravelMode.TRANSIT)) {
+            throw new IllegalStateException(
+                    "Cannot get transit details from a non-transit step!");
+        }
         return transitDetails;
     }
 
@@ -255,13 +264,13 @@ public final class Step implements Serializable {
      * 
      * @param newTransitDetails
      *            the newTransitDetails to set
-     * @throws IllegalArgumentException
+     * @throws IllegalStateException
      *             if the step is not a transit step
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setTransitDetails(final TransitDetails newTransitDetails) {
         if(!this.getTravelMode().equals(TravelMode.TRANSIT)) {
-            throw new IllegalArgumentException(
+            throw new IllegalStateException(
                     "Cannot add transit details to a non-transit step!");
         }
         this.transitDetails = newTransitDetails;

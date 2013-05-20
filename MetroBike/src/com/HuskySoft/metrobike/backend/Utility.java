@@ -7,8 +7,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,11 +40,21 @@ public final class Utility {
          */
         throw new AssertionError("Never instantiate utility classes!");
     }
-
+    
     /**
-     * 
+     * Class tag
      */
     private static final String TAG = "MetroBikeUtility";
+    
+    /**
+     * Format for printing times in "human-readable" way
+     */
+    private static final String TIME_FORMAT = "h:m a";
+    
+    /**
+     * Format for printing times in "human-readable" way
+     */
+    private static final Locale TIME_LOCALE = Locale.ENGLISH;
 
     /**
      * The URL for Google Maps.
@@ -418,6 +431,22 @@ public final class Utility {
             output += ", ";
         }
         return output.substring(0, output.length() - 2);
+    }
+    
+    /**
+     * Returns the given timestamp (in seconds) in a human-readable format
+     * NOTE: time given in GMT.
+     * 
+     * @param timestampSeconds
+     *            Timestamp (number of seconds since 1970) to convert to
+     *            human-readable time.
+     * @return the given timestamp as a human-readable String
+     */
+    public static String timestampTo12HourTime(final long timestampSeconds) {
+        long timestampMillis = timestampSeconds * 1000;
+        Date date = new Date(timestampMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT, TIME_LOCALE);
+        return dateFormat.format(date);
     }
 
 }

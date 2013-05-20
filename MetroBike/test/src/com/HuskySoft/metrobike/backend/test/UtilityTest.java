@@ -234,7 +234,7 @@ public class UtilityTest extends TestCase {
     }
     
     /**
-     * Test-Driven Development: This tests the test_secondsToHumanReadableDuration
+     * Test-Driven Development: This tests secondsToHumanReadableDuration
      * given a short duration.
      * 
      */
@@ -247,7 +247,7 @@ public class UtilityTest extends TestCase {
     }
     
     /**
-     * Test-Driven Development: This tests the test_secondsToHumanReadableDuration
+     * Test-Driven Development: This tests secondsToHumanReadableDuration
      * given a medium duration.
      * 
      */
@@ -260,7 +260,7 @@ public class UtilityTest extends TestCase {
     }
     
     /**
-     * Test-Driven Development: This tests the test_secondsToHumanReadableDuration
+     * Test-Driven Development: This tests secondsToHumanReadableDuration
      * given a long duration.
      * 
      */
@@ -269,6 +269,18 @@ public class UtilityTest extends TestCase {
         String expected = "3 days, 11 hours, 20 minutes";
         String actual = Utility.secondsToHumanReadableDuration(300000);
         Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(300000) was: " + actual,
+                expected, actual);
+    }
+    
+    /**
+     * Whitebox: This tests the timestampTo12HourTime
+     * 
+     */
+    // @Test
+    public void test_timestampTo12HourTime() {
+        String expected = "8:47 PM";
+        String actual = Utility.timestampTo12HourTime(1368996421);
+        Assert.assertEquals("Actual value of Utility.timestampTo12HourTime(1368996421) was: " + actual,
                 expected, actual);
     }
 }

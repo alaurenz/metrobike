@@ -32,14 +32,14 @@ public final class TransitDetails implements Serializable {
     private Location departureStop;
     
     /**
-     * The transit arrival time (as a timestamp).
+     * The transit arrival time (in 24-hour time).
      */
-    private long arrivalTime;
+    private String arrivalTime;
 
     /**
-     * The transit departure time (as a timestamp).
+     * The transit departure time (in 24-hour time).
      */
-    private long departureTime;
+    private String departureTime;
 
     /**
      * The transit agency name.
@@ -93,8 +93,8 @@ public final class TransitDetails implements Serializable {
     public TransitDetails() {
         arrivalStop = null;
         departureStop = null;
-        arrivalTime = 0L;
-        departureTime = 0L;
+        arrivalTime = "";
+        departureTime = "";
         agencyName = "";
         headsign = "";
         lineShortName = "";
@@ -126,7 +126,7 @@ public final class TransitDetails implements Serializable {
      * 
      * @return the arrival time
      */
-    public long getArrivalTime() {
+    public String getArrivalTime() {
         return arrivalTime;
     }
     
@@ -135,7 +135,7 @@ public final class TransitDetails implements Serializable {
      * 
      * @return the departure time
      */
-    public long getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
     
@@ -193,6 +193,19 @@ public final class TransitDetails implements Serializable {
         return numStops;
     }
 
+    /**
+     * Set the arrival stop location
+     * 
+     * @param lat
+     *            the latitude for the arrival stop Location
+     * @param lng
+     *            the longitude for the arrival stop Location
+     * @return the modified TransitDetails, for Builder pattern purposes
+     */
+    public TransitDetails setArrivalStop(final double lat, final double lng) {
+        this.arrivalStop = new Location(lat, lng);
+        return this;
+    }
     
     /**
      * Set the departure stop location
@@ -209,27 +222,13 @@ public final class TransitDetails implements Serializable {
     }
     
     /**
-     * Set the arrival end location
-     * 
-     * @param lat
-     *            the latitude for the arrival stop Location
-     * @param lng
-     *            the longitude for the arrival stop Location
-     * @return the modified TransitDetails, for Builder pattern purposes
-     */
-    public TransitDetails setArrivalStop(final double lat, final double lng) {
-        this.arrivalStop = new Location(lat, lng);
-        return this;
-    }
-    
-    /**
      * Set the arrival time
      * 
      * @param arrivalTime
      *            the transit arrival time
      * @return the modified TransitDetails, for Builder pattern purposes
      */
-    public TransitDetails setArrivalTime(final long arrivalTime) {
+    public TransitDetails setArrivalTime(final String arrivalTime) {
         this.arrivalTime = arrivalTime;
         return this;
     }
@@ -241,7 +240,7 @@ public final class TransitDetails implements Serializable {
      *            the transit departure time
      * @return the modified TransitDetails, for Builder pattern purposes
      */
-    public TransitDetails setDepartureTime(final long departureTime) {
+    public TransitDetails setDepartureTime(final String departureTime) {
         this.departureTime = departureTime;
         return this;
     }
