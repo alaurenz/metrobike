@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * This is a home screen which will show the map, search and detail button.
  * 
- * @author Sam Wilson
+ * @author Sam Wilson, Shuo Wang
  * 
  */
 public class MainActivity extends FragmentActivity {
@@ -53,6 +53,13 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+//        Set ActionBar to be translucent and overlaying the map
+//        Currently not using this. 
+//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+//        ActionBar actionBar = getActionBar();
+//        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#99000000")));
+        
         setContentView(R.layout.activity_main);
         // the search button
         Button searchButton = (Button) findViewById(R.id.buttonSearch);
@@ -128,6 +135,18 @@ public class MainActivity extends FragmentActivity {
             latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
         }
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
+        Log.v("MetroBike", "Finished launching main activity--onResume!");
+    }
+    
+    /**
+     * Destroy Map Related parameters such as map settings.
+     * 
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected final void onDestroy() {
+        super.onDestroy();
+        MapSetting.resetMapSetting();
     }
 
     /**

@@ -184,6 +184,7 @@ public class SettingsActivity extends PreferenceActivity {
          * Invoke when user click change traffic.
          * 
          * @param preference
+         * @param key
          */
         private void switchMode(final Preference preference, final String key) {
             ((ListPreference) preference)

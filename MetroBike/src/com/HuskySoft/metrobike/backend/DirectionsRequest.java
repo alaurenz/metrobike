@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.HuskySoft.metrobike.algorithm.AlgorithmWorker;
 import com.HuskySoft.metrobike.algorithm.SimpleAlgorithm;
 import com.HuskySoft.metrobike.algorithm.SimpleComboAlgorithm;
 
@@ -53,6 +54,7 @@ public final class DirectionsRequest implements Serializable {
      */
     private String errorMessages;
 
+    
     /**
      * Constructs a new DirectionsRequest object.
      */
@@ -76,6 +78,7 @@ public final class DirectionsRequest implements Serializable {
             return DirectionsStatus.INVALID_REQUEST_PARAMS;
         }
 
+        
         System.err.println(TAG + "RUNNING ON DUMMY JSON RESPONSE");
 
         solutions = new ArrayList<Route>();
@@ -133,23 +136,48 @@ public final class DirectionsRequest implements Serializable {
          */
 
         // Query the simple algorithm first
-        // SimpleAlgorithm firstAlg = new SimpleAlgorithm();
-        SimpleComboAlgorithm comboAlg = new SimpleComboAlgorithm();
-
-        // DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
-        DirectionsStatus comboStatus = comboAlg.findRoutes(myParams);
+        switch (myParams.getTravelMode()) {
+        case BICYCLING:
+            return doAlgorithm(new SimpleAlgorithm());
+        case TRANSIT:
+            return doAlgorithm(new SimpleAlgorithm());
+        case MIXED:
+            //Travel Mode Mix also needs the bicycle only routes
+            DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());
+            
+            DirectionsStatus bikeStatus = doAlgorithm(new SimpleAlgorithm());
+            if (comboStatus.isError() && bikeStatus.isError()) {
+                return DirectionsStatus.NO_RESULTS_FOUND;                
+            }
+            return DirectionsStatus.REQUEST_SUCCESSFUL;
+        default:
+            System.err.println("Incorrect Travel Mode here: "
+                    + myParams.getTravelMode().toString());
+            return DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR;
+        }
+        
+    }
+    
+    /**
+     * Run the given algorithm and add all the routes.
+     * @param algorithmWorker : the abstracted algorithm class
+     * @return  direction status after the algorithm completes
+     */
+    private DirectionsStatus doAlgorithm(final AlgorithmWorker algorithmWorker) {
+     // DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
+        DirectionsStatus status = algorithmWorker.findRoutes(myParams);
 
         /*
          * if(firstStatus.isError()) { extendedErrors = firstAlg.getErrors();
          * return firstStatus; }
          */
-        if (comboStatus.isError()) {
-            appendErrorMessage(comboAlg.getErrors());
-            return comboStatus;
+        if (status.isError()) {
+            appendErrorMessage(algorithmWorker.getErrors());
+            return status;
         }
 
         // List<Route> firstRoutes = firstAlg.getResults();
-        List<Route> comboRoutes = comboAlg.getResults();
+        List<Route> routes = algorithmWorker.getResults();
 
         /*
          * if (firstRoutes == null) { System.err.println(TAG +
@@ -157,16 +185,12 @@ public final class DirectionsRequest implements Serializable {
          * appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
          * return DirectionsStatus.NO_RESULTS_FOUND; }
          */
-        if (comboRoutes == null) {
+        if (routes == null) {
             System.err.println(TAG + "Got null from SimpleComboAlgorithm without an error");
             appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
             return DirectionsStatus.NO_RESULTS_FOUND;
         }
-
-        // TODO: temp for testing
-        // solutions.add(firstRoutes.get(0));
-        // solutions.add(comboRoutes.get(0));
-        solutions.addAll(comboRoutes);
+        solutions.addAll(routes);
 
         return DirectionsStatus.REQUEST_SUCCESSFUL;
     }

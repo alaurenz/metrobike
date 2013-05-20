@@ -7,7 +7,7 @@ import com.google.android.gms.maps.GoogleMap;
 /**
  * This class holds the setting of the display map.
  * 
- * @author Sam Wilson
+ * @author Sam Wilson, Shuo Wang
  * 
  */
 public final class MapSetting {
@@ -112,5 +112,16 @@ public final class MapSetting {
         googleMap.setMapType(mMap.getMapType());
         googleMap.setMyLocationEnabled(mMap.isMyLocationEnabled());
         googleMap.setTrafficEnabled(mMap.isTrafficEnabled());
+    }
+    
+    /**
+     * Reset MapSettings to be null.
+     * Useful when the Google Map this setting attached to
+     * is destroyed.
+     * WARNING: this method resets MapSettings to null.
+     * Use with caution.
+     */
+    public static void resetMapSetting() {
+        mSet = null;
     }
 }
