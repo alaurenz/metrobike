@@ -1,5 +1,11 @@
 package com.HuskySoft.metrobike.backend.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -9,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
@@ -229,6 +236,94 @@ public class RouteTest extends TestCase {
         String expected = dummyBicycleJSONToString;
         String actual = route.toString();
         Assert.assertEquals("Actual value for route.toString() was: " + actual, expected, actual);
+    }
+    
+    /**
+     * BlackBox: Tests to be sure we can safely serialize and deserialize a
+     * Rotue object. This functionality is used in the
+     * intent-passing system.
+     * 
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     */
+    public void test_serializationTestEmptyRouteObject() throws IOException, ClassNotFoundException {
+        Route testRoute = new Route();
+
+        // Serialize the empty request, then de-serialize it
+        byte[] theBytes = helpSerialize(testRoute);
+        Route recreatedRoute = helpDeserialize(theBytes);
+
+        // Use string equality to check the request
+        Assert.assertEquals("The toString() representation of a serialized->deserialized"
+                + " object should remain unchanged.", testRoute.toString(),
+                recreatedRoute.toString());
+    }
+
+    /**
+     * BlackBox: Tests to be sure we can safely serialize and deserialize a
+     * non-empty Route object. This functionality is used in the
+     * intent-passing system.
+     * 
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     * @throws JSONException 
+     */
+    public void test_serializationTestNonEmptyRouteObject() throws IOException, ClassNotFoundException, JSONException {
+        setUp();
+
+        // Serialize the request, then de-serialize it
+        byte[] theBytes = helpSerialize(route);
+        Route recreatedRoute = helpDeserialize(theBytes);
+
+        // Use string equality to check the request
+        Assert.assertEquals("The toString() representation of a serialized->deserialized"
+                + " object should remain unchanged.", route.toString(),
+                recreatedRoute.toString());
+    }
+
+    /**
+     * Helper function for serializing a Route object.Help on
+     * testing this based on
+     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * 
+     * @param toSerialize
+     *            the Route to serialize
+     * @return a byte array representing the serialized Route
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     */
+    private byte[] helpSerialize(Route toSerialize) throws IOException {
+        ByteArrayOutputStream byte_out = new ByteArrayOutputStream();
+        ObjectOutputStream object_out = new ObjectOutputStream(byte_out);
+        object_out.writeObject(toSerialize);
+        object_out.close();
+        return byte_out.toByteArray();
+    }
+
+    /**
+     * Helper function for serializing a Route object.Help on
+     * testing this based on
+     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * 
+     * @param toDeSerialize
+     *            a byte array representing the serialized Route
+     * @return the deserialized Route
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     * @throws OptionalDataException
+     *             if the object conversion is out of order
+     */
+    private Route helpDeserialize(byte[] toDeSerialize) throws OptionalDataException,
+            ClassNotFoundException, IOException {
+        ByteArrayInputStream byte_in = new ByteArrayInputStream(toDeSerialize);
+        ObjectInputStream object_in = new ObjectInputStream(byte_in);
+        return (Route) object_in.readObject();
     }
 
     /**

@@ -24,7 +24,7 @@ public final class Step implements Serializable {
      * or writeObject() methods, so we don't have old-version Step objects (ex:
      * from the log) being made into new-version Step objects.
      */
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     /**
      * The distance of this step in meters.
@@ -385,6 +385,9 @@ public final class Step implements Serializable {
         out.writeObject(travelMode);
         out.writeObject(htmlInstruction);
         out.writeObject(polyLine);
+        out.writeObject(substeps);
+        out.writeInt(indent);
+        out.writeObject(indentString);
     }
 
     /**
@@ -409,5 +412,8 @@ public final class Step implements Serializable {
         travelMode = (TravelMode) in.readObject();
         htmlInstruction = (String) in.readObject();
         polyLine = (String) in.readObject();
+        substeps = (List<Step>) in.readObject();
+        indent = in.readInt();
+        indentString = (String) in.readObject();
     }
 }

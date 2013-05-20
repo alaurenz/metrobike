@@ -495,10 +495,32 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsRequest recreatedRequest = helpDeserialize(theBytes);
 
         // Use string equality to check the request
-        Assert.assertEquals(
-                "The toString() representation of a serialized->deserialized" +
-                " object should remain unchanged.",
-                testRequest.toString(), recreatedRequest.toString());
+        Assert.assertEquals("The toString() representation of a serialized->deserialized"
+                + " object should remain unchanged.", testRequest.toString(),
+                recreatedRequest.toString());
+    }
+
+    /**
+     * BlackBox: Tests to be sure we can safely serialize and deserialize a
+     * non-empty DirectionsRequest object. This functionality is used in the
+     * intent-passing system.
+     * 
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     */
+    public void test_serializationTestNonEmptyDRObject() throws IOException, ClassNotFoundException {
+        setUp();
+
+        // Serialize the request, then de-serialize it
+        byte[] theBytes = helpSerialize(request);
+        DirectionsRequest recreatedRequest = helpDeserialize(theBytes);
+
+        // Use string equality to check the request
+        Assert.assertEquals("The toString() representation of a serialized->deserialized"
+                + " object should remain unchanged.", request.toString(),
+                recreatedRequest.toString());
     }
 
     /**

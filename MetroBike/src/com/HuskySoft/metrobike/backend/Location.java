@@ -21,7 +21,7 @@ public final class Location implements Serializable {
      * or writeObject() methods, so we don't have old-version Location objects
      * (ex: from the log) being made into new-version Location objects.
      */
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * A scaling factor used in computing the hashCode. It determines how much
@@ -214,6 +214,8 @@ public final class Location implements Serializable {
         // The order must be the same as the read order in readObject()
         out.writeDouble(latitude);
         out.writeDouble(longitude);
+        out.writeInt(indent);
+        out.writeObject(indentString);
     }
 
     /**
@@ -233,5 +235,7 @@ public final class Location implements Serializable {
         // The order must be the same as the writing order in writeObject()
         latitude = in.readDouble();
         longitude = in.readDouble();
+        indent = in.readInt();
+        indentString = (String)in.readObject();
     }
 }

@@ -26,7 +26,7 @@ public final class Leg implements Serializable {
      * or writeObject() methods, so we don't have old-version Leg objects (ex:
      * from the log) being made into new-version Leg objects.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * A default address for the start and end of a leg.
@@ -63,12 +63,12 @@ public final class Leg implements Serializable {
     /**
      * The amount to indent.
      */
-    private final int indent = 2;
+    private int indent = 2;
 
     /**
      * The actual indented string.
      */
-    private final String indentString = Utility.getIndentString() + Utility.getIndentString();
+    private String indentString = Utility.getIndentString() + Utility.getIndentString();
 
     /**
      * Constructs an empty Leg.
@@ -314,6 +314,8 @@ public final class Leg implements Serializable {
         out.writeObject(startAddress);
         out.writeObject(endAddress);
         out.writeObject(stepList);
+        out.writeInt(indent);
+        out.writeObject(indentString);
     }
 
     /**
@@ -335,5 +337,7 @@ public final class Leg implements Serializable {
         startAddress = (String) in.readObject();
         endAddress = (String) in.readObject();
         stepList = (List<Step>) in.readObject();
+        indent = in.readInt();
+        indentString = (String) in.readObject();
     }
 }
