@@ -7,8 +7,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,11 +40,21 @@ public final class Utility {
          */
         throw new AssertionError("Never instantiate utility classes!");
     }
-
+    
     /**
-     * 
+     * Class tag
      */
     private static final String TAG = "MetroBikeUtility";
+    
+    /**
+     * Format for printing times in "human-readable" way
+     */
+    private static final String TIME_FORMAT = "h:m a";
+    
+    /**
+     * Format for printing times in "human-readable" way
+     */
+    private static final Locale TIME_LOCALE = Locale.ENGLISH;
 
     /**
      * The URL for Google Maps.
@@ -382,6 +395,58 @@ public final class Utility {
      */
     public static String getIndentString() {
         return INDENT_STRING;
+    }
+    
+    /**
+     * Returns the given duration in seconds in the following format:
+     * "XX days, XX hours, XX minutes"
+     * 
+     * @param duration
+     *            Number of seconds to convert to human-readable String.
+     * @return the given duration as a human-readable String
+     */
+    public static String secondsToHumanReadableDuration(final long durationSeconds) {
+        int durationMinutesRounded = (int) Math.floor(((float) durationSeconds / 60) + 0.5f);
+        int minutes = (int) (durationMinutesRounded % 60);
+        int hours = (int) ((durationMinutesRounded / 60) % 24);
+        int days = (int) (durationMinutesRounded / (60 * 24));
+        
+        String output = "";
+        if(days > 0) {
+            output += days + " day";
+            if(days > 1)
+                output += "s";
+            output += ", ";
+        }
+        if(hours > 0) {
+            output += hours + " hour";
+            if(hours > 1)
+                output += "s";
+            output += ", ";
+        }
+        if(minutes > 0) {
+            output += minutes + " minute";
+            if(minutes > 1)
+                output += "s";
+            output += ", ";
+        }
+        return output.substring(0, output.length() - 2);
+    }
+    
+    /**
+     * Returns the given timestamp (in seconds) in a human-readable format
+     * NOTE: time given in GMT.
+     * 
+     * @param timestampSeconds
+     *            Timestamp (number of seconds since 1970) to convert to
+     *            human-readable time.
+     * @return the given timestamp as a human-readable String
+     */
+    public static String timestampTo12HourTime(final long timestampSeconds) {
+        long timestampMillis = timestampSeconds * 1000;
+        Date date = new Date(timestampMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT, TIME_LOCALE);
+        return dateFormat.format(date);
     }
 
 }

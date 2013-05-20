@@ -239,6 +239,7 @@ public class RouteTest extends TestCase {
     }
     
     /**
+<<<<<<< HEAD
      * BlackBox: Tests to be sure we can safely serialize and deserialize a
      * Rotue object. This functionality is used in the
      * intent-passing system.
@@ -324,6 +325,19 @@ public class RouteTest extends TestCase {
         ByteArrayInputStream byte_in = new ByteArrayInputStream(toDeSerialize);
         ObjectInputStream object_in = new ObjectInputStream(byte_in);
         return (Route) object_in.readObject();
+=======
+     * Test-Driven Development: This tests the getDurationHumanReadable method.
+     * 
+     * @throws JSONException
+     */
+    // @Test
+    public void test_getDurationHumanReadable() throws JSONException {
+        setUp();
+        String expected = "13 minutes";
+        String actual = route.getDurationHumanReadable();
+        Assert.assertEquals("Actual value for route.getDurationHumanReadable() was: " + actual,
+                expected, actual);
+>>>>>>> 540aed0ce5242e01e0f522494f6d0da27346afca
     }
 
     /**

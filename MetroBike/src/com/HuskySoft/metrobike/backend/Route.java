@@ -209,7 +209,19 @@ public final class Route implements Serializable {
         }
         return myDuration;
     }
-
+    
+    /**
+     * Returns the Route's total duration in the following format:
+     * "XX days, XX hours, XX minutes"
+     * 
+     * @return the Route's total duration as a human-readable 
+     *          String
+     */
+    public String getDurationHumanReadable() {
+        long totalDurationSeconds = getDurationInSeconds();
+        return Utility.secondsToHumanReadableDuration(totalDurationSeconds);
+    }
+    
     /**
      * Returns an unmodifiable list of Legs to complete this Route.
      * 

@@ -66,6 +66,13 @@ public final class Step implements Serializable {
      * this will be null.
      */
     private List<Step> substeps;
+    
+    /**
+     * Transit details for this step (if this is a transit step)
+     * If there are no transit details for the current step then
+     * this will be null.
+     */
+    private TransitDetails transitDetails;
 
     /**
      * The amount to indent.
@@ -89,6 +96,7 @@ public final class Step implements Serializable {
         htmlInstruction = "";
         polyLine = "";
         substeps = null;
+        transitDetails = null;
     }
 
     /**
@@ -163,7 +171,85 @@ public final class Step implements Serializable {
         //List<Location> polyList = com.jeffreysambells.polyline.Utility.decodePoly(tempPoints);
         //newStep.setPolyLinePoints(new ArrayList<Location>());
 
+        // Set transit details (but only if this is a transit step)
+        if(newStep.getTravelMode().equals(TravelMode.TRANSIT)) {
+            if (jsonStep.has(WebRequestJSONKeys.TRANSIT_DETAILS.getLowerCase())) {
+                TransitDetails newStepTransitDetails = new TransitDetails();
+                
+                JSONObject tempTransitDetails =
+                        jsonStep.getJSONObject(WebRequestJSONKeys.TRANSIT_DETAILS.getLowerCase());
+                
+                JSONObject tempArrivalStop =
+                        tempTransitDetails.getJSONObject(WebRequestJSONKeys.ARRIVAL_STOP.getLowerCase());
+                JSONObject tempArrivalStopLocation = 
+                        tempArrivalStop.getJSONObject(WebRequestJSONKeys.LOCATION.getLowerCase());
+                newStepTransitDetails.setArrivalStop(
+                        tempArrivalStopLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase()),
+                        tempArrivalStopLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase()));
+                JSONObject tempDepartureStop =
+                        tempTransitDetails.getJSONObject(WebRequestJSONKeys.DEPARTURE_STOP.getLowerCase());
+                JSONObject tempDepartureStopLocation = 
+                        tempDepartureStop.getJSONObject(WebRequestJSONKeys.LOCATION.getLowerCase());
+                newStepTransitDetails.setDepartureStop(
+                        tempDepartureStopLocation.getDouble(WebRequestJSONKeys.LAT.getLowerCase()),
+                        tempDepartureStopLocation.getDouble(WebRequestJSONKeys.LNG.getLowerCase()));
+                
+                JSONObject tempArrivalTime = tempTransitDetails.getJSONObject(WebRequestJSONKeys.ARRIVAL_TIME.getLowerCase());
+                newStepTransitDetails.setArrivalTime(
+                        tempArrivalTime.getString(WebRequestJSONKeys.TEXT.getLowerCase()));
+                JSONObject tempDepartureTime = tempTransitDetails.getJSONObject(WebRequestJSONKeys.DEPARTURE_TIME.getLowerCase());
+                newStepTransitDetails.setDepartureTime(
+                        tempDepartureTime.getString(WebRequestJSONKeys.TEXT.getLowerCase()));
+                
+                String tempHeadsign = tempTransitDetails.getString(WebRequestJSONKeys.HEADSIGN.getLowerCase());
+                newStepTransitDetails.setHeadsign(tempHeadsign);
+                
+                JSONObject tempTransitLine =
+                        tempTransitDetails.getJSONObject(WebRequestJSONKeys.LINE.getLowerCase());
+                newStepTransitDetails.setAgencyName(
+                        tempTransitLine.getString(WebRequestJSONKeys.AGENCIES.getLowerCase()));
+                
+                // NOTE: uses the first agency only
+                JSONArray tempAgenciesArray =
+                        tempTransitLine.getJSONArray(WebRequestJSONKeys.AGENCIES.getLowerCase());
+                // TODO: if(tempAgenciesArray.length() > 1) { ... }
+                JSONObject tempFirstAgency = tempAgenciesArray.getJSONObject(0);
+                newStepTransitDetails.setAgencyName(
+                tempFirstAgency.getString(WebRequestJSONKeys.NAME.getLowerCase()));
+                
+                newStepTransitDetails.setLineShortName(
+                        tempTransitLine.getString(WebRequestJSONKeys.SHORT_NAME.getLowerCase()));
+                
+                JSONObject tempVehicle = tempTransitLine.getJSONObject(
+                        WebRequestJSONKeys.VEHICLE.getLowerCase());
+                newStepTransitDetails.setVehicleType(
+                        tempVehicle.getString(WebRequestJSONKeys.TYPE.getLowerCase()));
+                newStepTransitDetails.setVehicleIconURL(
+                        tempVehicle.getString(WebRequestJSONKeys.ICON.getLowerCase()));
+                
+                int tempNumStops = tempTransitDetails.getInt(WebRequestJSONKeys.NUM_STOPS.getLowerCase());
+                newStepTransitDetails.setNumStops(tempNumStops);
+                
+                newStep.setTransitDetails(newStepTransitDetails);
+            } else {
+                System.err.println("No transit details for this step " +
+                		"(however, they were expected)!");
+            }
+        }
         return newStep;
+    }
+    
+    /**
+     * @throws IllegalStateException
+     *             if the step is not a transit step
+     * @return the transitDetails
+     */
+    public TransitDetails getTransitDetails() {
+        if(!this.getTravelMode().equals(TravelMode.TRANSIT)) {
+            throw new IllegalStateException(
+                    "Cannot get transit details from a non-transit step!");
+        }
+        return transitDetails;
     }
 
     /**
@@ -173,6 +259,24 @@ public final class Step implements Serializable {
         return distanceInMeters;
     }
 
+    /**
+     * Set the transit details for the step
+     * 
+     * @param newTransitDetails
+     *            the newTransitDetails to set
+     * @throws IllegalStateException
+     *             if the step is not a transit step
+     * @return the modified Step, for Builder pattern purposes
+     */
+    public Step setTransitDetails(final TransitDetails newTransitDetails) {
+        if(!this.getTravelMode().equals(TravelMode.TRANSIT)) {
+            throw new IllegalStateException(
+                    "Cannot add transit details to a non-transit step!");
+        }
+        this.transitDetails = newTransitDetails;
+        return this;
+    }
+    
     /**
      * Set the distance (in meters) for the step.
      * 
@@ -346,7 +450,7 @@ public final class Step implements Serializable {
         stepString.append(extraIndent + "polyLine: " + polyLine + "\n");
         stepString.append(extraIndent + "substepList:\n");
         stepString.append(Utility.getSubstepsAsString(substeps, indent + 2));
-
+        stepString.append(extraIndent + "transitDetails:" + transitDetails.toString() + "\n");
         return stepString.toString();
     }
 
@@ -388,6 +492,7 @@ public final class Step implements Serializable {
         out.writeObject(substeps);
         out.writeInt(indent);
         out.writeObject(indentString);
+        out.writeObject(transitDetails);
     }
 
     /**
@@ -415,5 +520,6 @@ public final class Step implements Serializable {
         substeps = (List<Step>) in.readObject();
         indent = in.readInt();
         indentString = (String) in.readObject();
+        transitDetails = (TransitDetails) in.readObject();
     }
 }
