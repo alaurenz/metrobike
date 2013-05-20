@@ -489,6 +489,9 @@ public final class Step implements Serializable {
         out.writeObject(travelMode);
         out.writeObject(htmlInstruction);
         out.writeObject(polyLine);
+        out.writeObject(substeps);
+        out.writeInt(indent);
+        out.writeObject(indentString);
         out.writeObject(transitDetails);
     }
 
@@ -514,6 +517,9 @@ public final class Step implements Serializable {
         travelMode = (TravelMode) in.readObject();
         htmlInstruction = (String) in.readObject();
         polyLine = (String) in.readObject();
+        substeps = (List<Step>) in.readObject();
+        indent = in.readInt();
+        indentString = (String) in.readObject();
         transitDetails = (TransitDetails) in.readObject();
     }
 }
