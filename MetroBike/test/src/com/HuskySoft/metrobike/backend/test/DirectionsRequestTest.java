@@ -1,10 +1,15 @@
 package com.HuskySoft.metrobike.backend.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
@@ -470,5 +475,70 @@ public final class DirectionsRequestTest extends TestCase {
         List<Route> actual = request.getSolutions();
         Assert.assertFalse("Actual value for actual.equals(null) should have been false.",
                 actual.equals(null));
+    }
+
+    /**
+     * BlackBox: Tests to be sure we can safely serialize and deserialize a
+     * DirectionsRequest object. This functionality is used in the
+     * intent-passing system.
+     * 
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     */
+    public void test_serializationTestEmptyDRObject() throws IOException, ClassNotFoundException {
+        DirectionsRequest testRequest = new DirectionsRequest();
+
+        // Serialize the empty request, then de-serialize it
+        byte[] theBytes = helpSerialize(testRequest);
+        DirectionsRequest recreatedRequest = helpDeserialize(theBytes);
+
+        // Use string equality to check the request
+        Assert.assertEquals(
+                "The toString() representation of a serialized->deserialized" +
+                " object should remain unchanged.",
+                testRequest.toString(), recreatedRequest.toString());
+    }
+
+    /**
+     * Helper function for serializing a DirectionsRequest object.Help on
+     * testing this based on
+     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * 
+     * @param toSerialize
+     *            the DirectionsRequest to serialize
+     * @return a byte array representing the serialized DirectionsRequest
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     */
+    private byte[] helpSerialize(DirectionsRequest toSerialize) throws IOException {
+        ByteArrayOutputStream byte_out = new ByteArrayOutputStream();
+        ObjectOutputStream object_out = new ObjectOutputStream(byte_out);
+        object_out.writeObject(toSerialize);
+        object_out.close();
+        return byte_out.toByteArray();
+    }
+
+    /**
+     * Helper function for serializing a DirectionsRequest object.Help on
+     * testing this based on
+     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * 
+     * @param toDeSerialize
+     *            a byte array representing the serialized DirectionsRequest
+     * @return the deserialized DirectionsRequest
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     * @throws OptionalDataException
+     *             if the object conversion is out of order
+     */
+    private DirectionsRequest helpDeserialize(byte[] toDeSerialize) throws OptionalDataException,
+            ClassNotFoundException, IOException {
+        ByteArrayInputStream byte_in = new ByteArrayInputStream(toDeSerialize);
+        ObjectInputStream object_in = new ObjectInputStream(byte_in);
+        return (DirectionsRequest) object_in.readObject();
     }
 }
