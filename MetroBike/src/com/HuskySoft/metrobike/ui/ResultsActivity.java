@@ -348,11 +348,16 @@ public class ResultsActivity extends Activity {
                         mMap.addPolyline(polylineOptions.
                                 color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
                                 .width(POLYLINE_THICK));
-                    } else {
+                    } else if (s.getTravelMode() == TravelMode.BICYCLING) {
                         mMap.addPolyline(polylineOptions.
                                 color(Color.argb(POLYLINE_TRANSPARENT, 0, 0, POLYLINE_COLOR))
                                 .width(POLYLINE_THIN).zIndex(1));
+                    } else {
+                        mMap.addPolyline(polylineOptions.
+                                color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
+                                .width(POLYLINE_THIN).zIndex(1));
                     }
+                    
                     mMap.addCircle(new CircleOptions()
                     .center(com.HuskySoft.metrobike.ui.utility.Utility.
                             convertLocation(s.getEndLocation()))

@@ -76,7 +76,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
                 // TODO make this more elegant?
                 // For preventing exceeding query request limit
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
