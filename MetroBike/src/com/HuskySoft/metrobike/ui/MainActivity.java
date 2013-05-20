@@ -1,7 +1,6 @@
 package com.HuskySoft.metrobike.ui;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -127,13 +126,8 @@ public class MainActivity extends FragmentActivity {
         // update or initialize the map
         MapSetting.updateStatus(googleMap);
         // try to get the current location
-        Location loc = googleMap.getMyLocation();
-        LatLng latLng = null;
-        if (loc == null) {
-            latLng = new LatLng(LATITUDE, LONGITUDE);
-        } else {
-            latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-        }
+        // would be in version 1.0
+        LatLng latLng = new LatLng(LATITUDE, LONGITUDE);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
         Log.v("MetroBike", "Finished launching main activity--onResume!");
     }
