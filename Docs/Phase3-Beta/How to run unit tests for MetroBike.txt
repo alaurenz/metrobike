@@ -1,0 +1,15 @@
+Unit testing instructions
+
+After completing the 'How to checkout MetroBike from scratch' instructions:
+
+1) Launch Eclipse
+
+2) Either launch an emulator instance -or- attach an Android 4.0.3+ device
+
+3) Right-click on the MetroBikeTest project (the source for this project is in <repo-root>/MetroBike/test/src)
+
+4) Run-as->Android JUnit test
+
+Note: Your emulator or Android device must have Internet access to run the tests, as several test our ability to connect to Google
+
+

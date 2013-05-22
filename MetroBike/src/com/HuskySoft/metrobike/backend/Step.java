@@ -461,7 +461,9 @@ public final class Step implements Serializable {
         stepString.append(extraIndent + "polyLine: " + polyLine + "\n");
         stepString.append(extraIndent + "substepList:\n");
         stepString.append(Utility.getSubstepsAsString(substeps, indent + 2));
-        stepString.append(extraIndent + "transitDetails:" + transitDetails.toString() + "\n");
+        if (transitDetails != null) {
+		    stepString.append(extraIndent + "transitDetails:" + transitDetails.toString() + "\n");
+		}
         return stepString.toString();
     }
 
