@@ -199,9 +199,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
                         // throw out this route
                         return null;
                     } else {
-                        // TODO: use more than just first result
-                        //Route subRoute = subRoutes.get(0);
-                        
+                        // TODO: use more than just one result
                         // find a subRoute with no walking steps 
                         // this could be more efficient if it did not check for bicycling queries
                         Route subRouteWithoutWalkingSteps = getRouteWithoutWalkingSteps(subRoutes);
@@ -224,9 +222,11 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
     }
     
     /**
+     * Returns the first route found with given list that does not contain 
+     * any walking steps, return null if all contain walking steps 
      * 
-     * @param subRoutes
-     * @return
+     * @param subRoutes list of routes
+     * @return first route without walking steps, null if none found
      */
     private Route getRouteWithoutWalkingSteps(List<Route> subRoutes)
     {
@@ -235,7 +235,6 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
             for (Leg tmpLeg : subRoute.getLegList()) {
                 for(Step newStep : tmpLeg.getStepList()) {
                     if(newStep.getTravelMode().equals(TravelMode.WALKING)) {
-                        //System.err.println("ERROR: walking present in subroute");
                         subRouteHasWalkingSteps = true;
                     }
                 }
