@@ -44,7 +44,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setArrivalTime(4000000);
-        request.setTravelMode(TravelMode.TRANSIT);
+        request.setTravelMode(TravelMode.MIXED);
         request.setMinDistanceToBikeInMeters(1000);
         request.setMaxDistanceToBikeInMeters(2000);
         request.setMinNumberBusTransfers(0);
@@ -160,7 +160,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         DirectionsStatus actual = request.doRequest();
         Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
+                "Actual status for request.doRequest() call was: " + actual.getMessage() + "\n Request object is " + request.toString(), expected,
                 actual);
     }
 
