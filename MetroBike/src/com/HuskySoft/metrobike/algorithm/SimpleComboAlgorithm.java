@@ -42,10 +42,9 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
             timeMode = TransitTimeMode.ARRIVAL_TIME;
             routeTime = toProcess.getArrivalTime();
 
-            // TODO: fix
-            // NOTE: currently unsupported
-            System.err.println("ERROR: arrival time not yet supported");
-            return addError(DirectionsStatus.INVALID_REQUEST_PARAMS);
+            // TODO: currently unsupported
+            //System.err.println("ERROR: arrival time not yet supported");
+            //return addError(DirectionsStatus.INVALID_REQUEST_PARAMS);
         } else {
             timeMode = TransitTimeMode.DEPARTURE_TIME;
             routeTime = toProcess.getDepartureTime();
@@ -65,9 +64,15 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
         if(transitRoutes != null) {
             List<Route> comboResults = new ArrayList<Route>();
             for (Route curRoute : transitRoutes) {
-    
-                Route comboRoute = replaceWalkingWithBicycling(
-                        curRoute, toProcess.getDepartureTime());
+                
+                Route comboRoute = null;
+                if(timeMode.equals(TransitTimeMode.DEPARTURE_TIME)) {
+                    comboRoute = replaceWalkingWithBicyclingDeparture(
+                        curRoute, routeTime);
+                } else if(timeMode.equals(TransitTimeMode.ARRIVAL_TIME)) {
+                    comboRoute = replaceWalkingWithBicyclingArrival(
+                        curRoute, routeTime);
+                }
     
                 if (comboRoute != null && comboRoute.getLegList().size() > 0) {
                     comboResults.add(comboRoute);
@@ -105,12 +110,12 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
      *
      * @param transitRoute
      *            the transit Route for which walking Steps will be replaced
-     *            departureTime the departure time for given Route
-     * @param departureTime initial departure time for the given Route
+     * @param departureTime 
+     *            the departure time for given Route
      * @return given Route with walking Steps replaced by bicycling Steps return
      *         null if Route could not be generated
      */
-    private Route replaceWalkingWithBicycling(final Route transitRoute,
+    private Route replaceWalkingWithBicyclingDeparture(final Route transitRoute,
             final long departureTime) {
         Location curStretchStartLocation = null;
         long curStretchDepartTime = departureTime;
@@ -178,13 +183,6 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
                             // addError(DirectionsStatus.UNSUPPORTED_CHARSET);
                             addError(DirectionsStatus.UNSUPPORTED_CHARSET);
                         }
-
-                        // TODO: check if there are any walking steps in each
-                        // subRoute
-                        // (due to different transit route being returned)
-                        // -> if so, replace w/ bicycling by recursively running
-                        // this method
-
                     } else {
                         // TODO: throw exception or something...
                         // unexpected travel mode for this step (not walking or
@@ -199,7 +197,8 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
                         // throw out this route
                         return null;
                     } else {
-                        // TODO: use more than just one result
+                        // TODO: (1) recursively run method if all subroutes contain walking 
+                        //        (2) try useing more than just one result
                         // find a subRoute with no walking steps 
                         // this could be more efficient if it did not check for bicycling queries
                         Route subRouteWithoutWalkingSteps = getRouteWithoutWalkingSteps(subRoutes);
@@ -218,6 +217,128 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
                 prevStep = curStep;
             }
         }
+        return comboRoute;
+    }
+    
+    /**
+     * Replaces all walking Steps within given Route (assumed to be a transit
+     * Route) with bicycling directions Steps.
+     *
+     * NOTE: this method only works for TransitTimeMode.ARRIVAL_TIME
+     *
+     * @param transitRoute
+     *            the transit Route for which walking Steps will be replaced
+     * @param arrivalTime 
+     *            the arrival time for given Route
+     * @return given Route with walking Steps replaced by bicycling Steps return
+     *         null if Route could not be generated
+     */
+    private Route replaceWalkingWithBicyclingArrival(final Route transitRoute,
+            final long arrivalTime) {
+        Location curStretchEndLocation = null;
+        long curStretchArrivalTime = arrivalTime;
+        Step prevStep = null;
+
+        Route comboRoute = new Route();
+
+        Step curStep;
+        List<Leg> curLegs = transitRoute.getLegList();
+        for (int l = curLegs.size() - 1; l >= 0; l--) {
+            List<Step> curSteps = curLegs.get(l).getStepList();
+            for (int s = curSteps.size() - 1; s >= -1; s--) {
+                if (s == -1) {
+                    curStep = prevStep;
+                } else {
+                    curStep = curSteps.get(s);
+                }
+
+                if (curStretchEndLocation == null) {
+                    curStretchEndLocation = curStep.getEndLocation();
+                }
+
+                if ((l == 0 && s == -1)
+                        || (prevStep != null
+                        && !prevStep.getTravelMode().equals(
+                                curStep.getTravelMode()))) {
+                    // we reached the [very] last step OR are switching travel
+                    // modes
+
+                    List<Route> subRoutes = null;
+
+                    // NOTE: this is needed to deal with end-of-route edge case
+                    TravelMode travelModeToCheck = prevStep.getTravelMode();
+                    Location curStretchStartLocation = prevStep.getStartLocation();
+                    if (l == 0 && s == -1) {
+                        travelModeToCheck = curStep.getTravelMode();
+                        curStretchStartLocation = curStep.getStartLocation();
+                    }
+
+                    if (travelModeToCheck.equals(TravelMode.WALKING)) {
+                        // ask for bicycling directions for prev stretch
+                        try {
+                            subRoutes = getBicycleResults(
+                                  curStretchStartLocation.getLocationAsString(),
+                                  curStretchEndLocation.getLocationAsString());
+                        } catch (UnsupportedEncodingException e) {
+                            // TODO have this error get "pushed up"
+                            // return
+                            // addError(DirectionsStatus.UNSUPPORTED_CHARSET);
+                            addError(DirectionsStatus.UNSUPPORTED_CHARSET);
+                        }
+
+                    } else if (travelModeToCheck.equals(TravelMode.TRANSIT)) {
+                        // ask for transit directions for prev stretch
+                        try {
+                            subRoutes = getTransitResults(
+                                  curStretchStartLocation.getLocationAsString(),
+                                  curStretchEndLocation.getLocationAsString(),
+                                  curStretchArrivalTime,
+                                  TransitTimeMode.ARRIVAL_TIME);
+
+                        } catch (UnsupportedEncodingException e) {
+                            // TODO have this error get "pushed up"
+                            // return
+                            // addError(DirectionsStatus.UNSUPPORTED_CHARSET);
+                            addError(DirectionsStatus.UNSUPPORTED_CHARSET);
+                        }
+                    } else {
+                        // TODO: throw exception or something...
+                        // unexpected travel mode for this step (not walking or
+                        // transit)
+                        System.err.println("ERROR: unexpected travel mode");
+                        // addError(...)
+                        return null;
+                    }
+
+                    if (subRoutes == null || subRoutes.size() == 0) {
+                        System.err.println("ERROR: no subroutes found");
+                        // throw out this route
+                        return null;
+                    } else {
+                        // TODO: (1) recursively run method if all subroutes contain walking 
+                        //        (2) try useing more than just one result
+                        // find a subRoute with no walking steps 
+                        // this could be more efficient if it did not check for bicycling queries
+                        Route subRouteWithoutWalkingSteps = getRouteWithoutWalkingSteps(subRoutes);
+                        if(subRouteWithoutWalkingSteps == null) {
+                            // throw out this route 
+                            return null;
+                        } else {
+                            for (Leg newLeg : subRouteWithoutWalkingSteps.getLegList()) {
+                                //comboRoute.addLeg(newLeg);
+                                comboRoute.addLegBeginning(newLeg);
+                            }
+                            curStretchArrivalTime -= subRouteWithoutWalkingSteps.getDurationInSeconds();
+                        }
+                    }
+                    curStretchEndLocation = curStep.getEndLocation();
+                }
+                prevStep = curStep;
+            }
+        }
+        
+        // TODO reverse all legs in comboRoute
+        
         return comboRoute;
     }
     

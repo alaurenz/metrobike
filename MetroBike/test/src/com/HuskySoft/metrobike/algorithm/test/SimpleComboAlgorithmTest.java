@@ -12,6 +12,7 @@ import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
+import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
 
 /**
  * This class tests the Algorithm Worker class.
@@ -33,14 +34,18 @@ public class SimpleComboAlgorithmTest extends TestCase {
      * @throws Exception
      */
     // @Before
-    public void setUpAdrainToStevens() {
+    public void setUpAdrainToStevens(final TransitTimeMode timeMode) {
         request = new DirectionsRequest();
 
         String startAddress = "302 NE 50th St,Seattle,WA";
         String endAddress = "3801 Brooklyn Ave NE,Seattle,WA";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setDepartureTime(1371427200);
+        if(timeMode.equals(TransitTimeMode.ARRIVAL_TIME)) {
+            request.setArrivalTime(1371427200);
+        } else {
+            request.setDepartureTime(1371427200);
+        }
         request.setTravelMode(TravelMode.MIXED);
     }
     
@@ -51,39 +56,49 @@ public class SimpleComboAlgorithmTest extends TestCase {
      * @throws Exception
      */
     // @Before
-    public void setUpStevensToQinyuan() {
+    public void setUpStevensToQinyuan(final TransitTimeMode timeMode) {
         request = new DirectionsRequest();
 
         String startAddress = "3801 Brooklyn Ave NE,Seattle,WA";
         String endAddress = "2310 48th Street NE, Seattle, WA";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setDepartureTime(1371427200);
+        if(timeMode.equals(TransitTimeMode.ARRIVAL_TIME)) {
+            request.setArrivalTime(1371427200);
+        } else {
+            request.setDepartureTime(1371427200);
+        }
         request.setTravelMode(TravelMode.MIXED);
     }
     
     /**
-     * Setup a case that is too long for the algorithm to return a route solution
+     * Setup a case that is too long for the algorithm 
+     * to return a combo route solution
      */
- // @Before
-    public void setUpQinyuanToMountRainer() {
+    // @Before
+    public void setUpQinyuanToMountRainer(final TransitTimeMode timeMode) {
         request = new DirectionsRequest();
 
         String startAddress = "2310 48th Street NE, Seattle, WA";
         String endAddress = "Mount Rainier National Park, WA, United States";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setDepartureTime(1371168000);
+        if(timeMode.equals(TransitTimeMode.ARRIVAL_TIME)) {
+            request.setArrivalTime(1371168000);
+        } else {
+            request.setDepartureTime(1371168000);
+        }
         request.setTravelMode(TravelMode.MIXED);
     }
     
     /**
      * Black Box test: Test if all the steps in the result are 
-     *                  in either bicycle mode or transite mode
+     *                 in either bicycle mode or transit mode
+     *                 given a departure time 
      */
     //@Test
     public void test_allStepModeAdrainToStevens() {
-        setUpAdrainToStevens();
+        setUpAdrainToStevens(TransitTimeMode.DEPARTURE_TIME);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -93,24 +108,32 @@ public class SimpleComboAlgorithmTest extends TestCase {
                 actual);
         List<Route> routes = request.getSolutions();
         Assert.assertTrue(routes.size() > 0);
-        for (Route r : routes) {
-            for (Leg l : r.getLegList()) {
-                for (Step s : l.getStepList()) {
-                    boolean allTransitBicycle = s.getTravelMode() == TravelMode.TRANSIT 
-                            || s.getTravelMode() == TravelMode.BICYCLING;
-                    Assert.assertTrue(allTransitBicycle);
-                }
-            }
-        }
+        
+        Assert.assertTrue(allStepsTransitBicycling(routes));
+    }
+    
+    /**
+     * White Box test: Test if all the steps in the result are 
+     *                 in either bicycle mode or transit mode
+     *                 given an arrival time 
+     */
+    //@Test
+    public void test_allStepModeArrivalAdrainToStevens() {
+        setUpAdrainToStevens(TransitTimeMode.ARRIVAL_TIME);
+
+        DirectionsStatus status = request.doRequest();
+        List<Route> routes = request.getSolutions();
+        Assert.assertTrue(allStepsTransitBicycling(routes));
     }
     
     /**
      * Black Box test: Test if all the steps in the result are 
-     *                  in either bicycle mode or transite mode
+     *                 in either bicycle mode or transit mode
+     *                 given a departure time 
      */
     //@Test
     public void test_allStepModeStevensToQinyuan() {
-        setUpStevensToQinyuan();
+        setUpStevensToQinyuan(TransitTimeMode.DEPARTURE_TIME);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -120,15 +143,31 @@ public class SimpleComboAlgorithmTest extends TestCase {
                 actual);
         List<Route> routes = request.getSolutions();
         Assert.assertTrue(routes.size() > 0);
-        for (Route r : routes) {
+        
+        Assert.assertTrue(allStepsTransitBicycling(routes));
+    }
+    
+    /**
+     * Returns true if all Steps of all given Routes are either 
+     * transit or bicycling, false otherwise
+     * 
+     * @param routesToCheck
+     *          list of routes to check
+     * @return true if all steps are transit or bicycling, 
+     *          false otherwise
+     */
+    private boolean allStepsTransitBicycling(List<Route> routesToCheck) {
+        for (Route r : routesToCheck) {
             for (Leg l : r.getLegList()) {
                 for (Step s : l.getStepList()) {
                     boolean allTransitBicycle = s.getTravelMode() == TravelMode.TRANSIT 
                             || s.getTravelMode() == TravelMode.BICYCLING;
-                    Assert.assertTrue(allTransitBicycle);
+                    if(!allTransitBicycle)
+                        return false;
                 }
             }
         }
+        return true;
     }
     
     /**
@@ -136,7 +175,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
      */
     //@Test
     public void test_allStepStartEndAdrainToStevens() {
-        setUpAdrainToStevens();
+        setUpAdrainToStevens(TransitTimeMode.DEPARTURE_TIME);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -173,7 +212,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
      */
     //@Test
     public void test_allStepStartEndStevensToQinyuan() {
-        setUpStevensToQinyuan();
+        setUpStevensToQinyuan(TransitTimeMode.DEPARTURE_TIME);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -211,7 +250,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
      */
     //@Test
     public void test_timeAdrainToStevens() {
-        setUpAdrainToStevens();
+        setUpAdrainToStevens(TransitTimeMode.DEPARTURE_TIME);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -243,7 +282,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
      */
     //@Test
     public void test_timeStevensToQinyuan() {
-        setUpStevensToQinyuan();
+        setUpStevensToQinyuan(TransitTimeMode.DEPARTURE_TIME);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -275,7 +314,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
      */
     //@Test
     public void test_NoTransitQinyuanToMountRainer() {
-        setUpQinyuanToMountRainer();
+        setUpQinyuanToMountRainer(TransitTimeMode.DEPARTURE_TIME);
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doRequest();
