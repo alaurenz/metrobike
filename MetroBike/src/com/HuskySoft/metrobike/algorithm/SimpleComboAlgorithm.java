@@ -196,17 +196,23 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
 
                     if (subRoutes == null || subRoutes.size() == 0) {
                         System.err.println("ERROR: no subroutes found");
-                        // addError(...)
+                        // throw out this route
                         return null;
                     } else {
-                        // TODO: use more than just first result
-                        Route subRoute = subRoutes.get(0);
-                        curStretchDepartTime += subRoute.getDurationInSeconds();
-                        for (Leg newLeg : subRoute.getLegList()) {
-                            comboRoute.addLeg(newLeg);
+                        // TODO: use more than just one result
+                        // find a subRoute with no walking steps 
+                        // this could be more efficient if it did not check for bicycling queries
+                        Route subRouteWithoutWalkingSteps = getRouteWithoutWalkingSteps(subRoutes);
+                        if(subRouteWithoutWalkingSteps == null) {
+                            // throw out this route 
+                            return null;
+                        } else {
+                            for (Leg newLeg : subRouteWithoutWalkingSteps.getLegList()) {
+                                comboRoute.addLeg(newLeg);
+                            }
+                            curStretchDepartTime += subRouteWithoutWalkingSteps.getDurationInSeconds();
                         }
                     }
-
                     curStretchStartLocation = curStep.getStartLocation();
                 }
                 prevStep = curStep;
@@ -214,7 +220,32 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
         }
         return comboRoute;
     }
-
+    
+    /**
+     * Returns the first route found with given list that does not contain 
+     * any walking steps, return null if all contain walking steps 
+     * 
+     * @param subRoutes list of routes
+     * @return first route without walking steps, null if none found
+     */
+    private Route getRouteWithoutWalkingSteps(List<Route> subRoutes)
+    {
+        for(Route subRoute : subRoutes) {
+            boolean subRouteHasWalkingSteps = false;
+            for (Leg tmpLeg : subRoute.getLegList()) {
+                for(Step newStep : tmpLeg.getStepList()) {
+                    if(newStep.getTravelMode().equals(TravelMode.WALKING)) {
+                        subRouteHasWalkingSteps = true;
+                    }
+                }
+            }
+            if(!subRouteHasWalkingSteps) {
+                return subRoute;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Retrieves transit directions between given
      * start and end addresses.

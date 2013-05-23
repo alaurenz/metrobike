@@ -316,11 +316,11 @@ public class ResultsActivity extends Activity {
             if (currToast != null) {
                 currToast.cancel();
             }
+            String prettyDuration = 
+                    Utility.secondsToHumanReadableDuration(routes.get(currRoute).getDurationInSeconds());
             currToast = Toast.makeText(getApplicationContext(), "Route length: " 
                     + routes.get(currRoute).getDistanceInMeters() 
-                    + " meters\nDuration: " 
-                    +  Utility.secondsToHumanReadableDuration(routes.get(currRoute).getDurationInSeconds()) 
-                    + " s" , Toast.LENGTH_LONG);
+                    + " meters\nDuration: " + prettyDuration, Toast.LENGTH_LONG);
             currToast.show();
             
             //set the camera to focus on the route
