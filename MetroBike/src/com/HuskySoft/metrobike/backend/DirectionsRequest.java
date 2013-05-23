@@ -139,8 +139,6 @@ public final class DirectionsRequest implements Serializable {
         switch (myParams.getTravelMode()) {
         case BICYCLING:
             return doAlgorithm(new SimpleAlgorithm());
-        case TRANSIT:
-            return doAlgorithm(new SimpleAlgorithm());
         case MIXED:
             //Travel Mode Mix also needs the bicycle only routes
             DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());

@@ -289,14 +289,14 @@ public class ResultsActivity extends Activity {
         @Override
         public void onClick(final View v) {
             currRoute = routeNumber;
-            drawRoute();
+            drawMap();
         }
     };
 
     /**
-     * draw the current route on the map.
+     * draw the map.
      */
-    private void drawRoute() {
+    private void drawMap() {
         
         if (currRoute >= 0 && currRoute < routes.size()) {
             //clear the map drawing first
@@ -310,61 +310,8 @@ public class ResultsActivity extends Activity {
             
             buttons.get(currRoute).setTextColor(BUTTON_TEXT_COLOR_HIGHLIGTH);            
             
-            //get the source and destination
-            List<Leg> legs = routes.get(currRoute).getLegList();
-            Location start = legs.get(0).getStartLocation();
-            Location end = legs.get(legs.size() - 1).getStepList()
-                    .get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
-
-            //draw Markers for starting and ending points
-            mMap.addMarker(new MarkerOptions()
-                    .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
-                    .title("Start Here!")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
-
-            mMap.addMarker(new MarkerOptions()
-                    .position(com.HuskySoft.metrobike.ui.utility.Utility.
-                            convertLocation(end)).title("End Here!")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
-            
-            mMap.addCircle(new CircleOptions()
-                .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
-                .radius(MAP_CIRCLE_RADIUS)
-                .strokeColor(Color.BLACK).strokeWidth(MAP_STROKE_WIDTH)
-                .fillColor(Color.WHITE).zIndex(2));
-            
-            
-            //draw Poly-line on the map
-            
-            for (Leg l : legs) {
-                for (Step s : l.getStepList()) {
-                    PolylineOptions polylineOptions = new PolylineOptions();
-                    for (LatLng ll : com.HuskySoft.metrobike.ui.utility.Utility.
-                            convertLocationList(s.getPolyLinePoints())) {
-                        polylineOptions = polylineOptions.add(ll);
-                    }
-                    if (s.getTravelMode() == TravelMode.TRANSIT) {
-                        mMap.addPolyline(polylineOptions.
-                                color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
-                                .width(POLYLINE_THICK));
-                    } else if (s.getTravelMode() == TravelMode.BICYCLING) {
-                        mMap.addPolyline(polylineOptions.
-                                color(Color.argb(POLYLINE_TRANSPARENT, 0, 0, POLYLINE_COLOR))
-                                .width(POLYLINE_THIN).zIndex(1));
-                    } else {
-                        mMap.addPolyline(polylineOptions.
-                                color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
-                                .width(POLYLINE_THIN).zIndex(1));
-                    }
-                    
-                    mMap.addCircle(new CircleOptions()
-                    .center(com.HuskySoft.metrobike.ui.utility.Utility.
-                            convertLocation(s.getEndLocation()))
-                    .radius(MAP_CIRCLE_RADIUS)
-                    .strokeColor(Color.BLACK).strokeWidth(MAP_STROKE_WIDTH)
-                    .fillColor(Color.WHITE).zIndex(2));
-                }
-            }
+            //draw the routes and markers
+            drawRoutesAndMarkers();
             
             if (currToast != null) {
                 currToast.cancel();
@@ -392,6 +339,67 @@ public class ResultsActivity extends Activity {
     }
     
     /**
+     * draw the routes and markers on the map
+     */
+    private void drawRoutesAndMarkers() {
+      //get the source and destination
+        List<Leg> legs = routes.get(currRoute).getLegList();
+        Location start = legs.get(0).getStartLocation();
+        Location end = legs.get(legs.size() - 1).getStepList()
+                .get(legs.get(legs.size() - 1).getStepList().size() - 1).getEndLocation();
+
+        //draw Markers for starting and ending points
+        mMap.addMarker(new MarkerOptions()
+                .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
+                .title("Start Here!")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(com.HuskySoft.metrobike.ui.utility.Utility.
+                        convertLocation(end)).title("End Here!")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
+        
+        mMap.addCircle(new CircleOptions()
+            .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
+            .radius(MAP_CIRCLE_RADIUS)
+            .strokeColor(Color.BLACK).strokeWidth(MAP_STROKE_WIDTH)
+            .fillColor(Color.WHITE).zIndex(2));
+        
+        
+        //draw Poly-line on the map
+        
+        for (Leg l : legs) {
+            for (Step s : l.getStepList()) {
+                PolylineOptions polylineOptions = new PolylineOptions();
+                for (LatLng ll : com.HuskySoft.metrobike.ui.utility.Utility.
+                        convertLocationList(s.getPolyLinePoints())) {
+                    polylineOptions = polylineOptions.add(ll);
+                }
+                if (s.getTravelMode() == TravelMode.TRANSIT) {
+                    mMap.addPolyline(polylineOptions.
+                            color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
+                            .width(POLYLINE_THICK));
+                } else if (s.getTravelMode() == TravelMode.BICYCLING) {
+                    mMap.addPolyline(polylineOptions.
+                            color(Color.argb(POLYLINE_TRANSPARENT, 0, 0, POLYLINE_COLOR))
+                            .width(POLYLINE_THIN).zIndex(1));
+                } else {
+                    mMap.addPolyline(polylineOptions.
+                            color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
+                            .width(POLYLINE_THIN).zIndex(1));
+                }
+                
+                mMap.addCircle(new CircleOptions()
+                .center(com.HuskySoft.metrobike.ui.utility.Utility.
+                        convertLocation(s.getEndLocation()))
+                .radius(MAP_CIRCLE_RADIUS)
+                .strokeColor(Color.BLACK).strokeWidth(MAP_STROKE_WIDTH)
+                .fillColor(Color.WHITE).zIndex(2));
+            }
+        }
+    }
+    
+    /**
      * Update the map setting.
      * 
      * @see android.app.Activity#onResume()
@@ -400,6 +408,6 @@ public class ResultsActivity extends Activity {
     protected final void onResume() {
         super.onResume();
         MapSetting.updateStatus(mMap);
-        drawRoute();
+        drawMap();
     }
 }
