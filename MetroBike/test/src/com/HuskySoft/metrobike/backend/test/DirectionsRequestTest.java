@@ -59,7 +59,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         String expected = "DirectionsRequest: RequestParameters:\nstartAddress: 6504 "
                 + "Latona Ave NE,Seattle,WA\n" + "endAddress: 3801 Brooklyn Ave NE,Seattle,WA\n"
-                + "arrivalTime: 4000000\n" + "departureTime: 0\n" + "travelMode: TRANSIT\n"
+                + "arrivalTime: 4000000\n" + "departureTime: 0\n" + "travelMode: MIXED\n"
                 + "minDistanceToBikeInMeters: 1000\n" + "maxDistanceToBikeInMeters: 2000\n"
                 + "minNumberBusTransfers: 0\n" + "maxNumberBusTransfers: 0\n" + "solutions: null";
 
