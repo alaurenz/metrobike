@@ -196,17 +196,25 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
 
                     if (subRoutes == null || subRoutes.size() == 0) {
                         System.err.println("ERROR: no subroutes found");
-                        // addError(...)
+                        // throw out this route
                         return null;
                     } else {
                         // TODO: use more than just first result
-                        Route subRoute = subRoutes.get(0);
-                        curStretchDepartTime += subRoute.getDurationInSeconds();
-                        for (Leg newLeg : subRoute.getLegList()) {
-                            comboRoute.addLeg(newLeg);
+                        //Route subRoute = subRoutes.get(0);
+                        
+                        // find a subRoute with no walking steps 
+                        // this could be more efficient if it did not check for bicycling queries
+                        Route subRouteWithoutWalkingSteps = getRouteWithoutWalkingSteps(subRoutes);
+                        if(subRouteWithoutWalkingSteps == null) {
+                            // throw out this route 
+                            return null;
+                        } else {
+                            for (Leg newLeg : subRouteWithoutWalkingSteps.getLegList()) {
+                                comboRoute.addLeg(newLeg);
+                            }
+                            curStretchDepartTime += subRouteWithoutWalkingSteps.getDurationInSeconds();
                         }
                     }
-
                     curStretchStartLocation = curStep.getStartLocation();
                 }
                 prevStep = curStep;
@@ -214,7 +222,31 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
         }
         return comboRoute;
     }
-
+    
+    /**
+     * 
+     * @param subRoutes
+     * @return
+     */
+    private Route getRouteWithoutWalkingSteps(List<Route> subRoutes)
+    {
+        for(Route subRoute : subRoutes) {
+            boolean subRouteHasWalkingSteps = false;
+            for (Leg tmpLeg : subRoute.getLegList()) {
+                for(Step newStep : tmpLeg.getStepList()) {
+                    if(newStep.getTravelMode().equals(TravelMode.WALKING)) {
+                        //System.err.println("ERROR: walking present in subroute");
+                        subRouteHasWalkingSteps = true;
+                    }
+                }
+            }
+            if(!subRouteHasWalkingSteps) {
+                return subRoute;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Retrieves transit directions between given
      * start and end addresses.
