@@ -16,7 +16,7 @@ To checkout our repository from scratch:
 
 5) Select your metrobike folder and all projects except 
     HelloMetroBike and HelloMetroBike's google-play-services_libs projects.
-   (Uncheck HelloMetroBike for now, to avoid naming conflicts)
+   (Uncheck HelloMetroBike and HelloMetroBike's google-play-services_libs to avoid naming conflicts)
 
 6) Leave 'Copy projects into workspace' *unchecked*
 
