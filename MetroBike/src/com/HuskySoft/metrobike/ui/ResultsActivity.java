@@ -316,7 +316,8 @@ public class ResultsActivity extends Activity {
                 currToast.cancel();
             }
             String prettyDuration = 
-                    Utility.secondsToHumanReadableDuration(routes.get(currRoute).getDurationInSeconds());
+                    Utility.secondsToHumanReadableDuration(
+                            routes.get(currRoute).getDurationInSeconds());
             currToast = Toast.makeText(getApplicationContext(), "Route length: " 
                     + routes.get(currRoute).getDistanceInMeters() 
                     + " meters\nDuration: " + prettyDuration, Toast.LENGTH_LONG);
@@ -338,7 +339,7 @@ public class ResultsActivity extends Activity {
     }
     
     /**
-     * draw the routes and markers on the map
+     * draw the routes and markers on the map.
      */
     private void drawRoutesAndMarkers() {
       //get the source and destination
