@@ -132,11 +132,23 @@ public class SimpleComboAlgorithmTest extends TestCase {
 	public void test_allStepModeStevensToQinyuan() {
 		setUpStevensToQinyuan(TransitTimeMode.DEPARTURE_TIME);
 
-		request.doRequest();
+		DirectionsStatus result = request.doRequest();
 		List<Route> routes = request.getSolutions();
-		Assert.assertTrue(routes.size() > 0);
 
-		Assert.assertTrue(allStepsTransitBicycling(routes));
+		// Multiple asserts here so we get good error messages instead of just
+		// exceptions
+		Assert.assertNotNull(
+				"Null routes means getting directions failed.  Errors: "
+						+ request.getVerboseErrorMessages()
+						+ " return status: " + result.getMessage(), routes);
+
+		Assert.assertTrue(
+				"We didn't get any routes!  (# of routes: " + routes.size()
+						+ "), status: " + result.getMessage(),
+				routes.size() > 0);
+
+		Assert.assertTrue("Some of our steps aren't bicycle steps!",
+				allStepsTransitBicycling(routes));
 	}
 
 	/**
