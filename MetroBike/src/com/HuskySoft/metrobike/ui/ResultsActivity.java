@@ -374,13 +374,18 @@ public class ResultsActivity extends Activity {
                         convertLocationList(s.getPolyLinePoints())) {
                     polylineOptions = polylineOptions.add(ll);
                 }
-                if (s.getTravelMode() == TravelMode.TRANSIT) {                    
+                
+                if (s.getTravelMode() == TravelMode.TRANSIT) {
+                    Toast.makeText(getApplicationContext(), s.getTransitDetails().getVehicleIconURL(), Toast.LENGTH_LONG).show();
                     mMap.addMarker(new MarkerOptions()
                     .position(com.HuskySoft.metrobike.ui.utility.Utility
                             .convertLocation(s.getStartLocation()))
                     .title(s.getTransitDetails().getVehicleType() 
                             + " No." + s.getTransitDetails().getLineShortName())
                             .snippet("Departure at: " + s.getTransitDetails().getDepartureTime())
+//                    .icon(BitmapDescriptorFactory.fromBitmap(
+//                            com.HuskySoft.metrobike.ui.utility.Utility.
+//                            getBitmapFromURL(s.getTransitDetails().getVehicleIconURL())))
                     );
                     mMap.addPolyline(polylineOptions.
                             color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))

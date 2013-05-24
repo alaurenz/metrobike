@@ -1,7 +1,15 @@
 package com.HuskySoft.metrobike.ui.utility;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
@@ -117,5 +125,30 @@ public final class Utility {
                 / NEXUS7_SCREEN_WIDTH);
 
         return Math.round(Math.log(NEXUS7_ZOOM_CONSTANT / maxOfTwo) / Math.log(2) + 1);
+    }
+    
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+
+            URL url = new URL("http://www.helpinghomelesscats.com/images/cat1.jpg");
+            InputStream in = url.openConnection().getInputStream(); 
+            BufferedInputStream bis = new BufferedInputStream(in,1024*8);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            int len=0;
+            byte[] buffer = new byte[1024];
+            while((len = bis.read(buffer)) != -1){
+                out.write(buffer, 0, len);
+            }
+            out.close();
+            bis.close();
+
+            byte[] data = out.toByteArray();
+            return BitmapFactory.decodeByteArray(data, 0, data.length);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
