@@ -93,6 +93,7 @@
     <target name="checkstyle">
         <checkstyle config="MetroBikeCheckStyle.xml">
             <fileset dir="src" includes="**/*.java" />
+			<fileset dir="test/src" includes="**/*.java" />
             <formatter type="plain" />
             <formatter type="xml" toFile="checkstyle-result.xml" />
         </checkstyle>
