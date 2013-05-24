@@ -12,6 +12,8 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -44,6 +46,9 @@ import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.TravelMode;
 import com.HuskySoft.metrobike.ui.utility.History;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
 
 /**
  * An activity that receives and handle's users' requests for routes.
@@ -51,7 +56,9 @@ import com.HuskySoft.metrobike.ui.utility.History;
  * @author Shuo Wang, Sam Wilson
  */
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends Activity
+implements GooglePlayServicesClient.ConnectionCallbacks,
+GooglePlayServicesClient.OnConnectionFailedListener {
 
     /**
      * Minimum two digit number.
@@ -217,6 +224,48 @@ public class SearchActivity extends Activity {
          */
         @Override
         public void run() {
+            // Set up addresses for direction request
+            String currLocationLatLagString = "";
+            if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
+                if (locationClient.isConnected()) {
+                    currLocationLatLagString += locationClient.getLastLocation().getLatitude()
+                                                + ", "
+                                                + locationClient.getLastLocation().getLongitude();
+                    
+                } else {
+                    currLocationLatLagString += "" + LATITUDE + ", " + LONGITUDE;
+                    // Must call runOnUiThread if want to display a Toast or a
+                    // Dialog within a thread
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(SearchActivity.this, 
+                                    "Cannot get current location, " 
+                                    + "use UW address instead", 
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+            }
+            
+            String from = "";
+            String to = "";
+            if (fromAutoCompleteTextView.isEnabled()) {
+                from = fromAutoCompleteTextView.getText().toString();
+            } else {
+                from = currLocationLatLagString;
+            }
+            
+            if (toAutoCompleteTextView.isEnabled()) {
+                to = toAutoCompleteTextView.getText().toString();
+            } else {
+                to = currLocationLatLagString;
+            }
+
+            // Generate a direction request
+            DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from)
+                                                              .setEndAddress(to)
+                                                              .setTravelMode(tm);
 
             // Set up time for direction request
 
@@ -245,13 +294,7 @@ public class SearchActivity extends Activity {
 
             time.set(second, minute, hourOfDay, dayOfMonth, month, year);
             long timeToSend = time.toMillis(false) / SEC_TO_MILLISEC;
-
-            // Generate a direction request
-            String from = fromAutoCompleteTextView.getText().toString();
-            String to = toAutoCompleteTextView.getText().toString();
-            DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from.toString())
-                    .setEndAddress(to).setTravelMode(tm);
-
+            
             // Determine time mode
             if (arriveAtButton.isChecked()) {
                 dReq.setArrivalTime(timeToSend);
@@ -259,6 +302,7 @@ public class SearchActivity extends Activity {
                 dReq.setDepartureTime(timeToSend);
             }
 
+            // Do Request
             DirectionsStatus retVal = dReq.doRequest();
 
             // If an error happens to the direction request
@@ -310,20 +354,15 @@ public class SearchActivity extends Activity {
     }
 
     /**
-     * First Position in travelModeData.
-     */
-    private static final int TRAVEL_MODE_DATA_POSITION_FIRST = 0;
-
-    /**
-     * Second Position in travelModeData.
-     */
-    private static final int TRAVEL_MODE_DATA_POSITION_SECOND = 1;
-
-    /**
      * Keeps an array of travel mode entries.
      */
-    private static final String[] TRAVEL_MODE_DATA = { "Bicycling", "Transit",
-            "Mixed (Bicycle and Transit)" };
+    private static final String[] TRAVEL_MODE_DATA = { "Bicycle Only", 
+            "Bicycle and Transit" };
+    
+    /**
+     * Integer Representation of Color: Light Blue.
+     */
+    private static final int COLOR_LIGHT_BLUE = Color.rgb(13, 139, 217);
 
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
@@ -406,6 +445,30 @@ public class SearchActivity extends Activity {
      * A progress dialog indicating the searching status of this activity.
      */
     private ProgressDialog pd;
+    
+    /**
+     * Location Client to get user's current location.
+     */
+    private LocationClient locationClient;
+    
+    /**
+     * The latitude value of University of Washington.
+     */
+    private static final double LATITUDE = 47.65555089999999;
+    /**
+     * The longitude value of University of Washington.
+     */
+    private static final double LONGITUDE = -122.30906219999997;
+    
+    /**
+     * Current Location (From) button for use current location.
+     */
+    private ImageButton fromCurrLocationButton;
+    
+    /**
+     * Current Location (To) button for use current location.
+     */
+    private ImageButton toCurrLocationButton;
 
     /**
      * {@inheritDoc}
@@ -421,6 +484,39 @@ public class SearchActivity extends Activity {
         setInitialText();
         setListeners();
         setHistorySection();
+    }
+    
+    /**
+     * Connect location client (for power saving).
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onStart(android.os.Bundle)
+     */
+    @Override
+    protected final void onStart() {
+        super.onStart();
+        locationClient.connect();
+    }
+    
+    /**
+     * Refresh the history list.
+     */
+    @Override
+    protected final void onResume() {
+        setHistorySection();
+        super.onResume();
+    }
+    
+    /**
+     * Disconnect location client (for power saving).
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onStop(android.os.Bundle)
+     */
+    @Override
+    protected final void onStop() {
+        locationClient.disconnect();
+        super.onStop();
     }
 
     /**
@@ -527,8 +623,13 @@ public class SearchActivity extends Activity {
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
         // Default Travel Mode: Mixed
-        travelModeSpinner.setSelection(2);
+        travelModeSpinner.setSelection(1);
         tm = TravelMode.MIXED;
+        
+        // Location setup
+        locationClient = new LocationClient(this, this, this);
+        fromCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationFrom);
+        toCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationTo);
     }
 
     /**
@@ -585,15 +686,13 @@ public class SearchActivity extends Activity {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view,
                     final int position, final long id) {
-                // travelModeData = {"Bicycling", "Transit",
-                // "Mixed (Bicycle and Transit)"}
+                // travelModeData = { "Bicycle Only", 
+                // "Bicycle and Transit" };
 
                 // Since there is no switch/case syntax in Android,
                 // only use if/else statements
-                if (position == TRAVEL_MODE_DATA_POSITION_FIRST) {
+                if (position == 0) {
                     tm = TravelMode.BICYCLING;
-                } else if (position == TRAVEL_MODE_DATA_POSITION_SECOND) {
-                    tm = TravelMode.TRANSIT;
                 } else {
                     tm = TravelMode.MIXED;
                 }
@@ -625,6 +724,118 @@ public class SearchActivity extends Activity {
     private void setAddressRelatedListeners() {
         // Determine whether to show clear button for fromAutoCompleteTextView
         // when it is focused
+        setAddressBoxListeners();
+
+        reverseButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                boolean fromACTVisEnabled = fromAutoCompleteTextView.isEnabled();
+                boolean toACTVisEnabled = toAutoCompleteTextView.isEnabled();
+                String fromACTVOriginalText = fromAutoCompleteTextView.getText().toString();
+                String toACTVOriginalText = toAutoCompleteTextView.getText().toString();
+                
+                if (!fromACTVisEnabled) {
+                    toAutoCompleteTextView.clearComposingText();
+                    toAutoCompleteTextView.setEnabled(false);
+                    toAutoCompleteTextView.setText(fromACTVOriginalText);
+                    toAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
+                    toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
+                    toClearButton.setVisibility(View.INVISIBLE); 
+                } else {
+                    toAutoCompleteTextView.setTextColor(Color.BLACK);
+                    toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
+                    toCurrLocationButton.setImageResource(R.drawable.current_location_select);
+                    toAutoCompleteTextView.setText(fromACTVOriginalText);
+                    toAutoCompleteTextView.setEnabled(true);                 
+                }
+                
+                if (!toACTVisEnabled) {
+                    fromAutoCompleteTextView.clearComposingText();
+                    fromAutoCompleteTextView.setEnabled(false);
+                    fromAutoCompleteTextView.setText(toACTVOriginalText);
+                    fromAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
+                    fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
+                    fromClearButton.setVisibility(View.INVISIBLE); 
+                } else {
+                    fromAutoCompleteTextView.setTextColor(Color.BLACK);
+                    fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
+                    fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
+                    fromAutoCompleteTextView.setText(toACTVOriginalText);
+                    fromAutoCompleteTextView.setEnabled(true);                 
+                }
+            }
+        });
+
+        fromClearButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                fromAutoCompleteTextView.clearComposingText();
+                fromAutoCompleteTextView.setText("");
+            }
+        });
+
+        toClearButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                toAutoCompleteTextView.clearComposingText();
+                toAutoCompleteTextView.setText("");
+            }
+        });
+        
+        fromCurrLocationButton.setOnClickListener(new OnClickListener() {
+            private boolean currentLocationSelected = false;
+            public void onClick(final View v) {
+                if (currentLocationSelected) {
+                    fromAutoCompleteTextView.setText("");
+                    fromAutoCompleteTextView.setTextColor(Color.BLACK);
+                    fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
+                    fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
+                    fromAutoCompleteTextView.setEnabled(true);
+                    fromAutoCompleteTextView.requestFocus();
+                    currentLocationSelected = false;
+                } else {
+                    fromAutoCompleteTextView.clearComposingText();
+                    fromAutoCompleteTextView.setEnabled(false);
+                    fromAutoCompleteTextView.setText("Current Location");
+                    fromAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
+                    fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
+                    fromClearButton.setVisibility(View.INVISIBLE); 
+                    currentLocationSelected = true;
+                }
+
+            }
+        });
+        
+        toCurrLocationButton.setOnClickListener(new OnClickListener() {
+            private boolean currentLocationSelected = false;
+            public void onClick(final View v) {
+                if (currentLocationSelected) {
+                    toAutoCompleteTextView.setText("");
+                    toAutoCompleteTextView.setTextColor(Color.BLACK);
+                    toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
+                    toCurrLocationButton.setImageResource(R.drawable.current_location_select);
+                    toAutoCompleteTextView.setEnabled(true);
+                    toAutoCompleteTextView.requestFocus();
+                    currentLocationSelected = false;
+                } else {
+                    toAutoCompleteTextView.clearComposingText();
+                    toAutoCompleteTextView.setEnabled(false);
+                    toAutoCompleteTextView.setText("Current Location");
+                    toAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
+                    toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
+                    toClearButton.setVisibility(View.INVISIBLE); 
+                    currentLocationSelected = true;
+                }
+
+            }
+        });
+    }
+
+    /**
+     * Attach the two address boxes listeners to corresponding UI widgets.
+     */
+    private void setAddressBoxListeners() {
         fromAutoCompleteTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(final View v, final boolean hasFocus) {
@@ -717,30 +928,8 @@ public class SearchActivity extends Activity {
                 // Do nothing
             }
         });
-
-        reverseButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                String temp = fromAutoCompleteTextView.getText().toString();
-                fromAutoCompleteTextView.setText(toAutoCompleteTextView.getText().toString());
-                toAutoCompleteTextView.setText(temp);
-            }
-        });
-
-        fromClearButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                fromAutoCompleteTextView.clearComposingText();
-                fromAutoCompleteTextView.setText("");
-            }
-        });
-
-        toClearButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                toAutoCompleteTextView.clearComposingText();
-                toAutoCompleteTextView.setText("");
-            }
-        });
     }
-
+    
     /**
      * Fill in the history section. TODO: currently hard-coded, creating a live
      * version in next phases. Since the data is dummy, I keep all the numbers
@@ -757,17 +946,41 @@ public class SearchActivity extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.select_dialog_item, f);
         fromAutoCompleteTextView.setAdapter(adapter);
+        
         toAutoCompleteTextView.setAdapter(adapter);
-
     }
 
     /**
-     * Refresh the history list.
+     * After onStart calls locationClient to connect,
+     * this is triggered if there is a problem connecting the
+     * Google Play Location Services.
+     * @param cr the connection result
      */
     @Override
-    protected final void onResume() {
-        setHistorySection();
-        super.onResume();
+    public final void onConnectionFailed(final ConnectionResult cr) {
+        Toast.makeText(this, "Connection Failed, please check your" 
+                    + "Google Play Services status", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * After onStart calls locationClient to connect,
+     * this is triggered if connection to Google Play Location Services
+     * is successfully established.
+     * @param bd the bundle passed in by Google Play Location Services
+     */
+    @Override
+    public final void onConnected(final Bundle bd) {
+        // Nothing happens
+    }
+
+    /**
+     * After onStart calls locationClient to disconnect,
+     * this is triggered if connection to Google Play Location Services
+     * is successfully disconnected.
+     */
+    @Override
+    public final void onDisconnected() {
+        // Nothing happens
     }
 
 }

@@ -20,7 +20,7 @@ import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
 
 /**
- * @author mengwan, Xinyun Chen
+ * @author mengwan, Xinyun Chen, Shuo Wang
  * 
  */
 public class DetailsActivity extends Activity {
@@ -34,25 +34,25 @@ public class DetailsActivity extends Activity {
      * Current route that should be displayed on the map.
      */
     private int currRoute = -1;
-    
+
     /**
      * TextView to show direction details.
      */
     private TextView directions;
-    
+
     /**
      * TextView to show source address.
      */
     private TextView start;
-    
+
     /**
      * TextView to show destination address.
      */
     private TextView destination;
 
     /**
-     * onCreate function of DetailsActivity class Display the details of metroBike search.
-     * {@inheritDoc}
+     * onCreate function of DetailsActivity class Display the details of
+     * metroBike search. {@inheritDoc}
      * 
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
@@ -78,8 +78,11 @@ public class DetailsActivity extends Activity {
 
     /**
      * onCreate menu option of DetailsActivity.
-     * @param menu the menu to be inflated.
-     * @return boolean for showing whether the action has been successfully done.
+     * 
+     * @param menu
+     *            the menu to be inflated.
+     * @return boolean for showing whether the action has been successfully
+     *         done.
      */
     @Override
     public final boolean onCreateOptionsMenu(final Menu menu) {
@@ -168,9 +171,10 @@ public class DetailsActivity extends Activity {
                 Step s = steps.get(j);
                 String ss = s.getHtmlInstruction().replaceAll("\\<.*?>", "");
                 if (s.getTravelMode() == TravelMode.TRANSIT) {
-                	// Use dummy route number to represent bus number.
-                	// This will be fixed when this part in backend is completed.
-                	ss = "(Bus #49) " + ss;
+                    // Use dummy route number to represent bus number.
+                    // This will be fixed when this part in backend is
+                    // completed.
+                    ss = "(Bus #49) " + ss;
                 }
                 directions.append("\nStep " + count + "   " + ss);
                 count++;
