@@ -375,6 +375,8 @@ public final class TransitDetails implements Serializable {
         // The order must be the same as the read order in readObject()
         out.writeObject(arrivalStop);
         out.writeObject(departureStop);
+        out.writeObject(arrivalTime);
+        out.writeObject(departureTime);
         out.writeObject(agencyName);
         out.writeObject(headsign);
         out.writeObject(lineShortName);
@@ -399,8 +401,10 @@ public final class TransitDetails implements Serializable {
         // Specifying this order helps shield the class from problems
         // in future versions.
         // The order must be the same as the writing order in writeObject()
-        arrivalStop = (Location) in.readObject();
+    	arrivalStop = (Location) in.readObject();
         departureStop = (Location) in.readObject();
+        arrivalTime = (String) in.readObject();
+        departureTime = (String) in.readObject();
         agencyName = (String) in.readObject();
         headsign = (String) in.readObject();
         lineShortName = (String) in.readObject();
