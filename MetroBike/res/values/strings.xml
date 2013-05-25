@@ -70,6 +70,7 @@
     <string name="textview_travel_mode">Select a Travel Mode:</string>
     <string name="history_from">From:\t</string>
     <string name="history_to">To:\t</string>
+    <string name="checkbox_bicycle_only">Bicycle Only</string>
 
     <!-- Result Activity -->
     <string name="route1">Route1</string>

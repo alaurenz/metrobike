@@ -26,16 +26,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.TimePicker;
@@ -264,8 +262,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
             // Generate a direction request
             DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from)
-                                                              .setEndAddress(to)
-                                                              .setTravelMode(tm);
+                                                              .setEndAddress(to);
+            
+            if (bicycleOnlyCheckBox.isChecked()) {
+                tm = TravelMode.BICYCLING;
+            } else {
+                tm = TravelMode.MIXED;
+            }
+              
+            dReq.setTravelMode(tm);
 
             // Set up time for direction request
 
@@ -353,11 +358,11 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         }
     }
 
-    /**
-     * Keeps an array of travel mode entries.
-     */
-    private static final String[] TRAVEL_MODE_DATA = { "Bicycle Only", 
-            "Bicycle and Transit" };
+//    /**
+//     * Keeps an array of travel mode entries.
+//     */
+//    private static final String[] TRAVEL_MODE_DATA = { "Bicycle Only", 
+//            "Bicycle and Transit" };
     
     /**
      * Integer Representation of Color: Light Blue.
@@ -431,10 +436,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
      */
     private History historyItem;
 
+//    /**
+//     * A Spinner for listing typing Travel Mode.
+//     */
+//    private Spinner travelModeSpinner;
+    
     /**
-     * A Spinner for listing typing Travel Mode.
+     * A CheckBox for user to select BICYCLE ONLY MODE.
      */
-    private Spinner travelModeSpinner;
+    private CheckBox bicycleOnlyCheckBox;
 
     /**
      * Keeps selected travelMode.
@@ -616,15 +626,16 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
 
         // Travel Mode Related setup
-        travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
-        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
-        travelModeSpinnerAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
+//        travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
+//        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
+//        travelModeSpinnerAdapter
+//                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
         // Default Travel Mode: Mixed
-        travelModeSpinner.setSelection(1);
+//        travelModeSpinner.setSelection(1);
         tm = TravelMode.MIXED;
+        bicycleOnlyCheckBox = (CheckBox) findViewById(R.id.checkboxBicycleOnly);
         
         // Location setup
         locationClient = new LocationClient(this, this, this);
@@ -681,31 +692,31 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         // a time)
         timeEditText.setKeyListener(null);
 
-        travelModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
-                // travelModeData = { "Bicycle Only", 
-                // "Bicycle and Transit" };
-
-                // Since there is no switch/case syntax in Android,
-                // only use if/else statements
-                if (position == 0) {
-                    tm = TravelMode.BICYCLING;
-                } else {
-                    tm = TravelMode.MIXED;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> arg0) {
-                // Default Value: Bicycling Mode
-                tm = TravelMode.MIXED;
-                travelModeSpinner.setSelection(2);
-                Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
-            }
-        });
+//        travelModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(final AdapterView<?> parent, final View view,
+//                    final int position, final long id) {
+//                // travelModeData = { "Bicycle Only", 
+//                // "Bicycle and Transit" };
+//
+//                // Since there is no switch/case syntax in Android,
+//                // only use if/else statements
+//                if (position == 0) {
+//                    tm = TravelMode.BICYCLING;
+//                } else {
+//                    tm = TravelMode.MIXED;
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(final AdapterView<?> arg0) {
+//                // Default Value: Bicycling Mode
+//                tm = TravelMode.MIXED;
+//                travelModeSpinner.setSelection(2);
+//                Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         findButton.setOnClickListener(new OnClickListener() {
             @Override

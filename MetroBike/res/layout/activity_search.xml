@@ -216,19 +216,11 @@
             android:inputType="time" />
     </LinearLayout>
     
-	<TextView
-           android:id="@+id/textViewTravelMode"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:textIsSelectable="false"
-           android:text="@string/textview_travel_mode"
-           android:textSize="18sp"
-           android:textColor="#1B84E0"
-           android:gravity="center"/>
-		
-    <Spinner android:id="@+id/spinnerTravelMode"   
-       	android:layout_width="match_parent"  
-       	android:layout_height="wrap_content"></Spinner>  
+    <CheckBox android:id="@+id/checkboxBicycleOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/checkbox_bicycle_only"/>
        
     <RelativeLayout
         android:layout_width="match_parent"
