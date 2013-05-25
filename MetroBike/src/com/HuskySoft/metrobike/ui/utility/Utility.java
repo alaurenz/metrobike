@@ -1,9 +1,8 @@
 package com.HuskySoft.metrobike.ui.utility;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,11 @@ public final class Utility {
      * zoom level constant helps to get the appropriate zoom level of the camera.
      */
     private static final double NEXUS7_ZOOM_CONSTANT = 259.6656;
+    
+    /**
+     * vehicle icon size.
+     */
+    private static final int VEHICLE_ICON_SIZE = 80;
 
     /**
      * A private constructor that throws an error to deter instantiation of this
@@ -127,26 +131,21 @@ public final class Utility {
         return Math.round(Math.log(NEXUS7_ZOOM_CONSTANT / maxOfTwo) / Math.log(2) + 1);
     }
     
-    public static Bitmap getBitmapFromURL(String src) {
+    /**
+     * Build a bit map from the given URL.
+     * @param src : the src string of the url.
+     * @return a Bitmap object
+     */
+    public static Bitmap getBitmapFromURL(final String src) {
         try {
-
-            URL url = new URL("http://www.helpinghomelesscats.com/images/cat1.jpg");
-            InputStream in = url.openConnection().getInputStream(); 
-            BufferedInputStream bis = new BufferedInputStream(in,1024*8);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-            int len=0;
-            byte[] buffer = new byte[1024];
-            while((len = bis.read(buffer)) != -1){
-                out.write(buffer, 0, len);
-            }
-            out.close();
-            bis.close();
-
-            byte[] data = out.toByteArray();
-            return BitmapFactory.decodeByteArray(data, 0, data.length);
-        }
-        catch (IOException e) {
+            URL url = new URL("http:" + src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return Bitmap.createScaledBitmap(myBitmap, VEHICLE_ICON_SIZE, VEHICLE_ICON_SIZE, false);
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }

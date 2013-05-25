@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -98,6 +99,11 @@ public class ResultsActivity extends Activity {
      * Current Device's screen width.
      */
     private float dpWidth;
+    
+    /**
+     * Bitmap object used for drawing icon of the marker.
+     */
+    private Bitmap bitmap;
     
     /**
      * Map circle radius.
@@ -377,17 +383,24 @@ public class ResultsActivity extends Activity {
                 }
                 
                 if (s.getTravelMode() == TravelMode.TRANSIT) {
-                    Toast.makeText(getApplicationContext(), s.getTransitDetails().getVehicleIconURL(), Toast.LENGTH_LONG).show();
-                    mMap.addMarker(new MarkerOptions()
+                    boolean getIcon = true;
+                    Thread markerThread = new Thread(new MarkerThread(s));
+                    markerThread.start();                    
+                    try {
+                        markerThread.join();
+                    } catch (InterruptedException e) {
+                        getIcon = false;
+                    }
+                    MarkerOptions mo = new MarkerOptions()
                     .position(com.HuskySoft.metrobike.ui.utility.Utility
                             .convertLocation(s.getStartLocation()))
                     .title(s.getTransitDetails().getVehicleType() 
                             + " No." + s.getTransitDetails().getLineShortName())
-                            .snippet("Departure at: " + s.getTransitDetails().getDepartureTime())
-//                    .icon(BitmapDescriptorFactory.fromBitmap(
-//                            com.HuskySoft.metrobike.ui.utility.Utility.
-//                            getBitmapFromURL(s.getTransitDetails().getVehicleIconURL())))
-                    );
+                            .snippet("Departure at: " + s.getTransitDetails().getDepartureTime());
+                    if (getIcon && bitmap != null) {
+                        mo = mo.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    }
+                    mMap.addMarker(mo);
                     mMap.addPolyline(polylineOptions.
                             color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
                             .width(POLYLINE_THICK));
@@ -421,5 +434,35 @@ public class ResultsActivity extends Activity {
         super.onResume();
         MapSetting.updateStatus(mMap);
         drawRoute();
+    }
+    
+    /**
+     * An inner class that generates a request for drawing the icon of the marker
+     * for a URL connection.
+     * 
+     * @author mengwan
+     */
+    private class MarkerThread implements Runnable {
+        /**
+         * Step object to be drew on the map.
+         */
+        private Step toDraw;
+        
+        /**
+         * Constructor of the thread.
+         * @param s : Step object to be drew.
+         */
+        public MarkerThread(final Step s) {
+            this.toDraw = s;
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() {
+            bitmap = com.HuskySoft.metrobike.ui.utility.Utility.
+                    getBitmapFromURL(toDraw.getTransitDetails().getVehicleIconURL());
+        }
     }
 }

@@ -201,7 +201,8 @@ public abstract class AlgorithmWorker {
                 response = Utility.doQuery(queryURL);
             } catch (IOException e) {
                 tryNum++;
-                System.err.println(TAG + "Bad connection... retrying " + (MAX_CONNECTION_ATTEMPTS - tryNum)
+                System.err.println(TAG + "Bad connection... retrying " 
+                        + (MAX_CONNECTION_ATTEMPTS - tryNum)
                         + " more times.");
                 try {
                     Thread.sleep(CONNECTION_RETRY_DELAY_MS);
