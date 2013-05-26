@@ -73,7 +73,6 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Setup a case that is too long for the algorithm to return a combo route
-	 * solution
 	 */
 	// @Before
 	public void setUpQinyuanToMountRainer(final TransitTimeMode timeMode) {
@@ -93,7 +92,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Black Box test: Test if all the steps in the result are in either bicycle
-	 * mode or transit mode given a departure time
+	 * mode or transit mode given a departure time.
 	 */
 	// @Test
 	public void test_allStepModeAdrainToStevens() {
@@ -108,7 +107,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * White Box test: Test if all the steps in the result are in either bicycle
-	 * mode or transit mode given an arrival time
+	 * mode or transit mode given an arrival time.
 	 */
 	// @Test
 	public void test_allStepModeArrivalAdrainToStevens() {
@@ -126,7 +125,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Black Box test: Test if all the steps in the result are in either bicycle
-	 * mode or transit mode given a departure time
+	 * mode or transit mode given a departure time.
 	 */
 	// @Test
 	public void test_allStepModeStevensToQinyuan() {
@@ -153,7 +152,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Returns true if all Steps of all given Routes are either transit or
-	 * bicycling, false otherwise
+	 * bicycling, false otherwise.
 	 * 
 	 * @param routesToCheck
 	 *            list of routes to check
@@ -175,7 +174,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Black Box test: Test if all the steps started with the same location as
-	 * the previous steps
+	 * the previous steps.
 	 */
 	// @Test
 	public void test_allStepStartEndAdrainToStevens() {
@@ -214,7 +213,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Black Box test: Test if all the steps started with the same location as
-	 * the previous steps
+	 * the previous steps.
 	 */
 	// @Test
 	public void test_allStepStartEndStevensToQinyuan() {
@@ -255,7 +254,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Black Box test: test if every route's duration consists the sum of its
-	 * legs and steps
+	 * legs and steps.
 	 */
 	// @Test
 	public void test_timeAdrainToStevens() {
@@ -284,7 +283,7 @@ public class SimpleComboAlgorithmTest extends TestCase {
 
 	/**
 	 * Black Box test: test if every route's duration consists the sum of its
-	 * legs and steps
+	 * legs and steps.
 	 */
 	// @Test
 	public void test_timeStevensToQinyuan() {
@@ -312,16 +311,13 @@ public class SimpleComboAlgorithmTest extends TestCase {
 	}
 
 	/**
-	 * Black Box test: the result will be all bicycling if the route is too long
+	 * Black Box test: the result will be all bicycling if the route is too long.
 	 */
 	// @Test
 	public void test_NoTransitQinyuanToMountRainer() {
 		setUpQinyuanToMountRainer(TransitTimeMode.DEPARTURE_TIME);
-		DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
-		DirectionsStatus actual = request.doRequest();
-		Assert.assertEquals("Actual status for request.doRequest() call was: "
-				+ actual.getMessage(), expected, actual);
+		request.doRequest();
 
 		List<Route> routes = request.getSolutions();
 
