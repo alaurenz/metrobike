@@ -1,5 +1,8 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -10,6 +13,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,6 +23,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,6 +63,11 @@ public class SearchActivity extends Activity
 implements GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener {
 
+	/**
+	 * The tag of this class.
+	 */
+	private static final String TAG = "SearchActivity";
+	
     /**
      * Minimum two digit number.
      */
@@ -346,11 +356,13 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			// don't store the current location.
 			if (!from.equals(currLocationLatLagString)) {
 				historyItem.addAddress(from);
+				saveHistoryFile(from);
 			}
 			if (!to.equals(currLocationLatLagString)) {
 				historyItem.addAddress(to);
+				saveHistoryFile(to);
 			}
-
+			
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
@@ -806,7 +818,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     fromAutoCompleteTextView.setEnabled(true);
-                    toCurrLocationButton.setEnabled(true);
+                    //toCurrLocationButton.setEnabled(true);
                     fromAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -818,7 +830,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     fromClearButton.setVisibility(View.INVISIBLE); 
                     // disable the to current location button 
-                    toCurrLocationButton.setEnabled(false);
+                    //toCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
@@ -834,7 +846,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     toAutoCompleteTextView.setEnabled(true);
-                    fromCurrLocationButton.setEnabled(true);
+                    //fromCurrLocationButton.setEnabled(true);
                     toAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -846,7 +858,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     toClearButton.setVisibility(View.INVISIBLE); 
                     // disable the from current location button 
-                    fromCurrLocationButton.setEnabled(false);
+                    //fromCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
@@ -1004,5 +1016,34 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     public final void onDisconnected() {
         // Nothing happens
     }
-
+    
+	/**
+	 * Write all history addresses into file.
+	 * 
+	 * @param address
+	 *            the address that will add the file.
+	 */
+	private void saveHistoryFile(final String address) {
+		FileOutputStream fos = null;
+		try {
+			// append the address into exist file.
+			fos = openFileOutput(History.FILENAME, Context.MODE_APPEND);
+			fos.write(address.getBytes());
+			// \n indicate the next address
+			fos.write("\n".getBytes());
+		} catch (FileNotFoundException e) {
+			Log.i(TAG, "Cannot create history file");
+		} catch (IOException e) {
+			Log.i(TAG, "Connot write history into file");
+		} finally {
+			try {
+				// close the file output stream.
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				Log.i(TAG, "Connot close the file ouput stream");
+			}
+		}
+	}
 }

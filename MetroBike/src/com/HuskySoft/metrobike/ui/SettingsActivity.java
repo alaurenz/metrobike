@@ -1,5 +1,7 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.File;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +14,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
@@ -37,6 +40,10 @@ public class SettingsActivity extends PreferenceActivity {
      * noted that if you going to change the strings in the instance field, you
      * also need to change them in the string_activity_setting.xml
      */
+	/**
+	 * The tag of this class.
+	 */
+	private static final String TAG = "SettingActivity";
     /**
      * the xml key of version tab.
      */
@@ -256,7 +263,11 @@ public class SettingsActivity extends PreferenceActivity {
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
                     historyItem.deleteAll();
+                    // delete saved file
+                    boolean deleted = new File(getFilesDir(), History.FILENAME).delete();
+                    Log.i(TAG, History.FILENAME + " is deleted --> " + deleted);
                 }
+
             });
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
@@ -269,32 +280,31 @@ public class SettingsActivity extends PreferenceActivity {
             alertDialog.create().show();
         }
 
-        /**
-         * Invoke when user want to change the map type.
-         * 
-         * @param preference
-         */
-        private void changeTheMapType(final Preference preference) {
-            // ****** bug *******
-            // the default value does not match!
-            ((ListPreference) preference)
-                    .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                        @Override
-                        public boolean onPreferenceChange(final Preference preference,
-                                final Object newValue) {
-                            try {
-                                int value = Integer.parseInt((String) newValue);
-                                map.setMapDisplay(MAP_ARRAYS[value]);
-                                return true;
-                            } catch (Exception e) {
-                                // Defensive programming even though it
-                                // should not be crashed
-                                return false;
-                            }
-                        }
-                    });
-        }
-    };
+		/**
+		 * Invoke when user want to change the map type.
+		 * 
+		 * @param preference
+		 */
+		private void changeTheMapType(final Preference preference) {
+			((ListPreference) preference)
+					.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+						@Override
+						public boolean onPreferenceChange(
+								final Preference preference,
+								final Object newValue) {
+							try {
+								int value = Integer.parseInt((String) newValue);
+								map.setMapDisplay(MAP_ARRAYS[value]);
+								return true;
+							} catch (Exception e) {
+								// Defensive programming even though it
+								// should not be crashed
+								return false;
+							}
+						}
+					});
+		}
+	};
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -303,31 +313,31 @@ public class SettingsActivity extends PreferenceActivity {
     private Preference.OnPreferenceChangeListener bindToVal = 
             new Preference.OnPreferenceChangeListener() {
 
-        @Override
-        public boolean onPreferenceChange(final Preference preference, final Object value) {
-            String stringValue = value.toString();
+		@Override
+		public boolean onPreferenceChange(final Preference preference,
+				final Object value) {
+			String stringValue = value.toString();
 
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
+			if (preference instanceof ListPreference) {
+				// For list preferences, look up the correct display value in
+				// the preference's 'entries' list.
+				ListPreference listPreference = (ListPreference) preference;
+				int index = listPreference.findIndexOfValue(stringValue);
 
-                // Set the summary to reflect the new value.
-                if (index >= 0) {
-                    preference.setSummary(listPreference.getEntries()[index]);
-                } else {
-                    preference.setSummary(null);
-                }
+				// Set the summary to reflect the new value.
+				if (index >= 0) {
+					preference.setSummary(listPreference.getEntries()[index]);
+				} else {
+					preference.setSummary(null);
+				}
 
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-
+			} else {
+				// For all other preferences, set the summary to the value's
+				// simple string representation.
+				preference.setSummary(stringValue);
+			}
+			return true;
+		}
     };
 
     /**
@@ -345,20 +355,18 @@ public class SettingsActivity extends PreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(bindToVal);
 
-        // Trigger the listener immediately with the preference's
-        // current value.
-        bindToVal.onPreferenceChange(
-                preference,
-                PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(
-                        preference.getKey(), ""));
-    }
-    
+		// Trigger the listener immediately with the preference's
+		// current value.
+		bindToVal.onPreferenceChange(preference, PreferenceManager
+				.getDefaultSharedPreferences(preference.getContext())
+				.getString(preference.getKey(), ""));
+	}
+
     /**
      * update the value of the list preference.
      */
     @Override
     protected final void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
         int temp = map.getMapDisplay();
         int value = 0;

@@ -1,5 +1,8 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import com.HuskySoft.metrobike.R;
@@ -12,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -28,7 +32,12 @@ import android.widget.Toast;
 public class HistoryActivity extends Activity {
 
     // This class pass the check style
-    
+
+	/**
+	 * The tag of this class.
+	 */
+	private static final String TAG = "HistoryActivity";
+	
     /**
      * The UI list view.
      */
@@ -118,4 +127,67 @@ public class HistoryActivity extends Activity {
 
     }
 
+	/**
+	 * We need to kill this activity if its not on the main screen.
+	 * {@inheritDoc}
+	 * 
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected final void onPause() {
+		super.onPause();
+		finish();
+	}
+
+	/**
+	 * We need to kill this activity if its not on the main screen.
+	 * {@inheritDoc}
+	 * 
+	 * @see android.app.Activity#onBackPressed()
+	 */
+	@Override
+	public final void onBackPressed() {
+		super.onBackPressed();
+		finish();
+	}
+
+	/**
+	 * We need to kill this activity if its not on the main screen.
+	 * {@inheritDoc}
+	 * 
+	 * @see android.app.Activity#onDestroy()
+	 */
+	@Override
+	protected final void onDestroy() {
+		super.onDestroy();
+		saveHistoryFile();
+	}
+
+	/**
+	 * Write all histories into file.
+	 */
+	private void saveHistoryFile() {
+		FileOutputStream fos = null;
+		try {
+			fos = openFileOutput(History.FILENAME, Context.MODE_PRIVATE);
+			final List<String> list = history.getHistory();
+			for (String str : list) {
+				Log.d(TAG, "Read list " + str);
+				fos.write(str.getBytes());
+				fos.write("\n".getBytes());
+			}
+		} catch (FileNotFoundException e) {
+			Log.i(TAG, "Cannot create history file");
+		} catch (IOException e) {
+			Log.i(TAG, "Connot write history into file");
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				Log.i(TAG, "Connot close the file ouput stream");
+			}
+		}
+	}
 }
