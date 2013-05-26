@@ -342,9 +342,14 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 pd.dismiss();
                 return;
             }
-            // if no errors, store the address into history
-            historyItem.addAddress(from);
-            historyItem.addAddress(to);
+			// if no errors, store the address into history.
+			// don't store the current location.
+			if (!from.equals(currLocationLatLagString)) {
+				historyItem.addAddress(from);
+			}
+			if (!to.equals(currLocationLatLagString)) {
+				historyItem.addAddress(to);
+			}
 
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
@@ -801,6 +806,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     fromAutoCompleteTextView.setEnabled(true);
+                    toCurrLocationButton.setEnabled(true);
                     fromAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -811,6 +817,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     fromClearButton.setVisibility(View.INVISIBLE); 
+                    // disable the to current location button 
+                    toCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
@@ -826,6 +834,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     toAutoCompleteTextView.setEnabled(true);
+                    fromCurrLocationButton.setEnabled(true);
                     toAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -836,6 +845,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     toClearButton.setVisibility(View.INVISIBLE); 
+                    // disable the from current location button 
+                    fromCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
