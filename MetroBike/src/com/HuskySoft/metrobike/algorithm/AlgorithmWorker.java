@@ -2,14 +2,16 @@ package com.HuskySoft.metrobike.algorithm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
+import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.GoogleMapsResponseStatusCodes;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Utility;
@@ -266,5 +268,20 @@ public abstract class AlgorithmWorker {
         }
 
         return routesList;
+    }
+    
+    /**
+     * Get the top two route with minimum duration of transit steps
+     */
+    public void topTwoRoute() {
+        List<Route> topTwo = new ArrayList<Route>();
+        Collections.sort(results);
+        Iterator<Route> itr = results.iterator();
+        int count = 0;
+        while (itr.hasNext() && count < 2) {
+            topTwo.add(itr.next());
+            count ++;
+        }
+        results = topTwo;
     }
 }
