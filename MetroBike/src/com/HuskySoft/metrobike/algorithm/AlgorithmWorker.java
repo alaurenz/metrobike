@@ -3,8 +3,6 @@ package com.HuskySoft.metrobike.algorithm;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -167,13 +165,6 @@ public abstract class AlgorithmWorker {
         } else {
             results.addAll(theResults);
         }
-    }
-
-    /**
-     * Clear the stored results.
-     */
-    protected final void clearResults() {
-        results = null;
     }
 
     /**

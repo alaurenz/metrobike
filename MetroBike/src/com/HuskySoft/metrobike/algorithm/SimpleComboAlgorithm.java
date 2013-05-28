@@ -6,11 +6,7 @@ import java.util.List;
 
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.DirectionsRequest.RequestParameters;
-import com.HuskySoft.metrobike.backend.Leg;
-import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
-import com.HuskySoft.metrobike.backend.Step;
-import com.HuskySoft.metrobike.backend.TravelMode;
 import com.HuskySoft.metrobike.backend.Utility;
 import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
 
@@ -28,7 +24,6 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
     @Override
     public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
-        clearResults();
 
         // NOTE: this method assumes:
         // toProcess.getTravelMode() == TravelMode.MIXED
@@ -41,10 +36,6 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
         if (toProcess.getArrivalTime() != 0) {
             timeMode = TransitTimeMode.ARRIVAL_TIME;
             routeTime = toProcess.getArrivalTime();
-
-            // TODO: currently unsupported
-            //System.err.println("ERROR: arrival time not yet supported");
-            //return addError(DirectionsStatus.INVALID_REQUEST_PARAMS);
         } else {
             timeMode = TransitTimeMode.DEPARTURE_TIME;
             routeTime = toProcess.getDepartureTime();

@@ -23,7 +23,6 @@ public final class SimpleAlgorithm extends AlgorithmWorker {
     @Override
     public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
-        clearResults();
 
         try {
             switch (toProcess.getTravelMode()) {
