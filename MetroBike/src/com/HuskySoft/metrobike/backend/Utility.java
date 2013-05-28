@@ -9,7 +9,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -447,6 +449,29 @@ public final class Utility {
         Date date = new Date(timestampMillis);
         SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT, TIME_LOCALE);
         return dateFormat.format(date);
+    }
+    
+    /**
+     * Return given a list of routes sorted by total 
+     * duration of transit Steps
+     * 
+     * @param routes to sort
+     * @return routes sorted by total duration of
+     * 			transit Steps (ascending order)
+     */
+    public static List<Route> sortRoutesByTransitDuration(List<Route> routes) {
+    	List<TransitRoute> transitRoutes = new ArrayList<TransitRoute>();
+        
+        for(Route r : routes) {
+        	transitRoutes.add(new TransitRoute(r));
+        }
+        Collections.sort(transitRoutes);
+        
+        List<Route> sortedRoutes = new ArrayList<Route>();
+        for(TransitRoute tr : transitRoutes) {
+        	sortedRoutes.add(tr.getSourceRoute());
+        }
+        return sortedRoutes;
     }
 
 }

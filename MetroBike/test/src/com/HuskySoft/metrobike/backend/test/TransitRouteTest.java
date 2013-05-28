@@ -14,22 +14,23 @@ import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TransitDetails;
+import com.HuskySoft.metrobike.backend.TransitRoute;
 import com.HuskySoft.metrobike.backend.WebRequestJSONKeys;
 
 /**
- * This class is responsible for testing the TransitDetails class.
+ * This class is responsible for testing the TransitRoute class.
  * 
  * @author Adrian Laurenzi
  * 
  */
-public class TransitDetailsTest extends TestCase {
+public class TransitRouteTest extends TestCase {
     /**
      * This is a TransitDetails variable that is used for testing this class.
      */
-    private TransitDetails transitDetails = null;
+    private TransitRoute transitRoute = null;
 
     /**
-     * This initializes the transitDetails variable for each test.
+     * This initializes the transitRoute variable for each test.
      * 
      * @throws JSONException
      * 
@@ -40,153 +41,52 @@ public class TransitDetailsTest extends TestCase {
         JSONObject transitJSON = new JSONObject(dummyTransitJSON);
         JSONArray routesArray = transitJSON.getJSONArray(WebRequestJSONKeys.ROUTES.getLowerCase());
         Route route = Route.buildRouteFromJSON(routesArray.getJSONObject(0));
-        List<Leg> legs = route.getLegList();
-        List<Step> steps = legs.get(0).getStepList();
-        transitDetails = steps.get(1).getTransitDetails();
+        transitRoute = new TransitRoute(route);
     }
 
     /**
-     * WhiteBox: This tests the getArrivalStop method.
+     * WhiteBox: This tests the getSourceRoute method.
      * 
      * @throws JSONException
      */
     // @Test
-    public void test_getArrivalStop() throws JSONException {
+    public void test_getSourceRoute() throws JSONException {
         setUp();
-        Location expected = new Location(47.66134640,-122.312080);
-        Location actual = transitDetails.getArrivalStop();
-        Assert.assertEquals("Actual value for transitDetails.getArrivalStop() was: "
-                + actual, expected, actual);
+        Assert.assertNotNull(transitRoute.getSourceRoute());
     }
     
     /**
-     * WhiteBox: This tests the getDepartureStop method.
+     * WhiteBox: This tests the getDurationInSeconds method.
      * 
      * @throws JSONException
      */
     // @Test
-    public void test_getDepartureStop() throws JSONException {
+    public void test_getDurationInSeconds() throws JSONException {
         setUp();
-        Location expected = new Location(47.6814690,-122.3273540);
-        Location actual = transitDetails.getDepartureStop();
-        Assert.assertEquals("Actual value for transitDetails.getDepartureStop() was: "
+        long expected = 659;
+        long actual = transitRoute.getDurationInSeconds();
+        Assert.assertEquals(
+        		"Actual value for transitDetails.getDurationInSeconds() was: "
                 + actual, expected, actual);
     }
     
     /**
-     * WhiteBox: This tests the getArrivalTime method.
+     * WhiteBox: This tests the getTransitDurationInSeconds method.
      * 
      * @throws JSONException
      */
     // @Test
-    public void test_getArrivalTime() throws JSONException {
+    public void test_getTransitDurationInSeconds() throws JSONException {
         setUp();
-        String expected = "13:58";
-        String actual = transitDetails.getArrivalTime();
-        Assert.assertEquals("Actual value for transitDetails.getArrivalTime() was: "
+        long expected = 639;
+        long actual = transitRoute.getTransitDurationInSeconds();
+        Assert.assertEquals(
+        		"Actual value for transitDetails.getTransitDurationInSeconds() was: "
                 + actual, expected, actual);
     }
     
     /**
-     * WhiteBox: This tests the getDepartureTime method.
-     * 
-     * @throws JSONException
-     */
-    // @Test
-    public void test_getDepartureTime() throws JSONException {
-        setUp();
-        String expected = "13:48";
-        String actual = transitDetails.getDepartureTime();
-        Assert.assertEquals("Actual value for transitDetails.getDepartureTime() was: "
-                + actual, expected, actual);
-    }
-    
-    /**
-     * WhiteBox: This tests the getAgencyName method.
-     * 
-     * @throws JSONException
-     */
-    // @Test
-    public void test_getAgencyName() throws JSONException {
-        setUp();
-        String expected = "Metro Transit";
-        String actual = transitDetails.getAgencyName();
-        Assert.assertEquals("Actual value for transitDetails.getAgencyName() was: "
-                + actual, expected, actual);
-    }
-    
-    /**
-     * WhiteBox: This tests the getHeadsign method.
-     * 
-     * @throws JSONException
-     */
-    // @Test
-    public void test_getHeadsign() throws JSONException {
-        setUp();
-        String expected = "Mount Baker Transit Center, University District";
-        String actual = transitDetails.getHeadsign();
-        Assert.assertEquals("Actual value for transitDetails.getHeadsign() was: "
-                + actual, expected, actual);
-    }
-    
-    /**
-     * WhiteBox: This tests the getLineShortName method.
-     * 
-     * @throws JSONException
-     */
-    // @Test
-    public void test_getLineShortName() throws JSONException {
-        setUp();
-        String expected = "48";
-        String actual = transitDetails.getLineShortName();
-        Assert.assertEquals("Actual value for transitDetails.getLineShortName() was: "
-                + actual, expected, actual);
-    }
-    
-    /**
-     * WhiteBox: This tests the getLineShortName method.
-     * 
-     * @throws JSONException
-     */
-    // @Test
-    public void test_getVehicleType() throws JSONException {
-        setUp();
-        String expected = "BUS";
-        String actual = transitDetails.getVehicleType();
-        Assert.assertEquals("Actual value for transitDetails.getVehicleType() was: "
-                + actual, expected, actual);
-    }
-    
-    /**
-     * WhiteBox: This tests the getVehicleIconURL method.
-     * 
-     * @throws JSONException
-     */
-    // @Test
-    public void test_getVehicleIconURL() throws JSONException {
-        setUp();
-        String expected = "//maps.gstatic.com/mapfiles/transit/iw/6/bus.png";
-        String actual = transitDetails.getVehicleIconURL();
-        Assert.assertEquals("Actual value for transitDetails.getVehicleIconURL() was: "
-                + actual, expected, actual);
-    }
-    
-    /**
-     * WhiteBox: This tests the getLineShortName method.
-     * 
-     * @throws JSONException
-     */
-    // @Test
-    public void test_getNumStops() throws JSONException {
-        setUp();
-        int expected = 10;
-        int actual = transitDetails.getNumStops();
-        Assert.assertEquals("Actual value for transitDetails.getNumStops() was: "
-                + actual, expected, actual);
-    }
-    
-    /**
-     * Dummy JSON transit directions.
+     * Dummy JSON transit directions
      */
     private final String dummyTransitJSON = "{   \"routes\" : [    " +
     		"  {         \"bounds\" : {            \"northeast\" : { " +
@@ -206,7 +106,7 @@ public class TransitDetailsTest extends TestCase {
     		" : {                  \"text\" : \"2.0 mi\",          " +
     		"        \"value\" : 3142               },              " +
     		" \"duration\" : {                 " +
-    		" \"text\" : \"11 mins\",                  \"value\" : 639 " +
+    		" \"text\" : \"11 mins\",                  \"value\" : 659 " +
     		"              },               " +
     		"\"end_address\" : \"1415 Northeast 45th Street, " +
     		"University of Washington, Seattle, WA 98105, USA\",   " +
@@ -222,7 +122,7 @@ public class TransitDetailsTest extends TestCase {
     		"\"1 ft\",                        \"value\" : 0        " +
     		"             },                     \"duration\" : {     " +
     		"                   \"text\" : \"1 min\",                 " +
-    		"       \"value\" : 0                     },                " +
+    		"       \"value\" : 20                     },                " +
     		"     \"end_location\" : {                        \"lat\" :" +
     		" 47.681470,                        \"lng\" : -122.327350    " +
     		"                 },                     \"html_instructions\" " +

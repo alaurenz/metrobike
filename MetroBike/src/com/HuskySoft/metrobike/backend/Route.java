@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.HuskySoft.metrobike.backend;
 
 import java.io.IOException;
@@ -65,11 +62,6 @@ public final class Route implements Serializable, Comparable<Route>{
      * Google-Maps-indicated warnings that must be displayed for this route.
      */
     private List<String> warnings;
-
-    /**
-     * Total transit duration of the route in second. 
-     */
-    private long transitDuration;
     
     /**
      * Constructs an empty Route.
@@ -79,7 +71,6 @@ public final class Route implements Serializable, Comparable<Route>{
         swBound = null;
         legList = new ArrayList<Leg>();
         summary = DEFAULT_ROUTE_SUMMARY;
-        transitDuration = 0;
     }
 
     /**
@@ -128,12 +119,7 @@ public final class Route implements Serializable, Comparable<Route>{
         
         // Add the leg to our list
         legList.add(toAdd);
-        for (Step s : toAdd.getStepList()) {
-            if (s.getTravelMode() == TravelMode.TRANSIT) {
-                transitDuration += s.getDurationInSeconds();
-            }
-        }
-
+        
         // TODO: consider if/how we should build the new polyline here.
     }
     
@@ -366,16 +352,11 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return
      */
     public int compareTo(Route other) {
-        if (this.transitDuration < other.transitDuration) {
+        if (this.getDurationInSeconds() < other.getDurationInSeconds()) {
             return -1;
-        } else if (this.transitDuration == other.transitDuration) {
-            if (this.getDurationInSeconds() < other.getDurationInSeconds()) {
-                return -1;
-            } else if (this.getDurationInSeconds() == other.getDurationInSeconds()) {
-                return 0;
-            } else {
-                return 1;
-            }
+        } else if (this.getDurationInSeconds()
+        		== other.getDurationInSeconds()) {
+            return 0;
         } else {
             return 1;
         }
