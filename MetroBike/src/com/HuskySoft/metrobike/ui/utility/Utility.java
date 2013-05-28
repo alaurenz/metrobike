@@ -1,7 +1,14 @@
 package com.HuskySoft.metrobike.ui.utility;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
@@ -27,6 +34,11 @@ public final class Utility {
      * zoom level constant helps to get the appropriate zoom level of the camera.
      */
     private static final double NEXUS7_ZOOM_CONSTANT = 259.6656;
+    
+    /**
+     * vehicle icon size.
+     */
+    private static final int VEHICLE_ICON_SIZE = 80;
 
     /**
      * A private constructor that throws an error to deter instantiation of this
@@ -117,5 +129,25 @@ public final class Utility {
                 / NEXUS7_SCREEN_WIDTH);
 
         return Math.round(Math.log(NEXUS7_ZOOM_CONSTANT / maxOfTwo) / Math.log(2) + 1);
+    }
+    
+    /**
+     * Build a bit map from the given URL.
+     * @param src : the src string of the url.
+     * @return a Bitmap object
+     */
+    public static Bitmap getBitmapFromURL(final String src) {
+        try {
+            URL url = new URL("http:" + src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return Bitmap.createScaledBitmap(myBitmap, VEHICLE_ICON_SIZE, VEHICLE_ICON_SIZE, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

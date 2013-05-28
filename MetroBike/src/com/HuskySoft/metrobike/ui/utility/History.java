@@ -1,6 +1,5 @@
 package com.HuskySoft.metrobike.ui.utility;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,16 +10,12 @@ import java.util.List;
  * @author Sam Wilson
  * 
  */
-public final class History implements Serializable {
+public final class History {
 
     /**
-     * Part of serializability, this id tracks if a serialized object can be
-     * deserialized using this version of the class.
-     * 
-     * NOTE: Please add 1 to this number every time you change the readObject()
-     * or writeObject() methods.
-     */
-    private static final long serialVersionUID = 1L;
+	 * The file name that we will write the history in.
+	 */
+	public static final String FILENAME = "History";
     /** The object of this class. */
     private static History hist;
     /** List that stores all the history. */
@@ -96,8 +91,6 @@ public final class History implements Serializable {
      */
     public void deleteAll() {
         historyList = new ArrayList<String>();
-        // I leave this method call is just for testing.
-        // hardCodeAddress();
     }
 
     /**
@@ -153,6 +146,5 @@ public final class History implements Serializable {
         historyList.add("404 Broad St, Seattle, WA");
         historyList.add("405 Broad St, Seattle, WA");
         historyList.add("2623 NE University Village St #7, Seattle, WA");
-
     }
 }

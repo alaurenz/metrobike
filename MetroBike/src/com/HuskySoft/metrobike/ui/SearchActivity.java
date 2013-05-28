@@ -1,5 +1,8 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -10,6 +13,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,6 +23,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,16 +31,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.TimePicker;
@@ -60,6 +63,11 @@ public class SearchActivity extends Activity
 implements GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener {
 
+	/**
+	 * The tag of this class.
+	 */
+	private static final String TAG = "SearchActivity";
+	
     /**
      * Minimum two digit number.
      */
@@ -264,8 +272,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
             // Generate a direction request
             DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from)
-                                                              .setEndAddress(to)
-                                                              .setTravelMode(tm);
+                                                              .setEndAddress(to);
+            
+            if (bicycleOnlyCheckBox.isChecked()) {
+                tm = TravelMode.BICYCLING;
+            } else {
+                tm = TravelMode.MIXED;
+            }
+              
+            dReq.setTravelMode(tm);
 
             // Set up time for direction request
 
@@ -337,10 +352,17 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 pd.dismiss();
                 return;
             }
-            // if no errors, store the address into history
-            historyItem.addAddress(from);
-            historyItem.addAddress(to);
-
+			// if no errors, store the address into history.
+			// don't store the current location.
+			if (!from.equals(currLocationLatLagString)) {
+				historyItem.addAddress(from);
+				saveHistoryFile(from);
+			}
+			if (!to.equals(currLocationLatLagString)) {
+				historyItem.addAddress(to);
+				saveHistoryFile(to);
+			}
+			
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
@@ -353,11 +375,11 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         }
     }
 
-    /**
-     * Keeps an array of travel mode entries.
-     */
-    private static final String[] TRAVEL_MODE_DATA = { "Bicycle Only", 
-            "Bicycle and Transit" };
+//    /**
+//     * Keeps an array of travel mode entries.
+//     */
+//    private static final String[] TRAVEL_MODE_DATA = { "Bicycle Only", 
+//            "Bicycle and Transit" };
     
     /**
      * Integer Representation of Color: Light Blue.
@@ -431,10 +453,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
      */
     private History historyItem;
 
+//    /**
+//     * A Spinner for listing typing Travel Mode.
+//     */
+//    private Spinner travelModeSpinner;
+    
     /**
-     * A Spinner for listing typing Travel Mode.
+     * A CheckBox for user to select BICYCLE ONLY MODE.
      */
-    private Spinner travelModeSpinner;
+    private CheckBox bicycleOnlyCheckBox;
 
     /**
      * Keeps selected travelMode.
@@ -616,15 +643,16 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
 
         // Travel Mode Related setup
-        travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
-        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
-        travelModeSpinnerAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
+//        travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
+//        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
+//        travelModeSpinnerAdapter
+//                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
         // Default Travel Mode: Mixed
-        travelModeSpinner.setSelection(1);
+//        travelModeSpinner.setSelection(1);
         tm = TravelMode.MIXED;
+        bicycleOnlyCheckBox = (CheckBox) findViewById(R.id.checkboxBicycleOnly);
         
         // Location setup
         locationClient = new LocationClient(this, this, this);
@@ -681,31 +709,31 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         // a time)
         timeEditText.setKeyListener(null);
 
-        travelModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
-                // travelModeData = { "Bicycle Only", 
-                // "Bicycle and Transit" };
-
-                // Since there is no switch/case syntax in Android,
-                // only use if/else statements
-                if (position == 0) {
-                    tm = TravelMode.BICYCLING;
-                } else {
-                    tm = TravelMode.MIXED;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> arg0) {
-                // Default Value: Bicycling Mode
-                tm = TravelMode.MIXED;
-                travelModeSpinner.setSelection(2);
-                Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
-            }
-        });
+//        travelModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(final AdapterView<?> parent, final View view,
+//                    final int position, final long id) {
+//                // travelModeData = { "Bicycle Only", 
+//                // "Bicycle and Transit" };
+//
+//                // Since there is no switch/case syntax in Android,
+//                // only use if/else statements
+//                if (position == 0) {
+//                    tm = TravelMode.BICYCLING;
+//                } else {
+//                    tm = TravelMode.MIXED;
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(final AdapterView<?> arg0) {
+//                // Default Value: Bicycling Mode
+//                tm = TravelMode.MIXED;
+//                travelModeSpinner.setSelection(2);
+//                Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         findButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -790,6 +818,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     fromAutoCompleteTextView.setEnabled(true);
+                    //toCurrLocationButton.setEnabled(true);
                     fromAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -800,6 +829,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     fromClearButton.setVisibility(View.INVISIBLE); 
+                    // disable the to current location button 
+                    //toCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
@@ -815,6 +846,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     toAutoCompleteTextView.setEnabled(true);
+                    //fromCurrLocationButton.setEnabled(true);
                     toAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -825,6 +857,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     toClearButton.setVisibility(View.INVISIBLE); 
+                    // disable the from current location button 
+                    //fromCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
@@ -982,5 +1016,34 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     public final void onDisconnected() {
         // Nothing happens
     }
-
+    
+	/**
+	 * Write all history addresses into file.
+	 * 
+	 * @param address
+	 *            the address that will add the file.
+	 */
+	private void saveHistoryFile(final String address) {
+		FileOutputStream fos = null;
+		try {
+			// append the address into exist file.
+			fos = openFileOutput(History.FILENAME, Context.MODE_APPEND);
+			fos.write(address.getBytes());
+			// \n indicate the next address
+			fos.write("\n".getBytes());
+		} catch (FileNotFoundException e) {
+			Log.i(TAG, "Cannot create history file");
+		} catch (IOException e) {
+			Log.i(TAG, "Connot write history into file");
+		} finally {
+			try {
+				// close the file output stream.
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				Log.i(TAG, "Connot close the file ouput stream");
+			}
+		}
+	}
 }

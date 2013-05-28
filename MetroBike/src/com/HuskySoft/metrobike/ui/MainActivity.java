@@ -1,5 +1,9 @@
 package com.HuskySoft.metrobike.ui;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.HuskySoft.metrobike.R;
+import com.HuskySoft.metrobike.ui.utility.History;
 import com.HuskySoft.metrobike.ui.utility.MapSetting;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +29,16 @@ import com.google.android.gms.maps.model.LatLng;
  * 
  */
 public class MainActivity extends FragmentActivity {
+	
+	/**
+	 * The tag of this class.
+	 */
+	private static final String TAG = "MainActivity";
+	
+	/**
+	 * The file name that we will write the history in.
+	 */
+	private static final String FILENAME = "History";
 
     /**
      * The latitude value of University of Washington.
@@ -38,6 +53,10 @@ public class MainActivity extends FragmentActivity {
      * 2.0 the highest zoom out and 21.0 the lowest zoom in
      */
     private static final float ZOOM = 15.0f;
+    /**
+     * History object.
+     */
+    private History history;
 
     /**
      * The actual GoogleMap object.
@@ -74,7 +93,9 @@ public class MainActivity extends FragmentActivity {
         // only initialize the map setting
         MapSetting.getInstance(googleMap);
         // onResume should be called so it can update the map
-
+        
+        history = History.getInstance();
+        readFromHistoryFile();
         // Showing log in console for debugging. To be removed for formal
         // release.
         Log.v("MetroBike", "Finished launching main activity!");
@@ -129,7 +150,7 @@ public class MainActivity extends FragmentActivity {
         // would be in version 1.0
         LatLng latLng = new LatLng(LATITUDE, LONGITUDE);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
-        Log.v("MetroBike", "Finished launching main activity--onResume!");
+        Log.v(TAG, "Finished launching main activity--onResume!");
     }
     
     /**
@@ -139,9 +160,48 @@ public class MainActivity extends FragmentActivity {
      */
     @Override
     protected final void onDestroy() {
-        super.onDestroy();
+    	super.onDestroy();
         MapSetting.resetMapSetting();
+        Log.v(TAG, "Destory MetroBike");
     }
+
+	/**
+	 * Read the saved history file.
+	 */
+	private void readFromHistoryFile() {
+		FileInputStream fis = null;
+		StringBuilder sb;
+		try {
+			fis = openFileInput(FILENAME);
+			sb = new StringBuilder();
+			int readByte;
+			// read one byte at a time.
+			while ((readByte = fis.read()) != -1) {
+				char c = (char) readByte;
+				if (c == '\n') {
+					// if we hit the new line, that's the other address.
+					String address = sb.toString();
+					Log.d(TAG, "Address: " + address + " is read from file.");
+					history.addAddress(address);
+					sb = new StringBuilder();
+					continue;
+				}
+				sb.append(c);
+			}
+		} catch (FileNotFoundException e) {
+			Log.i(TAG, "Cannot open history file");
+		} catch (IOException e) {
+			Log.i(TAG, "Connot read history from file");
+		} finally {
+			try {
+				if (fis != null) {
+					fis.close();
+				}
+			} catch (IOException e) {
+				Log.i(TAG, "Cannot close the file input stream");
+			}
+		}
+	}
 
     /**
      * Override the back button to act like home button. Do this in order to

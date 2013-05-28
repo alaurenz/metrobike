@@ -23,7 +23,7 @@ import org.json.JSONObject;
  *         addresses. A Route object can be created by parsing json or by
  *         creating a blank route and adding to it.
  */
-public final class Route implements Serializable {
+public final class Route implements Serializable, Comparable<Route>{
     /**
      * Part of serializability, this id tracks if a serialized object can be
      * deserialized using this version of the class.
@@ -67,6 +67,11 @@ public final class Route implements Serializable {
     private List<String> warnings;
 
     /**
+     * Total transit duration of the route in second. 
+     */
+    private long transitDuration;
+    
+    /**
      * Constructs an empty Route.
      */
     public Route() {
@@ -74,6 +79,7 @@ public final class Route implements Serializable {
         swBound = null;
         legList = new ArrayList<Leg>();
         summary = DEFAULT_ROUTE_SUMMARY;
+        transitDuration = 0;
     }
 
     /**
@@ -122,6 +128,11 @@ public final class Route implements Serializable {
         
         // Add the leg to our list
         legList.add(toAdd);
+        for (Step s : toAdd.getStepList()) {
+            if (s.getTravelMode() == TravelMode.TRANSIT) {
+                transitDuration += s.getDurationInSeconds();
+            }
+        }
 
         // TODO: consider if/how we should build the new polyline here.
     }
@@ -347,5 +358,26 @@ public final class Route implements Serializable {
         legList = (List<Leg>) in.readObject();
         summary = (String) in.readObject();
         warnings = (List<String>) in.readObject();
+    }
+    
+    /**
+     * Overwrite compareTo method
+     * @param other
+     * @return
+     */
+    public int compareTo(Route other) {
+        if (this.transitDuration < other.transitDuration) {
+            return -1;
+        } else if (this.transitDuration == other.transitDuration) {
+            if (this.getDurationInSeconds() < other.getDurationInSeconds()) {
+                return -1;
+            } else if (this.getDurationInSeconds() == other.getDurationInSeconds()) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 1;
+        }
     }
 }
