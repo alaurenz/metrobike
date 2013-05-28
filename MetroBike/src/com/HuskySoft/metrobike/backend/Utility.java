@@ -424,9 +424,9 @@ public final class Utility {
                 output += "s";
             output += ", ";
         }
-        if(minutes > 0) {
+        if(minutes >= 0) {
             output += minutes + " minute";
-            if(minutes > 1)
+            if(minutes > 1 || minutes == 0)
                 output += "s";
             output += ", ";
         }

@@ -235,6 +235,19 @@ public class UtilityTest extends TestCase {
     
     /**
      * Test-Driven Development: This tests secondsToHumanReadableDuration
+     * given a very short duration.
+     * 
+     */
+    // @Test
+    public void test_secondsToHumanReadableDurationVeryShort() {
+        String expected = "0 minutes";
+        String actual = Utility.secondsToHumanReadableDuration(20);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(20) was: " + actual,
+                expected, actual);
+    }
+    
+    /**
+     * Test-Driven Development: This tests secondsToHumanReadableDuration
      * given a short duration.
      * 
      */
