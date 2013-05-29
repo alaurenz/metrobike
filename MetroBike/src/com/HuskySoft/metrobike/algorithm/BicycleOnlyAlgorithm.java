@@ -23,7 +23,6 @@ public final class BicycleOnlyAlgorithm extends AlgorithmWorker {
 	@Override
 	public DirectionsStatus findRoutes(final RequestParameters toProcess) {
 		clearErrors();
-		clearResults();
 
 		try {
 			// Get only bicycle routes, no matter what.
