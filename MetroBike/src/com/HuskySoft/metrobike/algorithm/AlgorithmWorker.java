@@ -9,8 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.HuskySoft.metrobike.backend.APIQuery;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
+import com.HuskySoft.metrobike.backend.GoogleAPIWrapper;
 import com.HuskySoft.metrobike.backend.GoogleMapsResponseStatusCodes;
 import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Location;
@@ -67,6 +69,14 @@ public abstract class AlgorithmWorker {
      * Holds the routes found/built by the worker.
      */
     private List<Route> results = null;
+    
+    /**
+     * Holds the pointer that determines whether or not to call doQuery from the stub
+     * class or the actual class that talks to the Google APIs. It defaults to the real
+     * connection unless the stub is explicitly set in the parameter object that is
+     * passed in to doRequest.
+     */
+    private APIQuery queryObj = new GoogleAPIWrapper();
 
     /**
      * Runs the algorithm on the RequestParameters.
@@ -98,6 +108,28 @@ public abstract class AlgorithmWorker {
         return addError(theError, null);
     }
 
+    /**
+     * Sets whether to use the stub class to simulate the Google APIs or to actually contact 
+     * Google.  The default is to actually contact Google so this should only be set if
+     * you plan on using the stub method.
+     * 
+     * @param query This should be the StubGoogleAPIWrapper if this method is called.
+     */
+    public final void setResource(APIQuery query) {
+        if(query != null) {
+            queryObj = query;
+        }
+    }
+    
+    /**
+     * Getter for the queryObj.
+     * 
+     * @return returns the current APIQuery Object.
+     */
+    public final APIQuery getResource() {
+        return queryObj;
+    }
+    
     /**
      * Adds a message to the error message log with extra details.
      * 
@@ -203,7 +235,7 @@ public abstract class AlgorithmWorker {
 
         while (response == null && tryNum < MAX_CONNECTION_ATTEMPTS) {
             try {
-                response = Utility.doQuery(queryURL);
+                response = queryObj.doQuery(queryURL);
             } catch (IOException e) {
                 tryNum++;
                 System.err.println(TAG + "Bad connection... retrying " 

@@ -1,17 +1,11 @@
 package com.HuskySoft.metrobike.backend;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -275,46 +269,6 @@ public final class Utility {
     private static String encodeURLParameter(final String toFormat)
             throws UnsupportedEncodingException {
         return URLEncoder.encode(toFormat, URL_ENCODING_CHARSET_NAME);
-    }
-
-    /**
-     * This method takes in a URL as a String and returns a JSON String as a
-     * response.
-     * 
-     * @param theURL
-     *            the URL to send to the server.
-     * @return Returns what the server sends back (should be a JSON String).
-     * @throws IOException
-     *             if the connection fails for any reason
-     */
-    public static String doQuery(final String theURL) throws IOException {
-
-        /*
-         * Some example web connection code help from
-         * http://stackoverflow.com/questions/6951611/extract-message
-         * -body-out-of-httpresponse and other StackOverflow examples for
-         * URLConnection.
-         */
-
-        StringBuilder response = new StringBuilder();
-        System.err.println(TAG + "About to make query to this url: [" + theURL + "]");
-        URL url = new URL(theURL);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    urlConnection.getInputStream()));
-            String aLine = "";
-            while (aLine != null) {
-                response.append(aLine);
-                aLine = in.readLine();
-                // Log.w(TAG, "Got line: '" + aLine + "'");
-            }
-            in.close();
-        } finally {
-            urlConnection.disconnect();
-        }
-
-        return response.toString();
     }
 
     /**
