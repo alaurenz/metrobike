@@ -578,7 +578,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setArrivalTime(final long newArrivalTime) {
-        if (myParams.departureTime != 0) {
+        if (myParams.departureTime != RequestParameters.DONT_CARE) {
             throw new IllegalArgumentException("departureTime was already "
                     + "set.");
         }
@@ -597,8 +597,8 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setDepartureTime(final long newDepartureTime) {
-        if (myParams.arrivalTime != 0) {
-            throw new IllegalArgumentException("departureTime was "
+        if (myParams.arrivalTime != RequestParameters.DONT_CARE) {
+            throw new IllegalArgumentException("arrivalTime was "
                     + "already set.");
         }
         myParams.departureTime = newDepartureTime;

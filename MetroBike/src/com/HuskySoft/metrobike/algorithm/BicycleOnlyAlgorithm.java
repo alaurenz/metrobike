@@ -26,8 +26,9 @@ public final class BicycleOnlyAlgorithm extends AlgorithmWorker {
 
 		try {
 			// Get only bicycle routes, no matter what.
-			if (toProcess.getTravelMode() == TravelMode.BICYCLING ||
-					toProcess.getTravelMode() == TravelMode.TRANSIT) {
+			if (toProcess.getTravelMode() == TravelMode.BICYCLING
+					|| toProcess.getTravelMode() == TravelMode.TRANSIT
+					|| toProcess.getTravelMode() == TravelMode.MIXED) {
 				addBicycleResults(toProcess);
 			} else {
 				return addError(DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR, ": "
