@@ -395,7 +395,7 @@ public class ResultsActivity extends Activity {
                     .position(com.HuskySoft.metrobike.ui.utility.Utility
                             .convertLocation(s.getStartLocation()))
                     .title(s.getTransitDetails().getVehicleType() 
-                            + " No." + s.getTransitDetails().getLineShortName())
+                            + " " + s.getTransitDetails().getLineShortName())
                             .snippet("Departure at: " + s.getTransitDetails().getDepartureTime());
                     if (getIcon && bitmap != null) {
                         mo = mo.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
