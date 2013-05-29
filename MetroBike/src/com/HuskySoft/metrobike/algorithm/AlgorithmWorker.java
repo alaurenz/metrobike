@@ -52,7 +52,7 @@ public abstract class AlgorithmWorker {
      * The time in milliseconds to wait between Google Transit request queries.
      * This is to prevent going over the query limit.
      */
-    protected static final long TRANSIT_QUERY_DELAY_MS = 1000;
+    protected static final long TRANSIT_QUERY_DELAY_MS = 1500;
 
     /**
      * Holds any error message(s) generated during algorithm execution.

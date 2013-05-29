@@ -287,11 +287,12 @@ public class UtilityTest extends TestCase {
     
     /**
      * Whitebox: This tests the timestampTo12HourTime
+     * NOTE: this test assumes the time is GMT-7
      * 
      */
     // @Test
     public void test_timestampTo12HourTime() {
-        String expected = "8:47 PM";
+        String expected = "1:47 PM";
         String actual = Utility.timestampTo12HourTime(1368996421);
         Assert.assertEquals("Actual value of Utility.timestampTo12HourTime(1368996421) was: " + actual,
                 expected, actual);

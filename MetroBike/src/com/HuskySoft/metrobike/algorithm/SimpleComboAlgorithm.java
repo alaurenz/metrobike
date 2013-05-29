@@ -57,9 +57,19 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
         			Utility.sortRoutesByTransitDuration(unsortedTransitRoutes);
         	
             List<Route> comboResults = new ArrayList<Route>();
-            // TODO only use 1 or 2 of these routes...
+            int i = 0;
             for (Route curRoute : transitRoutes) {
+            	// use at most the first two transit routes
+            	if(i > 1)
+            		break;
                 
+            	// For preventing exceeding query request limit
+                try {
+                    Thread.sleep(TRANSIT_QUERY_DELAY_MS);
+                } catch (InterruptedException e) {
+                    System.err.println("Error delaying transit query request.");
+                }
+            	
                 Route comboRoute = null;
                 if(timeMode.equals(TransitTimeMode.DEPARTURE_TIME)) {
                     comboRoute = replaceWalkingWithBicyclingDeparture(
@@ -72,13 +82,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
                 if (comboRoute != null && comboRoute.getLegList().size() > 0) {
                     comboResults.add(comboRoute);
                 }
-                
-                // For preventing exceeding query request limit
-                try {
-                    Thread.sleep(TRANSIT_QUERY_DELAY_MS);
-                } catch (InterruptedException e) {
-                    System.err.println("Error delaying transit query request.");
-                }
+                i++;
             }
             addResults(comboResults);
         }
