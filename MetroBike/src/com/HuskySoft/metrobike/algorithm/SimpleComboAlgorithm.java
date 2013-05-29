@@ -33,7 +33,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
         // departure times are set, we'll use the arrival time.
         long routeTime;
         Utility.TransitTimeMode timeMode;
-        if (toProcess.getArrivalTime() != 0) {
+        if (toProcess.getArrivalTime() != RequestParameters.DONT_CARE) {
             timeMode = TransitTimeMode.ARRIVAL_TIME;
             routeTime = toProcess.getArrivalTime();
         } else {
