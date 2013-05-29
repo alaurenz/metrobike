@@ -134,18 +134,29 @@ public final class DirectionsRequest implements Serializable {
          * List<AlgorithmWorkers> in a different method, then call them in a
          * nested foreach loop to get all of the results (?)
          */
-
+        
+        AlgorithmWorker alg = null;
+        
         // Query the simple algorithm first
         switch (myParams.getTravelMode()) {
         case BICYCLING:
-            return doAlgorithm(new SimpleAlgorithm());
+            alg = new SimpleAlgorithm();
+            alg.setResource(myParams.getResource());
+            return doAlgorithm(alg);
         case TRANSIT:
-            return doAlgorithm(new SimpleAlgorithm());
+            alg = new SimpleAlgorithm();
+            alg.setResource(myParams.getResource());
+            return doAlgorithm(alg);
         case MIXED:
+            alg = new SimpleComboAlgorithm();
+            alg.setResource(myParams.getResource());
+            AlgorithmWorker alg2 = new SimpleAlgorithm();
+            alg2.setResource(myParams.getResource());
             //Travel Mode Mix also needs the bicycle only routes
-            DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());
+            DirectionsStatus comboStatus = doAlgorithm(alg);
             
-            DirectionsStatus bikeStatus = doAlgorithm(new SimpleAlgorithm());
+            
+            DirectionsStatus bikeStatus = doAlgorithm(alg2);
             if (comboStatus.isError() && bikeStatus.isError()) {
                 return DirectionsStatus.NO_RESULTS_FOUND;                
             }
@@ -284,6 +295,20 @@ public final class DirectionsRequest implements Serializable {
          */
         private int maxNumberBusTransfers = 0;
 
+        /**
+         * This determines whether or not to use the StubGoogleAPIWrapper.
+         */
+        private APIQuery resource = null;
+        
+        /**
+         * Getter for the resource field.
+         * 
+         * @return Returns the current APIQuery Object.
+         */
+        public APIQuery getResource() {
+            return resource;
+        }
+        
         /**
          * @return the startAddress
          */
@@ -485,6 +510,15 @@ public final class DirectionsRequest implements Serializable {
 
     }
 
+    /**
+     * Setter for the resource.
+     * 
+     * @param query This is the type of APIQuery to use.
+     */
+    public void setResource(APIQuery query) {
+        myParams.resource = query;
+    }
+    
     /**
      * Set the starting address for the trip.
      * 
