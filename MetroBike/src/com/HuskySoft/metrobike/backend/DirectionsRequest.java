@@ -12,7 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.HuskySoft.metrobike.algorithm.AlgorithmWorker;
-import com.HuskySoft.metrobike.algorithm.SimpleAlgorithm;
+import com.HuskySoft.metrobike.algorithm.BicycleOnlyAlgorithm;
 import com.HuskySoft.metrobike.algorithm.SimpleComboAlgorithm;
 
 /**
@@ -54,6 +54,10 @@ public final class DirectionsRequest implements Serializable {
      */
     private String errorMessages;
 
+    /**
+     * This determines whether or not to use the StubGoogleAPIWrapper.
+     */
+    private APIQuery resource = null;
     
     /**
      * Constructs a new DirectionsRequest object.
@@ -64,6 +68,16 @@ public final class DirectionsRequest implements Serializable {
         errorMessages = null;
     }
 
+    /**
+     * Getter for the resource field.
+     * 
+     * @return Returns the current APIQuery Object.
+     */
+    public APIQuery getResource() {
+        return resource;
+    }
+    
+    
     /**
      * Initiates the request calculation. This is a blocking call. NOTE: This
      * method is currently under heavy testing and does not currently meet style
@@ -78,7 +92,6 @@ public final class DirectionsRequest implements Serializable {
             return DirectionsStatus.INVALID_REQUEST_PARAMS;
         }
 
-        
         System.err.println(TAG + "RUNNING ON DUMMY JSON RESPONSE");
 
         solutions = new ArrayList<Route>();
@@ -88,10 +101,13 @@ public final class DirectionsRequest implements Serializable {
             myJSON = new JSONObject(DUMMY_BICYCLE_JSON);
             // Commenting this out until we have this part completely working.
             // myJSON = new JSONObject(jsonResponse);
-            if (!myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()).equalsIgnoreCase(
-                    GoogleMapsResponseStatusCodes.OK.toString())) {
-                System.err.println(TAG + "JSON Response returned: "
-                        + myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase()));
+            if (!myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase())
+                    .equalsIgnoreCase(
+                            GoogleMapsResponseStatusCodes.OK.toString())) {
+                System.err.println(TAG
+                        + "JSON Response returned: "
+                        + myJSON.getString(WebRequestJSONKeys.STATUS
+                                .getLowerCase()));
             }
         } catch (JSONException e) {
             appendErrorMessage("Error parsing JSON.");
@@ -101,12 +117,15 @@ public final class DirectionsRequest implements Serializable {
         JSONArray routesArray;
 
         try {
-            routesArray = myJSON.getJSONArray(WebRequestJSONKeys.ROUTES.getLowerCase());
+            routesArray = myJSON.getJSONArray(WebRequestJSONKeys.ROUTES
+                    .getLowerCase());
             for (int i = 0; i < routesArray.length(); i++) {
-                Route currentLeg = Route.buildRouteFromJSON(routesArray.getJSONObject(i));
+                Route currentLeg = Route.buildRouteFromJSON(routesArray
+                        .getJSONObject(i));
                 solutions.add(currentLeg);
             }
-            System.err.println("JSON_TEST" + "Processed " + routesArray.length() + " routes!");
+            System.err.println("JSON_TEST" + "Processed "
+                    + routesArray.length() + " routes!");
         } catch (JSONException e1) {
             appendErrorMessage("Error parsing JSON routes.");
             return DirectionsStatus.PARSING_ERROR;
@@ -134,31 +153,20 @@ public final class DirectionsRequest implements Serializable {
          * List<AlgorithmWorkers> in a different method, then call them in a
          * nested foreach loop to get all of the results (?)
          */
-        
-        AlgorithmWorker alg = null;
-        
+
         // Query the simple algorithm first
         switch (myParams.getTravelMode()) {
         case BICYCLING:
-            alg = new SimpleAlgorithm();
-            alg.setResource(myParams.getResource());
-            return doAlgorithm(alg);
+            return doAlgorithm(new BicycleOnlyAlgorithm());
         case TRANSIT:
-            alg = new SimpleAlgorithm();
-            alg.setResource(myParams.getResource());
-            return doAlgorithm(alg);
+            return doAlgorithm(new BicycleOnlyAlgorithm());
         case MIXED:
-            alg = new SimpleComboAlgorithm();
-            alg.setResource(myParams.getResource());
-            AlgorithmWorker alg2 = new SimpleAlgorithm();
-            alg2.setResource(myParams.getResource());
-            //Travel Mode Mix also needs the bicycle only routes
-            DirectionsStatus comboStatus = doAlgorithm(alg);
-            
-            
-            DirectionsStatus bikeStatus = doAlgorithm(alg2);
+            // Travel Mode Mix also needs the bicycle only routes
+            DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());
+
+            DirectionsStatus bikeStatus = doAlgorithm(new BicycleOnlyAlgorithm());
             if (comboStatus.isError() && bikeStatus.isError()) {
-                return DirectionsStatus.NO_RESULTS_FOUND;                
+                return DirectionsStatus.NO_RESULTS_FOUND;
             }
             return DirectionsStatus.REQUEST_SUCCESSFUL;
         default:
@@ -166,16 +174,18 @@ public final class DirectionsRequest implements Serializable {
                     + myParams.getTravelMode().toString());
             return DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR;
         }
-        
+
     }
-    
+
     /**
      * Run the given algorithm and add all the routes.
-     * @param algorithmWorker : the abstracted algorithm class
-     * @return  direction status after the algorithm completes
+     * 
+     * @param algorithmWorker
+     *            : the abstracted algorithm class
+     * @return direction status after the algorithm completes
      */
     private DirectionsStatus doAlgorithm(final AlgorithmWorker algorithmWorker) {
-     // DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
+        // DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
         DirectionsStatus status = algorithmWorker.findRoutes(myParams);
 
         /*
@@ -197,7 +207,8 @@ public final class DirectionsRequest implements Serializable {
          * return DirectionsStatus.NO_RESULTS_FOUND; }
          */
         if (routes == null) {
-            System.err.println(TAG + "Got null from SimpleComboAlgorithm without an error");
+            System.err.println(TAG
+                    + "Got null from SimpleComboAlgorithm without an error");
             appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
             return DirectionsStatus.NO_RESULTS_FOUND;
         }
@@ -234,7 +245,13 @@ public final class DirectionsRequest implements Serializable {
          * DirectionsRequest objects (ex: from the log) being made into
          * new-version DirectionsRequest objects.
          */
-        private static final long serialVersionUID = 0L;
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Represents a number-based option that hasn't been specified by the
+         * user.
+         */
+        public static final long DONT_CARE = -1;
 
         /**
          * The Android log tag for this inner class.
@@ -256,14 +273,14 @@ public final class DirectionsRequest implements Serializable {
          * set (ie. it equals a nonzero value), then departure time should not
          * be set.
          */
-        private long arrivalTime = 0;
+        private long arrivalTime = DONT_CARE;
 
         /**
          * Time the user would like to depart from their starting location. If
          * this is set (ie. it equals a nonzero value), then arrival time should
          * not be set.
          */
-        private long departureTime = 0;
+        private long departureTime = DONT_CARE;
 
         /**
          * The travel mode the user is requesting directions for. Default is
@@ -275,25 +292,25 @@ public final class DirectionsRequest implements Serializable {
          * An optional field. It sets a minimum distance the user would like to
          * bike.
          */
-        private long minDistanceToBikeInMeters = 0;
+        private long minDistanceToBikeInMeters = DONT_CARE;
 
         /**
          * An optional field. It sets the maximum distance the user would like
          * to bike. (In case they are exercise averse)
          */
-        private long maxDistanceToBikeInMeters = 0;
+        private long maxDistanceToBikeInMeters = DONT_CARE;
 
         /**
          * An optional field. The minimum number of bus transfers to have. In
          * case they like multiple transfers.
          */
-        private int minNumberBusTransfers = 0;
+        private long minNumberBusTransfers = DONT_CARE;
 
         /**
          * An optional field. Setting the maximum number of bus transfers in
          * case the user doesn't want routes with lots of transfers.
          */
-        private int maxNumberBusTransfers = 0;
+        private long maxNumberBusTransfers = DONT_CARE;
 
         /**
          * This determines whether or not to use the StubGoogleAPIWrapper.
@@ -361,14 +378,14 @@ public final class DirectionsRequest implements Serializable {
         /**
          * @return the minNumberBusTransfers
          */
-        public int getMinNumberBusTransfers() {
+        public long getMinNumberBusTransfers() {
             return minNumberBusTransfers;
         }
 
         /**
          * @return the maxNumberBusTransfers
          */
-        public int getMaxNumberBusTransfers() {
+        public long getMaxNumberBusTransfers() {
             return maxNumberBusTransfers;
         }
 
@@ -398,7 +415,7 @@ public final class DirectionsRequest implements Serializable {
             case TRANSIT:
             case MIXED:
                 // Check to be sure we got a time!
-                if (departureTime == 0 && arrivalTime == 0) {
+                if (departureTime == DONT_CARE && arrivalTime == DONT_CARE) {
                     appendErrorMessage("Directions for transit must include"
                             + " a departure or arrival time.");
                     return false;
@@ -407,7 +424,8 @@ public final class DirectionsRequest implements Serializable {
             default:
                 // Including walking since the Algorithm switch statements
                 // don't check for walking.
-                appendErrorMessage("Unsupported desired travel mode " + travelMode);
+                appendErrorMessage("Unsupported desired travel mode "
+                        + travelMode);
                 return false;
             }
 
@@ -415,33 +433,43 @@ public final class DirectionsRequest implements Serializable {
             // as google lets you set times in the past.
 
             // Validate optional parameters
-            if (minDistanceToBikeInMeters < 0 || maxDistanceToBikeInMeters < 0
-                    || minNumberBusTransfers < 0 || maxNumberBusTransfers < 0) {
+            if ((minDistanceToBikeInMeters != DONT_CARE && minDistanceToBikeInMeters < 0)
+                    || (maxDistanceToBikeInMeters != DONT_CARE && maxDistanceToBikeInMeters < 0)
+                    || (minNumberBusTransfers != DONT_CARE && minNumberBusTransfers < 0)
+                    || (maxNumberBusTransfers != DONT_CARE && maxNumberBusTransfers < 0)) {
                 appendErrorMessage("All optional parameters (biking distance and bus transfers)"
                         + " must be greater than or equal to zero");
                 return false;
             }
 
-            if (minDistanceToBikeInMeters > maxDistanceToBikeInMeters) {
+            if (minDistanceToBikeInMeters != DONT_CARE &&
+                    maxDistanceToBikeInMeters != DONT_CARE &&
+                    minDistanceToBikeInMeters > maxDistanceToBikeInMeters) {
                 appendErrorMessage("Min > Max for distance to bike.");
                 return false;
             }
 
-            if (minNumberBusTransfers > maxNumberBusTransfers) {
+            if (minNumberBusTransfers != DONT_CARE &&
+                    maxNumberBusTransfers != DONT_CARE &&
+                    minNumberBusTransfers > maxNumberBusTransfers) {
                 appendErrorMessage("Min > Max for number of transfers");
                 return false;
             }
 
             // Printing out the parameters for debug purposes
-            System.err.println(RP_TAG + "StartAddress: " + startAddress);
-            System.err.println(RP_TAG + "EndAddress: " + endAddress);
-            System.err.println(RP_TAG + "ArrivalTime: " + arrivalTime);
-            System.err.println(RP_TAG + "DepartureTime: " + departureTime);
-            System.err.println(RP_TAG + "TravelMode: " + travelMode);
-            System.err.println(RP_TAG + "MinDistanceToBikeInMeters: " + minDistanceToBikeInMeters);
-            System.err.println(RP_TAG + "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
-            System.err.println(RP_TAG + "MinNumberBusTransfers: " + minNumberBusTransfers);
-            System.err.println(RP_TAG + "MaxNumberBusTransfers: " + maxNumberBusTransfers);
+            System.out.println(RP_TAG + "StartAddress: " + startAddress);
+            System.out.println(RP_TAG + "EndAddress: " + endAddress);
+            System.out.println(RP_TAG + "ArrivalTime: " + arrivalTime);
+            System.out.println(RP_TAG + "DepartureTime: " + departureTime);
+            System.out.println(RP_TAG + "TravelMode: " + travelMode);
+            System.out.println(RP_TAG + "MinDistanceToBikeInMeters: "
+                    + minDistanceToBikeInMeters);
+            System.out.println(RP_TAG + "MaxDistanceToBikeInMeters: "
+                    + maxDistanceToBikeInMeters);
+            System.out.println(RP_TAG + "MinNumberBusTransfers: "
+                    + minNumberBusTransfers);
+            System.out.println(RP_TAG + "MaxNumberBusTransfers: "
+                    + maxNumberBusTransfers);
 
             return true;
         }
@@ -454,7 +482,8 @@ public final class DirectionsRequest implements Serializable {
          * @throws IOException
          *             if the stream fails
          */
-        private void writeObject(final ObjectOutputStream out) throws IOException {
+        private void writeObject(final ObjectOutputStream out)
+                throws IOException {
             // Write each field to the stream in a specific order.
             // Specifying this order helps shield the class from problems
             // in future versions.
@@ -466,8 +495,8 @@ public final class DirectionsRequest implements Serializable {
             out.writeObject(travelMode);
             out.writeLong(minDistanceToBikeInMeters);
             out.writeLong(maxDistanceToBikeInMeters);
-            out.writeInt(minNumberBusTransfers);
-            out.writeInt(maxNumberBusTransfers);
+            out.writeLong(minNumberBusTransfers);
+            out.writeLong(maxNumberBusTransfers);
         }
 
         /**
@@ -493,32 +522,26 @@ public final class DirectionsRequest implements Serializable {
             travelMode = (TravelMode) in.readObject();
             minDistanceToBikeInMeters = in.readLong();
             maxDistanceToBikeInMeters = in.readLong();
-            minNumberBusTransfers = in.readInt();
-            maxNumberBusTransfers = in.readInt();
+            minNumberBusTransfers = in.readLong();
+            maxNumberBusTransfers = in.readLong();
         }
 
         @Override
         public String toString() {
-            return "RequestParameters:" + "\nstartAddress: " + startAddress + "\nendAddress: "
-                    + endAddress + "\narrivalTime: " + arrivalTime + "\ndepartureTime: "
-                    + departureTime + "\ntravelMode: " + travelMode.toString()
-                    + "\nminDistanceToBikeInMeters: " + minDistanceToBikeInMeters
-                    + "\nmaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters
-                    + "\nminNumberBusTransfers: " + minNumberBusTransfers
-                    + "\nmaxNumberBusTransfers: " + maxNumberBusTransfers + "\n";
+            return "RequestParameters:" + "\nstartAddress: " + startAddress
+                    + "\nendAddress: " + endAddress + "\narrivalTime: "
+                    + arrivalTime + "\ndepartureTime: " + departureTime
+                    + "\ntravelMode: " + travelMode.toString()
+                    + "\nminDistanceToBikeInMeters: "
+                    + minDistanceToBikeInMeters
+                    + "\nmaxDistanceToBikeInMeters: "
+                    + maxDistanceToBikeInMeters + "\nminNumberBusTransfers: "
+                    + minNumberBusTransfers + "\nmaxNumberBusTransfers: "
+                    + maxNumberBusTransfers + "\n";
         }
 
     }
 
-    /**
-     * Setter for the resource.
-     * 
-     * @param query This is the type of APIQuery to use.
-     */
-    public void setResource(APIQuery query) {
-        myParams.resource = query;
-    }
-    
     /**
      * Set the starting address for the trip.
      * 
@@ -556,7 +579,8 @@ public final class DirectionsRequest implements Serializable {
      */
     public DirectionsRequest setArrivalTime(final long newArrivalTime) {
         if (myParams.departureTime != 0) {
-            throw new IllegalArgumentException("departureTime was already " + "set.");
+            throw new IllegalArgumentException("departureTime was already "
+                    + "set.");
         }
         myParams.arrivalTime = newArrivalTime;
         return this;
@@ -574,7 +598,8 @@ public final class DirectionsRequest implements Serializable {
      */
     public DirectionsRequest setDepartureTime(final long newDepartureTime) {
         if (myParams.arrivalTime != 0) {
-            throw new IllegalArgumentException("departureTime was " + "already set.");
+            throw new IllegalArgumentException("departureTime was "
+                    + "already set.");
         }
         myParams.departureTime = newDepartureTime;
         return this;
@@ -604,7 +629,8 @@ public final class DirectionsRequest implements Serializable {
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
      */
-    public DirectionsRequest setMinDistanceToBikeInMeters(final long newMinDistanceToBikeInMeters) {
+    public DirectionsRequest setMinDistanceToBikeInMeters(
+            final long newMinDistanceToBikeInMeters) {
         myParams.minDistanceToBikeInMeters = newMinDistanceToBikeInMeters;
         return this;
     }
@@ -617,7 +643,8 @@ public final class DirectionsRequest implements Serializable {
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
      */
-    public DirectionsRequest setMaxDistanceToBikeInMeters(final long newMaxDistanceToBikeInMeters) {
+    public DirectionsRequest setMaxDistanceToBikeInMeters(
+            final long newMaxDistanceToBikeInMeters) {
         myParams.maxDistanceToBikeInMeters = newMaxDistanceToBikeInMeters;
         return this;
     }
@@ -630,7 +657,8 @@ public final class DirectionsRequest implements Serializable {
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
      */
-    public DirectionsRequest setMinNumberBusTransfers(final int newMinNumberBusTransfers) {
+    public DirectionsRequest setMinNumberBusTransfers(
+            final int newMinNumberBusTransfers) {
         myParams.minNumberBusTransfers = newMinNumberBusTransfers;
         return this;
     }
@@ -643,7 +671,8 @@ public final class DirectionsRequest implements Serializable {
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
      */
-    public DirectionsRequest setMaxNumberBusTransfers(final int newMaxNumberBusTransfers) {
+    public DirectionsRequest setMaxNumberBusTransfers(
+            final int newMaxNumberBusTransfers) {
         myParams.maxNumberBusTransfers = newMaxNumberBusTransfers;
         return this;
     }
@@ -654,7 +683,8 @@ public final class DirectionsRequest implements Serializable {
      * user-friendly error messages, call .getMessage() on the return value of
      * doRequest().
      * 
-     * @return the verbose errorMessages. Returns null if no messages have been set.
+     * @return the verbose errorMessages. Returns null if no messages have been
+     *         set.
      */
     public String getVerboseErrorMessages() {
         return errorMessages;
@@ -716,7 +746,8 @@ public final class DirectionsRequest implements Serializable {
      *             if a class is not found
      */
     @SuppressWarnings("unchecked")
-    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException,
+            ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
         // in future versions.
@@ -728,7 +759,8 @@ public final class DirectionsRequest implements Serializable {
     /**
      * Dummy JSON bicycle directions.
      */
-    private static final String DUMMY_BICYCLE_JSON = "{" + "\n   \"routes\" : [\n    "
+    private static final String DUMMY_BICYCLE_JSON = "{"
+            + "\n   \"routes\" : [\n    "
             + "  {\n         \"bounds\" : {\n            \"northeast\" : {\n  "
             + "             \"lat\" : 47.676040,\n               \"lng\" : -12"
             + "2.313250\n            },\n            \"southwest\" : {\n      "
