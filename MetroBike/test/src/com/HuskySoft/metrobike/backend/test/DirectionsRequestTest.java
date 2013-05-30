@@ -15,6 +15,7 @@ import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.TravelMode;
+import com.HuskySoft.metrobike.backend.DirectionsRequest.RequestParameters;
 
 /**
  * This class tests the DirectionsRequest class.
@@ -59,7 +60,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         String expected = "DirectionsRequest: RequestParameters:\nstartAddress: 6504 "
                 + "Latona Ave NE,Seattle,WA\n" + "endAddress: 3801 Brooklyn Ave NE,Seattle,WA\n"
-                + "arrivalTime: 4000000\n" + "departureTime: 0\n" + "travelMode: TRANSIT\n"
+                + "arrivalTime: 4000000\n" + "departureTime: -1\n" + "travelMode: TRANSIT\n"
                 + "minDistanceToBikeInMeters: 1000\n" + "maxDistanceToBikeInMeters: 2000\n"
                 + "minNumberBusTransfers: 0\n" + "maxNumberBusTransfers: 0\n" + "solutions: null";
 
@@ -155,7 +156,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
-        request.setArrivalTime(0);
+        request.setArrivalTime(RequestParameters.DONT_CARE);
         request.setDepartureTime(4000000);
 
         DirectionsStatus actual = request.doRequest();
@@ -200,7 +201,7 @@ public final class DirectionsRequestTest extends TestCase {
     public void test_doDummyRequestDepartureSetTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
-        request.setArrivalTime(0);
+        request.setArrivalTime(RequestParameters.DONT_CARE);
         request.setDepartureTime(4000000);
 
         DirectionsStatus actual = request.doDummyRequest();
@@ -275,7 +276,7 @@ public final class DirectionsRequestTest extends TestCase {
     public void test_doDummyRequestFailToSetDepartureAndArrivalTimeforTransitOrMixedTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
-        request.setArrivalTime(0);
+        request.setArrivalTime(RequestParameters.DONT_CARE);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -358,7 +359,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMinNumberBusTransfers(-1);
+        request.setMinNumberBusTransfers(-2);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -376,7 +377,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMaxNumberBusTransfers(-1);
+        request.setMaxNumberBusTransfers(-2);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -392,7 +393,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMinDistanceToBikeInMeters(-1);
+        request.setMinDistanceToBikeInMeters(-2);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -406,7 +407,7 @@ public final class DirectionsRequestTest extends TestCase {
     // @Test
     public void test_setDepartureThenArrivalTimeTest() {
         setUp();
-        request.setArrivalTime(0);
+        request.setArrivalTime(RequestParameters.DONT_CARE);
         request.setDepartureTime(100);
         try {
             request.setArrivalTime(100);
@@ -444,7 +445,7 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMaxDistanceToBikeInMeters(-1);
+        request.setMaxDistanceToBikeInMeters(-2);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
