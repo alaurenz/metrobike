@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.util.Log;
-
 /**
  * History class contains valid history address that user used to use.
  * 
@@ -41,7 +39,7 @@ public final class History {
         historyList = new ArrayList<String>();
         // right now we just hard code the address in order to save time to type
         hardCodeAddress();
-        Log.v(TAG, "Done creating a singleton class for History");
+        System.out.println(TAG + " Done creating a singleton class for History");
     }
 
     /**
@@ -53,7 +51,7 @@ public final class History {
         if (hist == null) {
             hist = new History();
         } else {
-            Log.v(TAG, "Get an existing history object");
+            System.out.println(TAG + " Get an existing history object");
         }
         return hist;
     }
@@ -76,7 +74,7 @@ public final class History {
     public void addAddress(final String address) {
         if (address == null) {
             // defensive programming.
-            Log.wtf(TAG, "WTF? Add address should not be null!");
+            System.err.println(TAG + " Add address should not be null!");
             return;
         }
         // only added if no duplicate history
@@ -94,7 +92,7 @@ public final class History {
     public void addAddress(final String[] addresses) {
         if (addresses == null) {
             // defensive programming.
-            Log.wtf(TAG, "WTF? Add address array should not be null!");
+            System.err.println(TAG + " Add address array should not be null!");
             return;
         }
         for (int i = 0; i < addresses.length; i++) {
@@ -112,7 +110,7 @@ public final class History {
     public String getAddress(final int index) {
         if (index < 0 || index >= getSize()) {
             // defensive programming.
-            Log.wtf(TAG, "WTF? Don't give an invalid index of the history list to me!");
+            System.err.println(TAG + " Don't give an invalid index of the history list to me!");
             return null;
         }
         return historyList.get(index);
@@ -136,14 +134,14 @@ public final class History {
     public void deleteAddress(final String address) {
         // make sure (defensive programming)
         if (address == null) {
-            Log.wtf(TAG, "WTF? Delete address should not be null!");
+            System.err.println(TAG + " Delete address should not be null!");
             return;
         }
         // here although the address should be in this list, we just need to
         if (historyList.contains(address)) {
             historyList.remove(address);
         } else {
-            Log.wtf(TAG, "WTF? This address " + address + " cannot be found in this history list!");
+            System.err.println(TAG + " This address " + address + " cannot be found in this history list!");
         }
     }
 
@@ -156,7 +154,7 @@ public final class History {
     public void deleteAddress(final int index) {
         if (index < 0 || index >= getSize()) {
             // defensive programming.
-            Log.wtf(TAG, "WTF? Don't give an invalid index of the history list to me!");
+            System.err.println(TAG + " Don't give an invalid index of the history list to me!");
             return;
         }
         historyList.remove(index);

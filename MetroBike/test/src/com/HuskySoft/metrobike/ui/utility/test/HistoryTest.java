@@ -81,11 +81,12 @@ public class HistoryTest extends TestCase {
      */
     public final void testAddSingleNullAddress04() {
         setup();
+        int expected = history.getSize();
         String str = null;
         // add a single address
         history.addAddress(str);
-        Assert.assertTrue("Add null address", history.getHistory().contains(str));
-        history.deleteAddress(str);
+        int actual = history.getSize();
+        Assert.assertTrue("Add null address", expected == actual);
     }
 
     /**
@@ -93,13 +94,14 @@ public class HistoryTest extends TestCase {
      */
     public final void testAddSingleDuplicateNullAddress04() {
         setup();
+        int expected = history.getSize();
         String str = null;
         // add a single address
         history.addAddress(str);
         history.addAddress(str);
         // should not be crash
-        Assert.assertTrue("Add 2 null address", history.getHistory().contains(str));
-        history.deleteAddress(str);
+        int actual = history.getSize();
+        Assert.assertTrue("Add 2 null address", expected == actual);
     }
 
     /**
