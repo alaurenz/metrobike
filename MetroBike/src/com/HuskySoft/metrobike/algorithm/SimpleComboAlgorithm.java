@@ -17,7 +17,13 @@ import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
  * @author Adrian Laurenzi
  */
 public final class SimpleComboAlgorithm extends AlgorithmWorker {
-
+	
+	/**
+	 * Max combo routes to generate (by replacing walking steps in
+	 * transit routes with bicycling)
+	 */
+	private static final int MAX_COMBO_ROUTES_TO_GENERATE = 1;
+	
     /**
      * {@inheritDoc}
      */
@@ -49,28 +55,16 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
             return addError(DirectionsStatus.UNSUPPORTED_CHARSET);
         }
 
-        // TODO uncomment for comparing combo to normal transit
-        // addResults(transitRoutes);
-        
         if(unsortedTransitRoutes != null) {
         	List<Route> transitRoutes =
         			Utility.sortRoutesByTransitDuration(unsortedTransitRoutes);
         	
             List<Route> comboResults = new ArrayList<Route>();
             int i = 0;
-            for (Route curRoute : transitRoutes) {
-            	// use at most the first two transit routes
-            	if(i > 1)
-            		break;
-                
-            	// For preventing exceeding query request limit
-                try {
-                    Thread.sleep(TRANSIT_QUERY_DELAY_MS);
-                } catch (InterruptedException e) {
-                    System.err.println("Error delaying transit query request.");
-                }
+            while(i < transitRoutes.size() && i < MAX_COMBO_ROUTES_TO_GENERATE) {
+            	Route curRoute = transitRoutes.get(i);
             	
-                Route comboRoute = null;
+            	Route comboRoute = null;
                 if(timeMode.equals(TransitTimeMode.DEPARTURE_TIME)) {
                     comboRoute = replaceWalkingWithBicyclingDeparture(
                         curRoute, routeTime);

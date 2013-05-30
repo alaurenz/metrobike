@@ -12,9 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.HuskySoft.metrobike.algorithm.AlgorithmWorker;
-import com.HuskySoft.metrobike.algorithm.BicycleOnlyAlgorithm;
-import com.HuskySoft.metrobike.algorithm.SimpleComboAlgorithm;
+import com.HuskySoft.metrobike.algorithm.*;
 
 /**
  * @author coreyh3
@@ -163,10 +161,16 @@ public final class DirectionsRequest implements Serializable {
             return doAlgorithm(new BicycleOnlyAlgorithm());
         case MIXED:
             // Travel Mode Mix also needs the bicycle only routes
-            DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());
-
-            DirectionsStatus bikeStatus = doAlgorithm(new BicycleOnlyAlgorithm());
-            if (comboStatus.isError() && bikeStatus.isError()) {
+        	BicycleOnlyAlgorithm bikeAlg = new BicycleOnlyAlgorithm();
+        	DirectionsStatus bikeStatus = doAlgorithm(bikeAlg); 
+        	// this is to prevent need for SmartAlgorithm to re-query 
+        	// directions API
+        	SmartAlgorithm smartAlg = new SmartAlgorithm();
+        	smartAlg.setReferencedRoute(bikeAlg.getReferencedRoute());
+        	DirectionsStatus smartStatus = doAlgorithm(smartAlg); 
+        	DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());
+        	
+            if (bikeStatus.isError() && smartStatus.isError() && comboStatus.isError()) {
                 return DirectionsStatus.NO_RESULTS_FOUND;
             }
             // Sort results by total duration
@@ -188,30 +192,19 @@ public final class DirectionsRequest implements Serializable {
      * @return direction status after the algorithm completes
      */
     private DirectionsStatus doAlgorithm(final AlgorithmWorker algorithmWorker) {
-        // DirectionsStatus firstStatus = firstAlg.findRoutes(myParams);
         DirectionsStatus status = algorithmWorker.findRoutes(myParams);
 
-        /*
-         * if(firstStatus.isError()) { extendedErrors = firstAlg.getErrors();
-         * return firstStatus; }
-         */
         if (status.isError()) {
             appendErrorMessage(algorithmWorker.getErrors());
             return status;
         }
 
-        // List<Route> firstRoutes = firstAlg.getResults();
         List<Route> routes = algorithmWorker.getResults();
 
-        /*
-         * if (firstRoutes == null) { System.err.println(TAG +
-         * "Got null from SimpleAlgorithm without an error");
-         * appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
-         * return DirectionsStatus.NO_RESULTS_FOUND; }
-         */
         if (routes == null) {
             System.err.println(TAG
-                    + "Got null from SimpleComboAlgorithm without an error");
+                    + "Got null from " + algorithmWorker.getClass().getName()
+                    + " without an error");
             appendErrorMessage(DirectionsStatus.NO_RESULTS_FOUND.getMessage());
             return DirectionsStatus.NO_RESULTS_FOUND;
         }

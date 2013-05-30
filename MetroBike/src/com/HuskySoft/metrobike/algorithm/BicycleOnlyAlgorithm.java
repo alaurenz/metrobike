@@ -24,18 +24,26 @@ public final class BicycleOnlyAlgorithm extends AlgorithmWorker {
 	public DirectionsStatus findRoutes(final RequestParameters toProcess) {
 		clearErrors();
 
-		try {
-			// Get only bicycle routes, no matter what.
-			if (toProcess.getTravelMode() == TravelMode.BICYCLING
-					|| toProcess.getTravelMode() == TravelMode.TRANSIT
-					|| toProcess.getTravelMode() == TravelMode.MIXED) {
-				addBicycleResults(toProcess);
-			} else {
-				return addError(DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR, ": "
-						+ toProcess.getTravelMode().toString());
+		// Get only bicycle routes, no matter what.
+		if (toProcess.getTravelMode() == TravelMode.BICYCLING
+				|| toProcess.getTravelMode() == TravelMode.TRANSIT
+				|| toProcess.getTravelMode() == TravelMode.MIXED) {
+
+			List<Route> bicycleRoutes = null;
+			try {
+				bicycleRoutes = getBicycleResults(
+						toProcess.getStartAddress(), toProcess.getEndAddress());
+			} catch (UnsupportedEncodingException e) {
+				addError(DirectionsStatus.UNSUPPORTED_CHARSET);
 			}
-		} catch (UnsupportedEncodingException e) {
-			return addError(DirectionsStatus.UNSUPPORTED_CHARSET);
+
+			if(bicycleRoutes != null && bicycleRoutes.size() > 0) {
+				addResults(bicycleRoutes);
+				setReferencedRoute(bicycleRoutes.get(0));
+			}
+		} else {
+			return addError(DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR, ": "
+					+ toProcess.getTravelMode().toString());
 		}
 
 		// If we got no results, return the appropriate status code
@@ -49,34 +57,5 @@ public final class BicycleOnlyAlgorithm extends AlgorithmWorker {
 		}
 
 		return markSuccessful();
-	}
-
-	/**
-	 * Retrieves bicycle directions and adds these to the overall algorithm
-	 * results.
-	 * 
-	 * @param toProcess
-	 *            the RequestParameters object describing the search to make
-	 * @throws UnsupportedEncodingException
-	 *             if there is a problem with the default charset
-	 */
-	private void addBicycleResults(final RequestParameters toProcess)
-			throws UnsupportedEncodingException {
-		// Build the query string
-		String queryString;
-		queryString = Utility.buildBicycleQueryString(
-				toProcess.getStartAddress(), toProcess.getEndAddress(), true);
-
-		// Fetch the query results
-		String jsonResult = doQueryWithHandling(queryString);
-
-		if (jsonResult != null) {
-			// Parse the results
-			List<Route> result = buildRouteListFromJSONString(jsonResult);
-			if (result != null) {
-				// Add the results
-				addResults(result);
-			}
-		}
 	}
 }
