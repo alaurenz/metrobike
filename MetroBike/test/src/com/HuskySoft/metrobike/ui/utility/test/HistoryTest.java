@@ -1,5 +1,7 @@
 package com.HuskySoft.metrobike.ui.utility.test;
 
+import android.util.Log;
+
 import com.HuskySoft.metrobike.ui.utility.History;
 
 import junit.framework.Assert;
@@ -187,9 +189,11 @@ public class HistoryTest extends TestCase {
      */
     public final void testDeleteAddress01() {
         setup();
+        int numHistoryEntriesBefore = history.getSize();
         history.addAddress(TEST_STRING);
         history.deleteAddress(0);
-        Assert.assertTrue(history.getSize() == 0);
+        int numHistoryEntriesAfter = history.getSize();
+        Assert.assertEquals(numHistoryEntriesBefore, numHistoryEntriesAfter);
     }
 
     /**
