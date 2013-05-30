@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.Route;
+import com.HuskySoft.metrobike.backend.StubGoogleAPIWrapper;
 import com.HuskySoft.metrobike.backend.TravelMode;
 import com.HuskySoft.metrobike.backend.DirectionsRequest.RequestParameters;
 
@@ -522,6 +523,23 @@ public final class DirectionsRequestTest extends TestCase {
         Assert.assertEquals("The toString() representation of a serialized->deserialized"
                 + " object should remain unchanged.", request.toString(),
                 recreatedRequest.toString());
+    }
+    
+    /**
+     * BlackBox: Tests to make sure that when DoRequest is configured to use the 
+     * stubGoogleAPIWrapper it actually does.
+     */
+    public void test_StubDoRequestWorks(){
+        setUp();
+        request.setTravelMode(TravelMode.BICYCLING);
+        request.setResource(new StubGoogleAPIWrapper());
+        
+        DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
+
+        DirectionsStatus actual = request.doRequest();
+        Assert.assertEquals(
+                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
+                actual);
     }
 
     /**

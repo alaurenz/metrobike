@@ -52,11 +52,6 @@ public final class DirectionsRequest implements Serializable {
      * Holds any error message(s) generated during execution.
      */
     private String errorMessages;
-
-    /**
-     * This determines whether or not to use the StubGoogleAPIWrapper.
-     */
-    private APIQuery resource = null;
     
     /**
      * Constructs a new DirectionsRequest object.
@@ -66,16 +61,6 @@ public final class DirectionsRequest implements Serializable {
         solutions = null;
         errorMessages = null;
     }
-
-    /**
-     * Getter for the resource field.
-     * 
-     * @return Returns the current APIQuery Object.
-     */
-    public APIQuery getResource() {
-        return resource;
-    }
-    
     
     /**
      * Initiates the request calculation. This is a blocking call. NOTE: This
@@ -153,19 +138,27 @@ public final class DirectionsRequest implements Serializable {
          * nested foreach loop to get all of the results (?)
          */
 
+        AlgorithmWorker alg = null;
+        
         // Query the simple algorithm first
         switch (myParams.getTravelMode()) {
         case BICYCLING:
-            return doAlgorithm(new BicycleOnlyAlgorithm());
+            alg = new BicycleOnlyAlgorithm();
+            alg.setResource(myParams.getResource());
+            return doAlgorithm(alg);
         case TRANSIT:
-            return doAlgorithm(new BicycleOnlyAlgorithm());
+            alg = new BicycleOnlyAlgorithm();
+            alg.setResource(myParams.getResource());
+            return doAlgorithm(alg);
         case MIXED:
             // Travel Mode Mix also needs the bicycle only routes
         	BicycleOnlyAlgorithm bikeAlg = new BicycleOnlyAlgorithm();
+        	bikeAlg.setResource(myParams.getResource());
         	DirectionsStatus bikeStatus = doAlgorithm(bikeAlg); 
         	// this is to prevent need for SmartAlgorithm to re-query 
         	// directions API
         	SmartAlgorithm smartAlg = new SmartAlgorithm();
+        	smartAlg.setResource(myParams.getResource());
         	smartAlg.setReferencedRoute(bikeAlg.getReferencedRoute());
         	DirectionsStatus smartStatus = doAlgorithm(smartAlg); 
         	DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());
@@ -673,6 +666,16 @@ public final class DirectionsRequest implements Serializable {
         return this;
     }
 
+    /**
+     * Setter for the resource field
+     * 
+     * @param queryObj
+     */
+    public void setResource(APIQuery queryObj) {
+        myParams.resource = queryObj;
+    }
+    
+    
     /**
      * Returns the verbose error messages. This may contain repeated error
      * messages, and so may not be suitable for displaying to users. To display

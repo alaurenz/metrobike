@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,14 +39,9 @@ public final class Utility {
     }
     
     /**
-     * Class tag
-     */
-    private static final String TAG = "MetroBikeUtility";
-    
-    /**
      * Format for printing times in "human-readable" way
      */
-    private static final String TIME_FORMAT = "h:m a";
+    private static final String TIME_FORMAT = "h:mm a";
     
     /**
      * Format for printing times in "human-readable" way
@@ -391,7 +387,7 @@ public final class Utility {
     
     /**
      * Returns the given timestamp (in seconds) in a human-readable format
-     * NOTE: time given in GMT.
+     * NOTE: time given in GMT-7.
      * 
      * @param timestampSeconds
      *            Timestamp (number of seconds since 1970) to convert to
@@ -402,6 +398,8 @@ public final class Utility {
         long timestampMillis = timestampSeconds * 1000;
         Date date = new Date(timestampMillis);
         SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT, TIME_LOCALE);
+        //Set the timezone to GMT-7. If this isn't done then it returns GMT
+        dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
         return dateFormat.format(date);
     }
     
