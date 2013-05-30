@@ -8,6 +8,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -169,14 +171,36 @@ public class DetailsActivity extends Activity {
             List<Step> steps = curLeg.getStepList();
             for (int j = 0; j < steps.size(); j++) {
                 Step s = steps.get(j);
-                String ss = s.getHtmlInstruction().replaceAll("\\<.*?>", "");
+                directions.append("Step " + count + ": ");
+                
+                
+                // Note: DO NOT combine multiple directions.append() calls
+                // into one. Otherwise, the format (bold, italics, etc.) 
+                // will NOT be effective.
                 if (s.getTravelMode() == TravelMode.TRANSIT) {
-                    // Use dummy route number to represent bus number.
-                    // This will be fixed when this part in backend is
-                    // completed.
-                    ss = "(Bus #49) " + ss;
+                    // Add transit info if this step is transit
+                    String transitDetails = "<b>" 
+                                            + s.getTransitDetails().getVehicleType()
+                                            + " "
+                                            + s.getTransitDetails().getLineShortName()
+                                            + "</b>";
+                    directions.append(Html.fromHtml(transitDetails));
+                    directions.append(" (");
                 }
-                directions.append("\nStep " + count + "   " + ss);
+                
+                Log.v("MetroBike HTML Intructions", s.getHtmlInstruction());
+                
+                // Strip out all the <div> and </div> blocks in details
+                String ss = s.getHtmlInstruction().replaceAll("[<]div[^>]*[>]", " (")
+                                                  .replaceAll("[<]/div[>]", ")");
+                
+                directions.append(Html.fromHtml(ss));
+                
+                if (s.getTravelMode() == TravelMode.TRANSIT) {
+                    directions.append(")");
+                }   
+                
+                directions.append("\n");
                 count++;
             }
         }
