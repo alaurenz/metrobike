@@ -59,15 +59,15 @@ import com.google.android.gms.location.LocationClient;
  * @author Shuo Wang, Sam Wilson
  */
 
-public class SearchActivity extends Activity
-implements GooglePlayServicesClient.ConnectionCallbacks,
-GooglePlayServicesClient.OnConnectionFailedListener {
+public class SearchActivity extends Activity implements
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
 
-	/**
-	 * The tag of this class.
-	 */
-	private static final String TAG = "SearchActivity";
-	
+    /**
+     * The tag of this class.
+     */
+    private static final String TAG = "SearchActivity";
+
     /**
      * Minimum two digit number.
      */
@@ -237,25 +237,23 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
                 if (locationClient.isConnected()) {
                     currLocationLatLagString += locationClient.getLastLocation().getLatitude()
-                                                + ", "
-                                                + locationClient.getLastLocation().getLongitude();
-                    
+                            + ", " + locationClient.getLastLocation().getLongitude();
+
                 } else {
                     currLocationLatLagString += "" + LATITUDE + ", " + LONGITUDE;
                     // Must call runOnUiThread if want to display a Toast or a
                     // Dialog within a thread
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(SearchActivity.this, 
-                                    "Cannot get current location, " 
-                                    + "use UW address instead", 
+                            Toast.makeText(SearchActivity.this,
+                                    "Cannot get current location, " + "use UW address instead",
                                     Toast.LENGTH_LONG).show();
                         }
                     });
 
                 }
             }
-            
+
             String from = "";
             String to = "";
             if (fromAutoCompleteTextView.isEnabled()) {
@@ -263,7 +261,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             } else {
                 from = currLocationLatLagString;
             }
-            
+
             if (toAutoCompleteTextView.isEnabled()) {
                 to = toAutoCompleteTextView.getText().toString();
             } else {
@@ -271,15 +269,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             }
 
             // Generate a direction request
-            DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from)
-                                                              .setEndAddress(to);
-            
+            DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from).setEndAddress(
+                    to);
+
             if (bicycleOnlyCheckBox.isChecked()) {
                 tm = TravelMode.BICYCLING;
             } else {
                 tm = TravelMode.MIXED;
             }
-              
+
             dReq.setTravelMode(tm);
 
             // Set up time for direction request
@@ -309,7 +307,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
             time.set(second, minute, hourOfDay, dayOfMonth, month, year);
             long timeToSend = time.toMillis(false) / SEC_TO_MILLISEC;
-            
+
             // Determine time mode
             if (arriveAtButton.isChecked()) {
                 dReq.setArrivalTime(timeToSend);
@@ -336,7 +334,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                         builder.setTitle(Html.fromHtml("<font color='red'>Error</font>"));
                         // we can set the onClickListener parameter as null
                         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                            
+
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
                                 // cancel this dialog
@@ -352,17 +350,17 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 pd.dismiss();
                 return;
             }
-			// if no errors, store the address into history.
-			// don't store the current location.
-			if (!from.equals(currLocationLatLagString)) {
-				historyItem.addAddress(from);
-				saveHistoryFile(from);
-			}
-			if (!to.equals(currLocationLatLagString)) {
-				historyItem.addAddress(to);
-				saveHistoryFile(to);
-			}
-			
+            // if no errors, store the address into history.
+            // don't store the current location.
+            if (!from.equals(currLocationLatLagString)) {
+                historyItem.addAddress(from);
+                saveHistoryFile(from);
+            }
+            if (!to.equals(currLocationLatLagString)) {
+                historyItem.addAddress(to);
+                saveHistoryFile(to);
+            }
+
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
@@ -375,12 +373,12 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         }
     }
 
-//    /**
-//     * Keeps an array of travel mode entries.
-//     */
-//    private static final String[] TRAVEL_MODE_DATA = { "Bicycle Only", 
-//            "Bicycle and Transit" };
-    
+    // /**
+    // * Keeps an array of travel mode entries.
+    // */
+    // private static final String[] TRAVEL_MODE_DATA = { "Bicycle Only",
+    // "Bicycle and Transit" };
+
     /**
      * Integer Representation of Color: Light Blue.
      */
@@ -453,11 +451,11 @@ GooglePlayServicesClient.OnConnectionFailedListener {
      */
     private History historyItem;
 
-//    /**
-//     * A Spinner for listing typing Travel Mode.
-//     */
-//    private Spinner travelModeSpinner;
-    
+    // /**
+    // * A Spinner for listing typing Travel Mode.
+    // */
+    // private Spinner travelModeSpinner;
+
     /**
      * A CheckBox for user to select BICYCLE ONLY MODE.
      */
@@ -472,12 +470,12 @@ GooglePlayServicesClient.OnConnectionFailedListener {
      * A progress dialog indicating the searching status of this activity.
      */
     private ProgressDialog pd;
-    
+
     /**
      * Location Client to get user's current location.
      */
     private LocationClient locationClient;
-    
+
     /**
      * The latitude value of University of Washington.
      */
@@ -486,12 +484,12 @@ GooglePlayServicesClient.OnConnectionFailedListener {
      * The longitude value of University of Washington.
      */
     private static final double LONGITUDE = -122.30906219999997;
-    
+
     /**
      * Current Location (From) button for use current location.
      */
     private ImageButton fromCurrLocationButton;
-    
+
     /**
      * Current Location (To) button for use current location.
      */
@@ -512,10 +510,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         setListeners();
         setHistorySection();
     }
-    
+
     /**
-     * Connect location client (for power saving).
-     * {@inheritDoc}
+     * Connect location client (for power saving). {@inheritDoc}
      * 
      * @see android.app.Activity#onStart(android.os.Bundle)
      */
@@ -524,7 +521,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         super.onStart();
         locationClient.connect();
     }
-    
+
     /**
      * Refresh the history list.
      */
@@ -533,10 +530,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         setHistorySection();
         super.onResume();
     }
-    
+
     /**
-     * Disconnect location client (for power saving).
-     * {@inheritDoc}
+     * Disconnect location client (for power saving). {@inheritDoc}
      * 
      * @see android.app.Activity#onStop(android.os.Bundle)
      */
@@ -643,17 +639,18 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
 
         // Travel Mode Related setup
-//        travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
-//        ArrayAdapter<String> travelModeSpinnerAdapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
-//        travelModeSpinnerAdapter
-//                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
+        // travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
+        // ArrayAdapter<String> travelModeSpinnerAdapter = new
+        // ArrayAdapter<String>(this,
+        // android.R.layout.simple_spinner_item, TRAVEL_MODE_DATA);
+        // travelModeSpinnerAdapter
+        // .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // travelModeSpinner.setAdapter(travelModeSpinnerAdapter);
         // Default Travel Mode: Mixed
-//        travelModeSpinner.setSelection(1);
+        // travelModeSpinner.setSelection(1);
         tm = TravelMode.MIXED;
         bicycleOnlyCheckBox = (CheckBox) findViewById(R.id.checkboxBicycleOnly);
-        
+
         // Location setup
         locationClient = new LocationClient(this, this, this);
         fromCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationFrom);
@@ -709,31 +706,33 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         // a time)
         timeEditText.setKeyListener(null);
 
-//        travelModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-//
-//            @Override
-//            public void onItemSelected(final AdapterView<?> parent, final View view,
-//                    final int position, final long id) {
-//                // travelModeData = { "Bicycle Only", 
-//                // "Bicycle and Transit" };
-//
-//                // Since there is no switch/case syntax in Android,
-//                // only use if/else statements
-//                if (position == 0) {
-//                    tm = TravelMode.BICYCLING;
-//                } else {
-//                    tm = TravelMode.MIXED;
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(final AdapterView<?> arg0) {
-//                // Default Value: Bicycling Mode
-//                tm = TravelMode.MIXED;
-//                travelModeSpinner.setSelection(2);
-//                Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
-//            }
-//        });
+        // travelModeSpinner.setOnItemSelectedListener(new
+        // OnItemSelectedListener() {
+        //
+        // @Override
+        // public void onItemSelected(final AdapterView<?> parent, final View
+        // view,
+        // final int position, final long id) {
+        // // travelModeData = { "Bicycle Only",
+        // // "Bicycle and Transit" };
+        //
+        // // Since there is no switch/case syntax in Android,
+        // // only use if/else statements
+        // if (position == 0) {
+        // tm = TravelMode.BICYCLING;
+        // } else {
+        // tm = TravelMode.MIXED;
+        // }
+        // }
+        //
+        // @Override
+        // public void onNothingSelected(final AdapterView<?> arg0) {
+        // // Default Value: Bicycling Mode
+        // tm = TravelMode.MIXED;
+        // travelModeSpinner.setSelection(2);
+        // Toast.makeText(SearchActivity.this, "hah", Toast.LENGTH_LONG).show();
+        // }
+        // });
 
         findButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -760,7 +759,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 boolean toACTVisEnabled = toAutoCompleteTextView.isEnabled();
                 String fromACTVOriginalText = fromAutoCompleteTextView.getText().toString();
                 String toACTVOriginalText = toAutoCompleteTextView.getText().toString();
-                
+
                 if (!fromACTVisEnabled) {
                     toAutoCompleteTextView.clearComposingText();
                     toAutoCompleteTextView.setEnabled(false);
@@ -768,15 +767,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    toClearButton.setVisibility(View.INVISIBLE); 
+                    toClearButton.setVisibility(View.INVISIBLE);
                 } else {
                     toAutoCompleteTextView.setTextColor(Color.BLACK);
                     toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     toAutoCompleteTextView.setText(fromACTVOriginalText);
-                    toAutoCompleteTextView.setEnabled(true);                 
+                    toAutoCompleteTextView.setEnabled(true);
                 }
-                
+
                 if (!toACTVisEnabled) {
                     fromAutoCompleteTextView.clearComposingText();
                     fromAutoCompleteTextView.setEnabled(false);
@@ -784,13 +783,13 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    fromClearButton.setVisibility(View.INVISIBLE); 
+                    fromClearButton.setVisibility(View.INVISIBLE);
                 } else {
                     fromAutoCompleteTextView.setTextColor(Color.BLACK);
                     fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     fromAutoCompleteTextView.setText(toACTVOriginalText);
-                    fromAutoCompleteTextView.setEnabled(true);                 
+                    fromAutoCompleteTextView.setEnabled(true);
                 }
             }
         });
@@ -808,9 +807,10 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 toAutoCompleteTextView.setText("");
             }
         });
-        
+
         fromCurrLocationButton.setOnClickListener(new OnClickListener() {
             private boolean currentLocationSelected = false;
+
             public void onClick(final View v) {
                 if (currentLocationSelected) {
                     fromAutoCompleteTextView.setText("");
@@ -818,7 +818,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     fromAutoCompleteTextView.setEnabled(true);
-                    //toCurrLocationButton.setEnabled(true);
+                    // toCurrLocationButton.setEnabled(true);
                     fromAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -828,17 +828,18 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     fromAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    fromClearButton.setVisibility(View.INVISIBLE); 
-                    // disable the to current location button 
-                    //toCurrLocationButton.setEnabled(false);
+                    fromClearButton.setVisibility(View.INVISIBLE);
+                    // disable the to current location button
+                    // toCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
             }
         });
-        
+
         toCurrLocationButton.setOnClickListener(new OnClickListener() {
             private boolean currentLocationSelected = false;
+
             public void onClick(final View v) {
                 if (currentLocationSelected) {
                     toAutoCompleteTextView.setText("");
@@ -846,7 +847,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     toAutoCompleteTextView.setEnabled(true);
-                    //fromCurrLocationButton.setEnabled(true);
+                    // fromCurrLocationButton.setEnabled(true);
                     toAutoCompleteTextView.requestFocus();
                     currentLocationSelected = false;
                 } else {
@@ -856,9 +857,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                     toAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    toClearButton.setVisibility(View.INVISIBLE); 
-                    // disable the from current location button 
-                    //fromCurrLocationButton.setEnabled(false);
+                    toClearButton.setVisibility(View.INVISIBLE);
+                    // disable the from current location button
+                    // fromCurrLocationButton.setEnabled(false);
                     currentLocationSelected = true;
                 }
 
@@ -912,8 +913,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         // Jump from fromAutoCompleteTextView to toAutoCompleteTextView
         fromAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(final TextView v, final int actionId, 
-                    final KeyEvent event) {
+            public boolean onEditorAction(final TextView v, final int actionId, final KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     toAutoCompleteTextView.requestFocus();
@@ -963,7 +963,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             }
         });
     }
-    
+
     /**
      * Fill in the history section. TODO: currently hard-coded, creating a live
      * version in next phases. Since the data is dummy, I keep all the numbers
@@ -980,27 +980,30 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.select_dialog_item, f);
         fromAutoCompleteTextView.setAdapter(adapter);
-        
+
         toAutoCompleteTextView.setAdapter(adapter);
     }
 
     /**
-     * After onStart calls locationClient to connect,
-     * this is triggered if there is a problem connecting the
-     * Google Play Location Services.
-     * @param cr the connection result
+     * After onStart calls locationClient to connect, this is triggered if there
+     * is a problem connecting the Google Play Location Services.
+     * 
+     * @param cr
+     *            the connection result
      */
     @Override
     public final void onConnectionFailed(final ConnectionResult cr) {
-        Toast.makeText(this, "Connection Failed, please check your" 
-                    + "Google Play Services status", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,
+                "Connection Failed, please check your" + "Google Play Services status",
+                Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * After onStart calls locationClient to connect,
-     * this is triggered if connection to Google Play Location Services
-     * is successfully established.
-     * @param bd the bundle passed in by Google Play Location Services
+     * After onStart calls locationClient to connect, this is triggered if
+     * connection to Google Play Location Services is successfully established.
+     * 
+     * @param bd
+     *            the bundle passed in by Google Play Location Services
      */
     @Override
     public final void onConnected(final Bundle bd) {
@@ -1008,42 +1011,41 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     }
 
     /**
-     * After onStart calls locationClient to disconnect,
-     * this is triggered if connection to Google Play Location Services
-     * is successfully disconnected.
+     * After onStart calls locationClient to disconnect, this is triggered if
+     * connection to Google Play Location Services is successfully disconnected.
      */
     @Override
     public final void onDisconnected() {
         // Nothing happens
     }
-    
-	/**
-	 * Write all history addresses into file.
-	 * 
-	 * @param address
-	 *            the address that will add the file.
-	 */
-	private void saveHistoryFile(final String address) {
-		FileOutputStream fos = null;
-		try {
-			// append the address into exist file.
-			fos = openFileOutput(History.FILENAME, Context.MODE_APPEND);
-			fos.write(address.getBytes());
-			// \n indicate the next address
-			fos.write("\n".getBytes());
-		} catch (FileNotFoundException e) {
-			Log.i(TAG, "Cannot create history file");
-		} catch (IOException e) {
-			Log.i(TAG, "Connot write history into file");
-		} finally {
-			try {
-				// close the file output stream.
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				Log.i(TAG, "Connot close the file ouput stream");
-			}
-		}
-	}
+
+    /**
+     * Write all history addresses into file.
+     * 
+     * @param address
+     *            the address that will add the file.
+     */
+    private void saveHistoryFile(final String address) {
+        FileOutputStream fos = null;
+        try {
+            // append the address into exist file.
+            fos = openFileOutput(History.FILENAME, Context.MODE_APPEND);
+            fos.write(address.getBytes());
+            // \n indicate the next address
+            fos.write("\n".getBytes());
+        } catch (FileNotFoundException e) {
+            Log.i(TAG, "Cannot create history file");
+        } catch (IOException e) {
+            Log.i(TAG, "Connot write history into file");
+        } finally {
+            try {
+                // close the file output stream.
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                Log.i(TAG, "Connot close the file ouput stream");
+            }
+        }
+    }
 }

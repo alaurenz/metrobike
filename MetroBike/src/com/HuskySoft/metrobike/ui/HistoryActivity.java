@@ -33,11 +33,11 @@ public class HistoryActivity extends Activity {
 
     // This class pass the check style
 
-	/**
-	 * The tag of this class.
-	 */
-	private static final String TAG = "HistoryActivity";
-	
+    /**
+     * The tag of this class.
+     */
+    private static final String TAG = "HistoryActivity";
+
     /**
      * The UI list view.
      */
@@ -65,6 +65,7 @@ public class HistoryActivity extends Activity {
         history = History.getInstance();
         initializeHistoryListView();
         setListener();
+        Log.v(TAG, "Done creating the history page");
     }
 
     /**
@@ -75,8 +76,8 @@ public class HistoryActivity extends Activity {
         historyListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
             @Override
-            public boolean onItemLongClick(final AdapterView<?> parent, 
-                    final View view, final int position, final long id) {
+            public boolean onItemLongClick(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
                 // get the string item
                 final String item = (String) parent.getItemAtPosition(position);
                 // builder an alertdialog
@@ -96,6 +97,7 @@ public class HistoryActivity extends Activity {
                             Toast.makeText(context, emptyHistory, Toast.LENGTH_SHORT).show();
                             // kill this activity and go back to the previous
                             // one
+                            Log.d(TAG, "No more addresses, quite this history page");
                             finish();
                         }
                     }
@@ -127,67 +129,70 @@ public class HistoryActivity extends Activity {
 
     }
 
-	/**
-	 * We need to kill this activity if its not on the main screen.
-	 * {@inheritDoc}
-	 * 
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected final void onPause() {
-		super.onPause();
-		finish();
-	}
+    /**
+     * We need to kill this activity if its not on the main screen.
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onPause()
+     */
+    @Override
+    protected final void onPause() {
+        super.onPause();
+        Log.v(TAG, "Kill this history page");
+        finish();
+    }
 
-	/**
-	 * We need to kill this activity if its not on the main screen.
-	 * {@inheritDoc}
-	 * 
-	 * @see android.app.Activity#onBackPressed()
-	 */
-	@Override
-	public final void onBackPressed() {
-		super.onBackPressed();
-		finish();
-	}
+    /**
+     * We need to kill this activity if its not on the main screen.
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onBackPressed()
+     */
+    @Override
+    public final void onBackPressed() {
+        super.onBackPressed();
+        Log.v(TAG, "Kill this history page");
+        finish();
+    }
 
-	/**
-	 * We need to kill this activity if its not on the main screen.
-	 * {@inheritDoc}
-	 * 
-	 * @see android.app.Activity#onDestroy()
-	 */
-	@Override
-	protected final void onDestroy() {
-		super.onDestroy();
-		saveHistoryFile();
-	}
+    /**
+     * We need to kill this activity if its not on the main screen.
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected final void onDestroy() {
+        super.onDestroy();
+        saveHistoryFile();
+        Log.v(TAG, "Destroy this history page");
+    }
 
-	/**
-	 * Write all histories into file.
-	 */
-	private void saveHistoryFile() {
-		FileOutputStream fos = null;
-		try {
-			fos = openFileOutput(History.FILENAME, Context.MODE_PRIVATE);
-			final List<String> list = history.getHistory();
-			for (String str : list) {
-				Log.d(TAG, "Read list " + str);
-				fos.write(str.getBytes());
-				fos.write("\n".getBytes());
-			}
-		} catch (FileNotFoundException e) {
-			Log.i(TAG, "Cannot create history file");
-		} catch (IOException e) {
-			Log.i(TAG, "Connot write history into file");
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				Log.i(TAG, "Connot close the file ouput stream");
-			}
-		}
-	}
+    /**
+     * Write all histories into file.
+     */
+    private void saveHistoryFile() {
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(History.FILENAME, Context.MODE_PRIVATE);
+            final List<String> list = history.getHistory();
+            for (String str : list) {
+                Log.d(TAG, "Read list " + str);
+                fos.write(str.getBytes());
+                fos.write("\n".getBytes());
+            }
+        } catch (FileNotFoundException e) {
+            Log.i(TAG, "Cannot create history file");
+        } catch (IOException e) {
+            Log.i(TAG, "Connot write history into file");
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                Log.i(TAG, "Connot close the file ouput stream");
+            }
+        }
+    }
 }
