@@ -13,19 +13,33 @@ import java.util.List;
 public final class History {
 
     /**
-	 * The file name that we will write the history in.
-	 */
-	public static final String FILENAME = "History";
-    /** The object of this class. */
+     * The tag name of this class.
+     */
+    private static final String TAG = "History";
+
+    /**
+     * The file name that we will write the history in.
+     */
+    public static final String FILENAME = "History";
+
+    /**
+     * The object of this class.
+     */
     private static History hist;
-    /** List that stores all the history. */
+
+    /**
+     * List that stores all the history.
+     */
     private List<String> historyList;
 
-    /** Private constructor for this singleton class. */
+    /**
+     * Private constructor for this singleton class.
+     */
     private History() {
         historyList = new ArrayList<String>();
         // right now we just hard code the address in order to save time to type
         hardCodeAddress();
+        System.out.println(TAG + " Done creating a singleton class for History");
     }
 
     /**
@@ -36,6 +50,8 @@ public final class History {
     public static History getInstance() {
         if (hist == null) {
             hist = new History();
+        } else {
+            System.out.println(TAG + " Get an existing history object");
         }
         return hist;
     }
@@ -56,6 +72,11 @@ public final class History {
      *            the address to be added
      */
     public void addAddress(final String address) {
+        if (address == null) {
+            // defensive programming.
+            System.err.println(TAG + " Add address should not be null!");
+            return;
+        }
         // only added if no duplicate history
         if (!historyList.contains(address)) {
             historyList.add(address);
@@ -69,6 +90,11 @@ public final class History {
      *            list of addresses
      */
     public void addAddress(final String[] addresses) {
+        if (addresses == null) {
+            // defensive programming.
+            System.err.println(TAG + " Add address array should not be null!");
+            return;
+        }
         for (int i = 0; i < addresses.length; i++) {
             addAddress(addresses[i]);
         }
@@ -82,6 +108,11 @@ public final class History {
      * @return a string for address
      */
     public String getAddress(final int index) {
+        if (index < 0 || index >= getSize()) {
+            // defensive programming.
+            System.err.println(TAG + " Don't give an invalid index of the history list to me!");
+            return null;
+        }
         return historyList.get(index);
     }
 
@@ -101,10 +132,16 @@ public final class History {
      *            the address that need to remove
      */
     public void deleteAddress(final String address) {
-        // here although the address should be in this list, we just need to
         // make sure (defensive programming)
+        if (address == null) {
+            System.err.println(TAG + " Delete address should not be null!");
+            return;
+        }
+        // here although the address should be in this list, we just need to
         if (historyList.contains(address)) {
             historyList.remove(address);
+        } else {
+            System.err.println(TAG + " This address " + address + " cannot be found in this history list!");
         }
     }
 
@@ -115,6 +152,11 @@ public final class History {
      *            the index of the address.
      */
     public void deleteAddress(final int index) {
+        if (index < 0 || index >= getSize()) {
+            // defensive programming.
+            System.err.println(TAG + " Don't give an invalid index of the history list to me!");
+            return;
+        }
         historyList.remove(index);
     }
 

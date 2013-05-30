@@ -40,10 +40,10 @@ public class SettingsActivity extends PreferenceActivity {
      * noted that if you going to change the strings in the instance field, you
      * also need to change them in the string_activity_setting.xml
      */
-	/**
-	 * The tag of this class.
-	 */
-	private static final String TAG = "SettingActivity";
+    /**
+     * The tag of this class.
+     */
+    private static final String TAG = "SettingActivity";
     /**
      * the xml key of version tab.
      */
@@ -83,22 +83,22 @@ public class SettingsActivity extends PreferenceActivity {
      * the xml key of current_type.
      */
     private static final String CURRENT_TYPE = "current_type";
-    
+
     /**
      * the mapType list preference.
      */
     private ListPreference mapType;
-    
+
     /**
      * the traffic list preference.
      */
     private ListPreference trafficType;
-    
+
     /**
-     * the current list preference. 
+     * the current list preference.
      */
     private ListPreference currentType;
-    
+
     /**
      * Keeps an array of history entries.
      */
@@ -124,6 +124,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected final void onPostCreate(final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setupSimplePreferencesScreen();
+        Log.v(TAG, "Done creating setting page.");
     }
 
     /**
@@ -149,11 +150,11 @@ public class SettingsActivity extends PreferenceActivity {
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));
         bindPreferenceToClick(findPreference(VIEW_HISTORY));
-        
+
         mapType = (ListPreference) findPreference(MAP_TYPE);
         trafficType = (ListPreference) findPreference(TRAFFIC_TYPE);
         currentType = (ListPreference) findPreference(CURRENT_TYPE);
-        
+
         bindPreferenceToClick(mapType);
         bindPreferenceToClick(trafficType);
         bindPreferenceToClick(currentType);
@@ -207,7 +208,9 @@ public class SettingsActivity extends PreferenceActivity {
          * Invoke when user click change traffic.
          * 
          * @param preference
+         *            the preference of this activity
          * @param key
+         *            the type of traffic
          */
         private void switchMode(final Preference preference, final String key) {
             ((ListPreference) preference)
@@ -233,6 +236,7 @@ public class SettingsActivity extends PreferenceActivity {
          * Invoke when user click view history.
          * 
          * @param preference
+         *            the preference of this activity
          */
         private void viewHistory(final Preference preference) {
             if (historyItem.getSize() > 0) {
@@ -244,6 +248,7 @@ public class SettingsActivity extends PreferenceActivity {
                 Context context = preference.getContext();
                 int emptyHistory = R.string.empty_history;
                 Toast.makeText(context, emptyHistory, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "History list is empty, no need to create a history activity");
             }
         }
 
@@ -280,31 +285,31 @@ public class SettingsActivity extends PreferenceActivity {
             alertDialog.create().show();
         }
 
-		/**
-		 * Invoke when user want to change the map type.
-		 * 
-		 * @param preference
-		 */
-		private void changeTheMapType(final Preference preference) {
-			((ListPreference) preference)
-					.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-						@Override
-						public boolean onPreferenceChange(
-								final Preference preference,
-								final Object newValue) {
-							try {
-								int value = Integer.parseInt((String) newValue);
-								map.setMapDisplay(MAP_ARRAYS[value]);
-								return true;
-							} catch (Exception e) {
-								// Defensive programming even though it
-								// should not be crashed
-								return false;
-							}
-						}
-					});
-		}
-	};
+        /**
+         * Invoke when user want to change the map type.
+         * 
+         * @param preference
+         */
+        private void changeTheMapType(final Preference preference) {
+            ((ListPreference) preference)
+                    .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(final Preference preference,
+                                final Object newValue) {
+                            try {
+                                int value = Integer.parseInt((String) newValue);
+                                map.setMapDisplay(MAP_ARRAYS[value]);
+                                return true;
+                            } catch (Exception e) {
+                                // Defensive programming even though it
+                                // should not be crashed
+                                Log.wtf(TAG, "WTF? the value of the map type should be a number!");
+                                return false;
+                            }
+                        }
+                    });
+        }
+    };
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -313,31 +318,30 @@ public class SettingsActivity extends PreferenceActivity {
     private Preference.OnPreferenceChangeListener bindToVal = 
             new Preference.OnPreferenceChangeListener() {
 
-		@Override
-		public boolean onPreferenceChange(final Preference preference,
-				final Object value) {
-			String stringValue = value.toString();
+        @Override
+        public boolean onPreferenceChange(final Preference preference, final Object value) {
+            String stringValue = value.toString();
 
-			if (preference instanceof ListPreference) {
-				// For list preferences, look up the correct display value in
-				// the preference's 'entries' list.
-				ListPreference listPreference = (ListPreference) preference;
-				int index = listPreference.findIndexOfValue(stringValue);
+            if (preference instanceof ListPreference) {
+                // For list preferences, look up the correct display value in
+                // the preference's 'entries' list.
+                ListPreference listPreference = (ListPreference) preference;
+                int index = listPreference.findIndexOfValue(stringValue);
 
-				// Set the summary to reflect the new value.
-				if (index >= 0) {
-					preference.setSummary(listPreference.getEntries()[index]);
-				} else {
-					preference.setSummary(null);
-				}
+                // Set the summary to reflect the new value.
+                if (index >= 0) {
+                    preference.setSummary(listPreference.getEntries()[index]);
+                } else {
+                    preference.setSummary(null);
+                }
 
-			} else {
-				// For all other preferences, set the summary to the value's
-				// simple string representation.
-				preference.setSummary(stringValue);
-			}
-			return true;
-		}
+            } else {
+                // For all other preferences, set the summary to the value's
+                // simple string representation.
+                preference.setSummary(stringValue);
+            }
+            return true;
+        }
     };
 
     /**
@@ -355,12 +359,13 @@ public class SettingsActivity extends PreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(bindToVal);
 
-		// Trigger the listener immediately with the preference's
-		// current value.
-		bindToVal.onPreferenceChange(preference, PreferenceManager
-				.getDefaultSharedPreferences(preference.getContext())
-				.getString(preference.getKey(), ""));
-	}
+        // Trigger the listener immediately with the preference's
+        // current value.
+        bindToVal.onPreferenceChange(
+                preference,
+                PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(
+                        preference.getKey(), ""));
+    }
 
     /**
      * update the value of the list preference.
@@ -375,8 +380,10 @@ public class SettingsActivity extends PreferenceActivity {
                 break;
             }
         }
+        // update the map setting class
         mapType.setValueIndex(value);
         trafficType.setValue(map.getTrafficDisplay() + "");
         currentType.setValue(map.getMyCurrentLocation() + "");
+        Log.v(TAG, "resume setting page");
     }
 }

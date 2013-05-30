@@ -29,16 +29,16 @@ import com.google.android.gms.maps.model.LatLng;
  * 
  */
 public class MainActivity extends FragmentActivity {
-	
-	/**
-	 * The tag of this class.
-	 */
-	private static final String TAG = "MainActivity";
-	
-	/**
-	 * The file name that we will write the history in.
-	 */
-	private static final String FILENAME = "History";
+
+    /**
+     * The tag of this class.
+     */
+    private static final String TAG = "MainActivity";
+
+    /**
+     * The file name that we will write the history in.
+     */
+    private static final String FILENAME = "History";
 
     /**
      * The latitude value of University of Washington.
@@ -71,13 +71,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-//        Set ActionBar to be translucent and overlaying the map
-//        Currently not using this. 
-//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#99000000")));
-        
         setContentView(R.layout.activity_main);
         // the search button
         Button searchButton = (Button) findViewById(R.id.buttonSearch);
@@ -93,12 +86,12 @@ public class MainActivity extends FragmentActivity {
         // only initialize the map setting
         MapSetting.getInstance(googleMap);
         // onResume should be called so it can update the map
-        
+
         history = History.getInstance();
         readFromHistoryFile();
         // Showing log in console for debugging. To be removed for formal
         // release.
-        Log.v("MetroBike", "Finished launching main activity!");
+        Log.v(TAG, "Finished launching main activity!");
     }
 
     /**
@@ -125,6 +118,7 @@ public class MainActivity extends FragmentActivity {
      */
     @Override
     public final boolean onOptionsItemSelected(final MenuItem item) {
+        Log.i(TAG, "Setting menu pops up");
         switch (item.getItemId()) {
         case R.id.action_settings:
             // user click the setting button, start the settings activity
@@ -152,7 +146,7 @@ public class MainActivity extends FragmentActivity {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
         Log.v(TAG, "Finished launching main activity--onResume!");
     }
-    
+
     /**
      * Destroy Map Related parameters such as map settings.
      * 
@@ -160,48 +154,49 @@ public class MainActivity extends FragmentActivity {
      */
     @Override
     protected final void onDestroy() {
-    	super.onDestroy();
+        super.onDestroy();
         MapSetting.resetMapSetting();
         Log.v(TAG, "Destory MetroBike");
     }
 
-	/**
-	 * Read the saved history file.
-	 */
-	private void readFromHistoryFile() {
-		FileInputStream fis = null;
-		StringBuilder sb;
-		try {
-			fis = openFileInput(FILENAME);
-			sb = new StringBuilder();
-			int readByte;
-			// read one byte at a time.
-			while ((readByte = fis.read()) != -1) {
-				char c = (char) readByte;
-				if (c == '\n') {
-					// if we hit the new line, that's the other address.
-					String address = sb.toString();
-					Log.d(TAG, "Address: " + address + " is read from file.");
-					history.addAddress(address);
-					sb = new StringBuilder();
-					continue;
-				}
-				sb.append(c);
-			}
-		} catch (FileNotFoundException e) {
-			Log.i(TAG, "Cannot open history file");
-		} catch (IOException e) {
-			Log.i(TAG, "Connot read history from file");
-		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-			} catch (IOException e) {
-				Log.i(TAG, "Cannot close the file input stream");
-			}
-		}
-	}
+    /**
+     * Read the saved history file.
+     */
+    private void readFromHistoryFile() {
+        FileInputStream fis = null;
+        StringBuilder sb;
+        try {
+            fis = openFileInput(FILENAME);
+            sb = new StringBuilder();
+            int readByte;
+            // read one byte at a time.
+            while ((readByte = fis.read()) != -1) {
+                char c = (char) readByte;
+                if (c == '\n') {
+                    // if we hit the new line, that's the other address.
+                    String address = sb.toString();
+                    Log.d(TAG, "Address: " + address + " is read from file.");
+                    history.addAddress(address);
+                    sb = new StringBuilder();
+                    continue;
+                }
+                sb.append(c);
+            }
+        } catch (FileNotFoundException e) {
+            Log.i(TAG, "Cannot open history file");
+        } catch (IOException e) {
+            Log.i(TAG, "Connot read history from file");
+        } finally {
+            // close the file input stream
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+            } catch (IOException e) {
+                Log.i(TAG, "Cannot close the file input stream");
+            }
+        }
+    }
 
     /**
      * Override the back button to act like home button. Do this in order to
@@ -211,6 +206,7 @@ public class MainActivity extends FragmentActivity {
     public final void onBackPressed() {
         // call this to act like home button
         moveTaskToBack(true);
+        Log.v(TAG, "Back in here will be close the app");
     }
 
 }
