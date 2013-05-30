@@ -38,7 +38,7 @@ public final class Utility {
     /**
      * vehicle icon size.
      */
-    private static final int VEHICLE_ICON_SIZE = 80;
+    private static final int VEHICLE_ICON_SIZE = 40;
 
     /**
      * A private constructor that throws an error to deter instantiation of this
