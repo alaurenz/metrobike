@@ -1,7 +1,5 @@
 package com.HuskySoft.metrobike.ui.utility.test;
 
-import android.util.Log;
-
 import com.HuskySoft.metrobike.ui.utility.History;
 
 import junit.framework.Assert;
@@ -161,6 +159,19 @@ public class HistoryTest extends TestCase {
     }
 
     /**
+     * White box test: test addAddress(String[] address).
+     */
+    public final void testAddArrayOfNullAddress05() {
+        setup();
+        String[] strArray = null;
+        int expected = history.getSize();
+        // add array address
+        history.addAddress(strArray);
+        int actual = history.getSize();
+        Assert.assertEquals("The size should not changed ", expected, actual);
+    }
+
+    /**
      * White box test: test getAddress(int index).
      */
     public final void testGetAddedAddress01() {
@@ -174,6 +185,31 @@ public class HistoryTest extends TestCase {
     }
 
     /**
+     * White box test: test getAddress(int index).
+     */
+    public final void testGetAddedAddress02() {
+        setup();
+        // add array address
+        history.addAddress(TEST_STRING);
+        String actual = history.getAddress(-1);
+        Assert.assertNull(actual);
+        history.deleteAddress(TEST_STRING);
+    }
+    
+    /**
+     * White box test: test getAddress(int index).
+     */
+    public final void testGetAddedAddress03() {
+        setup();
+        int index = history.getSize();
+        // add array address
+        history.addAddress(TEST_STRING);
+        String actual = history.getAddress(index + 1);
+        Assert.assertNull(actual);
+        history.deleteAddress(TEST_STRING);
+    }
+    
+    /**
      * White box test: test deleteAll().
      */
     public final void testDeleteAllAddress01() {
@@ -182,6 +218,18 @@ public class HistoryTest extends TestCase {
         history.deleteAll();
         int actual = history.getSize();
         Assert.assertEquals(0, actual);
+    }
+    
+    /**
+     * White box test: test deleteAll().
+     */
+    public final void testDeleteNullAddress01() {
+        setup();
+        int expected = history.getSize();
+        // add array address
+        history.deleteAddress(null);
+        int actual = history.getSize();
+        Assert.assertEquals(expected, actual);
     }
 
     /**
@@ -196,6 +244,35 @@ public class HistoryTest extends TestCase {
         Assert.assertEquals(numHistoryEntriesBefore, numHistoryEntriesAfter);
     }
 
+    /**
+     * White box test: test delete address (int index).
+     */
+    public final void testDeleteAddress02() {
+        setup();
+        int expected = history.getSize();
+        history.addAddress(TEST_STRING);
+        history.deleteAddress(-1);
+        // should not be deleted this
+        int actual = history.getSize() - 1;
+        Assert.assertEquals(expected, actual);
+        // done testing
+        history.deleteAddress(TEST_STRING);
+    }
+    
+    /**
+     * White box test: test delete address (int index).
+     */
+    public final void testDeleteAddress03() {
+        setup();
+        int expected = history.getSize();
+        history.addAddress(TEST_STRING);
+        history.deleteAddress(expected + 1);
+        // should not be deleted this
+        int actual = history.getSize() - 1;
+        Assert.assertEquals(expected, actual);
+        history.deleteAddress(TEST_STRING);
+    }
+    
     /**
      * helper method for deleting the string array that has been added.
      * 
