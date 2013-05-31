@@ -64,6 +64,7 @@
         <!-- android:imeOptions="actionDone" is to set the blue button 
         	of soft keyboard to be "Done" and hide soft keyboard 
         	after user hit "Done" -->
+        	
         <AutoCompleteTextView
             android:id="@+id/editTextTo"
             android:layout_width="match_parent"
@@ -222,6 +223,26 @@
         android:layout_gravity="center"
         android:text="@string/checkbox_bicycle_only"/>
     
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/buttonFind"
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:textSize="22sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="#54BF83"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:drawable="@drawable/search"
+            android:text="@string/button_find" />
+    </RelativeLayout>
+        
     <TextView
 	    android:id="@+id/textViewAdvancedOptions"
 	    android:layout_width="match_parent"
@@ -237,20 +258,60 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/textview_advanced_options_note"
+	    android:textStyle="bold"
 	    android:gravity="center"
 	    android:layout_gravity="center"/> 
+
+    <TextView
+	    android:id="@+id/textViewBikingDistance"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_choose_distance"
+	    android:gravity="center"/> 
 	            
 	<LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center" >
-        
-	        <TextView
-	            android:id="@+id/textViewNumBuses"
+
+	        <!-- Use android:maxLength to limit the number of digits.
+	        	 This will not affect the length of Hint.
+	        	 Use android:digits to limit the input to be non-negative integer-->
+	        	 
+           	<EditText
+	            android:id="@+id/editTextMinBikingDistance"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="@string/textview_choose_num_buses"/> 
+	            android:hint="@string/edittext_hint_min"
+	            android:maxLength="5"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+                
+            <EditText
+	            android:id="@+id/editTextMaxBikingDistance"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/edittext_hint_max"
+	            android:maxLength="5"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+    </LinearLayout>
+    
+    <TextView
+	    android:id="@+id/textViewNumBuses"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_choose_num_buses"
+	    android:gravity="center"/> 
+	            	            
+	<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
 	                 
 	        <!-- Use android:maxLength to limit the number of digits.
 	        	 This will not affect the length of Hint.
@@ -276,25 +337,5 @@
 	            android:gravity="center"
 	            android:inputType="number" />
     </LinearLayout>
-       
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/buttonFind"
-            android:layout_width="200dp"
-            android:layout_height="45dp"
-            android:textSize="22sp"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="#54BF83"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:drawable="@drawable/search"
-            android:text="@string/button_find" />
-    </RelativeLayout>
 
 </LinearLayout>

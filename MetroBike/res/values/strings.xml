@@ -74,6 +74,7 @@
     <string name="textview_advanced_options">Advanced Options</string>
     <string name="textview_advanced_options_note">(Leave blank if you do not care)</string>
     <string name="textview_choose_num_buses">Number of Buses:</string>
+    <string name="textview_choose_distance">Total Biking Distance (in miles):</string>
     <string name="edittext_hint_min">Min</string>
     <string name="edittext_hint_max">Max</string>
 

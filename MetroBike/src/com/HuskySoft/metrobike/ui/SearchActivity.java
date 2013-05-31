@@ -228,6 +228,11 @@ public class SearchActivity extends Activity implements
         private static final int SEC_TO_MILLISEC = 1000;
 
         /**
+         * 1 mile = 1609.34 meters.
+         */
+        private static final double MILE_TO_METER = 1609.34;
+
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -283,7 +288,6 @@ public class SearchActivity extends Activity implements
             dReq.setTravelMode(tm);
 
             // Set up time for direction request
-
             int month, dayOfMonth, year, hourOfDay, minute, second = 0;
 
             Time time = new Time();
@@ -316,6 +320,20 @@ public class SearchActivity extends Activity implements
             } else {
                 dReq.setDepartureTime(timeToSend);
             }
+
+            // Set up biking distance 
+            // Note: Use round instead of floor or ceil converting miles into meters
+            if (minBikingDistanceEditText.getText().length() != 0) {
+                dReq.setMinDistanceToBikeInMeters(
+                        Math.round(Integer.parseInt(minBikingDistanceEditText.getText()
+                                .toString()) * MILE_TO_METER));
+            }
+            
+            if (maxBikingDistanceEditText.getText().length() != 0) {
+                dReq.setMaxDistanceToBikeInMeters(
+                        Math.round(Integer.parseInt(maxBikingDistanceEditText.getText()
+                                .toString()) * MILE_TO_METER));
+            }
             
             // Set up number of buses
             if (!bicycleOnlyCheckBox.isChecked()) {
@@ -327,7 +345,7 @@ public class SearchActivity extends Activity implements
                     dReq.setMaxNumberBusTransfers(Integer.parseInt(maxNumBusesEditText.getText().toString()));
                 }
             } 
-
+            
             // Do Request
             DirectionsStatus retVal = dReq.doRequest();
 
@@ -507,6 +525,11 @@ public class SearchActivity extends Activity implements
      * Current Location (To) button for current location.
      */
     private ImageButton toCurrLocationButton;
+
+    /**
+     * TextView for informing user to choose number of buses.
+     */
+    private TextView numBusesTextView;
     
     /**
      * EditText for user to set minimum number of buses.
@@ -517,6 +540,16 @@ public class SearchActivity extends Activity implements
      * EditText for user to set maximum number of buses.
      */
     private EditText maxNumBusesEditText;
+
+    /**
+     * EditText for user to set minimum biking distance.
+     */
+    private EditText minBikingDistanceEditText;
+    
+    /**
+     * EditText for user to set maximum biking distance.
+     */
+    private EditText maxBikingDistanceEditText;
 
     /**
      * {@inheritDoc}
@@ -660,8 +693,11 @@ public class SearchActivity extends Activity implements
         reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
         fromClearButton = (ImageButton) findViewById(R.id.imageButtonClearFrom);
         toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
+        numBusesTextView = (TextView) findViewById(R.id.textViewNumBuses);
         minNumBusesEditText = (EditText) findViewById(R.id.editTextMinNumBuses);
         maxNumBusesEditText = (EditText) findViewById(R.id.editTextMaxNumBuses);
+        minBikingDistanceEditText = (EditText) findViewById(R.id.editTextMinBikingDistance);
+        maxBikingDistanceEditText = (EditText) findViewById(R.id.editTextMaxBikingDistance);
         
         // Travel Mode Related setup
         // travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
@@ -774,17 +810,14 @@ public class SearchActivity extends Activity implements
             boolean isCheckedBefore = false;
             public void onClick(final View v) {
                 if (isCheckedBefore) {
-                    minNumBusesEditText.setEnabled(true);
-                    maxNumBusesEditText.setEnabled(true);            
+                    numBusesTextView.setVisibility(View.VISIBLE);
+                    minNumBusesEditText.setVisibility(View.VISIBLE);
+                    maxNumBusesEditText.setVisibility(View.VISIBLE);          
                     isCheckedBefore = false;
                 } else {
-                    minNumBusesEditText.clearFocus();
-                    maxNumBusesEditText.clearFocus();
-                    minNumBusesEditText.setEnabled(false);
-                    maxNumBusesEditText.setEnabled(false);
-                    minNumBusesEditText.setText("");
-                    maxNumBusesEditText.setText("");
-                    
+                    numBusesTextView.setVisibility(View.INVISIBLE);
+                    minNumBusesEditText.setVisibility(View.INVISIBLE);
+                    maxNumBusesEditText.setVisibility(View.INVISIBLE);
                     isCheckedBefore = true;
                 }
             }
@@ -793,14 +826,10 @@ public class SearchActivity extends Activity implements
         minNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && minNumBusesEditText.getText().length() != 0) {
                     // Format numbers
-                    String textBeforeProcess = minNumBusesEditText.getText().toString();
-                    if (textBeforeProcess.length() == 2
-                            && textBeforeProcess.startsWith("0")) {
-                        minNumBusesEditText.setText(textBeforeProcess.substring(1));
-                    }
-
+                    int formattedNumber = Integer.parseInt(minNumBusesEditText.getText().toString());
+                    minNumBusesEditText.setText("" + formattedNumber);
                 }
             }
         });
@@ -808,17 +837,36 @@ public class SearchActivity extends Activity implements
         maxNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && maxNumBusesEditText.getText().length() != 0) {
                     // Format numbers
-                    String textBeforeProcess = maxNumBusesEditText.getText().toString();
-                    if (textBeforeProcess.length() == 2
-                            && textBeforeProcess.startsWith("0")) {
-                        maxNumBusesEditText.setText(textBeforeProcess.substring(1));
-                    }
-
+                    int formattedNumber = Integer.parseInt(maxNumBusesEditText.getText().toString());
+                    maxNumBusesEditText.setText("" + formattedNumber);
                 }
             }
             
+        });
+
+        minBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && minBikingDistanceEditText.getText().length() != 0) {
+                    // Format numbers
+                    int formattedNumber = Integer.parseInt(minBikingDistanceEditText.getText().toString());
+                    minBikingDistanceEditText.setText("" + formattedNumber);
+                }
+            }
+            
+        });
+        
+        maxBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && maxBikingDistanceEditText.getText().length() != 0) {
+                    // Format numbers
+                    int formattedNumber = Integer.parseInt(maxBikingDistanceEditText.getText().toString());
+                    maxBikingDistanceEditText.setText("" + formattedNumber);
+                }
+            }
         });
         
     }
