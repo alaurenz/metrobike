@@ -19,7 +19,7 @@ import com.HuskySoft.metrobike.backend.TravelMode;
  * @author mengwan
  * 
  */
-public class SimpleAlgorithmTest extends TestCase {
+public class BicyclingOnlyAlgorithmTest extends TestCase {
     
     /**
      * static value of the time stamp that is needed for setting the request up.
@@ -51,7 +51,7 @@ public class SimpleAlgorithmTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setDepartureTime(TIME_STAMP_FOR_TESTING_ONE);
-        request.setTravelMode(TravelMode.TRANSIT);
+        request.setTravelMode(TravelMode.MIXED);
     }
 
     /**
@@ -107,9 +107,8 @@ public class SimpleAlgorithmTest extends TestCase {
         for (Route r : routes) {
             for (Leg l : r.getLegList()) {
                 for (Step s : l.getStepList()) {
-                    boolean allTransitWalk = s.getTravelMode() == TravelMode.TRANSIT
-                            || s.getTravelMode() == TravelMode.WALKING;
-                    Assert.assertTrue(allTransitWalk);
+                    boolean allBicycling = s.getTravelMode() == TravelMode.BICYCLING;
+                    Assert.assertTrue(allBicycling);
                 }
             }
         }

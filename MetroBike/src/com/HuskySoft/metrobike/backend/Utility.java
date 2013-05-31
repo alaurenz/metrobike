@@ -392,14 +392,18 @@ public final class Utility {
      * @param timestampSeconds
      *            Timestamp (number of seconds since 1970) to convert to
      *            human-readable time.
+     * @param timezone 
+     * 			  Default timezone (if null will use GMT)
      * @return the given timestamp as a human-readable String
      */
-    public static String timestampTo12HourTime(final long timestampSeconds) {
+    public static String timestampTo12HourTime(final long timestampSeconds,
+    		TimeZone timezone) {
         long timestampMillis = timestampSeconds * 1000;
         Date date = new Date(timestampMillis);
         SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT, TIME_LOCALE);
-        //Set the timezone to GMT-7. If this isn't done then it returns GMT
-        dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+        if(timezone != null) {
+        	dateFormat.setTimeZone(timezone);
+        }
         return dateFormat.format(date);
     }
     

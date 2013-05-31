@@ -6,6 +6,7 @@ package com.HuskySoft.metrobike.backend.test;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -293,7 +294,8 @@ public class UtilityTest extends TestCase {
     // @Test
     public void test_timestampTo12HourTime() {
         String expected = "1:47 PM";
-        String actual = Utility.timestampTo12HourTime(1368996421);
+        String actual = Utility.timestampTo12HourTime(1368996421,
+        		TimeZone.getTimeZone("America/Los_Angeles"));
         Assert.assertEquals("Actual value of Utility.timestampTo12HourTime(1368996421) was: " + actual,
                 expected, actual);
     }
