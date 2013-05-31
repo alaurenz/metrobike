@@ -73,12 +73,9 @@
     <string name="checkbox_bicycle_only">Bicycle Only</string>
 
     <!-- Result Activity -->
-    <string name="route1">Route1</string>
-    <string name="route2">Route2</string>
-    <string name="route3">Route3</string>
-    <string name="all4">All4</string>
-    <string name="all5">All5</string>
-
+    <string name="bike">Bike&#8212;</string>
+	<string name="transit">Transit&#8212;</string>
+    
     <!-- About Activity -->
     <string name="textview_dev_by">Developed By</string>
     <string name="textview_ui">UI</string>
