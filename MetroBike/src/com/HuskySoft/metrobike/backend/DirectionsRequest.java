@@ -161,7 +161,9 @@ public final class DirectionsRequest implements Serializable {
         	smartAlg.setResource(myParams.getResource());
         	smartAlg.setReferencedRoute(bikeAlg.getReferencedRoute());
         	DirectionsStatus smartStatus = doAlgorithm(smartAlg); 
-        	DirectionsStatus comboStatus = doAlgorithm(new SimpleComboAlgorithm());
+        	SimpleComboAlgorithm scAlg = new SimpleComboAlgorithm();
+        	scAlg.setResource(myParams.getResource());
+        	DirectionsStatus comboStatus = doAlgorithm(scAlg);
         	
             if (bikeStatus.isError() && smartStatus.isError() && comboStatus.isError()) {
                 return DirectionsStatus.NO_RESULTS_FOUND;

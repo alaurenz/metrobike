@@ -144,7 +144,7 @@ public final class Utility {
         } else {
             addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
         }
-
+        
         return url.toString();
     }
 
@@ -201,7 +201,7 @@ public final class Utility {
         } else {
             addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
         }
-
+        
         return url.toString();
     }
 

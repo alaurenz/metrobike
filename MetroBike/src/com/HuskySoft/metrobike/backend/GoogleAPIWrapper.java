@@ -11,6 +11,9 @@ import java.net.URL;
 
 /**
  * @author coreyh3
+ * 
+ * This class is the class that is actually responsible for making requests to Google and
+ * deals with real data.
  *
  */
 public class GoogleAPIWrapper implements APIQuery {
@@ -45,8 +48,7 @@ public class GoogleAPIWrapper implements APIQuery {
         } finally {
             urlConnection.disconnect();
         }
-
+        
         return response.toString();
     }
-
 }
