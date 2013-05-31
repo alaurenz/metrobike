@@ -71,6 +71,11 @@
     <string name="history_from">From:\t</string>
     <string name="history_to">To:\t</string>
     <string name="checkbox_bicycle_only">Bicycle Only</string>
+    <string name="textview_advanced_options">Advanced Options</string>
+    <string name="textview_advanced_options_note">(Leave blank if you do not care)</string>
+    <string name="textview_choose_num_buses">Number of Buses:</string>
+    <string name="edittext_hint_min">Min</string>
+    <string name="edittext_hint_max">Max</string>
 
     <!-- Result Activity -->
     <string name="bike">Bike&#8212;</string>
