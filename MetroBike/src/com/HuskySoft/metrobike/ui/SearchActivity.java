@@ -232,6 +232,9 @@ public class SearchActivity extends Activity implements
          */
         @Override
         public void run() {
+            // Generate a direction request
+            DirectionsRequest dReq = new DirectionsRequest();
+            
             // Set up addresses for direction request
             String currLocationLatLagString = "";
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
@@ -268,10 +271,9 @@ public class SearchActivity extends Activity implements
                 to = currLocationLatLagString;
             }
 
-            // Generate a direction request
-            DirectionsRequest dReq = (new DirectionsRequest()).setStartAddress(from).setEndAddress(
-                    to);
+            dReq.setStartAddress(from).setEndAddress(to);
 
+            // Set up travel mode for direction request
             if (bicycleOnlyCheckBox.isChecked()) {
                 tm = TravelMode.BICYCLING;
             } else {
@@ -314,6 +316,17 @@ public class SearchActivity extends Activity implements
             } else {
                 dReq.setDepartureTime(timeToSend);
             }
+            
+            // Set up number of buses
+            if (!bicycleOnlyCheckBox.isChecked()) {
+                if (minNumBusesEditText.getText().length() != 0) {
+                    dReq.setMinNumberBusTransfers(Integer.parseInt(minNumBusesEditText.getText().toString()));
+                }
+                
+                if (maxNumBusesEditText.getText().length() != 0) {
+                    dReq.setMaxNumberBusTransfers(Integer.parseInt(maxNumBusesEditText.getText().toString()));
+                }
+            } 
 
             // Do Request
             DirectionsStatus retVal = dReq.doRequest();
@@ -486,14 +499,24 @@ public class SearchActivity extends Activity implements
     private static final double LONGITUDE = -122.30906219999997;
 
     /**
-     * Current Location (From) button for use current location.
+     * Current Location (From) button for current location.
      */
     private ImageButton fromCurrLocationButton;
 
     /**
-     * Current Location (To) button for use current location.
+     * Current Location (To) button for current location.
      */
     private ImageButton toCurrLocationButton;
+    
+    /**
+     * EditText for user to set minimum number of buses.
+     */
+    private EditText minNumBusesEditText;
+    
+    /**
+     * EditText for user to set maximum number of buses.
+     */
+    private EditText maxNumBusesEditText;
 
     /**
      * {@inheritDoc}
@@ -637,7 +660,9 @@ public class SearchActivity extends Activity implements
         reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
         fromClearButton = (ImageButton) findViewById(R.id.imageButtonClearFrom);
         toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
-
+        minNumBusesEditText = (EditText) findViewById(R.id.editTextMinNumBuses);
+        maxNumBusesEditText = (EditText) findViewById(R.id.editTextMaxNumBuses);
+        
         // Travel Mode Related setup
         // travelModeSpinner = (Spinner) findViewById(R.id.spinnerTravelMode);
         // ArrayAdapter<String> travelModeSpinnerAdapter = new
@@ -743,6 +768,59 @@ public class SearchActivity extends Activity implements
                 dirThread.start();
             }
         });
+        
+        
+        bicycleOnlyCheckBox.setOnClickListener(new OnClickListener() {
+            boolean isCheckedBefore = false;
+            public void onClick(final View v) {
+                if (isCheckedBefore) {
+                    minNumBusesEditText.setEnabled(true);
+                    maxNumBusesEditText.setEnabled(true);            
+                    isCheckedBefore = false;
+                } else {
+                    minNumBusesEditText.clearFocus();
+                    maxNumBusesEditText.clearFocus();
+                    minNumBusesEditText.setEnabled(false);
+                    maxNumBusesEditText.setEnabled(false);
+                    minNumBusesEditText.setText("");
+                    maxNumBusesEditText.setText("");
+                    
+                    isCheckedBefore = true;
+                }
+            }
+        });
+        
+        minNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    // Format numbers
+                    String textBeforeProcess = minNumBusesEditText.getText().toString();
+                    if (textBeforeProcess.length() == 2
+                            && textBeforeProcess.startsWith("0")) {
+                        minNumBusesEditText.setText(textBeforeProcess.substring(1));
+                    }
+
+                }
+            }
+        });
+        
+        maxNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    // Format numbers
+                    String textBeforeProcess = maxNumBusesEditText.getText().toString();
+                    if (textBeforeProcess.length() == 2
+                            && textBeforeProcess.startsWith("0")) {
+                        maxNumBusesEditText.setText(textBeforeProcess.substring(1));
+                    }
+
+                }
+            }
+            
+        });
+        
     }
 
     /**

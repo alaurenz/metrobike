@@ -221,6 +221,61 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/checkbox_bicycle_only"/>
+    
+    <TextView
+	    android:id="@+id/textViewAdvancedOptions"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_advanced_options"
+	    android:textSize="18sp"
+	    android:textColor="#0D8BD9"
+	    android:gravity="center"
+	    android:layout_gravity="center"/>
+    
+	<TextView
+	    android:id="@+id/textViewAdvancedOptionsNote"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_advanced_options_note"
+	    android:gravity="center"
+	    android:layout_gravity="center"/> 
+	            
+	<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
+        
+	        <TextView
+	            android:id="@+id/textViewNumBuses"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/textview_choose_num_buses"/> 
+	                 
+	        <!-- Use android:maxLength to limit the number of digits.
+	        	 This will not affect the length of Hint.
+	        	 Use android:digits to limit the input to be non-negative integer-->
+	        	 
+           	<EditText
+	            android:id="@+id/editTextMinNumBuses"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/edittext_hint_min"
+	            android:maxLength="2"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+                
+            <EditText
+	            android:id="@+id/editTextMaxNumBuses"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/edittext_hint_max"
+	            android:maxLength="2"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+    </LinearLayout>
        
     <RelativeLayout
         android:layout_width="match_parent"
