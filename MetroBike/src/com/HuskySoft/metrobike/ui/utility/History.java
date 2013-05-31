@@ -37,8 +37,8 @@ public final class History {
      */
     private History() {
         historyList = new ArrayList<String>();
-        // right now we just hard code the address in order to save time to type
-        hardCodeAddress();
+        // remove the hard code in the version 1 phrase
+        // hardCodeAddress();
         System.out.println(TAG + " Done creating a singleton class for History");
     }
 
@@ -141,7 +141,8 @@ public final class History {
         if (historyList.contains(address)) {
             historyList.remove(address);
         } else {
-            System.err.println(TAG + " This address " + address + " cannot be found in this history list!");
+            System.err.println(TAG + " This address " + address
+                    + " cannot be found in this history list!");
         }
     }
 
@@ -169,24 +170,24 @@ public final class History {
         return historyList.size();
     }
 
-    /**
-     * Hardcoded address for testing. Will delete this method in version 1
-     * phase. TODO: Remove this in V1 phase.
-     */
-    private void hardCodeAddress() {
-        historyList.add("Paul G. Allen Center for Computer Science & Engineering (CSE)");
-        historyList.add("Guggenheim Hall (GUG)");
-        historyList.add("4311 11th Ave NE, Seattle, WA");
-        historyList.add("Schmitz Hall (SMZ)");
-        historyList.add("85 Pike St, Seattle, Washington");
-        historyList.add("7201 East Green Lake Dr N, Seattle, WA");
-        historyList.add("601 N 59th St, Seattle, WA");
-        historyList.add("400 Broad St, Seattle, WA");
-        historyList.add("401 Broad St, Seattle, WA");
-        historyList.add("402 Broad St, Seattle, WA");
-        historyList.add("403 Broad St, Seattle, WA");
-        historyList.add("404 Broad St, Seattle, WA");
-        historyList.add("405 Broad St, Seattle, WA");
-        historyList.add("2623 NE University Village St #7, Seattle, WA");
-    }
+//    /**
+//     * Hardcoded address for testing. Will delete this method in version 1
+//     * phase. TODO: Remove this in V1 phase.
+//     */
+//    private void hardCodeAddress() {
+//        historyList.add("Paul G. Allen Center for Computer Science & Engineering (CSE)");
+//        historyList.add("Guggenheim Hall (GUG)");
+//        historyList.add("4311 11th Ave NE, Seattle, WA");
+//        historyList.add("Schmitz Hall (SMZ)");
+//        historyList.add("85 Pike St, Seattle, Washington");
+//        historyList.add("7201 East Green Lake Dr N, Seattle, WA");
+//        historyList.add("601 N 59th St, Seattle, WA");
+//        historyList.add("400 Broad St, Seattle, WA");
+//        historyList.add("401 Broad St, Seattle, WA");
+//        historyList.add("402 Broad St, Seattle, WA");
+//        historyList.add("403 Broad St, Seattle, WA");
+//        historyList.add("404 Broad St, Seattle, WA");
+//        historyList.add("405 Broad St, Seattle, WA");
+//        historyList.add("2623 NE University Village St #7, Seattle, WA");
+//    }
 }

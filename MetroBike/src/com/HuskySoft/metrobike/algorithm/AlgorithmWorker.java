@@ -273,10 +273,9 @@ public abstract class AlgorithmWorker {
         while (response == null && tryNum < MAX_CONNECTION_ATTEMPTS
         		&& tryNumQueryLimit < MAX_QUERY_LIMIT_RETRIES ) {
             try {
-                response = queryObj.doQuery(queryURL);
-                
-                // Check if over query limit
-                JSONObject responseJSON;
+            response = queryObj.doQuery(queryURL);
+            // Check if over query limit
+            JSONObject responseJSON;
         		try {
         			responseJSON = new JSONObject(response);
         			String statusString = responseJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase());
@@ -296,7 +295,6 @@ public abstract class AlgorithmWorker {
         		} catch (JSONException e) {
         			System.err.println(TAG + "Error parsing JSON response.");
         		}
-                
             } catch (IOException e) {
                 tryNum++;
                 System.err.println(TAG + "Bad connection... retrying " 
