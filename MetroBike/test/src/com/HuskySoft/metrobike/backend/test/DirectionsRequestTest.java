@@ -12,11 +12,11 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.HuskySoft.metrobike.backend.DirectionsRequest;
+import com.HuskySoft.metrobike.backend.DirectionsRequest.RequestParameters;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.StubGoogleAPIWrapper;
 import com.HuskySoft.metrobike.backend.TravelMode;
-import com.HuskySoft.metrobike.backend.DirectionsRequest.RequestParameters;
 
 /**
  * This class tests the DirectionsRequest class.
@@ -526,12 +526,18 @@ public final class DirectionsRequestTest extends TestCase {
     }
     
     /**
-     * BlackBox: Tests to make sure that when DoRequest is configured to use the 
+     * WhiteBox: Tests to make sure that when DoRequest is configured to use the 
      * stubGoogleAPIWrapper it actually does.
      */
-    public void test_StubDoRequestWorks(){
-        setUp();
+    public void test_StubDoRequestCase1StandardResponse(){
+        request = new DirectionsRequest();
+
+        String startAddress = "302 NE 50th St,Seattle,WA";
+        String endAddress = "3801 Brooklyn Ave NE,Seattle,WA";
+        request.setStartAddress(startAddress);
+        request.setEndAddress(endAddress);
         request.setTravelMode(TravelMode.BICYCLING);
+        
         request.setResource(new StubGoogleAPIWrapper());
         
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
@@ -542,6 +548,98 @@ public final class DirectionsRequestTest extends TestCase {
                 actual);
     }
 
+    /**
+     * WhiteBox:LoadTest: Test that uses the StubGoogleAPIWrapper and makes sure that the code can handle 
+     * large JSON responses.
+     * 
+     * This load tests the system by returning an approximately 60,000 character String.
+     */
+    public final void test_stubDoRequestCase2StressTest() {
+        request = new DirectionsRequest();
+
+        String startAddress = "302 NE 50th St,Seattle,WA";
+        String endAddress = "Everett";
+        request.setStartAddress(startAddress);
+        request.setEndAddress(endAddress);
+        request.setTravelMode(TravelMode.BICYCLING);
+        request.setResource(new StubGoogleAPIWrapper());
+        
+        DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
+        DirectionsStatus actual = request.doRequest();
+        Assert.assertEquals(
+                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
+                actual);
+    }
+    
+    /**
+     * WhiteBox:SubSystem Disabled: Test that uses the StubGoogleAPIWrapper and makes 
+     * sure that the code can handle large JSON responses.
+     * 
+     * This tests how the system handles not having an Internet connection.  It simulates this
+     * by having the stub throw a IOException(), which is what would happen if the system was not
+     * able to contact Google.
+     */
+    public final void test_stubDoRequestCase3ConnectionFailedThrowIOException() {
+        request = new DirectionsRequest();
+
+        String startAddress = "3801 Brooklyn Ave NE,Seattle,WA";
+        String endAddress = "1320 S Maple Grove Road, Boise, ID";
+        request.setStartAddress(startAddress);
+        request.setEndAddress(endAddress);
+        request.setTravelMode(TravelMode.BICYCLING);
+        request.setResource(new StubGoogleAPIWrapper());
+        
+        DirectionsStatus expected = DirectionsStatus.CONNECTION_ERROR;
+        DirectionsStatus actual = request.doRequest();
+        Assert.assertEquals(
+                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
+                actual); 
+    }
+    
+    /**
+     * WhiteBox: Test that uses the StubGoogleAPIWrapper and makes sure that the code can handle 
+     * large JSON responses.
+     */
+    public final void test_stubDoRequestCase4GoogleReturnsNoResults() {
+        request = new DirectionsRequest();
+
+        String startAddress = "pig";
+        String endAddress = "bacon";
+        request.setStartAddress(startAddress);
+        request.setEndAddress(endAddress);
+        request.setTravelMode(TravelMode.BICYCLING);
+        request.setResource(new StubGoogleAPIWrapper());
+        
+        DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
+        DirectionsStatus actual = request.doRequest();
+        Assert.assertEquals(
+                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
+                actual); 
+    }
+    
+    /**
+     * WhiteBox: Test that uses the StubGoogleAPIWrapper and makes sure that the code can handle 
+     * large JSON responses.  Note that this actual request would technically return a 
+     * status of ZERO_RESULTS, but I can't get the system to generate an invalid query so 
+     * I'm using this one in conjunction with the stub.  
+     */
+    public final void test_stubDoRequestCase5GoogleDeniesRequest() {
+        request = new DirectionsRequest();
+
+        String startAddress = "cow";
+        String endAddress = "steak";
+        request.setStartAddress(startAddress);
+        request.setEndAddress(endAddress);
+        request.setTravelMode(TravelMode.BICYCLING);
+        request.setResource(new StubGoogleAPIWrapper());
+        
+        DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
+        DirectionsStatus actual = request.doRequest();
+        Assert.assertEquals(
+                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
+                actual); 
+    }
+    
     /**
      * Helper function for serializing a DirectionsRequest object.Help on
      * testing this based on
@@ -561,6 +659,7 @@ public final class DirectionsRequestTest extends TestCase {
         return byte_out.toByteArray();
     }
 
+    
     /**
      * Helper function for serializing a DirectionsRequest object.Help on
      * testing this based on
