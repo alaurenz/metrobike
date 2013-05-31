@@ -64,6 +64,7 @@
         <!-- android:imeOptions="actionDone" is to set the blue button 
         	of soft keyboard to be "Done" and hide soft keyboard 
         	after user hit "Done" -->
+        	
         <AutoCompleteTextView
             android:id="@+id/editTextTo"
             android:layout_width="match_parent"
@@ -221,7 +222,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/checkbox_bicycle_only"/>
-       
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -241,5 +242,100 @@
             android:drawable="@drawable/search"
             android:text="@string/button_find" />
     </RelativeLayout>
+        
+    <TextView
+	    android:id="@+id/textViewAdvancedOptions"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_advanced_options"
+	    android:textSize="18sp"
+	    android:textColor="#0D8BD9"
+	    android:gravity="center"
+	    android:layout_gravity="center"/>
+    
+	<TextView
+	    android:id="@+id/textViewAdvancedOptionsNote"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_advanced_options_note"
+	    android:textStyle="bold"
+	    android:gravity="center"
+	    android:layout_gravity="center"/> 
+
+    <TextView
+	    android:id="@+id/textViewBikingDistance"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_choose_distance"
+	    android:gravity="center"/> 
+	            
+	<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
+
+	        <!-- Use android:maxLength to limit the number of digits.
+	        	 This will not affect the length of Hint.
+	        	 Use android:digits to limit the input to be non-negative integer-->
+	        	 
+           	<EditText
+	            android:id="@+id/editTextMinBikingDistance"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/edittext_hint_min"
+	            android:maxLength="5"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+                
+            <EditText
+	            android:id="@+id/editTextMaxBikingDistance"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/edittext_hint_max"
+	            android:maxLength="5"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+    </LinearLayout>
+    
+    <TextView
+	    android:id="@+id/textViewNumBuses"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/textview_choose_num_buses"
+	    android:gravity="center"/> 
+	            	            
+	<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
+	                 
+	        <!-- Use android:maxLength to limit the number of digits.
+	        	 This will not affect the length of Hint.
+	        	 Use android:digits to limit the input to be non-negative integer-->
+	        	 
+           	<EditText
+	            android:id="@+id/editTextMinNumBuses"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/edittext_hint_min"
+	            android:maxLength="2"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+                
+            <EditText
+	            android:id="@+id/editTextMaxNumBuses"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/edittext_hint_max"
+	            android:maxLength="2"
+	            android:digits="0123456789"
+	            android:gravity="center"
+	            android:inputType="number" />
+    </LinearLayout>
 
 </LinearLayout>

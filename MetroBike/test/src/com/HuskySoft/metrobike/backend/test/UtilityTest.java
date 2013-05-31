@@ -288,7 +288,7 @@ public class UtilityTest extends TestCase {
     /**
      * Whitebox: This tests the timestampTo12HourTime
      * NOTE: this test assumes the time is GMT-7
-     * 
+     * See https://github.com/alaurenz/metrobike/issues/154
      */
     // @Test
     public void test_timestampTo12HourTime() {

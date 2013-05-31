@@ -1,7 +1,5 @@
 package com.HuskySoft.metrobike.backend.test;
 
-import java.util.List;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -9,11 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.HuskySoft.metrobike.backend.Leg;
-import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
-import com.HuskySoft.metrobike.backend.Step;
-import com.HuskySoft.metrobike.backend.TransitDetails;
 import com.HuskySoft.metrobike.backend.TransitRoute;
 import com.HuskySoft.metrobike.backend.WebRequestJSONKeys;
 

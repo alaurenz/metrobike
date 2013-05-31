@@ -7,7 +7,6 @@ import com.HuskySoft.metrobike.backend.DirectionsRequest.RequestParameters;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.TravelMode;
-import com.HuskySoft.metrobike.backend.Utility;
 
 /**
  * The simplest algorithm, this class simply asks Google for multiple Routes and

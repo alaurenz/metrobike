@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.HuskySoft.metrobike.R;
@@ -69,16 +69,6 @@ public class ResultsActivity extends Activity {
      * List of all the buttons used for selecting different routes.
      */
     private ArrayList<Button> buttons;
-    
-    /**
-     * Color integer of the button background color.
-     */
-    private static final int BUTTON_BACKGROUND_COLOR = 0xdf888888;
-    
-    /**
-     * Default color of the button text.
-     */
-    private static final int BUTTON_TEXT_COLOR_DEFAULT = -16777216;
 
     /**
      * Highlight color of the button text.
@@ -259,13 +249,16 @@ public class ResultsActivity extends Activity {
         buttons = new ArrayList<Button>();
         LinearLayout main = (LinearLayout) findViewById(R.id.linearLayoutForRouteSelection);
         for (int i = 0; i < routes.size(); i++) {
-            Button selectRouteBtn = new Button(this);
+            Button selectRouteBtn = new Button(this);         
+            selectRouteBtn.setBackgroundResource(R.drawable.custom_btn_shakespeare);
             selectRouteBtn.setText("Route" + (i + 1));
+            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            params.setMargins(3, 3, 3, 3);
+            selectRouteBtn.setLayoutParams(params);                  
             selectRouteBtn.setPadding(0, 0, 0, 0);
+            selectRouteBtn.setShadowLayer(0.6f, 1, 1, Color.parseColor("#000000"));
             selectRouteBtn.setOnClickListener(new MyOnClickListener(i));
-            main.addView(selectRouteBtn);            
-            selectRouteBtn.getBackground().setColorFilter(BUTTON_BACKGROUND_COLOR, 
-                    PorterDuff.Mode.MULTIPLY);
+            main.addView(selectRouteBtn);
             buttons.add(selectRouteBtn);
         }
     }
@@ -310,7 +303,7 @@ public class ResultsActivity extends Activity {
             
             //disable the buttons before the drawing taking place
             for (Button button : buttons) {
-                button.setTextColor(BUTTON_TEXT_COLOR_DEFAULT);
+                button.setTextColor(Color.WHITE);
                 button.setEnabled(false);
             }
             
@@ -404,13 +397,9 @@ public class ResultsActivity extends Activity {
                     mMap.addPolyline(polylineOptions.
                             color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
                             .width(POLYLINE_THICK));
-                } else if (s.getTravelMode() == TravelMode.BICYCLING) {
-                    mMap.addPolyline(polylineOptions.
-                            color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
-                            .width(POLYLINE_THIN).zIndex(1));
                 } else {
                     mMap.addPolyline(polylineOptions.
-                            color(Color.argb(POLYLINE_TRANSPARENT, 0, 0, POLYLINE_COLOR))
+                            color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
                             .width(POLYLINE_THIN).zIndex(1));
                 }
                 
