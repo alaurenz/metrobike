@@ -16,12 +16,20 @@ import com.HuskySoft.metrobike.backend.TravelMode;
  */
 public final class BicycleOnlyAlgorithm extends AlgorithmWorker {
 
+    /**
+     * The TAG to use in this file for Android Log messages.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.algorithm: "
+            + "BicycleOnlyAlgorithm.java: ";
+    
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public DirectionsStatus findRoutes(final RequestParameters toProcess) {
 		clearErrors();
+		
+		System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
 
 		// Get only bicycle routes, no matter what.
 		if (toProcess.getTravelMode() == TravelMode.BICYCLING
@@ -51,6 +59,7 @@ public final class BicycleOnlyAlgorithm extends AlgorithmWorker {
 				// If we didn't notice not getting results somehow, add this
 				// error manually.
 				addError(DirectionsStatus.NO_RESULTS_FOUND);
+				System.err.println(TAG + "findRoutes()->No results found");
 			}
 			return getMostRecentStatus();
 		}

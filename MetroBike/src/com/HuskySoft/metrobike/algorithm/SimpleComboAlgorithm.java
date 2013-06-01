@@ -18,6 +18,12 @@ import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
  */
 public final class SimpleComboAlgorithm extends AlgorithmWorker {
 	
+    /**
+     * The TAG to use in this file for Android Log messages.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.algorithm: "
+    		+ "SimpleComboAlgorithm.java: ";
+    
 	/**
 	 * Max combo routes to generate (by replacing walking steps in
 	 * transit routes with bicycling)
@@ -30,7 +36,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
     @Override
     public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
-
+        System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
         // NOTE: this method assumes:
         // toProcess.getTravelMode() == TravelMode.MIXED
 
@@ -47,6 +53,8 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
             routeTime = toProcess.getDepartureTime();
         }
 
+        System.out.println(TAG + "findRoutes()->routeTime: " + routeTime);
+        
         List<Route> unsortedTransitRoutes;
         try {
         	unsortedTransitRoutes = getTransitResults(toProcess.getStartAddress(),
@@ -87,6 +95,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
                 // If we didn't notice not getting results somehow, add this
                 // error manually.
                 addError(DirectionsStatus.NO_RESULTS_FOUND);
+                System.err.println(TAG + "findRoutes()->No results found.");
             }
             return getMostRecentStatus();
         }

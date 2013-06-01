@@ -36,7 +36,8 @@ public abstract class AlgorithmWorker {
     /**
      * The TAG to use in this file for Android Log messages.
      */
-    private static final String TAG = "AlgorithmWorker(Abstract) ";
+    private static final String TAG = "com.HuskySoft.metrobike.algorithm: "
+            + "AlgorithmWorker.java: ";
 
     /**
      * The maximum number of consecutive attempts to contact the Google server.
@@ -113,6 +114,7 @@ public abstract class AlgorithmWorker {
      * @param route to set
      */
     public void setReferencedRoute(Route route) {
+        System.out.println(TAG + "setReferencedRoute()->route: " + route);
     	referencedRoute = route;
     }
     
@@ -120,6 +122,7 @@ public abstract class AlgorithmWorker {
      * @return getReferencedRoute
      */
     public Route getReferencedRoute() {
+        System.out.println(TAG + "getReferencedRoute()->referencedRoute: " + referencedRoute);
     	return referencedRoute;
     }
     
@@ -198,6 +201,7 @@ public abstract class AlgorithmWorker {
      * @return A string if there is an error. Null otherwise.
      */
     public final String getErrors() {
+        System.out.println(TAG + "getErrors()->errorMessages: " + errorMessages);
         return errorMessages;
     }
 
@@ -272,6 +276,8 @@ public abstract class AlgorithmWorker {
 
         while (response == null && tryNum < MAX_CONNECTION_ATTEMPTS
         		&& tryNumQueryLimit < MAX_QUERY_LIMIT_RETRIES ) {
+            System.out.println(TAG + "doQueryWithHandling()->tryNum: " + tryNum);
+            System.out.println(TAG + "doQueryWithHandling()->tryNumQueryLimit: " + tryNumQueryLimit);
             try {
                 response = queryObj.doQuery(queryURL);
                 JSONObject responseJSON;
@@ -324,7 +330,7 @@ public abstract class AlgorithmWorker {
      * @return a list of Routes parsed from the JSON
      */
     protected final List<Route> buildRouteListFromJSONString(final String srcJSON) {
-
+        System.out.println(TAG + "buildRouteListFromJSONString()->Entering this method.");
         List<Route> routesList = new ArrayList<Route>();
 
         JSONObject myJSON;
@@ -337,10 +343,12 @@ public abstract class AlgorithmWorker {
                 // error
                 // Could even be as simple as checking for this error
                 addError(DirectionsStatus.NO_RESULTS_FOUND);
+                System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
                 return null;
             } else if (statusString.equalsIgnoreCase(
                     GoogleMapsResponseStatusCodes.OVER_QUERY_LIMIT.toString())) {
                 addError(DirectionsStatus.OVER_QUERY_LIMIT);
+                System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
                 return null;
             }
         } catch (JSONException e) {
@@ -358,9 +366,11 @@ public abstract class AlgorithmWorker {
             System.err.println("JSON_TEST" + "Processed " + routesArray.length() + " routes!");
         } catch (JSONException e1) {
             addError(DirectionsStatus.PARSING_ERROR);
+            System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
             return null;
         }
 
+        System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
         return routesList;
     }
     
@@ -382,6 +392,11 @@ public abstract class AlgorithmWorker {
             final long routeTime, final TransitTimeMode timeMode)
             throws UnsupportedEncodingException {
     	
+        System.out.println(TAG + "getTransitResults()->startAddress: " + startAddress);
+        System.out.println(TAG + "getTransitResults()->endAddress: " + endAddress);
+        System.out.println(TAG + "getTransitResults()->routeTime: " + routeTime);
+        System.out.println(TAG + "getTransitResults()->timeMode.name(): " + timeMode.name());
+        
     	// For preventing exceeding query request limit
         try {
             Thread.sleep(TRANSIT_QUERY_DELAY_MS);
@@ -392,6 +407,7 @@ public abstract class AlgorithmWorker {
         String queryString = Utility.buildTransitQueryString(
                 startAddress, endAddress, routeTime, timeMode, true);
 
+        System.out.println(TAG + "getTransitResults()->queryString: " + queryString);
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
         
@@ -415,11 +431,14 @@ public abstract class AlgorithmWorker {
      */
     protected List<Route> getBicycleResults(final String startAddress,
             final String endAddress) throws UnsupportedEncodingException {
+        System.out.println(TAG + "getBicycleResults()->startAddress: " + startAddress);
+        System.out.println(TAG + "getBicycleResults()->endAddress: " + endAddress);
         // Build the query string
         String queryString;
         queryString = Utility.buildBicycleQueryString(
                 startAddress, endAddress, true);
 
+        System.out.println(TAG + "getBicycleResults()->queryString: " + queryString);
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
         
@@ -447,6 +466,12 @@ public abstract class AlgorithmWorker {
      */
     protected Route replaceWalkingWithBicyclingDeparture(final Route transitRoute,
             final long departureTime) {
+        
+        System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->transitRoute: "
+                + transitRoute);
+        System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->departureTime: "
+                + departureTime);
+        
         Location curStretchStartLocation = null;
         long curStretchDepartTime = departureTime;
         Step prevStep = null;
@@ -536,6 +561,8 @@ public abstract class AlgorithmWorker {
                 prevStep = curStep;
             }
         }
+        System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->comboRoute: "
+                + comboRoute);
         return comboRoute;
     }
     
@@ -555,6 +582,11 @@ public abstract class AlgorithmWorker {
      */
     protected Route replaceWalkingWithBicyclingArrival(final Route transitRoute,
             final long arrivalTime) {
+        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->transitRoute: "
+                + transitRoute);
+        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->arrivalTime: "
+                + arrivalTime);
+        
         Location curStretchEndLocation = null;
         long curStretchArrivalTime = arrivalTime;
         Step prevStep = null;
@@ -645,6 +677,9 @@ public abstract class AlgorithmWorker {
                 prevStep = curStep;
             }
         }
+        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->comboRoute: "
+                + comboRoute);
+        
         return comboRoute;
     }
     
@@ -655,8 +690,8 @@ public abstract class AlgorithmWorker {
      * @param subRoutes list of routes
      * @return first route without walking steps, null if none found
      */
-    protected Route getRouteWithoutWalkingSteps(List<Route> subRoutes)
-    {
+    protected Route getRouteWithoutWalkingSteps(List<Route> subRoutes) {
+        System.out.println(TAG + "getRouteWithoutWalkingSteps()->Entering this method.");
         for(Route subRoute : subRoutes) {
             boolean subRouteHasWalkingSteps = false;
             for (Leg curLeg : subRoute.getLegList()) {
@@ -668,9 +703,13 @@ public abstract class AlgorithmWorker {
                 }
             }
             if(!subRouteHasWalkingSteps) {
+                System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method.");
                 return subRoute;
             }
         }
+        
+        System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method " 
+                + "(returning null).");
         return null;
     }
 }

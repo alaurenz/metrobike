@@ -27,7 +27,7 @@ public final class SmartAlgorithm extends AlgorithmWorker {
 	/**
      * The TAG to use in this file for Android Log messages.
      */
-    private static final String TAG = "SmartAlgorithm ";
+    private static final String TAG = "com.HuskySoft.metrobike.algorithm: SmartAlgorithm.java: ";
 	
 	/**
 	 * Distance (in degrees) to move along diagonal between
@@ -42,7 +42,7 @@ public final class SmartAlgorithm extends AlgorithmWorker {
     @Override
     public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
-
+        System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
         // NOTE: this method assumes:
         // toProcess.getTravelMode() == TravelMode.MIXED
 
@@ -206,6 +206,10 @@ public final class SmartAlgorithm extends AlgorithmWorker {
     	double latDegDiff = end.getLatitude() - start.getLatitude();
     	double longDegDiff = end.getLongitude() - start.getLongitude();
     	
+    	System.out.println(TAG + "getLocationAlongDiagonal()->start: " + start);
+    	System.out.println(TAG + "getLocationAlongDiagonal()->end: " + end);
+    	
+    	
     	// these variables are used to determine which way to move 
     	// along diagonal 
     	int latDirectionCoeff = 1;
@@ -224,6 +228,9 @@ public final class SmartAlgorithm extends AlgorithmWorker {
         double newLong = (longDirectionCoeff 
                 * distanceInDeg * Math.sin(theta)) + start.getLongitude();
     	
+        System.out.println(TAG + "getLocationAlongDiagonal()->newLat: " + newLat);
+        System.out.println(TAG + "getLocationAlongDiagonal()->newLong: " + newLong);
+        
     	return new Location(newLat, newLong);
     }
 
@@ -238,6 +245,8 @@ public final class SmartAlgorithm extends AlgorithmWorker {
      * 			all steps not removed from given route
      */
     private Route removeStartEndNonTransitSteps(Route transitRoute) {
+        System.out.println(TAG + "removeStartEndNonTransitSteps()->Entering this method.");
+        System.out.println(TAG + "removeStartEndNonTransitSteps()->transitRoute: " + transitRoute);
     	Route result = new Route();
     	List<Step> tmpSteps = new ArrayList<Step>();
     	boolean addSteps = false;
@@ -270,6 +279,7 @@ public final class SmartAlgorithm extends AlgorithmWorker {
     	}
     	
     	result.addLeg(tmpLeg);
+    	System.out.println(TAG + "removeStartEndNonTransitSteps()->Exiting this method.");
     	return result;
     }
 }
