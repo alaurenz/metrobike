@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -148,6 +149,10 @@ public class NavigateActivity extends FragmentActivity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
@@ -254,10 +259,24 @@ public class NavigateActivity extends FragmentActivity {
     @Override
     public final boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+        case android.R.id.home:
+            // app icon in action bar clicked; go home
+            Intent homeIntent = new Intent(this, ResultsActivity.class);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            homeIntent.putExtra("List of Routes", (Serializable) routes);
+            homeIntent.putExtra("Current Route Index", currRoute);
+            startActivity(homeIntent);
+            return true;
+        case R.id.action_search:
+            // user click the search button, start the search activity
+            Intent searchIntent = new Intent(this, SearchActivity.class);
+            searchIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(searchIntent);
+            return true;
         case R.id.action_settings:
             // user click the setting button, start the settings activity
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
             return true;
         default:
             return super.onOptionsItemSelected(item);

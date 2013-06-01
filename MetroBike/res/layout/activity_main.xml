@@ -10,7 +10,8 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent" />
-
+	
+    <!-- The following two views are invisible for testing the actionbar search item -->
     <TextView
         android:id="@+id/textViewDevBy"
         android:layout_width="match_parent"
@@ -22,7 +23,8 @@
         android:text="@string/textView_hint"
         android:textColor="#1B84E0"
         android:textIsSelectable="false"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/buttonSearch"
@@ -32,6 +34,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="16dp"
-        android:text="@string/button_search_main" />
+        android:text="@string/button_search_main"
+        android:visibility="invisible" />
 
 </RelativeLayout>

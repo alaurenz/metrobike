@@ -118,10 +118,15 @@ public class MainActivity extends FragmentActivity {
     public final boolean onOptionsItemSelected(final MenuItem item) {
         Log.i(TAG, "Setting menu pops up");
         switch (item.getItemId()) {
+        case R.id.action_search:
+            // user click the search button, start the search activity
+            Intent searchIntent = new Intent(this, SearchActivity.class);
+            startActivity(searchIntent);
+            return true;
         case R.id.action_settings:
             // user click the setting button, start the settings activity
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
             return true;
         default:
             return super.onOptionsItemSelected(item);
