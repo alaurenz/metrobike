@@ -23,7 +23,7 @@ import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
  * 
  * @author coreyh3
  * 
- * check style: Sam Wilson
+ *         check style: Sam Wilson
  */
 public class UtilityTest extends TestCase {
 
@@ -70,42 +70,38 @@ public class UtilityTest extends TestCase {
     /**
      * This is a bicycle query string to compare against.
      */
-    private String buildBicycleQueryStringSingleRouteTestString 
-        = "http://maps.googleapis.com/maps/api/directions/json?"
-            + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
-            + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
-            + "sensor=true&"
-            + "mode=bicycling&" + "alternatives=false";
+    private String buildBicycleQueryStringSingleRouteTestString =
+            "http://maps.googleapis.com/maps/api/directions/json?"
+                    + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
+                    + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
+                    + "mode=bicycling&" + "alternatives=false";
 
     /**
      * This is a bicycle query string to compare against.
      */
-    private String buildBicycleQueryStringMultipleRoutesTestString 
-        = "http://maps.googleapis.com/maps/api/directions/json?"
-            + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
-            + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
-            + "sensor=true&"
-            + "mode=bicycling&" + "alternatives=true";
+    private String buildBicycleQueryStringMultipleRoutesTestString =
+            "http://maps.googleapis.com/maps/api/directions/json?"
+                    + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
+                    + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
+                    + "mode=bicycling&" + "alternatives=true";
 
     /**
      * This is a transit query string to compare against.
      */
-    private String buildTransitQueryStringMultipleRoutesArrivalTestString 
-        = "http://maps.googleapis.com/maps/api/directions/json?"
-            + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
-            + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
-            + "sensor=true&"
-            + "arrival_time=100&" + "mode=transit&" + "alternatives=true";
+    private String buildTransitQueryStringMultipleRoutesArrivalTestString =
+            "http://maps.googleapis.com/maps/api/directions/json?"
+                    + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
+                    + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
+                    + "arrival_time=100&" + "mode=transit&" + "alternatives=true";
 
     /**
      * This is a transit query string to compare against.
      */
-    private String buildTransitQueryStringSingleRouteDepartureTestString 
-        = "http://maps.googleapis.com/maps/api/directions/json?"
-            + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
-            + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
-            + "sensor=true&"
-            + "departure_time=1000&" + "mode=transit&" + "alternatives=false";
+    private String buildTransitQueryStringSingleRouteDepartureTestString =
+            "http://maps.googleapis.com/maps/api/directions/json?"
+                    + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
+                    + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
+                    + "departure_time=1000&" + "mode=transit&" + "alternatives=false";
 
     /**
      * WhiteBox: This tests the jsonArrayToStringList method.
@@ -129,12 +125,13 @@ public class UtilityTest extends TestCase {
      *             the unsupported encodeing exception
      */
     // @Test
-    public final void testBuildBicycleQueryStringMultipleRoutesTest()
-            throws UnsupportedEncodingException {
+    public final void
+            testBuildBicycleQueryStringMultipleRoutesTest() throws UnsupportedEncodingException {
         boolean multipleRoutes = true;
         String expected = buildBicycleQueryStringMultipleRoutesTestString;
-        String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
-                "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
+        String actual =
+                Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
+                        "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual,
                 expected, actual);
     }
@@ -147,12 +144,13 @@ public class UtilityTest extends TestCase {
      *             the unsupported encodeing exception
      */
     // @Test
-    public final void testBuildBicycleQueryStringSingleRouteTest()
-            throws UnsupportedEncodingException {
+    public final void
+            testBuildBicycleQueryStringSingleRouteTest() throws UnsupportedEncodingException {
         boolean multipleRoutes = false;
         String expected = buildBicycleQueryStringSingleRouteTestString;
-        String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
-                "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
+        String actual =
+                Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
+                        "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual,
                 expected, actual);
     }
@@ -164,15 +162,16 @@ public class UtilityTest extends TestCase {
      * @throws UnsupportedEncodingException
      *             the unsupported encodeing exception
      */
-    // @Test
-    public final void testBuildTransitQueryStringMultipleRoutesArrivalTest()
-     throws UnsupportedEncodingException {
+    public final void
+            testBuildTransitQueryStringMultipleRoutesArrivalTest() 
+                    throws UnsupportedEncodingException {
         boolean multipleRoutes = true;
         long routeTime = ROUTE_TIME_1;
         TransitTimeMode timeMode = TransitTimeMode.ARRIVAL_TIME;
         String expected = buildTransitQueryStringMultipleRoutesArrivalTestString;
-        String actual = Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
-                "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
+        String actual =
+                Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
+                        "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual,
                 expected, actual);
     }
@@ -185,14 +184,16 @@ public class UtilityTest extends TestCase {
      *             the unsupported encodeing exception
      */
     // @Test
-    public final void testBuildTransitQueryStringSingleRouteDepartureTest()
-            throws UnsupportedEncodingException {
+    public final void
+            testBuildTransitQueryStringSingleRouteDepartureTest() 
+                    throws UnsupportedEncodingException {
         boolean multipleRoutes = false;
         long routeTime = ROUTE_TIME_2;
         TransitTimeMode timeMode = TransitTimeMode.DEPARTURE_TIME;
         String expected = buildTransitQueryStringSingleRouteDepartureTestString;
-        String actual = Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
-                "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
+        String actual =
+                Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
+                        "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual,
                 expected, actual);
     }
@@ -270,7 +271,8 @@ public class UtilityTest extends TestCase {
      * WhiteBox: This tests the getSubstepsAsString method and passes the method
      * an empty string.
      * 
-     * @throws JSONException the json exception.
+     * @throws JSONException
+     *             the json exception.
      */
     // @Test
     public final void testGetSubstepsAsString0sizeTest() throws JSONException {
@@ -280,10 +282,10 @@ public class UtilityTest extends TestCase {
         Assert.assertEquals("Actual value of Utility.getSubstepsAsString() was: " + actual,
                 expected, actual);
     }
-    
+
     /**
-     * Test-Driven Development: This tests secondsToHumanReadableDuration
-     * given a very short duration.
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a very short duration.
      * 
      */
     // @Test
@@ -293,10 +295,10 @@ public class UtilityTest extends TestCase {
         Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(20) was: "
                 + actual, expected, actual);
     }
-    
+
     /**
-     * Test-Driven Development: This tests secondsToHumanReadableDuration
-     * given a short duration.
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a short duration.
      * 
      */
     // @Test
@@ -306,10 +308,10 @@ public class UtilityTest extends TestCase {
         Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(1000) was: "
                 + actual, expected, actual);
     }
-    
+
     /**
-     * Test-Driven Development: This tests secondsToHumanReadableDuration
-     * given a medium duration.
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a medium duration.
      * 
      */
     // @Test
@@ -319,10 +321,10 @@ public class UtilityTest extends TestCase {
         Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(6100) was: "
                 + actual, expected, actual);
     }
-    
+
     /**
-     * Test-Driven Development: This tests secondsToHumanReadableDuration
-     * given a long duration.
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a long duration.
      * 
      */
     // @Test
@@ -332,17 +334,17 @@ public class UtilityTest extends TestCase {
         Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(300000) was: "
                 + actual, expected, actual);
     }
-    
+
     /**
-     * Whitebox: This tests the timestampTo12HourTime.
-     * NOTE: this test assumes the time is GMT-7
-     * See https://github.com/alaurenz/metrobike/issues/154
+     * Whitebox: This tests the timestampTo12HourTime. NOTE: this test assumes
+     * the time is GMT-7 See https://github.com/alaurenz/metrobike/issues/154
      */
     // @Test
     public final void testTimestampTo12HourTime() {
         String expected = "1:47 PM";
-        String actual = Utility.timestampTo12HourTime(TIME_STAMP,
-                TimeZone.getTimeZone("America/Los_Angeles"));
+        String actual =
+                Utility.timestampTo12HourTime(TIME_STAMP,
+                        TimeZone.getTimeZone("America/Los_Angeles"));
         Assert.assertEquals("Actual value of Utility.timestampTo12HourTime(1368996421) was: "
                 + actual, expected, actual);
     }

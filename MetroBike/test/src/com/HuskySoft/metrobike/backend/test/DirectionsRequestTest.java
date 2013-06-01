@@ -67,7 +67,8 @@ public final class DirectionsRequestTest extends TestCase {
     /**
      * An output constant.
      */
-    private static final String ACTUAL_STATUS_WAS_LABEL = "Actual status for request.doRequest() call was: ";
+    private static final String ACTUAL_STATUS_WAS_LABEL =
+            "Actual status for request.doRequest() call was: ";
 
     /**
      * This holds a directionsRequest object for use by other testing methods.
@@ -124,13 +125,16 @@ public final class DirectionsRequestTest extends TestCase {
     // @Test
     public void testToStringTest() {
         setUp();
-        String expected = "DirectionsRequest: RequestParameters:\nstartAddress: 6504 "
-                + "Latona Ave NE,Seattle,WA\n" + "endAddress: 3801 Brooklyn Ave NE,Seattle,WA\n"
-                + "arrivalTime: 4000000\n" + "departureTime: " + RequestParameters.DONT_CARE_STRING
-                + "\n" + "travelMode: TRANSIT\n" + "minDistanceToBikeInMeters: 1000\n"
-                + "maxDistanceToBikeInMeters: 2000\n" + "minNumberBusTransfers: "
-                + RequestParameters.DONT_CARE_STRING + "\n" + "maxNumberBusTransfers: "
-                + RequestParameters.DONT_CARE_STRING + "\n" + "solutions: null";
+        String expected =
+                "DirectionsRequest: RequestParameters:\nstartAddress: 6504 "
+                        + "Latona Ave NE,Seattle,WA\n"
+                        + "endAddress: 3801 Brooklyn Ave NE,Seattle,WA\n"
+                        + "arrivalTime: 4000000\n" + "departureTime: "
+                        + RequestParameters.DONT_CARE_STRING + "\n" + "travelMode: TRANSIT\n"
+                        + "minDistanceToBikeInMeters: 1000\n" + "maxDistanceToBikeInMeters: 2000\n"
+                        + "minNumberBusTransfers: " + RequestParameters.DONT_CARE_STRING + "\n"
+                        + "maxNumberBusTransfers: " + RequestParameters.DONT_CARE_STRING + "\n"
+                        + "solutions: null";
 
         String actual = request.toString();
         Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual, expected, actual);
@@ -714,8 +718,8 @@ public final class DirectionsRequestTest extends TestCase {
      * @throws ClassNotFoundException
      *             if a class cannot be found
      */
-    private DirectionsRequest helpDeserialize(final byte[] toDeSerialize)
-            throws ClassNotFoundException, IOException {
+    private DirectionsRequest
+            helpDeserialize(final byte[] toDeSerialize) throws ClassNotFoundException, IOException {
         ByteArrayInputStream byteIn = new ByteArrayInputStream(toDeSerialize);
         ObjectInputStream objectIn = new ObjectInputStream(byteIn);
         return (DirectionsRequest) objectIn.readObject();

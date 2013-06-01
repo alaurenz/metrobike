@@ -259,7 +259,7 @@ public final class DirectionsRequest implements Serializable {
         public static final long DONT_CARE = Long.MIN_VALUE;
 
         /**
-         * String representation of DONT_CARE;
+         * String representation of DONT_CARE.
          */
         public static final String DONT_CARE_STRING = "<don't care>";
 
@@ -564,7 +564,7 @@ public final class DirectionsRequest implements Serializable {
 
         /**
          * Returns the number as a string, or "Don't care" if it matches the
-         * DONT_CARE constant value
+         * DONT_CARE constant value.
          * 
          * @param toFormat
          *            the number to format
@@ -572,7 +572,14 @@ public final class DirectionsRequest implements Serializable {
          *         DONT_CARE constant value
          */
         private String optionToString(final long toFormat) {
-            return (toFormat == DONT_CARE) ? DONT_CARE_STRING : "" + toFormat;
+            String toReturn = "";
+            if (toFormat == DONT_CARE) {
+                toReturn = DONT_CARE_STRING;
+            } else {
+                toReturn = "" + toFormat;
+            }
+            
+            return toReturn;
         }
 
     }
@@ -693,7 +700,7 @@ public final class DirectionsRequest implements Serializable {
     /**
      * Set the minimum number of bus transfers. This parameter is optional.
      * 
-     * @param dontCare
+     * @param newMinNumberBusTransfers
      *            the minimum number of bus transfers.
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
