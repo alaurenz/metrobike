@@ -12,7 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.HuskySoft.metrobike.algorithm.*;
+import com.HuskySoft.metrobike.algorithm.AlgorithmWorker;
+import com.HuskySoft.metrobike.algorithm.BicycleOnlyAlgorithm;
+import com.HuskySoft.metrobike.algorithm.SimpleComboAlgorithm;
+import com.HuskySoft.metrobike.algorithm.SmartAlgorithm;
 
 /**
  * @author coreyh3
@@ -718,11 +721,13 @@ public final class DirectionsRequest implements Serializable {
     }
 
     /**
-     * Setter for the resource field
+     * Setter for the resource field.
      * 
      * @param queryObj
+     *            The query object to set the resource to (the stub or the
+     *            actual APIQuery).
      */
-    public void setResource(APIQuery queryObj) {
+    public void setResource(final APIQuery queryObj) {
         myParams.resource = queryObj;
     }
 

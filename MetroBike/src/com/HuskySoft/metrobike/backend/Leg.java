@@ -32,7 +32,7 @@ public final class Leg implements Serializable {
      * TAG for logging statements.
      */
     private static final String TAG = "com.HuskySoft.metrobike.backend: Leg.java: ";
-    
+
     /**
      * A default address for the start and end of a leg.
      */
@@ -59,7 +59,7 @@ public final class Leg implements Serializable {
      * the viewing window.
      */
     private Location swBound;
-    
+
     /**
      * The list of steps to complete this leg.
      */
@@ -90,7 +90,8 @@ public final class Leg implements Serializable {
      * @param jsonLeg
      *            the JSON to parse into a Leg object
      * @return A Leg based on the passed json_src
-     * @throws JSONException If parsing the JSON fails
+     * @throws JSONException
+     *             If parsing the JSON fails
      */
     public static Leg buildLegFromJSON(final JSONObject jsonLeg) throws JSONException {
         System.out.println(TAG + "buildLegFromJSON()->Entering this method.");
@@ -123,7 +124,7 @@ public final class Leg implements Serializable {
      */
     public Leg addStep(final Step newStep) {
         System.out.println(TAG + "addStep()->newStep: " + newStep);
-        
+
         // Update neBound
         neBound = Location.makeNorthEastBound(neBound, newStep.getStartLocation());
         neBound = Location.makeNorthEastBound(neBound, newStep.getEndLocation());
@@ -131,7 +132,7 @@ public final class Leg implements Serializable {
         // Update swBound
         swBound = Location.makeSouthWestBound(swBound, newStep.getStartLocation());
         swBound = Location.makeSouthWestBound(swBound, newStep.getEndLocation());
-        
+
         stepList.add(newStep);
         return this;
     }
@@ -234,7 +235,7 @@ public final class Leg implements Serializable {
         for (Step s : stepList) {
             myDistance += s.getDistanceInMeters();
         }
-        
+
         System.out.println(TAG + "getDistanceInMeters()->myDistance: " + myDistance);
         return myDistance;
     }
@@ -249,7 +250,7 @@ public final class Leg implements Serializable {
         for (Step s : stepList) {
             myDuration += s.getDurationInSeconds();
         }
-        
+
         System.out.println(TAG + "getDurationInSeconds()->myDuration: " + myDuration);
         return myDuration;
     }
@@ -285,7 +286,7 @@ public final class Leg implements Serializable {
         }
         return toReturn;
     }
-    
+
     /**
      * Returns the full polyline for this Leg.
      * 
