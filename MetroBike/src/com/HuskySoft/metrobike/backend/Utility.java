@@ -38,6 +38,8 @@ public final class Utility {
         throw new AssertionError("Never instantiate utility classes!");
     }
     
+    private static final String TAG = "com.HuskySoft.metrobike.backend: Utility.java: ";
+    
     /**
      * Format for printing times in "human-readable" way
      */
@@ -102,10 +104,14 @@ public final class Utility {
      */
     public static List<String> jsonArrayToStringList(final JSONArray jsonArray)
             throws JSONException {
+        System.out.println(TAG + "jsonArraytoStringList()->Printing the array");
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < jsonArray.length(); i++) {
+            System.out.println(TAG + "jsonArraytoStringList()->" + i + ": " + 
+                    jsonArray.getString(i));
             list.add(jsonArray.getString(i));
         }
+        System.out.println(TAG + "jsonArraytoStringList()->Done Printing the json array.");
         return list;
     }
 
@@ -131,6 +137,10 @@ public final class Utility {
     public static String buildBicycleQueryString(final String startAddress,
             final String endAddress, final boolean multipleRoutes)
             throws UnsupportedEncodingException {
+        
+        System.out.println(TAG + "buildBicycleQueryString()->startAddress: " + startAddress);
+        System.out.println(TAG + "buildBicycleQueryString()->endAddress: " + endAddress);
+        System.out.println(TAG + "buildBicycleQueryString()->multipleRoutes: " + multipleRoutes);
         StringBuilder url = new StringBuilder(GOOGLE_MAPS_BASE_URL);
 
         // Add the key/value pairs to the url
@@ -175,6 +185,12 @@ public final class Utility {
     public static String buildTransitQueryString(final String startAddress,
             final String endAddress, final long routeTime, final TransitTimeMode timeMode,
             final boolean multipleRoutes) throws UnsupportedEncodingException {
+        System.out.println(TAG + "buildtransitQueryString()->startAddress: " + startAddress);
+        System.out.println(TAG + "buildtransitQueryString()->endAddress: " + endAddress);
+        System.out.println(TAG + "buildtransitQueryString()->multipleRoutes: " + multipleRoutes);
+        System.out.println(TAG + "buildtransitQueryString()->routeTime: " + routeTime);
+        System.out.println(TAG + "buildtransitQueryString()->timeMode.name(): " + timeMode.name());
+        
         StringBuilder url = new StringBuilder(GOOGLE_MAPS_BASE_URL);
 
         // Add the key/value pairs to the url
@@ -219,6 +235,10 @@ public final class Utility {
      */
     private static void addKeyValuePair(final StringBuilder url, final URIKeys key,
             final URIKeys value, final boolean isFinalParam) {
+        System.out.println(TAG + "addKeyValuePair(URIKeys Value)->key.name(): " + key.name());
+        System.out.println(TAG + "addKeyValuePair(URIKeys Value)->value.name(): " + value.name());
+        System.out.println(TAG + "addKeyValuePair(URIKeys Value)->isFinalParam: " + isFinalParam);
+        
         url.append(key.getLowerCase());
         url.append(URL_ASSIGNMENT_OPERATOR);
         url.append(value.getLowerCase());
@@ -244,6 +264,10 @@ public final class Utility {
      */
     private static void addKeyValuePair(final StringBuilder url, final URIKeys key,
             final String value, final boolean isFinalParam) throws UnsupportedEncodingException {
+        System.out.println(TAG + "addKeyValuePair(String Value)->key.name(): " + key.name());
+        System.out.println(TAG + "addKeyValuePair(String Value)->value: " + value);
+        System.out.println(TAG + "addKeyValuePair(String Value)->isFinalParam: " + isFinalParam);
+        
         url.append(key.getLowerCase());
         url.append(URL_ASSIGNMENT_OPERATOR);
         url.append(encodeURLParameter(value));
@@ -264,6 +288,7 @@ public final class Utility {
      */
     private static String encodeURLParameter(final String toFormat)
             throws UnsupportedEncodingException {
+        System.out.println(TAG + "encodeURLParameter()->toFormat: " + toFormat);
         return URLEncoder.encode(toFormat, URL_ENCODING_CHARSET_NAME);
     }
 
@@ -278,8 +303,11 @@ public final class Utility {
      */
     public static String listPrettyPrint(final List<?> list, final int indent) {
         if(list == null || list.size() == 0) {
+            System.out.println(TAG + "listPrettyPrint()->list was null or of size 0.");
             return null;
         }
+        
+        System.out.println(TAG + "listPrettyPrint()->indent: " + indent);
 
         StringBuilder indentBuilder = new StringBuilder();
         for (int i = 0; i < indent; i++) {
@@ -289,9 +317,13 @@ public final class Utility {
         String indentString = indentBuilder.toString();
 
         StringBuilder listAsString = new StringBuilder();
+        
         for (int i = 0; i < list.size(); i++) {
             listAsString.append(indentString + i + ": " + list.get(i) + "\n");
         }
+        
+        System.out.println(TAG + "listPrettyPrint()->listAsString.toString(): " + listAsString.toString());
+        
         return listAsString.toString();
     }
 
@@ -307,8 +339,10 @@ public final class Utility {
      */
     public static String getSubstepsAsString(final List<Step> substeps, final int indent) {
         if (substeps == null || substeps.size() == 0) {
+            System.out.println(TAG + "getSubstepsAsString()->substeps was null or of size 0.");
             return "";
         }
+        System.out.println(TAG + "getSubstepsAsString()->indent: " + indent);
 
         StringBuilder substepString = new StringBuilder();
         for (int i = 0; i < substeps.size(); i++) {
@@ -316,6 +350,9 @@ public final class Utility {
             substepString.append(substeps.get(i).toString());
         }
 
+        System.out.println(TAG + "getSubstepsAsString()->substepString.toString(): " 
+                + substepString.toString());
+        
         return substepString.toString();
     }
 
@@ -329,6 +366,7 @@ public final class Utility {
      */
     public static String getLegsAsString(final List<Leg> legs) {
         if (legs == null || legs.size() == 0) {
+            System.out.println(TAG + "getLegsAsString()->legs was null or of size 0.");
             return "";
         }
 
@@ -337,6 +375,9 @@ public final class Utility {
             substepString.append(legs.get(i).toString());
         }
 
+        System.out.println(TAG + "getLegsAsString()->substepString.toString(): " 
+                + substepString.toString());
+        
         return substepString.toString();
     }
 
@@ -346,6 +387,7 @@ public final class Utility {
      * @return the indentation string
      */
     public static String getIndentString() {
+        System.out.println(TAG + "getIndentString()->INDENT_STRING: " + INDENT_STRING); 
         return INDENT_STRING;
     }
     
@@ -362,6 +404,14 @@ public final class Utility {
         int minutes = (int) (durationMinutesRounded % 60);
         int hours = (int) ((durationMinutesRounded / 60) % 24);
         int days = (int) (durationMinutesRounded / (60 * 24));
+        
+        System.out.println(TAG + "secondsToHumanReadableDuration()->durationSeconds: " 
+                + durationSeconds);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->durationMinutesRounded: " 
+                + durationMinutesRounded); 
+        System.out.println(TAG + "secondsToHumanReadableDuration()->minutes: " + minutes); 
+        System.out.println(TAG + "secondsToHumanReadableDuration()->hours: " + hours); 
+        System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days); 
         
         String output = "";
         if(days > 0) {
@@ -382,6 +432,11 @@ public final class Utility {
                 output += "s";
             output += ", ";
         }
+        
+        System.out.println(TAG + "secondsToHumanReadableDuration()->" 
+                + "output.substring(0, output.length() - 2): " 
+                + output.substring(0, output.length() - 2)); 
+        
         return output.substring(0, output.length() - 2);
     }
     
@@ -399,11 +454,17 @@ public final class Utility {
     public static String timestampTo12HourTime(final long timestampSeconds,
     		TimeZone timezone) {
         long timestampMillis = timestampSeconds * 1000;
+        System.out.println(TAG + "timestampTo12HourTime()->timestampMillis: " + timestampMillis);
+        
         Date date = new Date(timestampMillis);
         SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT, TIME_LOCALE);
         if(timezone != null) {
         	dateFormat.setTimeZone(timezone);
         }
+        
+        System.out.println(TAG + "timestampTo12HourTime()->dateFormat.format(date): " 
+                + dateFormat.format(date));
+        
         return dateFormat.format(date);
     }
     
