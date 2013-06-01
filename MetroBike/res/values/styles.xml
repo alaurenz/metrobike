@@ -16,7 +16,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+	
     <!-- button style used in navigation and result activity -->
 	<style name="button">
 	    <item name="android:layout_height">wrap_content</item>

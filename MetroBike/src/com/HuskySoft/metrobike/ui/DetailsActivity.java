@@ -65,8 +65,10 @@ public class DetailsActivity extends Activity {
         directions = (TextView) findViewById(R.id.directions);
         start = (TextView) findViewById(R.id.directionsStart);
         destination = (TextView) findViewById(R.id.directionsDest);
+        
         ActionBar actionBar = this.getActionBar();
-        actionBar.setTitle("Details");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        
         @SuppressWarnings("unchecked")
         List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(
                 "List of Routes");
@@ -103,10 +105,24 @@ public class DetailsActivity extends Activity {
     @Override
     public final boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+        case android.R.id.home:
+            // app icon in action bar clicked; go home
+            Intent homeIntent = new Intent(this, ResultsActivity.class);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            homeIntent.putExtra("List of Routes", (Serializable) routes);
+            homeIntent.putExtra("Current Route Index", currRoute);
+            startActivity(homeIntent);
+            return true;
+        case R.id.action_search:
+            // user click the search button, start the search activity
+            Intent searchIntent = new Intent(this, SearchActivity.class);
+            searchIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(searchIntent);
+            return true;
         case R.id.action_settings:
             // user click the setting button, start the settings activity
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
             return true;
         default:
             return super.onOptionsItemSelected(item);

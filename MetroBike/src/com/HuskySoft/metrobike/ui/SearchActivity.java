@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -54,7 +55,7 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 
 /**
- * An activity that receives and handle's users' requests for routes.
+ * An activity that receives and handles users' requests for routes.
  * 
  * @author Shuo Wang, Sam Wilson
  */
@@ -557,7 +558,9 @@ public class SearchActivity extends Activity implements
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        
         establishViewsAndOtherNecessaryComponents();
         setInitialText();
         setListeners();
@@ -610,7 +613,7 @@ public class SearchActivity extends Activity implements
     @Override
     public final boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_menu, menu);
+        getMenuInflater().inflate(R.menu.activity_search, menu);
         return true;
     }
 
@@ -624,11 +627,17 @@ public class SearchActivity extends Activity implements
     @Override
     public final boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+        case android.R.id.home:
+            // app icon in action bar clicked; go home
+            Intent homeIntent = new Intent(this, MainActivity.class);
+            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            return true;
         case R.id.action_settings:
             // user click the setting button, start the settings activity
-            Intent intent = new Intent(this, SettingsActivity.class);
-            intent.putExtra("parent", "Search");
-            startActivity(intent);
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            settingsIntent.putExtra("parent", "Search");
+            startActivity(settingsIntent);
             return true;
         default:
             return super.onOptionsItemSelected(item);

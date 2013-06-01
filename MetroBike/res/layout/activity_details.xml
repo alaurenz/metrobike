@@ -43,12 +43,14 @@
         android:orientation="horizontal"
         android:weightSum="1.0" >
 
+        <!-- android:visibility="gone" to disable this button -->
         <Button
             android:id="@+id/button_go_to_search"
             style="@style/button_style_details"
             android:layout_weight=".33"
             android:onClick="goToSearchPage"
-            android:text="@string/button_go_to_search" />
+            android:text="@string/button_go_to_search"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_go_to_result"
