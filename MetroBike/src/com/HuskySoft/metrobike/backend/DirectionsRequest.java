@@ -143,10 +143,6 @@ public final class DirectionsRequest implements Serializable {
             alg = new BicycleOnlyAlgorithm();
             alg.setResource(myParams.getResource());
             return doAlgorithm(alg);
-        case TRANSIT:
-            alg = new BicycleOnlyAlgorithm();
-            alg.setResource(myParams.getResource());
-            return doAlgorithm(alg);
         case MIXED:
             // Travel Mode Mix also needs the bicycle only routes
             BicycleOnlyAlgorithm bikeAlg = new BicycleOnlyAlgorithm();

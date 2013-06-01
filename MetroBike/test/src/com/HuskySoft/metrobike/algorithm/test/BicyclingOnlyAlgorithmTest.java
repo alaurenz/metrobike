@@ -32,6 +32,11 @@ public class BicyclingOnlyAlgorithmTest extends TestCase {
     private static final int TIME_STAMP_FOR_TESTING_TWO = 1371168000;
     
     /**
+     * static value of the time stamp that is need for setting the request up.
+     */
+    private static final int ARRIVAL_TIME_STAMP = 1371168000;
+    
+    /**
      * This holds a directionsRequest object for use by other testing methods.
      */
     private DirectionsRequest request = null;
@@ -51,7 +56,7 @@ public class BicyclingOnlyAlgorithmTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setDepartureTime(TIME_STAMP_FOR_TESTING_ONE);
-        request.setTravelMode(TravelMode.MIXED);
+        request.setTravelMode(TravelMode.BICYCLING);
     }
 
     /**
@@ -68,7 +73,7 @@ public class BicyclingOnlyAlgorithmTest extends TestCase {
         String endAddress = "2310 48th Street NE, Seattle, WA";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setDepartureTime(TIME_STAMP_FOR_TESTING_ONE);
+        request.setArrivalTime(ARRIVAL_TIME_STAMP);
         request.setTravelMode(TravelMode.BICYCLING);
     }
 
