@@ -24,10 +24,15 @@ import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
 
 /**
- * @author mengwan, Xinyun Chen, Shuo Wang
+ * @author mengwan, Xinyun Chen, Shuo Wang, Sam Wilson
  * 
  */
 public class DetailsActivity extends Activity {
+
+    /**
+     * The tag of this activity.
+     */
+    private static final String TAG = "DeatilsActivity";
 
     /**
      * Results from the search.
@@ -53,8 +58,8 @@ public class DetailsActivity extends Activity {
      * TextView to show destination address.
      */
     private TextView destination;
-	
-	/**
+
+    /**
      * The size of the bus and bicycle icons.
      */
     private static final int IMAGE_SIZE = 35;
@@ -72,10 +77,10 @@ public class DetailsActivity extends Activity {
         directions = (TextView) findViewById(R.id.directions);
         start = (TextView) findViewById(R.id.directionsStart);
         destination = (TextView) findViewById(R.id.directionsDest);
-        
+
         ActionBar actionBar = this.getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        
+
         @SuppressWarnings("unchecked")
         List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(
                 "List of Routes");
@@ -85,6 +90,7 @@ public class DetailsActivity extends Activity {
             // if there exists route, show the details
             this.setDetails();
         }
+        Log.v(TAG, "Done creating Detail activity");
     }
 
     /**
@@ -194,51 +200,48 @@ public class DetailsActivity extends Activity {
             for (int j = 0; j < steps.size(); j++) {
                 final Step s = steps.get(j);
 
-            	// Add the bus or bicycle icon for each step
+                // Add the bus or bicycle icon for each step
                 ImageGetter imgGetter = new ImageGetter() {
-            		public Drawable getDrawable(String source) {
-                		Drawable drawable = null;
-                        if (s.getTravelMode() != TravelMode.TRANSIT) {   
-                        	drawable = getResources().getDrawable(R.drawable.bicycle_icon);
+                    public Drawable getDrawable(final String source) {
+                        Drawable drawable = null;
+                        if (s.getTravelMode() != TravelMode.TRANSIT) {
+                            drawable = getResources().getDrawable(R.drawable.bicycle_icon);
                         } else {
-                        	drawable = getResources().getDrawable(R.drawable.bus_icon);
+                            drawable = getResources().getDrawable(R.drawable.bus_icon);
                         }
                         drawable.setBounds(0, 0, IMAGE_SIZE, IMAGE_SIZE);
                         return drawable;
                     }
-                 };
-            	String image = "<img src=\"mode\"/>";
+                };
+                String image = "<img src=\"mode\"/>";
                 directions.append(Html.fromHtml(image, imgGetter, null));
-                
+
                 // Add duration time for each step
                 directions.append("  ( " + s.getDurationHumanReadable() + " )\n");
-                
+
                 // Note: DO NOT combine multiple directions.append() calls
-                // into one. Otherwise, the format (bold, italics, etc.) 
+                // into one. Otherwise, the format (bold, italics, etc.)
                 // will NOT be effective.
                 if (s.getTravelMode() == TravelMode.TRANSIT) {
                     // Add transit info if this step is transit
-                    String transitDetails = "<b>" 
-                                            + s.getTransitDetails().getVehicleType()
-                                            + " "
-                                            + s.getTransitDetails().getLineShortName()
-                                            + "</b>";
+                    String transitDetails = "<b>" + s.getTransitDetails().getVehicleType() + " "
+                            + s.getTransitDetails().getLineShortName() + "</b>";
                     directions.append(Html.fromHtml(transitDetails));
                     directions.append(" (");
                 }
-                
+
                 Log.v("MetroBike HTML Intructions", s.getHtmlInstruction());
-                
+
                 // Strip out all the <div> and </div> blocks in details
                 String ss = s.getHtmlInstruction().replaceAll("[<]div[^>]*[>]", " (")
-                                                  .replaceAll("[<]/div[>]", ")");
-                
+                        .replaceAll("[<]/div[>]", ")");
+
                 directions.append(Html.fromHtml(ss));
-                
+
                 if (s.getTravelMode() == TravelMode.TRANSIT) {
                     directions.append(")");
-                }   
-                
+                }
+
                 directions.append("\n");
             }
         }

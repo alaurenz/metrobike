@@ -1,11 +1,9 @@
-<RelativeLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AboutActivity" >
 
-    
     <!-- The HuskySoft logo -->
 
     <ImageView
@@ -18,103 +16,117 @@
         android:layout_marginTop="20dp"
         android:contentDescription="@string/huskysoft_description"
         android:src="@drawable/about_logo" />
-    
-	<TextView
-            android:id="@+id/textViewVersion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/huskySoftLogo"
-            android:textIsSelectable="false"
-            android:text="@string/version"
-            android:textSize="18sp"
-            android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/textViewVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/huskySoftLogo"
+        android:gravity="center"
+        android:text="@string/version"
+        android:textIsSelectable="false"
+        android:textSize="18sp" />
 
     <!-- Will add more details in this page -->
 
-	<LinearLayout 
-	    android:id="@+id/linearLayoutAbout"
-	    android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:isScrollContainer="true"
-    	android:orientation="vertical"
-    	android:layout_marginTop="20dp"
-    	android:layout_below="@+id/textViewVersion"
-    	 >
-    	
-	    <TextView
+    <LinearLayout
+        android:id="@+id/linearLayoutAbout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textViewVersion"
+        android:layout_marginTop="20dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical" >
+
+        <TextView
             android:id="@+id/textViewDevBy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
+            android:gravity="center"
             android:text="@string/textview_dev_by"
-            android:textSize="24sp"
             android:textColor="#1B84E0"
-            android:gravity="center"/>
-	   	
-	   	<TextView
+            android:textIsSelectable="false"
+            android:textSize="24sp" />
+
+        <TextView
             android:id="@+id/textViewJaylen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
-            android:text="@string/textview_jaylen"
-            android:textSize="18sp"
             android:layout_marginTop="10dp"
-            android:gravity="center"/>
-	   	
-	   	<TextView
+            android:gravity="center"
+            android:text="@string/textview_jaylen"
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textViewXinyun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
+            android:gravity="center"
             android:text="@string/textview_xinyun"
-            android:textSize="18sp"
-            android:gravity="center"/>
-	   	
-	   	<TextView
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textViewCorey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
+            android:gravity="center"
             android:text="@string/textview_corey"
-            android:textSize="18sp"
-            android:gravity="center"/>
-	   	
-	   	<TextView
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textViewAdrian"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
+            android:gravity="center"
             android:text="@string/textview_adrian"
-            android:textSize="18sp"
-            android:gravity="center"/>
-	   	
-	   	<TextView
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textViewQinyuan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
+            android:gravity="center"
             android:text="@string/textview_qinyuan"
-            android:textSize="18sp"
-            android:gravity="center"/>
-	   	
-	   	<TextView
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textViewShuo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
+            android:gravity="center"
             android:text="@string/textview_shuo"
-            android:textSize="18sp"
-            android:gravity="center"/>
-	   	
-	   	<TextView
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textViewSam"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="false"
+            android:gravity="center"
             android:text="@string/textview_sam"
-            android:textSize="18sp"
-            android:gravity="center"/>
-	    
-	</LinearLayout>
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="end"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/termAndConditions"
+            style="@style/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_term_and_conditions" />
+    </LinearLayout>
 
 </RelativeLayout>
