@@ -203,8 +203,41 @@ public class MixAlgorithmTest extends TestCase {
      * the previous steps.
      */
     // @Test
-    public final void testAllStepStartEndAdrainToStevens() {
+    public final void testAllStepStartEndAdrainToStevensDeparture() {
         setUpAdrainToStevens(TransitTimeMode.DEPARTURE_TIME);
+
+        request.doRequest();
+
+        List<Route> routes = request.getSolutions();
+        for (Route r : routes) {
+            Location legStart = null;
+            Location stepStart = null;
+            Location stepEnd = null;
+            for (int i = 0; i < r.getLegList().size(); i++) {
+                legStart = r.getLegList().get(i).getStartLocation();
+                for (int j = 0; j < r.getLegList().get(i).getStepList().size(); j++) {
+                    stepStart = r.getLegList().get(i).getStepList().get(j).getStartLocation();
+                    if (j == 0) {
+                        Assert.assertEquals(stepStart.getLatitude(), legStart.getLatitude());
+                        Assert.assertEquals(stepStart.getLongitude(), legStart.getLongitude());
+                    }
+                    if (j != 0 && i != 0) {
+                        Assert.assertEquals(stepStart.getLatitude(), stepEnd.getLatitude());
+                        Assert.assertEquals(stepStart.getLongitude(), stepEnd.getLongitude());
+                    }
+                    stepEnd = r.getLegList().get(i).getStepList().get(j).getEndLocation();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Black Box test: Test if all the steps started with the same location as
+     * the previous steps.
+     */
+    // @Test
+    public final void testAllStepStartEndAdrainToStevensArrival() {
+        setUpAdrainToStevens(TransitTimeMode.ARRIVAL_TIME);
 
         request.doRequest();
 
@@ -236,8 +269,43 @@ public class MixAlgorithmTest extends TestCase {
      * the previous steps.
      */
     // @Test
-    public final void testAllStepStartEndStevensToQinyuan() {
+    public final void testAllStepStartEndStevensToQinyuanDeparture() {
         setUpStevensToQinyuan(TransitTimeMode.DEPARTURE_TIME);
+
+        request.doRequest();
+
+        List<Route> routes = request.getSolutions();
+
+        for (Route r : routes) {
+            Location legStart = null;
+            Location stepStart = null;
+            Location stepEnd = null;
+            for (int i = 0; i < r.getLegList().size(); i++) {
+                legStart = r.getLegList().get(i).getStartLocation();
+
+                for (int j = 0; j < r.getLegList().get(i).getStepList().size(); j++) {
+                    stepStart = r.getLegList().get(i).getStepList().get(j).getStartLocation();
+                    if (j == 0) {
+                        Assert.assertEquals(stepStart.getLatitude(), legStart.getLatitude());
+                        Assert.assertEquals(stepStart.getLongitude(), legStart.getLongitude());
+                    }
+                    if (j != 0 && i != 0) {
+                        Assert.assertEquals(stepStart.getLatitude(), stepEnd.getLatitude());
+                        Assert.assertEquals(stepStart.getLongitude(), stepEnd.getLongitude());
+                    }
+                    stepEnd = r.getLegList().get(i).getStepList().get(j).getEndLocation();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Black Box test: Test if all the steps started with the same location as
+     * the previous steps.
+     */
+    // @Test
+    public final void testAllStepStartEndStevensToQinyuanArrival() {
+        setUpStevensToQinyuan(TransitTimeMode.ARRIVAL_TIME);
 
         request.doRequest();
 
@@ -271,8 +339,37 @@ public class MixAlgorithmTest extends TestCase {
      * legs and steps.
      */
     // @Test
-    public final void testTimeAdrainToStevens() {
+    public final void testTimeAdrainToStevensDeparture() {
         setUpAdrainToStevens(TransitTimeMode.DEPARTURE_TIME);
+
+        request.doRequest();
+
+        List<Route> routes = request.getSolutions();
+
+        for (Route r : routes) {
+            long routeTimeForLeg = r.getDurationInSeconds();
+            long routeTimeForSteps = r.getDurationInSeconds();
+            for (Leg l : r.getLegList()) {
+                long legTimeForSteps = l.getDurationInSeconds();
+                routeTimeForLeg -= l.getDurationInSeconds();
+                for (Step s : l.getStepList()) {
+                    routeTimeForSteps -= s.getDurationInSeconds();
+                    legTimeForSteps -= s.getDurationInSeconds();
+                }
+                Assert.assertEquals(0, legTimeForSteps);
+            }
+            Assert.assertEquals(0, routeTimeForLeg);
+            Assert.assertEquals(0, routeTimeForSteps);
+        }
+    }
+    
+    /**
+     * Black Box test: test if every route's duration consists the sum of its
+     * legs and steps.
+     */
+    // @Test
+    public final void testTimeAdrainToStevensArrival() {
+        setUpAdrainToStevens(TransitTimeMode.ARRIVAL_TIME);
 
         request.doRequest();
 
