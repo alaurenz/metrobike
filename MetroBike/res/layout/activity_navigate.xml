@@ -48,9 +48,7 @@
             android:text="@string/button_go_to_results" />
     </LinearLayout>
 
-    
-    
-        
+
    		<Button
             android:id="@+id/button_previous"
             android:layout_width="wrap_content"
@@ -65,7 +63,9 @@
             android:layout_gravity="top|center"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textIsSelectable="false" />
+            android:textIsSelectable="false" 
+            android:paddingLeft="75dp"
+            android:paddingRight="60dp"/>
 
    		<!-- we may not need this for the next button android:layout_marginRight="60dp" -->
    		

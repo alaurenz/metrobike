@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -49,29 +50,9 @@ public class NavigateActivity extends FragmentActivity {
     private static final int ANIMATED_CAMERA_DURATION_IN_MILLISECOND = 3000;
 
     /**
-     * Alpha value for argb for drawing paths.
-     */
-    private static final int DRAW_STEPS_ARGB_ALPHA = 200;
-
-    /**
-     * Full value (255) for argb for drawing paths.
-     */
-    private static final int DRAW_STEPS_ARGB_FULL_VALUE = 255;
-
-    /**
      * Another value for argb for drawing paths.
      */
     private static final int DRAW_STEPS_ARGB_105 = 105;
-
-    /**
-     * Width value 1 for paths.
-     */
-    private static final float DRAW_STEPS_WIDTH_12 = 12f;
-
-    /**
-     * Width value 2 for paths.
-     */
-    private static final float DRAW_STEPS_WIDTH_8 = 8f;
 
     /**
      * Radius for drawing paths.
@@ -87,6 +68,26 @@ public class NavigateActivity extends FragmentActivity {
      * Results from the search.
      */
     private ArrayList<Route> routes;
+    
+    /**
+     * Transparent rate of the poly-line.
+     */
+    private static final int POLYLINE_TRANSPARENT = 200;
+    
+    /**
+     * poly-line color integer.
+     */
+    private static final int POLYLINE_COLOR = 255;
+    
+    /**
+     * Thick poly-line width.
+     */
+    private static final float POLYLINE_THICK = 12f;
+    
+    /**
+     * Thin poly-line width.
+     */
+    private static final float POLYLINE_THIN = 8f;
 
     /**
      * Current Device's screen height.
@@ -103,6 +104,11 @@ public class NavigateActivity extends FragmentActivity {
      */
     private GoogleMap googleMap;
 
+    /**
+     * Bitmap object used for drawing icon of the marker.
+     */
+    private Bitmap bitmap;
+    
     /**
      * Keeps a list of legs used for map.
      */
@@ -357,12 +363,6 @@ public class NavigateActivity extends FragmentActivity {
             googleMap.addMarker(markerTo);
 
             drawSteps();
-            // set the camera to focus on the route
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(
-                    com.HuskySoft.metrobike.ui.utility.Utility.getCameraCenter(routes
-                            .get(currRoute)), com.HuskySoft.metrobike.ui.utility.Utility
-                            .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth));
-            googleMap.animateCamera(update, ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
         }
     }
 
@@ -383,33 +383,58 @@ public class NavigateActivity extends FragmentActivity {
                         .getPolyLinePoints())) {
                     polylineOptions = polylineOptions.add(ll);
                 }
+                
+                // draw the bus icon
+                if (s.getTravelMode() == TravelMode.TRANSIT) {
+                	boolean getIcon = true;
+                    Thread markerThread = new Thread(new MarkerThread(s));
+                    markerThread.start();                    
+                    try {
+                        markerThread.join();
+                    } catch (InterruptedException e) {
+                        getIcon = false;
+                    }
+                    MarkerOptions mo = new MarkerOptions()
+                    .position(com.HuskySoft.metrobike.ui.utility.Utility
+                            .convertLocation(s.getStartLocation()))
+                    .title(s.getTransitDetails().getVehicleType() 
+                            + " " + s.getTransitDetails().getLineShortName())
+                            .snippet("Departure at: " + s.getTransitDetails().getDepartureTime());
+                    if (getIcon && bitmap != null) {
+                        mo = mo.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    }
+                    googleMap.addMarker(mo);
+                }
 
                 if (i == currentLeg && j == currentStep) {
+                	LatLng ll = com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
+                    		.getStartLocation());
+                    // set the camera to focus on the step
+                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(
+                            ll, com.HuskySoft.metrobike.ui.utility.Utility
+                                    .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth));
+                    googleMap.animateCamera(update, ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
+                	
                     if (s.getTravelMode() == TravelMode.TRANSIT) {
-
-                        googleMap.addPolyline(polylineOptions
-                                .color(Color.argb(DRAW_STEPS_ARGB_ALPHA,
-                                        DRAW_STEPS_ARGB_FULL_VALUE, 0, 0)).width(
-                                        DRAW_STEPS_WIDTH_12));
+                    	googleMap.addPolyline(polylineOptions
+                                .color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
+                                .width(POLYLINE_THICK));
                     } else {
-                        googleMap.addPolyline(polylineOptions
-                                .color(Color.argb(DRAW_STEPS_ARGB_ALPHA, 0, 0,
-                                        DRAW_STEPS_ARGB_FULL_VALUE)).width(DRAW_STEPS_WIDTH_8)
-                                .zIndex(1));
+                    	googleMap.addPolyline(polylineOptions
+                                .color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
+                                .width(POLYLINE_THIN).zIndex(1));
                     }
                 } else {
-
                     if (s.getTravelMode() == TravelMode.TRANSIT) {
-
-                        googleMap.addPolyline(polylineOptions.color(
-                                Color.argb(DRAW_STEPS_ARGB_ALPHA, DRAW_STEPS_ARGB_105,
-                                        DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105)).width(
-                                DRAW_STEPS_WIDTH_12));
+                        googleMap.addPolyline(polylineOptions
+                        		.color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                                        DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
+                                .width(POLYLINE_THICK));
                     } else {
                         googleMap.addPolyline(polylineOptions
-                                .color(Color.argb(DRAW_STEPS_ARGB_ALPHA, DRAW_STEPS_ARGB_105,
+                                .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
                                         DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
-                                .width(DRAW_STEPS_WIDTH_8).zIndex(1));
+                                .width(POLYLINE_THIN).zIndex(1));
                     }
                 }
                 googleMap.addCircle(new CircleOptions()
@@ -433,5 +458,34 @@ public class NavigateActivity extends FragmentActivity {
         MapSetting.updateStatus(googleMap);
         drawRoute();
     }
-
+    
+    /**
+     * An inner class that generates a request for drawing the icon of the marker
+     * for a URL connection.
+     * 
+     * @author mengwan
+     */
+    private class MarkerThread implements Runnable {
+        /**
+         * Step object to be drew on the map.
+         */
+        private Step toDraw;
+        
+        /**
+         * Constructor of the thread.
+         * @param s : Step object to be drew.
+         */
+        public MarkerThread(final Step s) {
+            this.toDraw = s;
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() {
+            bitmap = com.HuskySoft.metrobike.ui.utility.Utility.
+                    getBitmapFromURL(toDraw.getTransitDetails().getVehicleIconURL());
+        }
+    }
 }
