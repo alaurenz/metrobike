@@ -34,7 +34,7 @@
         <Button
             android:id="@+id/button_detail"
             style="@style/button"
-            android:layout_weight=".34"
+            android:layout_weight=".5"
             android:onClick="goToDetail"
             android:textSize="18sp"
             android:text="@string/button_go_to_detail" />
@@ -42,7 +42,7 @@
         <Button
             android:id="@+id/button_results"
             style="@style/button"
-            android:layout_weight=".33"
+            android:layout_weight=".5"
             android:onClick="goToResults"
             android:textSize="18sp"
             android:text="@string/button_go_to_results" />

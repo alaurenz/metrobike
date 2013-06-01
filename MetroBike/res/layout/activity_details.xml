@@ -107,14 +107,14 @@
         <Button
             android:id="@+id/button_go_to_result"
             style="@style/button"
-            android:layout_weight=".34"
+            android:layout_weight=".5"
             android:onClick="goToResults"
             android:text="@string/button_go_to_results" />
 
         <Button
             android:id="@+id/button_navigate"
             style="@style/button"
-            android:layout_weight=".33"
+            android:layout_weight=".5"
             android:onClick="goToNavigate"
             android:text="@string/button_navigate" />
     </LinearLayout>

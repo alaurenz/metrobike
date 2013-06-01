@@ -80,8 +80,8 @@
 
     <!-- Result Activity -->
     <string name="bike">Bike&#8212;</string>
-	<string name="transit">Transit&#8212;</string>
-    
+    <string name="transit">Transit&#8212;</string>
+
     <!-- About Activity -->
     <string name="textview_dev_by">Developed By</string>
     <string name="textview_ui">UI</string>
@@ -96,13 +96,20 @@
     <string name="textview_qinyuan">Qinyuan Wan</string>
     <string name="textview_shuo">Shuo Wang</string>
     <string name="textview_sam">Sam Wilson</string>
+    <string name="textview_title_term_and_conditions">Terms and Conditions</string>
+    <string name="button_term_and_conditions">Terms and Conditions</string>
+    <string name="term_and_conditions">MetroBike is a non-profit android application developed by students in Computer Science department at University of Washington, Seattle.
+        \nMetroBike is only used in education and research purpose. The result routes may not be the best route. MetroBike will not responsable for any loss or damage caused by using this application. 
+        \nMetroBike used Google Map service as our map engine. All the terms and conditions are under Google Map term and conditions.
+        \nFor more information about the Google map terms and conditions, please use Google to search "google maps terms and conditions"
+       </string>
 
     <!-- Main Activity -->
     <string name="button_search_main">Search</string>
     <string name="textView_hint">Click "Search" to Start Searching for Biking Routes</string>
     <string name="title_activity_history">HistoryActivity</string>
     <string name="menu_settings">Settings</string>
-    
+
     <!-- Action Bar/Menu Texts -->
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
