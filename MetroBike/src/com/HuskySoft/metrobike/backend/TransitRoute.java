@@ -9,7 +9,13 @@ package com.HuskySoft.metrobike.backend;
  *         one transit step.
  */
 public final class TransitRoute implements Comparable<TransitRoute> {
-	/**
+	
+    /**
+     * TAG for logging statements.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.backend: TransitRoute.java: ";
+    
+    /**
 	 * The source route.
 	 */
 	private Route route;
@@ -48,6 +54,8 @@ public final class TransitRoute implements Comparable<TransitRoute> {
      * 			in seconds
      */
     public long getDurationInSeconds() {
+        System.out.println(TAG + "getDurationInSeconds()->route.getDurationInSeconds(): " 
+                + route.getDurationInSeconds());
         return route.getDurationInSeconds();
     }
 
@@ -56,6 +64,8 @@ public final class TransitRoute implements Comparable<TransitRoute> {
      * 	 		of the route in seconds
      */
     public long getTransitDurationInSeconds() {
+        System.out.println(TAG + "getTransitDurationInSeconds()->transitDuration: " 
+                + transitDuration);
         return transitDuration;
     }
 
@@ -65,20 +75,26 @@ public final class TransitRoute implements Comparable<TransitRoute> {
      * @return comparison result
      */
     public int compareTo(TransitRoute other) {
+        System.out.println(TAG + "compareTo()->Entering compareTo");
         if (this.getTransitDurationInSeconds()
         		< other.getTransitDurationInSeconds()) {
+            System.out.println(TAG + "compareTo()->Exiting compareTo");
             return -1;
         } else if (this.getTransitDurationInSeconds()
         		== other.getTransitDurationInSeconds()) {
             if (this.getDurationInSeconds() < other.getDurationInSeconds()) {
+                System.out.println(TAG + "compareTo()->Exiting compareTo");
                 return -1;
             } else if (this.getDurationInSeconds()
             		== other.getDurationInSeconds()) {
+                System.out.println(TAG + "compareTo()->Exiting compareTo");
                 return 0;
             } else {
+                System.out.println(TAG + "compareTo()->Exiting compareTo");
                 return 1;
             }
         } else {
+            System.out.println(TAG + "compareTo()->Exiting compareTo");
             return 1;
         }
     }

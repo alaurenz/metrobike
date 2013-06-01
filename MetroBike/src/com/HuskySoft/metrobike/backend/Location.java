@@ -24,6 +24,11 @@ public final class Location implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * TAG for logging statements.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.backend: Location.java: ";
+    
+    /**
      * A scaling factor used in computing the hashCode. It determines how much
      * precision to use in the hashCode calculation.
      */
@@ -58,6 +63,8 @@ public final class Location implements Serializable {
      *            the longitude for the new Location
      */
     public Location(final double lat, final double lng) {
+        System.out.println(TAG + "Location()->lat: " + lat);
+        System.out.println(TAG + "Location()->lng: " + lng);
         latitude = lat;
         longitude = lng;
     }
@@ -76,17 +83,22 @@ public final class Location implements Serializable {
     public static Location makeNorthEastBound(final Location one, final Location two) {
         // TODO: Consider the case where two locations are on opposite sides of
         // the Prime Meridian.
-
+        
+        System.out.println(TAG + "makeNorthEastBound()->one: " + one);
+        System.out.println(TAG + "makeNorthEastBound()->two: " + two);
         // Return two if one is null (even if two is also null)
         if (one == null) {
+            System.out.println(TAG + "makeNorthEastBound()->Returning two.");
             return two;
         }
 
         // Return one if two is null
         if (two == null) {
+            System.out.println(TAG + "makeNorthEastBound()->Returning one.");
             return one;
         }
 
+        System.out.println(TAG + "makeNorthEastBound()->Creating a new Location object.");
         return new Location(Math.max(one.latitude, two.latitude), Math.max(one.longitude,
                 two.longitude));
     }
@@ -97,6 +109,7 @@ public final class Location implements Serializable {
      * @return the latitude
      */
     public double getLatitude() {
+        System.out.println(TAG + "getLatitude()->latitude: " + latitude);
         return latitude;
     }
 
@@ -106,6 +119,7 @@ public final class Location implements Serializable {
      * @return the longitude
      */
     public double getLongitude() {
+        System.out.println(TAG + "getLongitude()->longitude: " + longitude);
         return longitude;
     }
 
@@ -133,16 +147,21 @@ public final class Location implements Serializable {
         // TODO: Consider the case where two locations are on opposite sides of
         // the Prime Meridian.
 
+        System.out.println(TAG + "makeSouthWestBound()->one: " + one);
+        System.out.println(TAG + "makeSouthWestBound()->two: " + two);
         // Return two if one is null (even if two is also null)
         if (one == null) {
+            System.out.println(TAG + "makeSouthWestBound()->Returning two.");
             return two;
         }
 
         // Return one if two is null
         if (two == null) {
+            System.out.println(TAG + "makeSouthWestBound()->Returning one.");
             return one;
         }
 
+        System.out.println(TAG + "makeSouthWestBound()->Creating a new Location object.");
         return new Location(Math.min(one.latitude, two.latitude), Math.min(one.longitude,
                 two.longitude));
     }
@@ -155,6 +174,7 @@ public final class Location implements Serializable {
      *            the new indent value.
      */
     public void setIndent(final int indent) {
+        System.out.println(TAG + "setIndent()->indent: " + indent);
         this.indent = indent;
         indentString = "";
         for (int i = 0; i < indent; i++) {
@@ -169,6 +189,7 @@ public final class Location implements Serializable {
      * @return the amount to indent.
      */
     public int getIndent() {
+        System.out.println(TAG + "getIndent()->indent: " + indent);
         return indent;
     }
 
@@ -189,6 +210,7 @@ public final class Location implements Serializable {
             Location oth = (Location) other;
             return (this.latitude == oth.latitude) && (this.longitude == oth.longitude);
         }
+        System.out.println(TAG + "equals()->other was not an instanceOf Location");
         return false;
     }
 
@@ -196,7 +218,9 @@ public final class Location implements Serializable {
     public int hashCode() {
         int latInt = (int) Math.floor(HASH_SCALE * latitude);
         int longInt = (int) Math.floor(HASH_SCALE * longitude);
-        return (latInt * longInt);
+        int hash = (latInt * longInt);
+        System.out.println(TAG + "hashCode()->hash: " + hash);
+        return hash;
     }
 
     /**

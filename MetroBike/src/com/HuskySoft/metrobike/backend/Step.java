@@ -25,6 +25,11 @@ public final class Step implements Serializable {
      * from the log) being made into new-version Step objects.
      */
     private static final long serialVersionUID = 3L;
+    
+    /**
+     * TAG for logging statements.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.backend: Step.java: ";
 
     /**
      * The distance of this step in meters.
@@ -109,7 +114,7 @@ public final class Step implements Serializable {
      */
     public static Step buildStepFromJSON(final JSONObject jsonStep) throws JSONException {
         Step newStep = new Step();
-
+        System.out.println(TAG + "buildStepFromJSON()->Entering this method.");
         // Set the distance.
         JSONObject distance = jsonStep.getJSONObject(WebRequestJSONKeys.DISTANCE.getLowerCase());
         newStep.setDistanceInMeters(distance.getLong(WebRequestJSONKeys.VALUE.getLowerCase()));
@@ -236,6 +241,8 @@ public final class Step implements Serializable {
                 		"(however, they were expected)!");
             }
         }
+        
+        System.out.println(TAG + "buildStepFromJson()->Exiting this method.");
         return newStep;
     }
     
@@ -245,6 +252,7 @@ public final class Step implements Serializable {
      * @return the transitDetails
      */
     public TransitDetails getTransitDetails() {
+        System.out.println(TAG + "getTransitDetails()->transitDetails: " + transitDetails);
         if(!this.getTravelMode().equals(TravelMode.TRANSIT)) {
             throw new IllegalStateException(
                     "Cannot get transit details from a non-transit step!");
@@ -256,6 +264,7 @@ public final class Step implements Serializable {
      * @return the distanceInMeters
      */
     public long getDistanceInMeters() {
+        System.out.println(TAG + "getDistanceInMeters()->distanceInMeters: " + distanceInMeters);
         return distanceInMeters;
     }
 
@@ -269,6 +278,7 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setTransitDetails(final TransitDetails newTransitDetails) {
+        System.out.println(TAG + "setTransitDetails()->newTransitDetails: " + newTransitDetails);
         if(!this.getTravelMode().equals(TravelMode.TRANSIT)) {
             throw new IllegalStateException(
                     "Cannot add transit details to a non-transit step!");
@@ -285,6 +295,8 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setDistanceInMeters(final long newDistanceInMeters) {
+        System.out.println(TAG + "setDistanceInMeters()->newDistanceInMeters: " 
+                + newDistanceInMeters);
         this.distanceInMeters = newDistanceInMeters;
         return this;
     }
@@ -293,6 +305,8 @@ public final class Step implements Serializable {
      * @return the durationInSeconds
      */
     public long getDurationInSeconds() {
+        System.out.println(TAG + "getDurationInSeconds()->durationInSeconds: " 
+                + durationInSeconds);
         return durationInSeconds;
     }
 
@@ -304,6 +318,7 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setDurationInSeconds(final long newDurationInSeconds) {
+        System.out.println(TAG + "setDurationInSeconds()->newDurationInSeconds: " + newDurationInSeconds);
         this.durationInSeconds = newDurationInSeconds;
         return this;
     }
@@ -316,13 +331,17 @@ public final class Step implements Serializable {
      */
     public String getDurationHumanReadable() {
         long durationSeconds = getDurationInSeconds();
-        return Utility.secondsToHumanReadableDuration(durationSeconds);
+        String secondsHumanReadable = Utility.secondsToHumanReadableDuration(durationSeconds);
+        System.out.println(TAG + "getDurationHumanReadable()->secondsHumanReadable: " 
+                + secondsHumanReadable);
+        return secondsHumanReadable;
     }
 
     /**
      * @return the startLocation
      */
     public Location getStartLocation() {
+        System.out.println(TAG + "getStartLocation()->startLocation: " + startLocation);
         return startLocation;
     }
 
@@ -334,6 +353,7 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setStartLocation(final Location newStartLocation) {
+        System.out.println(TAG + "setStartLocation()->newStartLocation: " + newStartLocation);
         this.startLocation = newStartLocation;
         return this;
     }
@@ -342,6 +362,7 @@ public final class Step implements Serializable {
      * @return the endLocation
      */
     public Location getEndLocation() {
+        System.out.println(TAG + "getEndLocation()->endLocation: " + endLocation);
         return endLocation;
     }
 
@@ -353,6 +374,7 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setEndLocation(final Location newEndLocation) {
+        System.out.println(TAG + "setEndLocation()->newEndLocation: " + newEndLocation);
         this.endLocation = newEndLocation;
         return this;
     }
@@ -361,6 +383,7 @@ public final class Step implements Serializable {
      * @return the travelMode
      */
     public TravelMode getTravelMode() {
+        System.out.println(TAG + "getTravelMode()->travelMode.name(): " + travelMode.name());
         return travelMode;
     }
 
@@ -372,6 +395,8 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setTravelMode(final TravelMode newTravelMode) {
+        System.out.println(TAG + "setTravelMode()->newTravelMode.name(): " 
+                + newTravelMode.name());
         this.travelMode = newTravelMode;
         return this;
     }
@@ -380,6 +405,7 @@ public final class Step implements Serializable {
      * @return the htmlInstruction
      */
     public String getHtmlInstruction() {
+        System.out.println(TAG + "getHtmlInstruction()->htmlInstruction: " + htmlInstruction);
         return htmlInstruction;
     }
 
@@ -391,6 +417,7 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setHtmlInstruction(final String newHtmlInstruction) {
+        System.out.println(TAG + "setHtmlInstruction()->newHtmlInstruction: " + newHtmlInstruction);
         this.htmlInstruction = newHtmlInstruction;
         return this;
     }
@@ -399,7 +426,9 @@ public final class Step implements Serializable {
      * @return list of Locations for this step obtained by decoding its polyLine
      */
     public List<Location> getPolyLinePoints() {
+        System.out.println(TAG + "getPolyLinePoints()->Entering this method.");
         List<Location> polyLinePoints = com.jeffreysambells.polyline.Utility.decodePoly(polyLine);
+        System.out.println(TAG + "getPolyLinePoints()->Exiting this method.");
         return polyLinePoints;
     }
     
@@ -407,6 +436,7 @@ public final class Step implements Serializable {
      * @return the polyLine
      */
     public String getPolyLine() {
+        System.out.println(TAG + "getPolyLine()->polyLine: " + polyLine);
         return polyLine;
     }
 
@@ -418,6 +448,7 @@ public final class Step implements Serializable {
      * @return the modified Step, for Builder pattern purposes
      */
     public Step setPolyLine(final String newPolyLine) {
+        System.out.println(TAG + "setPolyLine()->newPolyLine: " + newPolyLine);
         this.polyLine = newPolyLine;
         return this;
     }
@@ -475,6 +506,7 @@ public final class Step implements Serializable {
      *            the new indent value.
      */
     public void setIndent(final int newIndent) {
+        System.out.println(TAG + "setIndent()->newIndent: " + newIndent);
         this.indent = newIndent;
         indentString = "";
         for (int i = 0; i < indent; i++) {

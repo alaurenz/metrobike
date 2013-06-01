@@ -32,6 +32,11 @@ public final class Route implements Serializable, Comparable<Route>{
     private static final long serialVersionUID = 1L;
 
     /**
+     * TAG for logging statements.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.backend: Route.java: ";
+    
+    /**
      * Default value for the route summary.
      */
     private static final String DEFAULT_ROUTE_SUMMARY = "no summary";
@@ -82,6 +87,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * @throws JSONException If parsing the JSON fails
      */
     public static Route buildRouteFromJSON(final JSONObject jsonRoute) throws JSONException {
+        System.out.println(TAG + "buildRouteFromJSON()->Entering this method.");
         Route newRoute = new Route();
 
         JSONArray legsArray = jsonRoute.getJSONArray(WebRequestJSONKeys.LEGS.getLowerCase());
@@ -96,6 +102,7 @@ public final class Route implements Serializable, Comparable<Route>{
 
         newRoute.setWarnings(Utility.jsonArrayToStringList(warningsArray));
 
+        System.out.println(TAG + "buildRouteFromJSON()->Exiting this method.");
         return newRoute;
     }
 
@@ -106,6 +113,7 @@ public final class Route implements Serializable, Comparable<Route>{
      *            the leg to add
      */
     public void addLeg(final Leg toAdd) {
+        System.out.println(TAG + "addLeg()->toAdd: " + toAdd);
 
         // Update neBound
         //neBound = Location.makeNorthEastBound(neBound, toAdd.getStartLocation());
@@ -130,7 +138,7 @@ public final class Route implements Serializable, Comparable<Route>{
      *            the leg to add
      */
     public void addLegBeginning(final Leg toAdd) {
-
+        System.out.println(TAG + "addLegBeginning()->toAdd: " + toAdd);
         // Update neBound
         //neBound = Location.makeNorthEastBound(neBound, toAdd.getStartLocation());
         //neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
@@ -149,6 +157,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return the summary
      */
     public String getSummary() {
+        System.out.println(TAG + "getSummary()->summary: " + summary);
         return summary;
     }
 
@@ -160,6 +169,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return the modified Route, for Builder pattern purposes
      */
     public Route setSummary(final String newSummary) {
+        System.out.println(TAG + "setSummary()->newSummary: " + newSummary);
         this.summary = newSummary;
         return this;
     }
@@ -170,6 +180,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return the list of warnings that must be displayed on the map.
      */
     public List<String> getWarnings() {
+        System.out.println(TAG + "getWarnings()->warnings: " + warnings);
         return warnings;
     }
 
@@ -181,6 +192,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return the modified Route, for Builder pattern purposes
      */
     public Route setWarnings(final List<String> newWarnings) {
+        System.out.println(TAG + "setWarnings()->newWarnings: " + newWarnings);
         this.warnings = newWarnings;
         return this;
     }
@@ -191,6 +203,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return the North-East bound for the route display area.
      */
     public Location getNeBound() {
+        System.out.println(TAG + "getNeBound()->neBound: " + neBound);
         return neBound;
     }
 
@@ -200,6 +213,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return the South-West bound for the route display area.
      */
     public Location getSwBound() {
+        System.out.println(TAG + "getSwBound()->swBound: " + swBound);
         return swBound;
     }
 
@@ -213,6 +227,7 @@ public final class Route implements Serializable, Comparable<Route>{
         for (Leg l : legList) {
             myDistance += l.getDistanceInMeters();
         }
+        System.out.println(TAG + "getDistanceInMeters()->myDistance: " + myDistance);
         return myDistance;
     }
 
@@ -226,6 +241,7 @@ public final class Route implements Serializable, Comparable<Route>{
         for (Leg l : legList) {
             myDuration += l.getDurationInSeconds();
         }
+        System.out.println(TAG + "getDurationInSeconds()->myDuration: " + myDuration);
         return myDuration;
     }
     
@@ -238,7 +254,9 @@ public final class Route implements Serializable, Comparable<Route>{
      */
     public String getDurationHumanReadable() {
         long totalDurationSeconds = getDurationInSeconds();
-        return Utility.secondsToHumanReadableDuration(totalDurationSeconds);
+        String humanReadable = Utility.secondsToHumanReadableDuration(totalDurationSeconds);
+        System.out.println(TAG + "getDurationHumanReadable()->humanReadable: " + humanReadable);
+        return humanReadable;
     }
     
     /**
@@ -352,12 +370,16 @@ public final class Route implements Serializable, Comparable<Route>{
      * @return
      */
     public int compareTo(Route other) {
+        System.out.println(TAG + "compareTo()->Entering this method.");
         if (this.getDurationInSeconds() < other.getDurationInSeconds()) {
+            System.out.println(TAG + "compareTo()->Exiting this method.");
             return -1;
         } else if (this.getDurationInSeconds()
         		== other.getDurationInSeconds()) {
+            System.out.println(TAG + "compareTo()->Exiting this method.");
             return 0;
         } else {
+            System.out.println(TAG + "compareTo()->Exiting this method.");
             return 1;
         }
     }

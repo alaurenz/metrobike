@@ -18,6 +18,11 @@ import java.net.URL;
  */
 public class GoogleAPIWrapper implements APIQuery {
 
+    /**
+     * TAG for logging statements.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.backend: GoogleAPIWrapper.java: ";
+    
     /* (non-Javadoc)
      * @see com.HuskySoft.metrobike.backend.APIQuery#doQuery(java.lang.String)
      */
@@ -30,7 +35,7 @@ public class GoogleAPIWrapper implements APIQuery {
          * -body-out-of-httpresponse and other StackOverflow examples for
          * URLConnection.
          */
-
+        System.out.println(TAG + "doQuery()->theURL: " + theURL);
         StringBuilder response = new StringBuilder();
         System.err.println("GoogleAPIWrapper: About to make query to this url: [" + theURL + "]");
         URL url = new URL(theURL);
@@ -48,6 +53,9 @@ public class GoogleAPIWrapper implements APIQuery {
         } finally {
             urlConnection.disconnect();
         }
+        
+        //This line may slow down the system too much.
+        //System.out.println(TAG + "doQuery()->response.toString(): " + response.toString());
         
         return response.toString();
     }

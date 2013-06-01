@@ -34,7 +34,7 @@ public final class DirectionsRequest implements Serializable {
     /**
      * The tag for Android logging.
      */
-    private static final String TAG = "MetroBikeDirectionsRequest";
+    private static final String TAG = "com.HuskySoft.metrobike.backend: DirectionsRequest.java: ";
 
     /**
      * The request parameters object for this request, which specifies all of
@@ -70,7 +70,7 @@ public final class DirectionsRequest implements Serializable {
      * @return the final status of the doRequest process
      */
     public DirectionsStatus doDummyRequest() {
-
+        
         // First, validate our parameters!
         if (!myParams.validateParameters()) {
             return DirectionsStatus.INVALID_REQUEST_PARAMS;
@@ -321,6 +321,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the startAddress
          */
         public String getStartAddress() {
+            System.out.println(TAG + "getStartAddress()->startAddress: " + startAddress);
             return startAddress;
         }
 
@@ -328,6 +329,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the endAddress
          */
         public String getEndAddress() {
+            System.out.println(TAG + "getEndAddress()->endAddress: " + endAddress);
             return endAddress;
         }
 
@@ -335,6 +337,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the arrivalTime
          */
         public long getArrivalTime() {
+            System.out.println(TAG + "getArrivalTime()->arrivalTime: " + arrivalTime);
             return arrivalTime;
         }
 
@@ -342,6 +345,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the departureTime
          */
         public long getDepartureTime() {
+            System.out.println(TAG + "getDepartureTime()->departureTime: " + departureTime);
             return departureTime;
         }
 
@@ -349,6 +353,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the travelMode
          */
         public TravelMode getTravelMode() {
+            System.out.println(TAG + "getTravelMode()->travelMode.name(): " + travelMode.name());
             return travelMode;
         }
 
@@ -356,6 +361,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the minDistanceToBikeInMeters
          */
         public long getMinDistanceToBikeInMeters() {
+            System.out.println(TAG + "getMinDistanceToBikeInMeters()->minDistanceToBikeInMeters: "
+                    + minDistanceToBikeInMeters);
             return minDistanceToBikeInMeters;
         }
 
@@ -363,6 +370,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the maxDistanceToBikeInMeters
          */
         public long getMaxDistanceToBikeInMeters() {
+            System.out.println(TAG + "getMaxDistanceToBikeInMeters()->maxDistanceToBikeInMeters: "
+                    + maxDistanceToBikeInMeters);
             return maxDistanceToBikeInMeters;
         }
 
@@ -370,6 +379,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the minNumberBusTransfers
          */
         public long getMinNumberBusTransfers() {
+            System.out.println(TAG + "getMinNumberBusTransfers()->minNumberBusTransfers: "
+                    + minNumberBusTransfers);
             return minNumberBusTransfers;
         }
 
@@ -377,6 +388,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the maxNumberBusTransfers
          */
         public long getMaxNumberBusTransfers() {
+            System.out.println(TAG + "getMaxNumberBusTransfers()->maxNumberBusTransfers: "
+                    + maxNumberBusTransfers);
             return maxNumberBusTransfers;
         }
 
@@ -390,11 +403,13 @@ public final class DirectionsRequest implements Serializable {
 
             if (startAddress == null || startAddress.trim().isEmpty()) {
                 appendErrorMessage("Origin address may not be empty.");
+                System.err.println(TAG + "validateParameters()->startAddress was null or empty.");
                 return false;
             }
 
             if (endAddress == null || endAddress.trim().isEmpty()) {
                 appendErrorMessage("Destination address may not be empty.");
+                System.err.println(TAG + "validateParameters()->endAddress was null or empty.");
                 return false;
             }
 
@@ -409,6 +424,8 @@ public final class DirectionsRequest implements Serializable {
                 if (departureTime == DONT_CARE && arrivalTime == DONT_CARE) {
                     appendErrorMessage("Directions for transit must include"
                             + " a departure or arrival time.");
+                    System.err.println(TAG + "validateParameters()->departureTime or "
+                    		+ "arrivalTime must be set for transit.");
                     return false;
                 }
                 break;
@@ -430,6 +447,8 @@ public final class DirectionsRequest implements Serializable {
                     || (maxNumberBusTransfers != DONT_CARE && maxNumberBusTransfers < 0)) {
                 appendErrorMessage("All optional parameters (biking distance and bus transfers)"
                         + " must be greater than or equal to zero");
+                System.err.println(TAG + "validateParameters()-> :All optional parameters must "
+                		+ "be greater than or equal to zero.");
                 return false;
             }
 
@@ -437,6 +456,7 @@ public final class DirectionsRequest implements Serializable {
                     maxDistanceToBikeInMeters != DONT_CARE &&
                     minDistanceToBikeInMeters > maxDistanceToBikeInMeters) {
                 appendErrorMessage("Min > Max for distance to bike.");
+                System.err.println(TAG + "validateParameters()->Min > Max for distance to bike.");
                 return false;
             }
 
@@ -444,6 +464,8 @@ public final class DirectionsRequest implements Serializable {
                     maxNumberBusTransfers != DONT_CARE &&
                     minNumberBusTransfers > maxNumberBusTransfers) {
                 appendErrorMessage("Min > Max for number of transfers");
+                System.err.println(TAG + "validateParameters()->Min > Max for number of "
+                		+ "transfers");
                 return false;
             }
 
@@ -542,6 +564,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setStartAddress(final String newStartAddress) {
+        System.out.println(TAG + "setStartAddress()->newStartAddress: " + newStartAddress);
         myParams.startAddress = newStartAddress;
         return this;
     }
@@ -555,6 +578,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setEndAddress(final String newEndAddress) {
+        System.out.println(TAG + "setEndAddress()->newEndAddress: " + newEndAddress);
         myParams.endAddress = newEndAddress;
         return this;
     }
@@ -573,6 +597,8 @@ public final class DirectionsRequest implements Serializable {
             throw new IllegalArgumentException("departureTime was already "
                     + "set.");
         }
+        System.out.println(TAG + "setArrivalTime()->newArrivalTime: " + newArrivalTime);
+        
         myParams.arrivalTime = newArrivalTime;
         return this;
     }
@@ -592,6 +618,7 @@ public final class DirectionsRequest implements Serializable {
             throw new IllegalArgumentException("arrivalTime was "
                     + "already set.");
         }
+        System.out.println(TAG + "setDepartureTime()->newDepartureTime: " + newDepartureTime);
         myParams.departureTime = newDepartureTime;
         return this;
     }
@@ -607,6 +634,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setTravelMode(final TravelMode newTravelMode) {
+        System.out.println(TAG + "setTravelMode()->newTravelMode: " + newTravelMode);
         myParams.travelMode = newTravelMode;
         return this;
     }
@@ -622,6 +650,8 @@ public final class DirectionsRequest implements Serializable {
      */
     public DirectionsRequest setMinDistanceToBikeInMeters(
             final long newMinDistanceToBikeInMeters) {
+        System.out.println(TAG + "setMinDistanceToBikeInMeters()->newMinDistanceToBikeInMeters: " 
+                + newMinDistanceToBikeInMeters);
         myParams.minDistanceToBikeInMeters = newMinDistanceToBikeInMeters;
         return this;
     }
@@ -636,6 +666,8 @@ public final class DirectionsRequest implements Serializable {
      */
     public DirectionsRequest setMaxDistanceToBikeInMeters(
             final long newMaxDistanceToBikeInMeters) {
+        System.out.println(TAG + "setMaxDistanceToBikeInMeters()->newMaxDistanceToBikeInMeters: " 
+                + newMaxDistanceToBikeInMeters);
         myParams.maxDistanceToBikeInMeters = newMaxDistanceToBikeInMeters;
         return this;
     }
@@ -650,6 +682,8 @@ public final class DirectionsRequest implements Serializable {
      */
     public DirectionsRequest setMinNumberBusTransfers(
             final int newMinNumberBusTransfers) {
+        System.out.println(TAG + "setMinNumberBusTransfers()->newMinNumberBusTransfers: " 
+                + newMinNumberBusTransfers);
         myParams.minNumberBusTransfers = newMinNumberBusTransfers;
         return this;
     }
@@ -664,6 +698,8 @@ public final class DirectionsRequest implements Serializable {
      */
     public DirectionsRequest setMaxNumberBusTransfers(
             final int newMaxNumberBusTransfers) {
+        System.out.println(TAG + "setMaxNumberBusTransfers()->newMaxNumberBusTransfers: " 
+                + newMaxNumberBusTransfers);
         myParams.maxNumberBusTransfers = newMaxNumberBusTransfers;
         return this;
     }

@@ -15,6 +15,15 @@ import java.util.Map;
  */
 public class StubGoogleAPIWrapper implements APIQuery {
     
+    /**
+     * TAG for logging statements.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.backend: StubGoogleAPIWrapper.java: ";
+    
+    /**
+     * HashMap for holding the query to JSON response mappings enabling us to simulate the Google
+     * APIs without actually connecting to them.
+     */
     private final Map<String, String> queryMap = new HashMap<String, String>();
     
     /**
@@ -103,6 +112,7 @@ public class StubGoogleAPIWrapper implements APIQuery {
      */
     @Override
     public String doQuery(String theURL) throws IOException {
+        System.out.println(TAG + "doQuery()->theURL: " + theURL);
         if(theURL == null) {
             throw new IllegalArgumentException("theURL parameter was null.");
         } else if(!queryMap.containsKey(theURL)) {

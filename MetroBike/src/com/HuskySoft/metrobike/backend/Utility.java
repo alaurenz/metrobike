@@ -38,6 +38,9 @@ public final class Utility {
         throw new AssertionError("Never instantiate utility classes!");
     }
     
+    /**
+     * Tag for logging statements.
+     */
     private static final String TAG = "com.HuskySoft.metrobike.backend: Utility.java: ";
     
     /**
