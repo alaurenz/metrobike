@@ -48,9 +48,6 @@ public final class Utility {
     /**
      * A private constructor that throws an error to deter instantiation of this
      * utility class.
-     * 
-     * @throws AssertionError
-     *             if the constructor is called
      */
     private Utility() {
         /*
@@ -75,8 +72,10 @@ public final class Utility {
             return null;
         }
         
-        System.out.println(TAG + "convertLocation()->toConvert.getLatitude(): " + toConvert.getLatitude());
-        System.out.println(TAG + "convertLocation()->toConvert.getLongitude(): " + toConvert.getLongitude());
+        System.out.println(TAG + "convertLocation()->toConvert.getLatitude(): "
+                + toConvert.getLatitude());
+        System.out.println(TAG + "convertLocation()->toConvert.getLongitude(): "
+                + toConvert.getLongitude());
         return new LatLng(toConvert.getLatitude(), toConvert.getLongitude());
     }
 
@@ -111,6 +110,9 @@ public final class Utility {
      * @return a LatLng representation of the geographical point on the map.
      */
     public static LatLng getCameraCenter(final Route route) {
+        if (route == null) {
+            return null;
+        }
         double latitude = (route.getNeBound().getLatitude() 
                 + route.getSwBound().getLatitude()) / 2;
         double longitude = (route.getNeBound().getLongitude() 
@@ -143,10 +145,12 @@ public final class Utility {
 
         System.out.println(TAG + "getCameraZoomLevel()->latitudeDif: " + latitudeDif);
         System.out.println(TAG + "getCameraZoomLevel()->longitudeDif: " + longitudeDif);
-        System.out.println(TAG + "getCameraZoomLevel()->comparedLatitudeDif: " + comparedLatitudeDif);
-        System.out.println(TAG + "getCameraZoomLevel()->comparedLongitudeDif: " + comparedLongitudeDif);
+        System.out.println(TAG + "getCameraZoomLevel()->comparedLatitudeDif: "
+                + comparedLatitudeDif);
+        System.out.println(TAG + "getCameraZoomLevel()->comparedLongitudeDif: "
+                + comparedLongitudeDif);
         System.out.println(TAG + "getCameraZoomLevel()->maxOfTwo: " + maxOfTwo);
-        
+
         return Math.round(Math.log(NEXUS7_ZOOM_CONSTANT / maxOfTwo) / Math.log(2) + 1);
     }
     

@@ -75,8 +75,8 @@ public final class MapSetting {
      * @return true if traffic is enable.
      */
     public boolean getTrafficDisplay() {
-        System.out.println(TAG + "getTraffic()->mMap.isTrafficEnabled(): " + 
-                mMap.isTrafficEnabled());
+        System.out.println(TAG + "getTraffic()->mMap.isTrafficEnabled(): " 
+                + mMap.isTrafficEnabled());
         return mMap.isTrafficEnabled();
     }
 
@@ -131,8 +131,8 @@ public final class MapSetting {
      * @return true if my current location enable.
      */
     public boolean getMyCurrentLocation() {
-        System.out.println(TAG + "getMyCurrentLocation()->mMap.isMyLocationEnabled(): " + 
-                mMap.isMyLocationEnabled());
+        System.out.println(TAG + "getMyCurrentLocation()->mMap.isMyLocationEnabled(): " 
+                + mMap.isMyLocationEnabled());
         return mMap.isMyLocationEnabled();
     }
 
@@ -144,6 +144,9 @@ public final class MapSetting {
      */
     public static void updateStatus(final GoogleMap googleMap) {
         System.out.println(TAG + "updateStatus()->googleMap: " + googleMap);
+        if (mMap == null || googleMap == null) {
+            return;
+        }
         googleMap.setMapType(mMap.getMapType());
         googleMap.setMyLocationEnabled(mMap.isMyLocationEnabled());
         googleMap.setTrafficEnabled(mMap.isTrafficEnabled());

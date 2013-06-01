@@ -71,11 +71,7 @@ public class MainActivity extends FragmentActivity {
                 startActivity(intent);
             }
         });
-        // initialize the background map
-        googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                .getMap();
-        // only initialize the map setting
-        MapSetting.getInstance(googleMap);
+        initGoogleMap();
         // onResume should be called so it can update the map
         // create a new empty history object
         History.getInstance();
@@ -83,6 +79,17 @@ public class MainActivity extends FragmentActivity {
         // Showing log in console for debugging. To be removed for formal
         // release.
         Log.v(TAG, "Finished launching main activity!");
+    }
+
+    /**
+     * Initialize the Google Map.
+     */
+    private void initGoogleMap() {
+        // initialize the background map
+        googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                .getMap();
+        // only initialize the map setting
+        MapSetting.getInstance(googleMap);
     }
 
     /**
@@ -129,6 +136,9 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected final void onResume() {
         super.onResume();
+        if (googleMap == null) {
+            initGoogleMap();
+        }
         // update or initialize the map
         MapSetting.updateStatus(googleMap);
         // try to get the current location

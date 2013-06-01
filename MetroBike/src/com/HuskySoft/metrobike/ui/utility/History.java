@@ -97,7 +97,8 @@ public final class History {
     public void addAddress(final String[] addresses) {
         if (addresses == null) {
             // defensive programming.
-            System.err.println(TAG + "addAddress(String[] addresses)->Add address array should not be null!");
+            System.err.println(TAG
+                    + "addAddress(String[] addresses)->Add address array should not be null!");
             return;
         }
         for (int i = 0; i < addresses.length; i++) {
@@ -115,7 +116,8 @@ public final class History {
     public String getAddress(final int index) {
         if (index < 0 || index >= getSize()) {
             // defensive programming.
-            System.err.println(TAG + "getAddress()->Don't give an invalid index of the history list to me!");
+            System.err.println(TAG
+                    + "getAddress()->Don't give an invalid index of the history list to me!");
             return null;
         }
         return historyList.get(index);
@@ -140,7 +142,8 @@ public final class History {
     public void deleteAddress(final String address) {
         // make sure (defensive programming)
         if (address == null) {
-            System.err.println(TAG + "deleteAddress(String address)->Delete address should not be null!");
+            System.err.println(TAG
+                    + "deleteAddress(String address)->Delete address should not be null!");
             return;
         }
         // here although the address should be in this list, we just need to
@@ -161,7 +164,8 @@ public final class History {
     public void deleteAddress(final int index) {
         if (index < 0 || index >= getSize()) {
             // defensive programming.
-            System.err.println(TAG + "deleteAddress(int index)->Don't give an invalid index of the history list to me!");
+            System.err.println(TAG
+             + "deleteAddress(int index)->Don't give an invalid index of the history list to me!");
             return;
         }
         historyList.remove(index);
@@ -174,6 +178,28 @@ public final class History {
      */
     public int getSize() {
         return historyList.size();
+    }
+    
+    /**
+     * Check if the address is not lat and lng, then add into the store this
+     * into history.
+     * 
+     * @param currLocationLatLagString
+     *            the current lat and log string.
+     * @param address
+     *            the address that may need to add into history.
+     * @return true if this address is added into history.
+     */
+    public boolean addToHistory(final String currLocationLatLagString, final String address) {
+        boolean isAdded = false;
+        if (address == null || currLocationLatLagString == null) {
+            return isAdded;
+        }
+        if (!address.equals(currLocationLatLagString)) {
+            addAddress(address);
+            isAdded = true;
+        }
+        return isAdded;
     }
     
     /**
@@ -205,22 +231,22 @@ public final class History {
      *            the file input stream.
      */
     public static void readFromFile(final FileInputStream fis) {
+        History history = History.getInstance();
+        StringBuilder sb = new StringBuilder();
+        int readByte;
+        char c;
         if (fis == null) {
             // input stream is null, don't process.
             return;
         }
-        History history = History.getInstance();
-        StringBuilder sb = new StringBuilder();
-        int readByte;
         // read one byte at a time.
         try {
             while ((readByte = fis.read()) != -1) {
-                char c = (char) readByte;
+                c = (char) readByte;
                 if (c == '\n') {
                     // if we hit the new line, that's the other address.
-                    String address = sb.toString();
-                    System.out.println(TAG + " Address: " + address + " is read from file.");
-                    history.addAddress(address);
+                    System.out.println(TAG + " Address: " + sb.toString() + " is read from file.");
+                    history.addAddress(sb.toString());
                     sb = new StringBuilder();
                     continue;
                 }

@@ -1,11 +1,5 @@
 package com.HuskySoft.metrobike.ui.utility.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.HuskySoft.metrobike.ui.utility.History;
 
 import junit.framework.Assert;
@@ -289,50 +283,6 @@ public class HistoryTest extends TestCase {
     }
 
     /**
-     * White box test: test writeOneAddressToFile.
-     */
-    public final void testWriteToFile02() {
-        try {
-            History.writeOneAddressToFile(new FileOutputStream("./testFile"), TEST_STRING);
-        } catch (FileNotFoundException e) {
-            Assert.fail("Cannot create a test file");
-        }
-    }
-
-    /**
-     * White box test: test writeOneAddressToFile.
-     */
-    public final void testWriteToFile03() {
-        String file = "./testFile";
-        FileOutputStream fos = null;
-        FileInputStream fis = null;
-        try {
-            fos = new FileOutputStream(file);
-            History.writeOneAddressToFile(fos, TEST_STRING);
-            fis = new FileInputStream(file);
-            byte[] expected = TEST_STRING.getBytes();
-            byte[] actual = new byte[expected.length];
-            fis.read(actual);
-            Assert.assertTrue(Arrays.equals(expected, actual));
-        } catch (FileNotFoundException e) {
-            Assert.fail("File cannot open");
-        } catch (IOException e) {
-            Assert.fail("Cannot read or write file");
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                System.out.println("file didn't close");
-            }
-        }
-    }
-    
-    /**
      * White box test: test readOneAddressToFile.
      */
     public final void testReadToFile01() {
@@ -341,43 +291,41 @@ public class HistoryTest extends TestCase {
     }
 
     /**
-     * White box test: test readOneAddressToFile.
+     * White box test: test addToHistory.
      */
-    public final void testReadToFile02() {
+    public final void testAddToHistory01() {
+        // add null for address
         setup();
-        String file = "./testFile";
-        FileOutputStream fos = null;
-        FileInputStream fis = null;
-        try {
-            int expected = history.getSize();
-            fos = new FileOutputStream(file);
-            byte[] strBytes = TEST_STRING.getBytes();
-            fos.write(strBytes);
-            fos.write("\n".getBytes());
-            fis = new FileInputStream(file);
-            History.readFromFile(fis);
-            int actual = history.getSize() - 1;
-            Assert.assertEquals(expected, actual);
-        } catch (FileNotFoundException e) {
-            Assert.fail("File cannot open");
-        } catch (IOException e) {
-            Assert.fail("Cannot read or write file");
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                System.out.println("file didn't close");
-            }
-        }
+        Assert.assertFalse(history.addToHistory(TEST_STRING, null));
     }
-    
-    
-    
+
+    /**
+     * White box test: test addToHistory.
+     */
+    public final void testAddToHistory02() {
+        // add null for curr lat and lng.
+        setup();
+        Assert.assertFalse(history.addToHistory(null, TEST_STRING));
+    }
+
+    /**
+     * White box test: test addToHistory.
+     */
+    public final void testAddToHistory03() {
+        // add diff latlng and address
+        setup();
+        Assert.assertTrue(history.addToHistory(TEST_STRING, TEST_STRING + TEST_STRING));
+    }
+
+    /**
+     * White box test: test addToHistory.
+     */
+    public final void testAddToHistory04() {
+        // add real address
+        setup();
+        Assert.assertFalse(history.addToHistory(TEST_STRING, TEST_STRING));
+    }
+
     /**
      * helper method for deleting the string array that has been added.
      * 
