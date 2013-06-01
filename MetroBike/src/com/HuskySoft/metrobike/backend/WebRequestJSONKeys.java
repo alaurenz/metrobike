@@ -42,7 +42,7 @@ public enum WebRequestJSONKeys {
      * A longitude number.
      */
     LNG,
-    
+
     /**
      * A location (used for transit departure and arrival stops.
      */
