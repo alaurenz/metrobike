@@ -23,8 +23,44 @@ import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
  * 
  * @author coreyh3
  * 
+ * check style: Sam Wilson
  */
 public class UtilityTest extends TestCase {
+
+    /**
+     * The route time.
+     */
+    private static final int ROUTE_TIME_2 = 1000;
+
+    /**
+     * The route time.
+     */
+    private static final int ROUTE_TIME_1 = 100;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_4 = 20;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_3 = 1000;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_2 = 6100;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_1 = 300000;
+
+    /**
+     * The time stamp value.
+     */
+    private static final int TIME_STAMP = 1368996421;
 
     /**
      * This is a simple jsonArray to test with.
@@ -34,7 +70,8 @@ public class UtilityTest extends TestCase {
     /**
      * This is a bicycle query string to compare against.
      */
-    private String buildBicycleQueryString_SingleRouteTestString = "http://maps.googleapis.com/maps/api/directions/json?"
+    private String buildBicycleQueryStringSingleRouteTestString 
+        = "http://maps.googleapis.com/maps/api/directions/json?"
             + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
             + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
             + "sensor=true&"
@@ -43,7 +80,8 @@ public class UtilityTest extends TestCase {
     /**
      * This is a bicycle query string to compare against.
      */
-    private String buildBicycleQueryString_MultipleRoutesTestString = "http://maps.googleapis.com/maps/api/directions/json?"
+    private String buildBicycleQueryStringMultipleRoutesTestString 
+        = "http://maps.googleapis.com/maps/api/directions/json?"
             + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
             + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
             + "sensor=true&"
@@ -52,7 +90,8 @@ public class UtilityTest extends TestCase {
     /**
      * This is a transit query string to compare against.
      */
-    private String buildTransitQueryString_MultipleRoutes_ArrivalTestString = "http://maps.googleapis.com/maps/api/directions/json?"
+    private String buildTransitQueryStringMultipleRoutesArrivalTestString 
+        = "http://maps.googleapis.com/maps/api/directions/json?"
             + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
             + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
             + "sensor=true&"
@@ -61,8 +100,8 @@ public class UtilityTest extends TestCase {
     /**
      * This is a transit query string to compare against.
      */
-    private String buildTransitQueryString_SingleRoute_DepartureTestString = 
-            "http://maps.googleapis.com/maps/api/directions/json?"
+    private String buildTransitQueryStringSingleRouteDepartureTestString 
+        = "http://maps.googleapis.com/maps/api/directions/json?"
             + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
             + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&"
             + "sensor=true&"
@@ -72,12 +111,14 @@ public class UtilityTest extends TestCase {
      * WhiteBox: This tests the jsonArrayToStringList method.
      * 
      * @throws JSONException
+     *             json exception
      */
     // @Test
-    public void test_jsonArrayToStringListTest() throws JSONException {
+    public final void testJsonArrayToStringListTest() throws JSONException {
         JSONArray testArray = new JSONArray(jsonArrayToStringListTestString);
         List<String> testValue = Utility.jsonArrayToStringList(testArray);
-        Assert.assertEquals("List's actual size was: " + testValue.size(), 3, testValue.size());
+        Assert.assertEquals("List's actual size was: " + testValue.size(), 1 + 1 + 1,
+                testValue.size());
     }
 
     /**
@@ -85,12 +126,13 @@ public class UtilityTest extends TestCase {
      * routes.
      * 
      * @throws UnsupportedEncodingException
+     *             the unsupported encodeing exception
      */
     // @Test
-    public void test_buildBicycleQueryStringMultipleRoutesTest()
+    public final void testBuildBicycleQueryStringMultipleRoutesTest()
             throws UnsupportedEncodingException {
         boolean multipleRoutes = true;
-        String expected = buildBicycleQueryString_MultipleRoutesTestString;
+        String expected = buildBicycleQueryStringMultipleRoutesTestString;
         String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual,
@@ -102,11 +144,13 @@ public class UtilityTest extends TestCase {
      * route.
      * 
      * @throws UnsupportedEncodingException
+     *             the unsupported encodeing exception
      */
     // @Test
-    public void test_buildBicycleQueryStringSingleRouteTest() throws UnsupportedEncodingException {
+    public final void testBuildBicycleQueryStringSingleRouteTest()
+            throws UnsupportedEncodingException {
         boolean multipleRoutes = false;
-        String expected = buildBicycleQueryString_SingleRouteTestString;
+        String expected = buildBicycleQueryStringSingleRouteTestString;
         String actual = Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual,
@@ -118,14 +162,15 @@ public class UtilityTest extends TestCase {
      * and arrival set.
      * 
      * @throws UnsupportedEncodingException
+     *             the unsupported encodeing exception
      */
     // @Test
-    public void test_buildTransitQueryStringMultipleRoutes_ArrivalTest()
-            throws UnsupportedEncodingException {
+    public final void testBuildTransitQueryStringMultipleRoutesArrivalTest()
+     throws UnsupportedEncodingException {
         boolean multipleRoutes = true;
-        long routeTime = 100;
+        long routeTime = ROUTE_TIME_1;
         TransitTimeMode timeMode = TransitTimeMode.ARRIVAL_TIME;
-        String expected = buildTransitQueryString_MultipleRoutes_ArrivalTestString;
+        String expected = buildTransitQueryStringMultipleRoutesArrivalTestString;
         String actual = Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual,
@@ -137,14 +182,15 @@ public class UtilityTest extends TestCase {
      * Routes and arrival set.
      * 
      * @throws UnsupportedEncodingException
+     *             the unsupported encodeing exception
      */
     // @Test
-    public void test_buildTransitQueryStringSingleRoute_DepartureTest()
+    public final void testBuildTransitQueryStringSingleRouteDepartureTest()
             throws UnsupportedEncodingException {
         boolean multipleRoutes = false;
-        long routeTime = 1000;
+        long routeTime = ROUTE_TIME_2;
         TransitTimeMode timeMode = TransitTimeMode.DEPARTURE_TIME;
-        String expected = buildTransitQueryString_SingleRoute_DepartureTestString;
+        String expected = buildTransitQueryStringSingleRouteDepartureTestString;
         String actual = Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
                 "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
         Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual,
@@ -155,7 +201,7 @@ public class UtilityTest extends TestCase {
      * WhiteBox: This tests the listPrettyPrint method.
      */
     // @Test
-    public void test_listPrettyPrintTest() {
+    public final void testListPrettyPrintTest() {
         int indent = 1;
         String expected = "    0: first\n    1: second\n    2: third\n";
         List<String> list = new LinkedList<String>();
@@ -171,7 +217,7 @@ public class UtilityTest extends TestCase {
      * WhiteBox: This tests the listPrettyPrint method with a null list.
      */
     // @Test
-    public void test_listPrettyPrintNullTest() {
+    public final void testListPrettyPrintNullTest() {
         int indent = 1;
         String expected = null;
         List<String> list = null;
@@ -184,7 +230,7 @@ public class UtilityTest extends TestCase {
      * WhiteBox: This tests the listPrettyPrint method with a null response.
      */
     // @Test
-    public void test_listPrettyPrintZeroSizeNullTest() {
+    public final void testListPrettyPrintZeroSizeNullTest() {
         int indent = 1;
         String expected = null;
         List<String> list = new LinkedList<String>();
@@ -197,7 +243,7 @@ public class UtilityTest extends TestCase {
      * WhiteBox: This tests the getIndentString method.
      */
     // @Test
-    public void test_getIndentStringTest() {
+    public final void testGetIndentStringTest() {
         String expected = "    ";
         String actual = Utility.getIndentString();
         Assert.assertEquals("Actual value of Utility.getIndentString() was: " + actual, expected,
@@ -209,9 +255,10 @@ public class UtilityTest extends TestCase {
      * a null value.
      * 
      * @throws JSONException
+     *             the json exception.
      */
     // @Test
-    public void test_getSubstepsAsStringNullTest() throws JSONException {
+    public final void testGetSubstepsAsStringNullTest() throws JSONException {
         String expected = "";
         int indent = 0;
         String actual = Utility.getSubstepsAsString(null, indent);
@@ -223,10 +270,10 @@ public class UtilityTest extends TestCase {
      * WhiteBox: This tests the getSubstepsAsString method and passes the method
      * an empty string.
      * 
-     * @throws JSONException
+     * @throws JSONException the json exception.
      */
     // @Test
-    public void test_getSubstepsAsString0sizeTest() throws JSONException {
+    public final void testGetSubstepsAsString0sizeTest() throws JSONException {
         int indent = 1;
         String expected = "";
         String actual = Utility.getSubstepsAsString(new LinkedList<Step>(), indent);
@@ -240,11 +287,11 @@ public class UtilityTest extends TestCase {
      * 
      */
     // @Test
-    public void test_secondsToHumanReadableDurationVeryShort() {
+    public final void testSecondsToHumanReadableDurationVeryShort() {
         String expected = "0 minutes";
-        String actual = Utility.secondsToHumanReadableDuration(20);
-        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(20) was: " + actual,
-                expected, actual);
+        String actual = Utility.secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_4);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(20) was: "
+                + actual, expected, actual);
     }
     
     /**
@@ -253,11 +300,11 @@ public class UtilityTest extends TestCase {
      * 
      */
     // @Test
-    public void test_secondsToHumanReadableDurationShort() {
+    public final void testSecondsToHumanReadableDurationShort() {
         String expected = "17 minutes";
-        String actual = Utility.secondsToHumanReadableDuration(1000);
-        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(1000) was: " + actual,
-                expected, actual);
+        String actual = Utility.secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_3);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(1000) was: "
+                + actual, expected, actual);
     }
     
     /**
@@ -266,11 +313,11 @@ public class UtilityTest extends TestCase {
      * 
      */
     // @Test
-    public void test_secondsToHumanReadableDurationMedium() {
+    public final void testSecondsToHumanReadableDurationMedium() {
         String expected = "1 hour, 42 minutes";
-        String actual = Utility.secondsToHumanReadableDuration(6100);
-        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(6100) was: " + actual,
-                expected, actual);
+        String actual = Utility.secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_2);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(6100) was: "
+                + actual, expected, actual);
     }
     
     /**
@@ -279,24 +326,24 @@ public class UtilityTest extends TestCase {
      * 
      */
     // @Test
-    public void test_secondsToHumanReadableDurationLong() {
+    public final void testSecondsToHumanReadableDurationLong() {
         String expected = "3 days, 11 hours, 20 minutes";
-        String actual = Utility.secondsToHumanReadableDuration(300000);
-        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(300000) was: " + actual,
-                expected, actual);
+        String actual = Utility.secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_1);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(300000) was: "
+                + actual, expected, actual);
     }
     
     /**
-     * Whitebox: This tests the timestampTo12HourTime
+     * Whitebox: This tests the timestampTo12HourTime.
      * NOTE: this test assumes the time is GMT-7
      * See https://github.com/alaurenz/metrobike/issues/154
      */
     // @Test
-    public void test_timestampTo12HourTime() {
+    public final void testTimestampTo12HourTime() {
         String expected = "1:47 PM";
-        String actual = Utility.timestampTo12HourTime(1368996421,
-        		TimeZone.getTimeZone("America/Los_Angeles"));
-        Assert.assertEquals("Actual value of Utility.timestampTo12HourTime(1368996421) was: " + actual,
-                expected, actual);
+        String actual = Utility.timestampTo12HourTime(TIME_STAMP,
+                TimeZone.getTimeZone("America/Los_Angeles"));
+        Assert.assertEquals("Actual value of Utility.timestampTo12HourTime(1368996421) was: "
+                + actual, expected, actual);
     }
 }
