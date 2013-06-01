@@ -178,13 +178,12 @@ public class HistoryActivity extends Activity {
             final List<String> list = history.getHistory();
             for (String str : list) {
                 Log.d(TAG, "Read list " + str);
-                fos.write(str.getBytes());
-                fos.write("\n".getBytes());
+                History.writeOneAddressToFile(fos, str);
+//                fos.write(str.getBytes());
+//                fos.write("\n".getBytes());
             }
         } catch (FileNotFoundException e) {
             Log.i(TAG, "Cannot create history file");
-        } catch (IOException e) {
-            Log.i(TAG, "Connot write history into file");
         } finally {
             try {
                 if (fos != null) {

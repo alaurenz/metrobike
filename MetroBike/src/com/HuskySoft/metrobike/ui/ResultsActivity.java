@@ -252,7 +252,8 @@ public class ResultsActivity extends Activity {
             Button selectRouteBtn = new Button(this);         
             selectRouteBtn.setBackgroundResource(R.drawable.custom_btn_shakespeare);
             selectRouteBtn.setText("Route" + (i + 1));
-            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
             params.setMargins(3, 3, 3, 3);
             selectRouteBtn.setLayoutParams(params);                  
             selectRouteBtn.setPadding(0, 0, 0, 0);

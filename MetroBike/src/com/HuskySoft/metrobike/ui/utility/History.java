@@ -1,8 +1,13 @@
 package com.HuskySoft.metrobike.ui.utility;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import android.util.Log;
 
 /**
  * History class contains valid history address that user used to use.
@@ -168,6 +173,61 @@ public final class History {
      */
     public int getSize() {
         return historyList.size();
+    }
+    
+    /**
+     * Write one address into an existing file.
+     * 
+     * @param fos
+     *            the file output stream object.
+     * @param address
+     *            the address that need to add.
+     */
+    public static void writeOneAddressToFile(final FileOutputStream fos, final String address) {
+        if (fos == null || address == null) {
+            // don't write to file as object is null
+            return;
+        }
+        try {
+            fos.write(address.getBytes());
+            // \n indicate the next address
+            fos.write("\n".getBytes());
+        } catch (IOException e) {
+            Log.i(TAG, "Connot write history into file");
+        }
+    }
+    
+    /**
+     * Read addresses from saved file and add them into the history.
+     * 
+     * @param fis
+     *            the file input stream.
+     */
+    public static void readFromFile(final FileInputStream fis) {
+        if (fis == null) {
+            // input stream is null, don't process.
+            return;
+        }
+        History history = History.getInstance();
+        StringBuilder sb = new StringBuilder();
+        int readByte;
+        // read one byte at a time.
+        try {
+            while ((readByte = fis.read()) != -1) {
+                char c = (char) readByte;
+                if (c == '\n') {
+                    // if we hit the new line, that's the other address.
+                    String address = sb.toString();
+                    System.out.println(TAG + " Address: " + address + " is read from file.");
+                    history.addAddress(address);
+                    sb = new StringBuilder();
+                    continue;
+                }
+                sb.append(c);
+            }
+        } catch (IOException e) {
+            System.out.println(TAG + " Connot read history from file");
+        }
     }
 
 //    /**
