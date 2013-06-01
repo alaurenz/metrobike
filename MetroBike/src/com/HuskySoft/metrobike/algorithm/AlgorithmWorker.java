@@ -43,24 +43,24 @@ public abstract class AlgorithmWorker {
      * The maximum number of consecutive attempts to contact the Google server.
      */
     private static final int MAX_CONNECTION_ATTEMPTS = 5;
-    
+
     /**
      * The maximum number of consecutive attempts to contact the Google server
      * after exceeding query limit.
      */
     private static final int MAX_QUERY_LIMIT_RETRIES = 2;
-    
+
     /**
      * The time in milliseconds to wait between retries.
      */
     private static final long CONNECTION_RETRY_DELAY_MS = 1000;
-    
+
     /**
-     * The time in milliseconds to wait between retries after exceeding
-     * the query limit.
+     * The time in milliseconds to wait between retries after exceeding the
+     * query limit.
      */
     private static final long QUERY_LIMIT_RETRY_DELAY_MS = 3000;
-    
+
     /**
      * The time in milliseconds to wait between Google Transit request queries.
      * This is to prevent going over the query limit.
@@ -82,19 +82,18 @@ public abstract class AlgorithmWorker {
      * Holds the routes found/built by the worker.
      */
     private List<Route> results = null;
-    
+
     /**
-     * Holds the pointer that determines whether or not to call doQuery from the stub
-     * class or the actual class that talks to the Google APIs. It defaults to the real
-     * connection unless the stub is explicitly set in the parameter object that is
-     * passed in to doRequest.
+     * Holds the pointer that determines whether or not to call doQuery from the
+     * stub class or the actual class that talks to the Google APIs. It defaults
+     * to the real connection unless the stub is explicitly set in the parameter
+     * object that is passed in to doRequest.
      */
     private APIQuery queryObj = new GoogleAPIWrapper();
-    
+
     /**
-     * Holds an arbitrary route to be shared amongst
-     * algorithms in order to reduce transit API
-     * queries
+     * Holds an arbitrary route to be shared amongst algorithms in order to
+     * reduce transit API queries.
      */
     private Route referencedRoute = null;
 
@@ -108,24 +107,24 @@ public abstract class AlgorithmWorker {
     public abstract DirectionsStatus findRoutes(DirectionsRequest.RequestParameters toProcess);
 
     /**
-     * Saves given route so multiple algorithms can
-     * reference it.
+     * Saves given route so multiple algorithms can reference it.
      * 
-     * @param route to set
+     * @param route
+     *            to set
      */
-    public void setReferencedRoute(Route route) {
+    public final void setReferencedRoute(final Route route) {
         System.out.println(TAG + "setReferencedRoute()->route: " + route);
-    	referencedRoute = route;
+        referencedRoute = route;
     }
-    
+
     /**
      * @return getReferencedRoute
      */
-    public Route getReferencedRoute() {
+    public final Route getReferencedRoute() {
         System.out.println(TAG + "getReferencedRoute()->referencedRoute: " + referencedRoute);
-    	return referencedRoute;
+        return referencedRoute;
     }
-    
+
     /**
      * Returns true if there was an error, false otherwise.
      * 
@@ -148,18 +147,20 @@ public abstract class AlgorithmWorker {
     }
 
     /**
-     * Sets whether to use the stub class to simulate the Google APIs or to actually contact 
-     * Google.  The default is to actually contact Google so this should only be set if
-     * you plan on using the stub method.
+     * Sets whether to use the stub class to simulate the Google APIs or to
+     * actually contact Google. The default is to actually contact Google so
+     * this should only be set if you plan on using the stub method.
      * 
-     * @param query This should be the StubGoogleAPIWrapper if this method is called.
+     * @param query
+     *            This should be the StubGoogleAPIWrapper if this method is
+     *            called.
      */
-    public final void setResource(APIQuery query) {
-        if(query != null) {
+    public final void setResource(final APIQuery query) {
+        if (query != null) {
             queryObj = query;
         }
     }
-    
+
     /**
      * Getter for the queryObj.
      * 
@@ -168,7 +169,7 @@ public abstract class AlgorithmWorker {
     public final APIQuery getResource() {
         return queryObj;
     }
-    
+
     /**
      * Adds a message to the error message log with extra details.
      * 
@@ -275,36 +276,38 @@ public abstract class AlgorithmWorker {
         int tryNumQueryLimit = 0;
 
         while (response == null && tryNum < MAX_CONNECTION_ATTEMPTS
-        		&& tryNumQueryLimit < MAX_QUERY_LIMIT_RETRIES ) {
+                && tryNumQueryLimit < MAX_QUERY_LIMIT_RETRIES) {
             System.out.println(TAG + "doQueryWithHandling()->tryNum: " + tryNum);
-            System.out.println(TAG + "doQueryWithHandling()->tryNumQueryLimit: " + tryNumQueryLimit);
+            System.out
+                    .println(TAG + "doQueryWithHandling()->tryNumQueryLimit: " + tryNumQueryLimit);
             try {
                 response = queryObj.doQuery(queryURL);
                 JSONObject responseJSON;
-        		try {
-        			responseJSON = new JSONObject(response);
-        			String statusString = responseJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase());
-        			if(statusString.equalsIgnoreCase(
-                            GoogleMapsResponseStatusCodes.OVER_QUERY_LIMIT.toString())) {
-        				response = null;
-        				tryNumQueryLimit++;
-                        System.err.println(TAG + "Over query limit... retrying " 
-                                + (MAX_QUERY_LIMIT_RETRIES - tryNumQueryLimit)
-                                + " more times.");
+                try {
+                    responseJSON = new JSONObject(response);
+                    String statusString = responseJSON.getString(WebRequestJSONKeys.STATUS
+                            .getLowerCase());
+                    if (statusString
+                            .equalsIgnoreCase(GoogleMapsResponseStatusCodes.OVER_QUERY_LIMIT
+                                    .toString())) {
+                        response = null;
+                        tryNumQueryLimit++;
+                        System.err.println(TAG + "Over query limit... retrying "
+                                + (MAX_QUERY_LIMIT_RETRIES - tryNumQueryLimit) + " more times.");
                         try {
                             Thread.sleep(QUERY_LIMIT_RETRY_DELAY_MS);
                         } catch (InterruptedException e1) {
-                            System.err.println(TAG + "Connection retry interrupted (not a problem)");
+                            System.err
+                                    .println(TAG + "Connection retry interrupted (not a problem)");
                         }
-        			}
-        		} catch (JSONException e) {
-        			System.err.println(TAG + "Error parsing JSON response.");
-        		}
+                    }
+                } catch (JSONException e) {
+                    System.err.println(TAG + "Error parsing JSON response.");
+                }
             } catch (IOException e) {
                 tryNum++;
-                System.err.println(TAG + "Bad connection... retrying " 
-                        + (MAX_CONNECTION_ATTEMPTS - tryNum)
-                        + " more times.");
+                System.err.println(TAG + "Bad connection... retrying "
+                        + (MAX_CONNECTION_ATTEMPTS - tryNum) + " more times.");
                 try {
                     Thread.sleep(CONNECTION_RETRY_DELAY_MS);
                 } catch (InterruptedException e1) {
@@ -317,7 +320,7 @@ public abstract class AlgorithmWorker {
             addError(DirectionsStatus.CONNECTION_ERROR);
             return null;
         }
-        
+
         return response;
     }
 
@@ -334,7 +337,7 @@ public abstract class AlgorithmWorker {
         List<Route> routesList = new ArrayList<Route>();
 
         JSONObject myJSON;
-        
+
         try {
             myJSON = new JSONObject(srcJSON);
             String statusString = myJSON.getString(WebRequestJSONKeys.STATUS.getLowerCase());
@@ -345,8 +348,8 @@ public abstract class AlgorithmWorker {
                 addError(DirectionsStatus.NO_RESULTS_FOUND);
                 System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
                 return null;
-            } else if (statusString.equalsIgnoreCase(
-                    GoogleMapsResponseStatusCodes.OVER_QUERY_LIMIT.toString())) {
+            } else if (statusString.equalsIgnoreCase(GoogleMapsResponseStatusCodes.OVER_QUERY_LIMIT
+                    .toString())) {
                 addError(DirectionsStatus.OVER_QUERY_LIMIT);
                 System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
                 return null;
@@ -373,44 +376,47 @@ public abstract class AlgorithmWorker {
         System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
         return routesList;
     }
-    
+
     /**
-     * Retrieves transit directions between given
-     * start and end addresses.
-     *
-     * @param startAddress describing the search to make
-     * @param endAddress describing the search to make
-     * @param routeTime departure or arrival time for search
+     * Retrieves transit directions between given start and end addresses.
+     * 
+     * @param startAddress
+     *            describing the search to make
+     * @param endAddress
+     *            describing the search to make
+     * @param routeTime
+     *            departure or arrival time for search
      * @param timeMode
-     *             denoting if searching by departure or arrival time
+     *            denoting if searching by departure or arrival time
      * @throws UnsupportedEncodingException
      *             if there is a problem with the default charset
      * @return list of retrieved Routes
      */
-    protected List<Route> getTransitResults(
-            final String startAddress, final String endAddress,
-            final long routeTime, final TransitTimeMode timeMode)
+    protected final List<Route> getTransitResults(final String startAddress, 
+            final String endAddress,
+            final long routeTime, 
+            final TransitTimeMode timeMode)
             throws UnsupportedEncodingException {
-    	
+
         System.out.println(TAG + "getTransitResults()->startAddress: " + startAddress);
         System.out.println(TAG + "getTransitResults()->endAddress: " + endAddress);
         System.out.println(TAG + "getTransitResults()->routeTime: " + routeTime);
         System.out.println(TAG + "getTransitResults()->timeMode.name(): " + timeMode.name());
-        
-    	// For preventing exceeding query request limit
+
+        // For preventing exceeding query request limit
         try {
             Thread.sleep(TRANSIT_QUERY_DELAY_MS);
         } catch (InterruptedException e) {
             System.err.println("Error delaying transit query request.");
         }
-    	
-        String queryString = Utility.buildTransitQueryString(
-                startAddress, endAddress, routeTime, timeMode, true);
+
+        String queryString = Utility.buildTransitQueryString(startAddress, endAddress, routeTime,
+                timeMode, true);
 
         System.out.println(TAG + "getTransitResults()->queryString: " + queryString);
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
-        
+
         if (jsonResult != null) {
             // Parse the results
             List<Route> result = buildRouteListFromJSONString(jsonResult);
@@ -418,30 +424,31 @@ public abstract class AlgorithmWorker {
         }
         return null;
     }
-    
+
     /**
-     * Retrieves bicycle directions between given
-     * start and end addresses.
-     *
-     * @param startAddress describing the search to make
-     * @param endAddress describing the search to make
+     * Retrieves bicycle directions between given start and end addresses.
+     * 
+     * @param startAddress
+     *            describing the search to make
+     * @param endAddress
+     *            describing the search to make
      * @throws UnsupportedEncodingException
      *             if there is a problem with the default charset
      * @return list of retrieved Routes
      */
-    protected List<Route> getBicycleResults(final String startAddress,
-            final String endAddress) throws UnsupportedEncodingException {
+    protected final List<Route> getBicycleResults(final String startAddress, 
+            final String endAddress)
+            throws UnsupportedEncodingException {
         System.out.println(TAG + "getBicycleResults()->startAddress: " + startAddress);
         System.out.println(TAG + "getBicycleResults()->endAddress: " + endAddress);
         // Build the query string
         String queryString;
-        queryString = Utility.buildBicycleQueryString(
-                startAddress, endAddress, true);
+        queryString = Utility.buildBicycleQueryString(startAddress, endAddress, true);
 
         System.out.println(TAG + "getBicycleResults()->queryString: " + queryString);
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
-        
+
         if (jsonResult != null) {
             // Parse the results
             List<Route> result = buildRouteListFromJSONString(jsonResult);
@@ -449,29 +456,29 @@ public abstract class AlgorithmWorker {
         }
         return null;
     }
-    
+
     /**
      * Replaces all walking Steps within given Route (assumed to be a transit
-     * Route) with bicycling directions Steps and re-queries API for all
-     * other steps so that transit departure times align.
-     *
+     * Route) with bicycling directions Steps and re-queries API for all other
+     * steps so that transit departure times align.
+     * 
      * NOTE: this method only works for TransitTimeMode.DEPARTURE_TIME
-     *
+     * 
      * @param transitRoute
      *            the transit Route for which walking Steps will be replaced
-     * @param departureTime 
+     * @param departureTime
      *            the departure time for given Route
      * @return given Route with walking Steps replaced by bicycling Steps return
      *         null if Route could not be generated
      */
-    protected Route replaceWalkingWithBicyclingDeparture(final Route transitRoute,
+    protected final Route replaceWalkingWithBicyclingDeparture(final Route transitRoute,
             final long departureTime) {
-        
+
         System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->transitRoute: "
                 + transitRoute);
         System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->departureTime: "
                 + departureTime);
-        
+
         Location curStretchStartLocation = null;
         long curStretchDepartTime = departureTime;
         Step prevStep = null;
@@ -494,10 +501,10 @@ public abstract class AlgorithmWorker {
                 }
 
                 if ((l == (curLegs.size() - 1) && s == curSteps.size())
-                        || (prevStep != null
-                        && !prevStep.getTravelMode().equals(
+                        || (prevStep != null && !prevStep.getTravelMode().equals(
                                 curStep.getTravelMode()))) {
-                    // we reached the [very] last step OR are switching travel modes
+                    // we reached the [very] last step OR are switching travel
+                    // modes
 
                     List<Route> subRoutes = null;
                     // NOTE: this is needed to deal with end-of-route edge case
@@ -509,12 +516,12 @@ public abstract class AlgorithmWorker {
                     }
 
                     if (travelModeToCheck.equals(TravelMode.WALKING)
-                    		|| travelModeToCheck.equals(TravelMode.BICYCLING)) {
+                            || travelModeToCheck.equals(TravelMode.BICYCLING)) {
                         // ask for bicycling directions for prev stretch
                         try {
                             subRoutes = getBicycleResults(
-                                  curStretchStartLocation.getLocationAsString(),
-                                  curStretchEndLocation.getLocationAsString());
+                                    curStretchStartLocation.getLocationAsString(),
+                                    curStretchEndLocation.getLocationAsString());
                         } catch (UnsupportedEncodingException e) {
                             addError(DirectionsStatus.UNSUPPORTED_CHARSET);
                         }
@@ -523,17 +530,16 @@ public abstract class AlgorithmWorker {
                         // ask for transit directions for prev stretch
                         try {
                             subRoutes = getTransitResults(
-                                  curStretchStartLocation.getLocationAsString(),
-                                  curStretchEndLocation.getLocationAsString(),
-                                  curStretchDepartTime,
-                                  TransitTimeMode.DEPARTURE_TIME);
+                                    curStretchStartLocation.getLocationAsString(),
+                                    curStretchEndLocation.getLocationAsString(),
+                                    curStretchDepartTime, TransitTimeMode.DEPARTURE_TIME);
 
                         } catch (UnsupportedEncodingException e) {
                             addError(DirectionsStatus.UNSUPPORTED_CHARSET);
                         }
                     } else {
-                    	System.err.println(TAG + "Unexpected travel mode ("
-                        		+ travelModeToCheck.toString() + ")");
+                        System.err.println(TAG + "Unexpected travel mode ("
+                                + travelModeToCheck.toString() + ")");
                         // addError(...)
                         return null;
                     }
@@ -542,18 +548,20 @@ public abstract class AlgorithmWorker {
                         System.err.println(TAG + "No subroutes found");
                         return null;
                     } else {
-                    	// find a subRoute with no walking steps (this could be more efficient
-                    	// if it did not run this check for bicycling queries)
+                        // find a subRoute with no walking steps (this could be
+                        // more efficient
+                        // if it did not run this check for bicycling queries)
                         Route subRouteWithoutWalkingSteps = getRouteWithoutWalkingSteps(subRoutes);
-                        if(subRouteWithoutWalkingSteps == null) {
-                        	System.err.println(TAG + "All sub routes unusable" +
-                        			" (all contained walking steps).");
+                        if (subRouteWithoutWalkingSteps == null) {
+                            System.err.println(TAG + "All sub routes unusable"
+                                    + " (all contained walking steps).");
                             return null;
                         } else {
                             for (Leg newLeg : subRouteWithoutWalkingSteps.getLegList()) {
                                 comboRoute.addLeg(newLeg);
                             }
-                            curStretchDepartTime += subRouteWithoutWalkingSteps.getDurationInSeconds();
+                            curStretchDepartTime += subRouteWithoutWalkingSteps
+                                    .getDurationInSeconds();
                         }
                     }
                     curStretchStartLocation = curStep.getStartLocation();
@@ -565,28 +573,28 @@ public abstract class AlgorithmWorker {
                 + comboRoute);
         return comboRoute;
     }
-    
+
     /**
      * Replaces all walking Steps within given Route (assumed to be a transit
-     * Route) with bicycling directions Steps and re-queries API for all
-     * other steps so that transit arrival times align.
-     *
+     * Route) with bicycling directions Steps and re-queries API for all other
+     * steps so that transit arrival times align.
+     * 
      * NOTE: this method only works for TransitTimeMode.ARRIVAL_TIME
-     *
+     * 
      * @param transitRoute
      *            the transit Route for which walking Steps will be replaced
-     * @param arrivalTime 
+     * @param arrivalTime
      *            the arrival time for given Route
      * @return given Route with walking Steps replaced by bicycling Steps return
      *         null if Route could not be generated
      */
-    protected Route replaceWalkingWithBicyclingArrival(final Route transitRoute,
+    protected final Route replaceWalkingWithBicyclingArrival(final Route transitRoute,
             final long arrivalTime) {
         System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->transitRoute: "
                 + transitRoute);
         System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->arrivalTime: "
                 + arrivalTime);
-        
+
         Location curStretchEndLocation = null;
         long curStretchArrivalTime = arrivalTime;
         Step prevStep = null;
@@ -609,10 +617,10 @@ public abstract class AlgorithmWorker {
                 }
 
                 if ((l == 0 && s == -1)
-                        || (prevStep != null
-                        && !prevStep.getTravelMode().equals(
+                        || (prevStep != null && !prevStep.getTravelMode().equals(
                                 curStep.getTravelMode()))) {
-                    // we reached the [very] last step OR are switching travel modes
+                    // we reached the [very] last step OR are switching travel
+                    // modes
 
                     List<Route> subRoutes = null;
                     // NOTE: this is needed to deal with end-of-route edge case
@@ -623,14 +631,14 @@ public abstract class AlgorithmWorker {
                         curStretchStartLocation = curStep.getStartLocation();
                     }
 
-                    //if (!travelModeToCheck.equals(TravelMode.TRANSIT)) {
+                    // if (!travelModeToCheck.equals(TravelMode.TRANSIT)) {
                     if (travelModeToCheck.equals(TravelMode.WALKING)
-                    		|| travelModeToCheck.equals(TravelMode.BICYCLING)) {
+                            || travelModeToCheck.equals(TravelMode.BICYCLING)) {
                         // ask for bicycling directions for prev stretch
                         try {
                             subRoutes = getBicycleResults(
-                                  curStretchStartLocation.getLocationAsString(),
-                                  curStretchEndLocation.getLocationAsString());
+                                    curStretchStartLocation.getLocationAsString(),
+                                    curStretchEndLocation.getLocationAsString());
                         } catch (UnsupportedEncodingException e) {
                             addError(DirectionsStatus.UNSUPPORTED_CHARSET);
                         }
@@ -639,17 +647,16 @@ public abstract class AlgorithmWorker {
                         // ask for transit directions for prev stretch
                         try {
                             subRoutes = getTransitResults(
-                                  curStretchStartLocation.getLocationAsString(),
-                                  curStretchEndLocation.getLocationAsString(),
-                                  curStretchArrivalTime,
-                                  TransitTimeMode.ARRIVAL_TIME);
+                                    curStretchStartLocation.getLocationAsString(),
+                                    curStretchEndLocation.getLocationAsString(),
+                                    curStretchArrivalTime, TransitTimeMode.ARRIVAL_TIME);
 
                         } catch (UnsupportedEncodingException e) {
                             addError(DirectionsStatus.UNSUPPORTED_CHARSET);
                         }
                     } else {
                         System.err.println(TAG + "Unexpected travel mode ("
-                        		+ travelModeToCheck.toString() + ")");
+                                + travelModeToCheck.toString() + ")");
                         // addError(...)
                         return null;
                     }
@@ -658,18 +665,20 @@ public abstract class AlgorithmWorker {
                         System.err.println(TAG + "No subroutes found");
                         return null;
                     } else {
-                        // find a subRoute with no walking steps (this could be more efficient
-                    	// if it did not run this check for bicycling queries)
+                        // find a subRoute with no walking steps (this could be
+                        // more efficient
+                        // if it did not run this check for bicycling queries)
                         Route subRouteWithoutWalkingSteps = getRouteWithoutWalkingSteps(subRoutes);
-                        if(subRouteWithoutWalkingSteps == null) {
-                        	System.err.println(TAG + "All sub routes unusable" +
-                        			" (all contained walking steps).");
+                        if (subRouteWithoutWalkingSteps == null) {
+                            System.err.println(TAG + "All sub routes unusable"
+                                    + " (all contained walking steps).");
                             return null;
                         } else {
                             for (Leg newLeg : subRouteWithoutWalkingSteps.getLegList()) {
                                 comboRoute.addLegBeginning(newLeg);
                             }
-                            curStretchArrivalTime -= subRouteWithoutWalkingSteps.getDurationInSeconds();
+                            curStretchArrivalTime -= subRouteWithoutWalkingSteps
+                                    .getDurationInSeconds();
                         }
                     }
                     curStretchEndLocation = curStep.getEndLocation();
@@ -677,38 +686,38 @@ public abstract class AlgorithmWorker {
                 prevStep = curStep;
             }
         }
-        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->comboRoute: "
-                + comboRoute);
-        
+        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->comboRoute: " + comboRoute);
+
         return comboRoute;
     }
-    
+
     /**
-     * Returns the first route found with given list that does not contain 
-     * any walking steps, return null if all contain walking steps 
+     * Returns the first route found with given list that does not contain any
+     * walking steps, return null if all contain walking steps.
      * 
-     * @param subRoutes list of routes
+     * @param subRoutes
+     *            list of routes
      * @return first route without walking steps, null if none found
      */
-    protected Route getRouteWithoutWalkingSteps(List<Route> subRoutes) {
+    protected final Route getRouteWithoutWalkingSteps(final List<Route> subRoutes) {
         System.out.println(TAG + "getRouteWithoutWalkingSteps()->Entering this method.");
-        for(Route subRoute : subRoutes) {
+        for (Route subRoute : subRoutes) {
             boolean subRouteHasWalkingSteps = false;
             for (Leg curLeg : subRoute.getLegList()) {
-                for(Step curStep : curLeg.getStepList()) {
-                    if(curStep.getTravelMode().equals(TravelMode.WALKING)
-                    		&& curStep.getDistanceInMeters() > 0) {
+                for (Step curStep : curLeg.getStepList()) {
+                    if (curStep.getTravelMode().equals(TravelMode.WALKING)
+                            && curStep.getDistanceInMeters() > 0) {
                         subRouteHasWalkingSteps = true;
                     }
                 }
             }
-            if(!subRouteHasWalkingSteps) {
+            if (!subRouteHasWalkingSteps) {
                 System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method.");
                 return subRoute;
             }
         }
-        
-        System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method " 
+
+        System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method "
                 + "(returning null).");
         return null;
     }

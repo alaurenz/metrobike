@@ -13,23 +13,23 @@ import com.HuskySoft.metrobike.backend.Utility.TransitTimeMode;
 /**
  * The simplest "combo" algorithm, this class takes a transit Route and replaces
  * the walking steps with bicycling directions.
- *
+ * 
  * @author Adrian Laurenzi
  */
 public final class SimpleComboAlgorithm extends AlgorithmWorker {
-	
+
     /**
      * The TAG to use in this file for Android Log messages.
      */
     private static final String TAG = "com.HuskySoft.metrobike.algorithm: "
-    		+ "SimpleComboAlgorithm.java: ";
-    
-	/**
-	 * Max combo routes to generate (by replacing walking steps in
-	 * transit routes with bicycling)
-	 */
-	private static final int MAX_COMBO_ROUTES_TO_GENERATE = 1;
-	
+            + "SimpleComboAlgorithm.java: ";
+
+    /**
+     * Max combo routes to generate. (by replacing walking steps in transit
+     * routes with bicycling)
+     */
+    private static final int MAX_COMBO_ROUTES_TO_GENERATE = 1;
+
     /**
      * {@inheritDoc}
      */
@@ -54,33 +54,30 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
         }
 
         System.out.println(TAG + "findRoutes()->routeTime: " + routeTime);
-        
+
         List<Route> unsortedTransitRoutes;
         try {
-        	unsortedTransitRoutes = getTransitResults(toProcess.getStartAddress(),
+            unsortedTransitRoutes = getTransitResults(toProcess.getStartAddress(),
                     toProcess.getEndAddress(), routeTime, timeMode);
         } catch (UnsupportedEncodingException e) {
             return addError(DirectionsStatus.UNSUPPORTED_CHARSET);
         }
 
-        if(unsortedTransitRoutes != null) {
-        	List<Route> transitRoutes =
-        			Utility.sortRoutesByTransitDuration(unsortedTransitRoutes);
-        	
+        if (unsortedTransitRoutes != null) {
+            List<Route> transitRoutes = Utility.sortRoutesByTransitDuration(unsortedTransitRoutes);
+
             List<Route> comboResults = new ArrayList<Route>();
             int i = 0;
-            while(i < transitRoutes.size() && i < MAX_COMBO_ROUTES_TO_GENERATE) {
-            	Route curRoute = transitRoutes.get(i);
-            	
-            	Route comboRoute = null;
-                if(timeMode.equals(TransitTimeMode.DEPARTURE_TIME)) {
-                    comboRoute = replaceWalkingWithBicyclingDeparture(
-                        curRoute, routeTime);
-                } else if(timeMode.equals(TransitTimeMode.ARRIVAL_TIME)) {
-                    comboRoute = replaceWalkingWithBicyclingArrival(
-                        curRoute, routeTime);
+            while (i < transitRoutes.size() && i < MAX_COMBO_ROUTES_TO_GENERATE) {
+                Route curRoute = transitRoutes.get(i);
+
+                Route comboRoute = null;
+                if (timeMode.equals(TransitTimeMode.DEPARTURE_TIME)) {
+                    comboRoute = replaceWalkingWithBicyclingDeparture(curRoute, routeTime);
+                } else if (timeMode.equals(TransitTimeMode.ARRIVAL_TIME)) {
+                    comboRoute = replaceWalkingWithBicyclingArrival(curRoute, routeTime);
                 }
-    
+
                 if (comboRoute != null && comboRoute.getLegList().size() > 0) {
                     comboResults.add(comboRoute);
                 }
