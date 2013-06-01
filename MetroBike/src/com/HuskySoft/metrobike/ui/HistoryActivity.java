@@ -179,8 +179,6 @@ public class HistoryActivity extends Activity {
             for (String str : list) {
                 Log.d(TAG, "Read list " + str);
                 History.writeOneAddressToFile(fos, str);
-//                fos.write(str.getBytes());
-//                fos.write("\n".getBytes());
             }
         } catch (FileNotFoundException e) {
             Log.i(TAG, "Cannot create history file");

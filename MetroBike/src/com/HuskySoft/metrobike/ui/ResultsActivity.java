@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,13 +39,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
- * 
- * @author mengwan
+ * This class shows the result and display it onto the screen.
+ * @author mengwan, Sam Wilson
  * 
  */
-
 public class ResultsActivity extends Activity {
 
+    /**
+     * The tag of this activity.
+     */
+    private static final String TAG = "ResultActivity";
+    
     /**
      * duration of the animated camera in the map.
      */
@@ -126,6 +131,16 @@ public class ResultsActivity extends Activity {
     private static final float POLYLINE_THIN = 8f;
     
     /**
+     * The margin number.
+     */
+    private static final int MARGIN = 3;
+    
+    /**
+     * The setShadowLayer.
+     */
+    private static final float LAYER = 0.6f;
+
+    /**
      * {@inheritDoc}
      * 
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -133,12 +148,6 @@ public class ResultsActivity extends Activity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-//      Set ActionBar to be translucent and overlaying the map
-//      Currently not using this. 
-//      getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-//      ActionBar actionBar = getActionBar();
-//      actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#99000000")));
         
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -161,6 +170,7 @@ public class ResultsActivity extends Activity {
             addRouteButtons();
             mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         }
+        Log.v(TAG, "Done on create");
     }
 
     /**
@@ -253,6 +263,7 @@ public class ResultsActivity extends Activity {
      */
     private void addRouteButtons() {
         buttons = new ArrayList<Button>();
+        String white = "#000000";
         LinearLayout main = (LinearLayout) findViewById(R.id.linearLayoutForRouteSelection);
         for (int i = 0; i < routes.size(); i++) {
             Button selectRouteBtn = new Button(this);         
@@ -260,10 +271,10 @@ public class ResultsActivity extends Activity {
             selectRouteBtn.setText("Route" + (i + 1));
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
-            params.setMargins(3, 3, 3, 3);
+            params.setMargins(MARGIN, MARGIN, MARGIN, MARGIN);
             selectRouteBtn.setLayoutParams(params);                  
             selectRouteBtn.setPadding(0, 0, 0, 0);
-            selectRouteBtn.setShadowLayer(0.6f, 1, 1, Color.parseColor("#000000"));
+            selectRouteBtn.setShadowLayer(LAYER, 1, 1, Color.parseColor(white));
             selectRouteBtn.setOnClickListener(new MyOnClickListener(i));
             main.addView(selectRouteBtn);
             buttons.add(selectRouteBtn);
@@ -342,6 +353,7 @@ public class ResultsActivity extends Activity {
                 button.setEnabled(true);
             }
         }
+        Log.v(TAG, "Done drawing the route");
     }
     
     /**
@@ -370,10 +382,19 @@ public class ResultsActivity extends Activity {
             .radius(MAP_CIRCLE_RADIUS)
             .strokeColor(Color.BLACK).strokeWidth(MAP_STROKE_WIDTH)
             .fillColor(Color.WHITE).zIndex(2));
-        
-        
+
         //draw Poly-line on the map
-        
+        drawPolyLine(legs);
+        Log.v(TAG, "Done drawing the legs");
+    }
+
+    /**
+     * Draw Poly lines on the map.
+     * 
+     * @param legs
+     *            each step on the route.
+     */
+    private void drawPolyLine(final List<Leg> legs) {
         for (Leg l : legs) {
             for (Step s : l.getStepList()) {
                 PolylineOptions polylineOptions = new PolylineOptions();
@@ -430,6 +451,7 @@ public class ResultsActivity extends Activity {
         super.onResume();
         MapSetting.updateStatus(mMap);
         drawRoute();
+        Log.v(TAG, "Done on resume");
     }
     
     /**

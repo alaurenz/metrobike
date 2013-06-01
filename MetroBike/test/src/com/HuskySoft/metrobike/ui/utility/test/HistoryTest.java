@@ -1,11 +1,5 @@
 package com.HuskySoft.metrobike.ui.utility.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.HuskySoft.metrobike.ui.utility.History;
 
 import junit.framework.Assert;
@@ -289,6 +283,23 @@ public class HistoryTest extends TestCase {
     }
 
     /**
+     * White box test: test readOneAddressToFile.
+     */
+    public final void testReadToFile01() {
+        History.readFromFile(null);
+        // nothing should happen.
+    }
+
+    /**
+     * White box test: test addToHistory.
+     */
+    public final void testAddToHistory01() {
+        // add null for address
+        setup();
+        Assert.assertFalse(history.addToHistory(TEST_STRING, null));
+    }
+
+    /**
      * White box test: test writeOneAddressToFile.
      *//* TODO: Get this test working!
     public final void testWriteToFile02() {
@@ -333,11 +344,30 @@ public class HistoryTest extends TestCase {
     }*/
     
     /**
-     * White box test: test readOneAddressToFile.
+     * White box test: test addToHistory.
      */
-    public final void testReadToFile01() {
-        History.readFromFile(null);
-        // nothing should happen.
+    public final void testAddToHistory02() {
+        // add null for curr lat and lng.
+        setup();
+        Assert.assertFalse(history.addToHistory(null, TEST_STRING));
+    }
+
+    /**
+     * White box test: test addToHistory.
+     */
+    public final void testAddToHistory03() {
+        // add diff latlng and address
+        setup();
+        Assert.assertTrue(history.addToHistory(TEST_STRING, TEST_STRING + TEST_STRING));
+    }
+
+    /**
+     * White box test: test addToHistory.
+     */
+    public final void testAddToHistory04() {
+        // add real address
+        setup();
+        Assert.assertFalse(history.addToHistory(TEST_STRING, TEST_STRING));
     }
 
     /**
@@ -375,8 +405,6 @@ public class HistoryTest extends TestCase {
             }
         }
     }*/
-    
-    
     
     /**
      * helper method for deleting the string array that has been added.

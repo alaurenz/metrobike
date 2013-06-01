@@ -161,4 +161,11 @@ public class UtilityTest extends TestCase {
                 .getBitmapFromURL("helpinghomelesscats.com/images/cat1.jpg");
         Assert.assertNull(badResultBitmap);
     }
+    
+    /**
+     * WhiteBox: Test get camera center for passing null.
+     */
+    public final void testNullGetCameraCenter() {
+        Assert.assertNull(Utility.getCameraCenter(null));
+    }
 }

@@ -19,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -245,8 +246,14 @@ public class SearchActivity extends Activity implements
             String currLocationLatLagString = "";
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
                 if (locationClient.isConnected()) {
-                    currLocationLatLagString += locationClient.getLastLocation().getLatitude()
-                            + ", " + locationClient.getLastLocation().getLongitude();
+                    Location lastLoc = locationClient.getLastLocation();
+                    if (lastLoc == null) {
+                        // defensive programming, avoid null pointer exception.
+                        showErrorDialog("GPS location is not available");
+                        return;
+                    }
+                    currLocationLatLagString += lastLoc.getLatitude() + ", "
+                            + lastLoc.getLongitude();
 
                 } else {
                     currLocationLatLagString += "" + LATITUDE + ", " + LONGITUDE;
@@ -328,26 +335,12 @@ public class SearchActivity extends Activity implements
             // a new request
             if (retVal.isError()) {
                 Log.d(TAG, "Error on do request");
-                final CharSequence errorMessage = retVal.getMessage();
-
+                final String errorMessage = retVal.getMessage();
                 // Must call runOnUiThread if want to display a Toast or a
                 // Dialog within a thread
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-                        builder.setMessage(errorMessage);
-                        builder.setTitle(Html.fromHtml("<font color='red'>Error</font>"));
-                        // we can set the onClickListener parameter as null
-                        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(final DialogInterface dialog, final int which) {
-                                // cancel this dialog
-                                dialog.cancel();
-                            }
-                        });
-                        // Create the AlertDialog object and return it
-                        builder.create().show();
+                        showErrorDialog(errorMessage);
                     }
                 });
 
@@ -356,17 +349,12 @@ public class SearchActivity extends Activity implements
                 return;
             }
             Log.d(TAG, "Do request success!");
-            // if no errors, store the address into history.
-            // don't store the current location.
-            if (!from.equals(currLocationLatLagString)) {
-                historyItem.addAddress(from);
+            if (historyItem.addToHistory(currLocationLatLagString, from)) {
                 saveHistoryFile(from);
             }
-            if (!to.equals(currLocationLatLagString)) {
-                historyItem.addAddress(to);
+            if (historyItem.addToHistory(currLocationLatLagString, to)) {
                 saveHistoryFile(to);
             }
-
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
@@ -376,6 +364,29 @@ public class SearchActivity extends Activity implements
             // Closes the searching dialog
             pd.dismiss();
             Log.v(TAG, "Done searching, go to result activity");
+        }
+
+        /**
+         * Show the error dialog to user.
+         * 
+         * @param message
+         *            the error message that will show in the dialog.
+         */
+        private void showErrorDialog(final String message) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
+            builder.setMessage(message);
+            builder.setTitle(Html.fromHtml("<font color='red'>Error</font>"));
+            // we can set the onClickListener parameter as null
+            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+    // cancel this dialog
+                    dialog.cancel();
+                }
+            });
+            // Create the AlertDialog object and return it
+            builder.create().show();
         }
 
         /**
@@ -772,7 +783,6 @@ public class SearchActivity extends Activity implements
                 dirThread.start();
             }
         });
-        
         
         bicycleOnlyCheckBox.setOnClickListener(new OnClickListener() {
             private boolean isCheckedBefore = false;
