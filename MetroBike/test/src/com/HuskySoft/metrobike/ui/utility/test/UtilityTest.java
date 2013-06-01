@@ -168,4 +168,14 @@ public class UtilityTest extends TestCase {
     public final void testNullGetCameraCenter() {
         Assert.assertNull(Utility.getCameraCenter(null));
     }
+    
+    /**
+     * BlackBox: Test if the converting method of the location is working properly.
+     */
+    public final void testLocationToLatLng() {
+        Location toConvert = new Location(0.00, 1.00);
+        LatLng result = Utility.convertLocation(toConvert);
+        Assert.assertEquals(toConvert.getLatitude(), result.latitude);
+        Assert.assertEquals(toConvert.getLongitude(), result.longitude);
+    }
 }

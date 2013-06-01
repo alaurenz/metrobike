@@ -24,7 +24,7 @@ import com.HuskySoft.metrobike.backend.WebRequestJSONKeys;
  * 
  * @author coreyh3
  * 
- * check style: Sam Wilson
+ *         check style: Sam Wilson
  */
 public class RouteTest extends TestCase {
     /**
@@ -80,7 +80,8 @@ public class RouteTest extends TestCase {
     /**
      * WhiteBox: This tests the setSummary method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testSetSummaryTest() throws JSONException {
@@ -95,13 +96,15 @@ public class RouteTest extends TestCase {
     /**
      * WhiteBox: This tests the getWarnings method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetWarningsTest() throws JSONException {
         setUp();
-        String expected = "Bicycling directions are in beta. Use caution - "
-                + "This route may contain streets that aren't suited for bicycling.";
+        String expected =
+                "Bicycling directions are in beta. Use caution - "
+                        + "This route may contain streets that aren't suited for bicycling.";
         List<String> warnings = route.getWarnings();
         String actual = "";
         for (int i = 0; i < warnings.size(); i++) {
@@ -109,7 +112,7 @@ public class RouteTest extends TestCase {
         }
         System.err.println("Expected:\n" + expected + "\n");
         System.err.println("Actual:\n" + actual + "\n");
-        
+
         Assert.assertEquals("Actual value for route.getWarnings() (Note:concatenated "
                 + "the list together) was: " + actual, expected, actual);
     }
@@ -117,7 +120,8 @@ public class RouteTest extends TestCase {
     /**
      * WhiteBox: This tests the getNeBound method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetNEBoundTest() throws JSONException {
@@ -131,7 +135,8 @@ public class RouteTest extends TestCase {
     /**
      * WhiteBox: This tests the get SwBound method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetSWBoundTest() throws JSONException {
@@ -145,7 +150,8 @@ public class RouteTest extends TestCase {
     /**
      * WhiteBox: This tests the getDistanceInMeters() method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetdistanceInMetersTest() throws JSONException {
@@ -159,7 +165,8 @@ public class RouteTest extends TestCase {
     /**
      * WhiteBox: This tests the getDurationInSeconds method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetDurationInSecondsTest() throws JSONException {
@@ -174,7 +181,8 @@ public class RouteTest extends TestCase {
      * WhiteBox: This tests the getLegList method and verifies that the returned
      * list is not null.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetLegListListIsNotNullTest() throws JSONException {
@@ -189,7 +197,8 @@ public class RouteTest extends TestCase {
      * WhiteBox: This tests the getLegList method and verifies that the returned
      * list is not size zero.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetLegListListIsNotSizeZeroTest() throws JSONException {
@@ -203,18 +212,23 @@ public class RouteTest extends TestCase {
     /**
      * WhiteBox: This tests the getDirectionsStepsText method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetDirectionsStepsTextTest() throws JSONException {
         setUp();
-        String expected = "Head <b>southeast</b> on <b>Latona Ave NE</b> toward <b>NE 65th St</b>"
-                + "Turn <b>left</b> onto <b>NE 65th St</b>Turn <b>right</b> onto "
-                + "<b>NE Ravenna Blvd</b>Turn <b>right</b> onto <b>Roosevelt Way NE</b>Turn "
-                + "<b>left</b> onto <b>NE Campus Pkwy</b>Turn <b>right</b> onto <b>University "
-                + "Way NE</b>Turn <b>right</b> onto <b>Burke-Gilman Trail</b>Turn <b>left</b> "
-                + "onto <b>Brooklyn Ave NE</b><div style=\"font-size:0.9em\">Destination will "
-                + "be on the right</div>";
+        String expected =
+                "Head <b>southeast</b> on <b>Latona Ave NE</b> toward <b>NE 65th St</b>"
+                        + "Turn <b>left</b> onto <b>NE 65th St</b>Turn <b>right</b> onto "
+                        + "<b>NE Ravenna Blvd</b>Turn <b>right</b> onto <b>"
+                        + "Roosevelt Way NE</b>Turn "
+                        + "<b>left</b> onto <b>NE Campus Pkwy</b>Turn <b>right</b> "
+                        + "onto <b>University "
+                        + "Way NE</b>Turn <b>right</b> onto <b>Burke-Gilman Trail</b>"
+                        + "Turn <b>left</b> "
+                        + "onto <b>Brooklyn Ave NE</b><div style=\"font-size:0.9em\">"
+                        + "Destination will be on the right</div>";
         List<String> text = route.directionStepsText();
         String actual = "";
         for (int i = 0; i < text.size(); i++) {
@@ -229,7 +243,8 @@ public class RouteTest extends TestCase {
      * WhiteBox: This tests the getPolyLinePoints method and checks that it is
      * not null.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetPolyLinePointsNotNullTest() throws JSONException {
@@ -244,7 +259,8 @@ public class RouteTest extends TestCase {
      * WhiteBox: This tests the getPolyLinePoints method and checks that it is
      * not size zero.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetPolyLinePointsNotSizeZeroTest() throws JSONException {
@@ -268,11 +284,10 @@ public class RouteTest extends TestCase {
         String actual = route.toString();
         Assert.assertEquals("Actual value for route.toString() was: " + actual, expected, actual);
     }
-    
+
     /**
      * BlackBox: Tests to be sure we can safely serialize and deserialize a
-     * Rotue object. This functionality is used in the
-     * intent-passing system.
+     * Rotue object. This functionality is used in the intent-passing system.
      * 
      * @throws IOException
      *             if an IO exception occurs during processing
@@ -306,7 +321,8 @@ public class RouteTest extends TestCase {
      *             the json exception.
      */
     public final void testSerializationTestNonEmptyRouteObject() throws IOException,
-            ClassNotFoundException, JSONException {
+            ClassNotFoundException,
+            JSONException {
         setUp();
 
         // Serialize the request, then de-serialize it
@@ -315,14 +331,12 @@ public class RouteTest extends TestCase {
 
         // Use string equality to check the request
         Assert.assertEquals("The toString() representation of a serialized->deserialized"
-                + " object should remain unchanged.", route.toString(),
-                recreatedRoute.toString());
+                + " object should remain unchanged.", route.toString(), recreatedRoute.toString());
     }
 
     /**
-     * Helper function for serializing a Route object.Help on
-     * testing this based on.
-     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * Helper function for serializing a Route object.Help on testing this based
+     * on. http://www.ibm.com/developerworks/library/j-serialtest/index.html
      * 
      * @param toSerialize
      *            the Route to serialize
@@ -339,9 +353,8 @@ public class RouteTest extends TestCase {
     }
 
     /**
-     * Helper function for serializing a Route object.Help on
-     * testing this based on.
-     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * Helper function for serializing a Route object.Help on testing this based
+     * on. http://www.ibm.com/developerworks/library/j-serialtest/index.html
      * 
      * @param toDeSerialize
      *            a byte array representing the serialized Route
@@ -361,7 +374,8 @@ public class RouteTest extends TestCase {
     /**
      * Test-Driven Development: This tests the getDurationHumanReadable method.
      * 
-     * @throws JSONException the json exception
+     * @throws JSONException
+     *             the json exception
      */
     // @Test
     public final void testGetDurationHumanReadable() throws JSONException {

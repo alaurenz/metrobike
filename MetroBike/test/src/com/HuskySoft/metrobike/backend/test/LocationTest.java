@@ -12,7 +12,7 @@ import com.HuskySoft.metrobike.backend.Location;
  * 
  * @author coreyh3
  * 
- * check style: Sam Wilson
+ *         check style: Sam Wilson
  */
 public class LocationTest extends TestCase {
     /**

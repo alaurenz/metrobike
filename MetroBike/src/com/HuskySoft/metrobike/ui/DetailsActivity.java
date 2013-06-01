@@ -204,7 +204,7 @@ public class DetailsActivity extends Activity {
                 ImageGetter imgGetter = new ImageGetter() {
                     public Drawable getDrawable(final String source) {
                         Drawable drawable = null;
-                        if (s.getTravelMode() != TravelMode.TRANSIT) {
+                        if (s.getTravelMode() != TravelMode.TRANSIT) {   
                             drawable = getResources().getDrawable(R.drawable.bicycle_icon);
                         } else {
                             drawable = getResources().getDrawable(R.drawable.bus_icon);

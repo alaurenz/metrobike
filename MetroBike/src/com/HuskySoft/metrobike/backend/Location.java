@@ -27,7 +27,7 @@ public final class Location implements Serializable {
      * TAG for logging statements.
      */
     private static final String TAG = "com.HuskySoft.metrobike.backend: Location.java: ";
-    
+
     /**
      * A scaling factor used in computing the hashCode. It determines how much
      * precision to use in the hashCode calculation.
@@ -47,8 +47,8 @@ public final class Location implements Serializable {
     /**
      * The amount to indent the toString call.
      */
-    int indent = 0;
-    
+    private int indent = 0;
+
     /**
      * The actual indented string.
      */
@@ -83,7 +83,7 @@ public final class Location implements Serializable {
     public static Location makeNorthEastBound(final Location one, final Location two) {
         // TODO: Consider the case where two locations are on opposite sides of
         // the Prime Meridian.
-        
+
         System.out.println(TAG + "makeNorthEastBound()->one: " + one);
         System.out.println(TAG + "makeNorthEastBound()->two: " + two);
         // Return two if one is null (even if two is also null)
@@ -124,14 +124,14 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Returns a string representation of this location
+     * Returns a string representation of this location.
      * 
-     * @return this location in format: latitude,longitude
+     * @return this location in format: "latitude,longitude".
      */
     public String getLocationAsString() {
         return latitude + "," + longitude;
     }
-    
+
     /**
      * Returns a Location that is a South-West bound on the passed Locations. If
      * one location is null, the non-null location will be returned. If both
@@ -170,19 +170,18 @@ public final class Location implements Serializable {
      * Setter for the indent field. Affects the amount of indentation used in
      * the toString() method.
      * 
-     * @param indent
+     * @param newIndent
      *            the new indent value.
      */
-    public void setIndent(final int indent) {
-        System.out.println(TAG + "setIndent()->indent: " + indent);
-        this.indent = indent;
+    public void setIndent(final int newIndent) {
+        System.out.println(TAG + "setIndent()->newIndent: " + newIndent);
+        this.indent = newIndent;
         indentString = "";
-        for (int i = 0; i < indent; i++) {
+        for (int i = 0; i < newIndent; i++) {
             indentString = Utility.getIndentString();
         }
     }
-    
-    
+
     /**
      * This is the getter for the indent field.
      * 
@@ -260,6 +259,6 @@ public final class Location implements Serializable {
         latitude = in.readDouble();
         longitude = in.readDouble();
         indent = in.readInt();
-        indentString = (String)in.readObject();
+        indentString = (String) in.readObject();
     }
 }

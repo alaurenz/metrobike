@@ -21,7 +21,6 @@ import org.json.JSONException;
  * 
  */
 public final class Utility {
-
     /**
      * A private constructor that throws an error to deter instantiation of this
      * utility class. Throws unchecked exception AssertionError if called. Note
@@ -37,19 +36,39 @@ public final class Utility {
          */
         throw new AssertionError("Never instantiate utility classes!");
     }
-    
+
     /**
      * Tag for logging statements.
      */
     private static final String TAG = "com.HuskySoft.metrobike.backend: Utility.java: ";
-    
+
     /**
-     * Format for printing times in "human-readable" way
+     * Used to round up when using math.floor.
+     */
+    private static final float ROUNDING_UP = 0.5f;
+
+    /**
+     * The number of hours in a day.
+     */
+    private static final int HOURS_IN_A_DAY = 24;
+
+    /**
+     * Number of seconds in a minute.
+     */
+    private static final int SECONDS_IN_A_MINUTE = 60;
+
+    /**
+     * Number of milliseconds in a second.
+     */
+    private static final int MILLIS_IN_A_SECOND = 1000;
+
+    /**
+     * Format for printing times in "human-readable" way.
      */
     private static final String TIME_FORMAT = "h:mm a";
-    
+
     /**
-     * Format for printing times in "human-readable" way
+     * Format for printing times in "human-readable" way.
      */
     private static final Locale TIME_LOCALE = Locale.ENGLISH;
 
@@ -78,7 +97,7 @@ public final class Utility {
      * The default size for what a single indent is. (For the toString Methods)
      */
     private static final String INDENT_STRING = "    ";
-
+    
     /**
      * 
      * @author dutchscout
@@ -105,13 +124,13 @@ public final class Utility {
      * @throws JSONException
      *             if the JSON isn't in the expected format
      */
-    public static List<String> jsonArrayToStringList(final JSONArray jsonArray)
-            throws JSONException {
+    public static List<String>
+            jsonArrayToStringList(final JSONArray jsonArray) throws JSONException {
         System.out.println(TAG + "jsonArraytoStringList()->Printing the array");
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            System.out.println(TAG + "jsonArraytoStringList()->" + i + ": " + 
-                    jsonArray.getString(i));
+            System.out.println(TAG + "jsonArraytoStringList()->" + i + ": "
+                    + jsonArray.getString(i));
             list.add(jsonArray.getString(i));
         }
         System.out.println(TAG + "jsonArraytoStringList()->Done Printing the json array.");
@@ -138,9 +157,9 @@ public final class Utility {
      *             found
      */
     public static String buildBicycleQueryString(final String startAddress,
-            final String endAddress, final boolean multipleRoutes)
-            throws UnsupportedEncodingException {
-        
+            final String endAddress,
+            final boolean multipleRoutes) throws UnsupportedEncodingException {
+
         System.out.println(TAG + "buildBicycleQueryString()->startAddress: " + startAddress);
         System.out.println(TAG + "buildBicycleQueryString()->endAddress: " + endAddress);
         System.out.println(TAG + "buildBicycleQueryString()->multipleRoutes: " + multipleRoutes);
@@ -157,7 +176,7 @@ public final class Utility {
         } else {
             addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
         }
-        
+
         return url.toString();
     }
 
@@ -186,14 +205,16 @@ public final class Utility {
      *             found
      */
     public static String buildTransitQueryString(final String startAddress,
-            final String endAddress, final long routeTime, final TransitTimeMode timeMode,
+            final String endAddress,
+            final long routeTime,
+            final TransitTimeMode timeMode,
             final boolean multipleRoutes) throws UnsupportedEncodingException {
         System.out.println(TAG + "buildtransitQueryString()->startAddress: " + startAddress);
         System.out.println(TAG + "buildtransitQueryString()->endAddress: " + endAddress);
         System.out.println(TAG + "buildtransitQueryString()->multipleRoutes: " + multipleRoutes);
         System.out.println(TAG + "buildtransitQueryString()->routeTime: " + routeTime);
         System.out.println(TAG + "buildtransitQueryString()->timeMode.name(): " + timeMode.name());
-        
+
         StringBuilder url = new StringBuilder(GOOGLE_MAPS_BASE_URL);
 
         // Add the key/value pairs to the url
@@ -220,7 +241,7 @@ public final class Utility {
         } else {
             addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
         }
-        
+
         return url.toString();
     }
 
@@ -236,12 +257,14 @@ public final class Utility {
      * @param isFinalParam
      *            true if this is the final parameter
      */
-    private static void addKeyValuePair(final StringBuilder url, final URIKeys key,
-            final URIKeys value, final boolean isFinalParam) {
+    private static void addKeyValuePair(final StringBuilder url,
+            final URIKeys key,
+            final URIKeys value,
+            final boolean isFinalParam) {
         System.out.println(TAG + "addKeyValuePair(URIKeys Value)->key.name(): " + key.name());
         System.out.println(TAG + "addKeyValuePair(URIKeys Value)->value.name(): " + value.name());
         System.out.println(TAG + "addKeyValuePair(URIKeys Value)->isFinalParam: " + isFinalParam);
-        
+
         url.append(key.getLowerCase());
         url.append(URL_ASSIGNMENT_OPERATOR);
         url.append(value.getLowerCase());
@@ -265,12 +288,14 @@ public final class Utility {
      *             if the charset specified by URL_ENCODING_CHARSET_NAME is not
      *             found
      */
-    private static void addKeyValuePair(final StringBuilder url, final URIKeys key,
-            final String value, final boolean isFinalParam) throws UnsupportedEncodingException {
+    private static void addKeyValuePair(final StringBuilder url,
+            final URIKeys key,
+            final String value,
+            final boolean isFinalParam) throws UnsupportedEncodingException {
         System.out.println(TAG + "addKeyValuePair(String Value)->key.name(): " + key.name());
         System.out.println(TAG + "addKeyValuePair(String Value)->value: " + value);
         System.out.println(TAG + "addKeyValuePair(String Value)->isFinalParam: " + isFinalParam);
-        
+
         url.append(key.getLowerCase());
         url.append(URL_ASSIGNMENT_OPERATOR);
         url.append(encodeURLParameter(value));
@@ -289,8 +314,8 @@ public final class Utility {
      *             if the charset specified by URL_ENCODING_CHARSET_NAME is not
      *             found
      */
-    private static String encodeURLParameter(final String toFormat)
-            throws UnsupportedEncodingException {
+    private static String
+            encodeURLParameter(final String toFormat) throws UnsupportedEncodingException {
         System.out.println(TAG + "encodeURLParameter()->toFormat: " + toFormat);
         return URLEncoder.encode(toFormat, URL_ENCODING_CHARSET_NAME);
     }
@@ -305,11 +330,11 @@ public final class Utility {
      * @return a String representation of the list
      */
     public static String listPrettyPrint(final List<?> list, final int indent) {
-        if(list == null || list.size() == 0) {
+        if (list == null || list.size() == 0) {
             System.out.println(TAG + "listPrettyPrint()->list was null or of size 0.");
             return null;
         }
-        
+
         System.out.println(TAG + "listPrettyPrint()->indent: " + indent);
 
         StringBuilder indentBuilder = new StringBuilder();
@@ -320,13 +345,14 @@ public final class Utility {
         String indentString = indentBuilder.toString();
 
         StringBuilder listAsString = new StringBuilder();
-        
+
         for (int i = 0; i < list.size(); i++) {
             listAsString.append(indentString + i + ": " + list.get(i) + "\n");
         }
-        
-        System.out.println(TAG + "listPrettyPrint()->listAsString.toString(): " + listAsString.toString());
-        
+
+        System.out.println(TAG + "listPrettyPrint()->listAsString.toString(): "
+                + listAsString.toString());
+
         return listAsString.toString();
     }
 
@@ -353,9 +379,9 @@ public final class Utility {
             substepString.append(substeps.get(i).toString());
         }
 
-        System.out.println(TAG + "getSubstepsAsString()->substepString.toString(): " 
+        System.out.println(TAG + "getSubstepsAsString()->substepString.toString(): "
                 + substepString.toString());
-        
+
         return substepString.toString();
     }
 
@@ -378,9 +404,9 @@ public final class Utility {
             substepString.append(legs.get(i).toString());
         }
 
-        System.out.println(TAG + "getLegsAsString()->substepString.toString(): " 
+        System.out.println(TAG + "getLegsAsString()->substepString.toString(): "
                 + substepString.toString());
-        
+
         return substepString.toString();
     }
 
@@ -390,106 +416,110 @@ public final class Utility {
      * @return the indentation string
      */
     public static String getIndentString() {
-        System.out.println(TAG + "getIndentString()->INDENT_STRING: " + INDENT_STRING); 
+        System.out.println(TAG + "getIndentString()->INDENT_STRING: " + INDENT_STRING);
         return INDENT_STRING;
     }
-    
+
     /**
      * Returns the given duration in seconds in the following format:
-     * "XX days, XX hours, XX minutes"
+     * "XX days, XX hours, XX minutes".
      * 
-     * @param duration
+     * @param durationSeconds
      *            Number of seconds to convert to human-readable String.
      * @return the given duration as a human-readable String
      */
     public static String secondsToHumanReadableDuration(final long durationSeconds) {
-        int durationMinutesRounded = (int) Math.floor(((float) durationSeconds / 60) + 0.5f);
-        int minutes = (int) (durationMinutesRounded % 60);
-        int hours = (int) ((durationMinutesRounded / 60) % 24);
-        int days = (int) (durationMinutesRounded / (60 * 24));
-        
-        System.out.println(TAG + "secondsToHumanReadableDuration()->durationSeconds: " 
+        int durationMinutesRounded =
+                (int) Math.floor(((float) durationSeconds / SECONDS_IN_A_MINUTE) + ROUNDING_UP);
+        int minutes = (int) (durationMinutesRounded % SECONDS_IN_A_MINUTE);
+        int hours = (int) ((durationMinutesRounded / SECONDS_IN_A_MINUTE) % HOURS_IN_A_DAY);
+        int days = (int) (durationMinutesRounded / (SECONDS_IN_A_MINUTE * HOURS_IN_A_DAY));
+
+        System.out.println(TAG + "secondsToHumanReadableDuration()->durationSeconds: "
                 + durationSeconds);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->durationMinutesRounded: " 
-                + durationMinutesRounded); 
-        System.out.println(TAG + "secondsToHumanReadableDuration()->minutes: " + minutes); 
-        System.out.println(TAG + "secondsToHumanReadableDuration()->hours: " + hours); 
-        System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days); 
-        
+        System.out.println(TAG + "secondsToHumanReadableDuration()->durationMinutesRounded: "
+                + durationMinutesRounded);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->minutes: " + minutes);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->hours: " + hours);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days);
+
         String output = "";
-        if(days > 0) {
+        if (days > 0) {
             output += days + " day";
-            if(days > 1)
+            if (days > 1) {
                 output += "s";
+            }
             output += ", ";
         }
-        if(hours > 0) {
+        if (hours > 0) {
             output += hours + " hour";
-            if(hours > 1)
+            if (hours > 1) {
                 output += "s";
+            }
             output += ", ";
         }
-        if(minutes >= 0) {
+        if (minutes >= 0) {
             output += minutes + " minute";
-            if(minutes > 1 || minutes == 0)
+            if (minutes > 1 || minutes == 0) {
                 output += "s";
+            }
             output += ", ";
         }
-        
-        System.out.println(TAG + "secondsToHumanReadableDuration()->" 
-                + "output.substring(0, output.length() - 2): " 
-                + output.substring(0, output.length() - 2)); 
-        
+
+        System.out.println(TAG + "secondsToHumanReadableDuration()->"
+                + "output.substring(0, output.length() - 2): "
+                + output.substring(0, output.length() - 2));
+
         return output.substring(0, output.length() - 2);
     }
-    
+
     /**
-     * Returns the given timestamp (in seconds) in a human-readable format
-     * NOTE: time given in GMT-7.
+     * Returns the given timestamp (in seconds) in a human-readable format NOTE:
+     * time given in GMT-7.
      * 
      * @param timestampSeconds
      *            Timestamp (number of seconds since 1970) to convert to
      *            human-readable time.
-     * @param timezone 
-     * 			  Default timezone (if null will use GMT)
+     * @param timezone
+     *            Default timezone (if null will use GMT)
      * @return the given timestamp as a human-readable String
      */
-    public static String timestampTo12HourTime(final long timestampSeconds,
-    		TimeZone timezone) {
-        long timestampMillis = timestampSeconds * 1000;
+    public static String
+            timestampTo12HourTime(final long timestampSeconds, final TimeZone timezone) {
+        long timestampMillis = timestampSeconds * MILLIS_IN_A_SECOND;
         System.out.println(TAG + "timestampTo12HourTime()->timestampMillis: " + timestampMillis);
-        
+
         Date date = new Date(timestampMillis);
         SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT, TIME_LOCALE);
-        if(timezone != null) {
-        	dateFormat.setTimeZone(timezone);
+        if (timezone != null) {
+            dateFormat.setTimeZone(timezone);
         }
-        
-        System.out.println(TAG + "timestampTo12HourTime()->dateFormat.format(date): " 
+
+        System.out.println(TAG + "timestampTo12HourTime()->dateFormat.format(date): "
                 + dateFormat.format(date));
-        
+
         return dateFormat.format(date);
     }
-    
+
     /**
-     * Return given a list of routes sorted by total 
-     * duration of transit Steps
+     * Return given a list of routes sorted by total duration of transit Steps.
      * 
-     * @param routes to sort
-     * @return routes sorted by total duration of
-     * 			transit Steps (ascending order)
+     * @param routes
+     *            to sort
+     * @return routes sorted by total duration of transit Steps (ascending
+     *         order)
      */
-    public static List<Route> sortRoutesByTransitDuration(List<Route> routes) {
-    	List<TransitRoute> transitRoutes = new ArrayList<TransitRoute>();
-        
-        for(Route r : routes) {
-        	transitRoutes.add(new TransitRoute(r));
+    public static List<Route> sortRoutesByTransitDuration(final List<Route> routes) {
+        List<TransitRoute> transitRoutes = new ArrayList<TransitRoute>();
+
+        for (Route r : routes) {
+            transitRoutes.add(new TransitRoute(r));
         }
         Collections.sort(transitRoutes);
-        
+
         List<Route> sortedRoutes = new ArrayList<Route>();
-        for(TransitRoute tr : transitRoutes) {
-        	sortedRoutes.add(tr.getSourceRoute());
+        for (TransitRoute tr : transitRoutes) {
+            sortedRoutes.add(tr.getSourceRoute());
         }
         return sortedRoutes;
     }

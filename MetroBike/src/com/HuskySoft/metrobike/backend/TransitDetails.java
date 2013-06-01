@@ -7,14 +7,14 @@ import java.io.Serializable;
 
 /**
  * Represents the transit details for a single [transit] Step.
- *
+ * 
  * @author Adrian Laurenzi
  */
 public final class TransitDetails implements Serializable {
     /**
      * Part of serializability, this id tracks if a serialized object can be
      * deserialized using this version of the class.
-     *
+     * 
      * NOTE: Please add 1 to this number every time you change the readObject()
      * or writeObject() methods, so we don't have old-version Location objects
      * (ex: from the log) being made into new-version Location objects.
@@ -25,7 +25,7 @@ public final class TransitDetails implements Serializable {
      * TAG for logging statements.
      */
     private static final String TAG = "com.HuskySoft.metrobike.backend: TransitDetails.java: ";
-    
+
     /**
      * The arrival transit stop location.
      */
@@ -105,7 +105,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the arrivalStop field.
-     *
+     * 
      * @return the arrival stop
      */
     public Location getArrivalStop() {
@@ -115,7 +115,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the departureStop field.
-     *
+     * 
      * @return the departure stop
      */
     public Location getDepartureStop() {
@@ -125,7 +125,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the getArrivalTime field.
-     *
+     * 
      * @return the arrival time
      */
     public String getArrivalTime() {
@@ -135,7 +135,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the departureTime field.
-     *
+     * 
      * @return the departure time
      */
     public String getDepartureTime() {
@@ -145,7 +145,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the agencyName field.
-     *
+     * 
      * @return the agency name of the transit line
      */
     public String getAgencyName() {
@@ -155,7 +155,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the headsign field.
-     *
+     * 
      * @return the headsign of the transit line
      */
     public String getHeadsign() {
@@ -165,7 +165,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the lineShortName field.
-     *
+     * 
      * @return the short name of the transit line
      */
     public String getLineShortName() {
@@ -175,7 +175,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the vehicleType field.
-     *
+     * 
      * @return the vehicle type (i.e. bus)
      */
     public String getVehicleType() {
@@ -185,7 +185,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the vehicleIconURL field.
-     *
+     * 
      * @return the vehicle icon URL
      */
     public String getVehicleIconURL() {
@@ -195,7 +195,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Getter for the numStops field.
-     *
+     * 
      * @return the number of stops
      */
     public int getNumStops() {
@@ -205,7 +205,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the arrival stop location.
-     *
+     * 
      * @param lat
      *            the latitude for the arrival stop Location
      * @param lng
@@ -221,7 +221,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the departure stop location.
-     *
+     * 
      * @param lat
      *            the latitude for the departure stop Location
      * @param lng
@@ -237,7 +237,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the arrival time.
-     *
+     * 
      * @param newArrivalTime
      *            the transit arrival time
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -250,7 +250,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the departure time.
-     *
+     * 
      * @param newDepartureTime
      *            the transit departure time
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -263,7 +263,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the transit agency name.
-     *
+     * 
      * @param newAgencyName
      *            the agency name of transit line
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -276,7 +276,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the transit line headsign.
-     *
+     * 
      * @param newHeadsign
      *            the headsign of transit line
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -289,7 +289,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the transit line short name.
-     *
+     * 
      * @param newLineShortName
      *            the short name of transit line
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -302,7 +302,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the transit vehicle type.
-     *
+     * 
      * @param newVehicleType
      *            the vehicle type of transit line
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -315,7 +315,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the transit vehicle icon URL.
-     *
+     * 
      * @param newVehicleIconURL
      *            the transit vehicle icon URL
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -328,7 +328,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Sets the number of stops.
-     *
+     * 
      * @param newNumStops
      *            the number of stops
      * @return the modified TransitDetails, for Builder pattern purposes
@@ -342,7 +342,7 @@ public final class TransitDetails implements Serializable {
     /**
      * Setter for the indent field. Affects the amount of indentation used in
      * the toString() method.
-     *
+     * 
      * @param newIndent
      *            the new indent value.
      */
@@ -357,7 +357,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * This is the getter for the indent field.
-     *
+     * 
      * @return the amount to indent.
      */
     public int getIndent() {
@@ -370,28 +370,21 @@ public final class TransitDetails implements Serializable {
         StringBuilder transitDetailsString = new StringBuilder();
         String extraIndent = indentString + Utility.getIndentString();
         transitDetailsString.append(indentString + "Transit Details:\n");
-        transitDetailsString.append(extraIndent + "Arrival Stop: "
-        + arrivalStop.toString() + "\n");
-        transitDetailsString.append(extraIndent + "Departure Stop: "
-        + departureStop.toString() + "\n");
-        transitDetailsString.append(extraIndent + "Agency Name: "
-                + agencyName + "\n");
-        transitDetailsString.append(extraIndent + "Headsign: "
-                + headsign + "\n");
-        transitDetailsString.append(extraIndent + "Line Short Name: "
-                + lineShortName + "\n");
-        transitDetailsString.append(extraIndent + "Vehicle Type: "
-                + vehicleType + "\n");
-        transitDetailsString.append(extraIndent + "Vehicle Icon URL: "
-                + vehicleIconURL + "\n");
-        transitDetailsString.append(extraIndent + "Number of Stops: "
-                + numStops + "\n");
+        transitDetailsString.append(extraIndent + "Arrival Stop: " + arrivalStop.toString() + "\n");
+        transitDetailsString.append(extraIndent + "Departure Stop: " + departureStop.toString()
+                + "\n");
+        transitDetailsString.append(extraIndent + "Agency Name: " + agencyName + "\n");
+        transitDetailsString.append(extraIndent + "Headsign: " + headsign + "\n");
+        transitDetailsString.append(extraIndent + "Line Short Name: " + lineShortName + "\n");
+        transitDetailsString.append(extraIndent + "Vehicle Type: " + vehicleType + "\n");
+        transitDetailsString.append(extraIndent + "Vehicle Icon URL: " + vehicleIconURL + "\n");
+        transitDetailsString.append(extraIndent + "Number of Stops: " + numStops + "\n");
         return transitDetailsString.toString();
     }
 
     /**
      * Implements a custom serialization of a TransitDetails object.
-     *
+     * 
      * @param out
      *            the ObjectOutputStream to write to
      * @throws IOException
@@ -416,7 +409,7 @@ public final class TransitDetails implements Serializable {
 
     /**
      * Implements a custom deserialization of a TransitDetails object.
-     *
+     * 
      * @param in
      *            the ObjectInputStream to read from
      * @throws IOException
@@ -424,13 +417,12 @@ public final class TransitDetails implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
-    private void readObject(final ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
         // in future versions.
         // The order must be the same as the writing order in writeObject()
-    	arrivalStop = (Location) in.readObject();
+        arrivalStop = (Location) in.readObject();
         departureStop = (Location) in.readObject();
         arrivalTime = (String) in.readObject();
         departureTime = (String) in.readObject();
