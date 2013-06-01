@@ -97,7 +97,7 @@ public final class Utility {
      * The default size for what a single indent is. (For the toString Methods)
      */
     private static final String INDENT_STRING = "    ";
-
+    
     /**
      * 
      * @author dutchscout

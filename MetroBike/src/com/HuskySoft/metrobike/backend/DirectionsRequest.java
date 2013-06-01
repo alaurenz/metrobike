@@ -205,6 +205,24 @@ public final class DirectionsRequest implements Serializable {
     }
 
     /**
+     * Disables Internet queries so searches can be cancelled. To cancel
+     * doRequest(), call this method, then wait for the method to return, then
+     * call enableBackendQueries() to re-enable the backend. This is a static
+     * method, so all current queries will eventually (upon web failure) be
+     * cancelled.
+     */
+    public static void disableBackendQueries() {
+        GoogleAPIWrapper.disableAPIConnection();
+    }
+
+    /**
+     * Call this to re-enable web queries, after calling disableBackenQueries().
+     */
+    public static void enableBackendQueries() {
+        GoogleAPIWrapper.enableAPIConnection();
+    }
+
+    /**
      * Holds the parameters of a request for directions. Made separate from
      * DirectionsRequest so it can be passed to various Algorithm
      * implementations.
@@ -238,7 +256,12 @@ public final class DirectionsRequest implements Serializable {
          * Represents a number-based option that hasn't been specified by the
          * user.
          */
-        public static final long DONT_CARE = -1;
+        public static final long DONT_CARE = Long.MIN_VALUE;
+
+        /**
+         * String representation of DONT_CARE;
+         */
+        public static final String DONT_CARE_STRING = "<don't care>";
 
         /**
          * The Android log tag for this inner class.
@@ -530,12 +553,26 @@ public final class DirectionsRequest implements Serializable {
         @Override
         public String toString() {
             return "RequestParameters:" + "\nstartAddress: " + startAddress + "\nendAddress: "
-                    + endAddress + "\narrivalTime: " + arrivalTime + "\ndepartureTime: "
-                    + departureTime + "\ntravelMode: " + travelMode.toString()
-                    + "\nminDistanceToBikeInMeters: " + minDistanceToBikeInMeters
-                    + "\nmaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters
-                    + "\nminNumberBusTransfers: " + minNumberBusTransfers
-                    + "\nmaxNumberBusTransfers: " + maxNumberBusTransfers + "\n";
+                    + endAddress + "\narrivalTime: " + optionToString(arrivalTime)
+                    + "\ndepartureTime: " + optionToString(departureTime) + "\ntravelMode: "
+                    + travelMode.toString() + "\nminDistanceToBikeInMeters: "
+                    + optionToString(minDistanceToBikeInMeters) + "\nmaxDistanceToBikeInMeters: "
+                    + optionToString(maxDistanceToBikeInMeters) + "\nminNumberBusTransfers: "
+                    + optionToString(minNumberBusTransfers) + "\nmaxNumberBusTransfers: "
+                    + optionToString(maxNumberBusTransfers) + "\n";
+        }
+
+        /**
+         * Returns the number as a string, or "Don't care" if it matches the
+         * DONT_CARE constant value
+         * 
+         * @param toFormat
+         *            the number to format
+         * @return the number as a string, or "Don't care" if it matches the
+         *         DONT_CARE constant value
+         */
+        private String optionToString(final long toFormat) {
+            return (toFormat == DONT_CARE) ? DONT_CARE_STRING : "" + toFormat;
         }
 
     }
@@ -656,12 +693,12 @@ public final class DirectionsRequest implements Serializable {
     /**
      * Set the minimum number of bus transfers. This parameter is optional.
      * 
-     * @param newMinNumberBusTransfers
+     * @param dontCare
      *            the minimum number of bus transfers.
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
      */
-    public DirectionsRequest setMinNumberBusTransfers(final int newMinNumberBusTransfers) {
+    public DirectionsRequest setMinNumberBusTransfers(final long newMinNumberBusTransfers) {
         System.out.println(TAG + "setMinNumberBusTransfers()->newMinNumberBusTransfers: "
                 + newMinNumberBusTransfers);
         myParams.minNumberBusTransfers = newMinNumberBusTransfers;
@@ -676,7 +713,7 @@ public final class DirectionsRequest implements Serializable {
      * @return the modified DirectionsRequest object. Used as part of the
      *         builder pattern.
      */
-    public DirectionsRequest setMaxNumberBusTransfers(final int newMaxNumberBusTransfers) {
+    public DirectionsRequest setMaxNumberBusTransfers(final long newMaxNumberBusTransfers) {
         System.out.println(TAG + "setMaxNumberBusTransfers()->newMaxNumberBusTransfers: "
                 + newMaxNumberBusTransfers);
         myParams.maxNumberBusTransfers = newMaxNumberBusTransfers;

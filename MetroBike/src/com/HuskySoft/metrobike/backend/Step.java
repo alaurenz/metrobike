@@ -554,7 +554,7 @@ public final class Step implements Serializable {
      * @throws ClassNotFoundException
      *             if a class is not found
      */
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings("unchecked")
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Read each field from the stream in a specific order.
         // Specifying this order helps shield the class from problems
