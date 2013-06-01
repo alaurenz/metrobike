@@ -20,9 +20,7 @@ import com.HuskySoft.metrobike.backend.TravelMode;
 /**
  * This class tests the DirectionsRequest class.
  * 
- * @author coreyh3
- * 
- * check style: Sam Wilson
+ * @author coreyh3 check style: Sam Wilson
  */
 public final class DirectionsRequestTest extends TestCase {
 
@@ -50,25 +48,53 @@ public final class DirectionsRequestTest extends TestCase {
      * The max distance to bike in meters.
      */
     private static final int MAX_DIST_IN_METER = 2000;
-    
+
     /**
      * The min distance to bike in meters.
      */
     private static final int MIN_DIST_IN_METER = 1000;
-    
+
     /**
      * The arrival time in ms.
      */
     private static final int ARRIVAL_TIME = 4000000;
-    
+
     /**
      * The departure time.
      */
     private static final int DEPARTURE_TIME = 100;
+
+    /**
+     * An output constant.
+     */
+    private static final String ACTUAL_STATUS_WAS_LABEL = "Actual status for request.doRequest() call was: ";
+
     /**
      * This holds a directionsRequest object for use by other testing methods.
      */
     private DirectionsRequest request = null;
+
+    /**
+     * A private variable for getting results back from a testing thread. See
+     * the testCancelRunningQuery() test.
+     */
+    private volatile DirectionsStatus threadedResult;
+
+    /**
+     * A thread class for running doRequest() in a separate thread. Used for
+     * testing the cancel feature.
+     * 
+     * @author dutchscout
+     */
+    private class RequestRunner implements Runnable {
+
+        @Override
+        public void run() {
+            setUp();
+            Thread.yield();
+            threadedResult = request.doRequest();
+        }
+    }
 
     /**
      * This sets up the test class to use a new directions request object in
@@ -88,8 +114,8 @@ public final class DirectionsRequestTest extends TestCase {
         request.setTravelMode(TravelMode.TRANSIT);
         request.setMinDistanceToBikeInMeters(MIN_DIST_IN_METER);
         request.setMaxDistanceToBikeInMeters(MAX_DIST_IN_METER);
-        request.setMinNumberBusTransfers(0);
-        request.setMaxNumberBusTransfers(0);
+        request.setMinNumberBusTransfers(RequestParameters.DONT_CARE);
+        request.setMaxNumberBusTransfers(RequestParameters.DONT_CARE);
     }
 
     /**
@@ -100,13 +126,14 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         String expected = "DirectionsRequest: RequestParameters:\nstartAddress: 6504 "
                 + "Latona Ave NE,Seattle,WA\n" + "endAddress: 3801 Brooklyn Ave NE,Seattle,WA\n"
-                + "arrivalTime: 4000000\n" + "departureTime: -1\n" + "travelMode: TRANSIT\n"
-                + "minDistanceToBikeInMeters: 1000\n" + "maxDistanceToBikeInMeters: 2000\n"
-                + "minNumberBusTransfers: 0\n" + "maxNumberBusTransfers: 0\n" + "solutions: null";
+                + "arrivalTime: 4000000\n" + "departureTime: " + RequestParameters.DONT_CARE_STRING
+                + "\n" + "travelMode: TRANSIT\n" + "minDistanceToBikeInMeters: 1000\n"
+                + "maxDistanceToBikeInMeters: 2000\n" + "minNumberBusTransfers: "
+                + RequestParameters.DONT_CARE_STRING + "\n" + "maxNumberBusTransfers: "
+                + RequestParameters.DONT_CARE_STRING + "\n" + "solutions: null";
 
         String actual = request.toString();
-        Assert.assertEquals("actual toString for the DirectionRequest object was: " + actual,
-                expected, actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual, expected, actual);
     }
 
     /**
@@ -129,9 +156,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -153,9 +178,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -179,9 +202,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -200,9 +221,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setDepartureTime(ARRIVAL_TIME);
 
         DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -215,9 +234,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setStartAddress(null);
 
         DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -229,9 +246,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -245,9 +260,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setDepartureTime(ARRIVAL_TIME);
 
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -260,9 +273,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setStartAddress(null);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -275,9 +286,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setStartAddress("");
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -289,9 +298,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setEndAddress(null);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -303,9 +310,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setEndAddress("");
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -318,9 +323,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setArrivalTime(RequestParameters.DONT_CARE);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -335,9 +338,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setTravelMode(TravelMode.BICYCLING);
         request.setArrivalTime(0);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -351,9 +352,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         request.setTravelMode(TravelMode.WALKING);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -368,9 +367,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setMinDistanceToBikeInMeters(MIN_DIST_BIKE_METER);
         request.setMaxDistanceToBikeInMeters(MAX_DIST_BIKE_METER);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -385,9 +382,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setMinNumberBusTransfers(1 + 1 + 1);
         request.setMaxNumberBusTransfers(1 + 1);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -401,9 +396,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         request.setMinNumberBusTransfers(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -419,9 +412,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         request.setMaxNumberBusTransfers(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -435,9 +426,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         request.setMinDistanceToBikeInMeters(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -487,9 +476,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         request.setMaxDistanceToBikeInMeters(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -519,6 +506,30 @@ public final class DirectionsRequestTest extends TestCase {
     }
 
     /**
+     * WhiteBox: Tests the cancel feature by starting a test query, disabling
+     * the backend query system, waiting for the test query to finish, and
+     * re-enabling the backend query system.
+     */
+    public void testCancelRunningQuery() {
+        threadedResult = null;
+
+        Thread requestThread = new Thread(new RequestRunner());
+        requestThread.start();
+        DirectionsRequest.disableBackendQueries();
+
+        try {
+            requestThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Assert.assertEquals("Backend query didn't stop when disabled!",
+                DirectionsStatus.CONNECTION_ERROR, threadedResult);
+
+        DirectionsRequest.enableBackendQueries();
+    }
+
+    /**
      * BlackBox: Tests to be sure we can safely serialize and deserialize a
      * DirectionsRequest object. This functionality is used in the
      * intent-passing system.
@@ -528,8 +539,7 @@ public final class DirectionsRequestTest extends TestCase {
      * @throws ClassNotFoundException
      *             if a class cannot be found
      */
-    public void testSerializationTestEmptyDRObject() throws IOException,
-            ClassNotFoundException {
+    public void testSerializationTestEmptyDRObject() throws IOException, ClassNotFoundException {
         DirectionsRequest testRequest = new DirectionsRequest();
 
         // Serialize the empty request, then de-serialize it
@@ -552,8 +562,7 @@ public final class DirectionsRequestTest extends TestCase {
      * @throws ClassNotFoundException
      *             if a class cannot be found
      */
-    public void testSerializationTestNonEmptyDRObject() throws IOException,
-            ClassNotFoundException {
+    public void testSerializationTestNonEmptyDRObject() throws IOException, ClassNotFoundException {
         setUp();
 
         // Serialize the request, then de-serialize it
@@ -584,9 +593,7 @@ public final class DirectionsRequestTest extends TestCase {
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -608,9 +615,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
         DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -633,9 +638,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         DirectionsStatus expected = DirectionsStatus.CONNECTION_ERROR;
         DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -654,9 +657,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
         DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**
@@ -678,9 +679,7 @@ public final class DirectionsRequestTest extends TestCase {
 
         DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
         DirectionsStatus actual = request.doRequest();
-        Assert.assertEquals(
-                "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual);
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }
 
     /**

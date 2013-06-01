@@ -20,7 +20,7 @@ import org.json.JSONObject;
  *         addresses. A Route object can be created by parsing json or by
  *         creating a blank route and adding to it.
  */
-public final class Route implements Serializable, Comparable<Route>{
+public final class Route implements Serializable, Comparable<Route> {
     /**
      * Part of serializability, this id tracks if a serialized object can be
      * deserialized using this version of the class.
@@ -35,7 +35,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * TAG for logging statements.
      */
     private static final String TAG = "com.HuskySoft.metrobike.backend: Route.java: ";
-    
+
     /**
      * Default value for the route summary.
      */
@@ -67,7 +67,7 @@ public final class Route implements Serializable, Comparable<Route>{
      * Google-Maps-indicated warnings that must be displayed for this route.
      */
     private List<String> warnings;
-    
+
     /**
      * Constructs an empty Route.
      */
@@ -84,7 +84,8 @@ public final class Route implements Serializable, Comparable<Route>{
      * @param jsonRoute
      *            the JSON to parse into a route object
      * @return A route based on the passed json_src
-     * @throws JSONException If parsing the JSON fails
+     * @throws JSONException
+     *             If parsing the JSON fails
      */
     public static Route buildRouteFromJSON(final JSONObject jsonRoute) throws JSONException {
         System.out.println(TAG + "buildRouteFromJSON()->Entering this method.");
@@ -116,21 +117,25 @@ public final class Route implements Serializable, Comparable<Route>{
         System.out.println(TAG + "addLeg()->toAdd: " + toAdd);
 
         // Update neBound
-        //neBound = Location.makeNorthEastBound(neBound, toAdd.getStartLocation());
-        //neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
+        // neBound = Location.makeNorthEastBound(neBound,
+        // toAdd.getStartLocation());
+        // neBound = Location.makeNorthEastBound(neBound,
+        // toAdd.getEndLocation());
         neBound = Location.makeNorthEastBound(neBound, toAdd.getNeBound());
 
         // Update swBound
-        //swBound = Location.makeSouthWestBound(swBound, toAdd.getStartLocation());
-        //swBound = Location.makeSouthWestBound(swBound, toAdd.getEndLocation());
+        // swBound = Location.makeSouthWestBound(swBound,
+        // toAdd.getStartLocation());
+        // swBound = Location.makeSouthWestBound(swBound,
+        // toAdd.getEndLocation());
         swBound = Location.makeSouthWestBound(swBound, toAdd.getSwBound());
-        
+
         // Add the leg to our list
         legList.add(toAdd);
-        
+
         // TODO: consider if/how we should build the new polyline here.
     }
-    
+
     /**
      * Add a new leg to this route at the beginning of route.
      * 
@@ -140,15 +145,19 @@ public final class Route implements Serializable, Comparable<Route>{
     public void addLegBeginning(final Leg toAdd) {
         System.out.println(TAG + "addLegBeginning()->toAdd: " + toAdd);
         // Update neBound
-        //neBound = Location.makeNorthEastBound(neBound, toAdd.getStartLocation());
-        //neBound = Location.makeNorthEastBound(neBound, toAdd.getEndLocation());
+        // neBound = Location.makeNorthEastBound(neBound,
+        // toAdd.getStartLocation());
+        // neBound = Location.makeNorthEastBound(neBound,
+        // toAdd.getEndLocation());
         neBound = Location.makeNorthEastBound(neBound, toAdd.getNeBound());
 
         // Update swBound
-        //swBound = Location.makeSouthWestBound(swBound, toAdd.getStartLocation());
-        //swBound = Location.makeSouthWestBound(swBound, toAdd.getEndLocation());
+        // swBound = Location.makeSouthWestBound(swBound,
+        // toAdd.getStartLocation());
+        // swBound = Location.makeSouthWestBound(swBound,
+        // toAdd.getEndLocation());
         swBound = Location.makeSouthWestBound(swBound, toAdd.getSwBound());
-        
+
         // Add the leg to our list
         legList.add(0, toAdd);
     }
@@ -244,13 +253,12 @@ public final class Route implements Serializable, Comparable<Route>{
         System.out.println(TAG + "getDurationInSeconds()->myDuration: " + myDuration);
         return myDuration;
     }
-    
+
     /**
-     * Returns the Route's total duration in the following format:
-     * "XX days, XX hours, XX minutes"
+     * Returns the Route's total duration in the following format.
+     * "XX days, XX hours, XX minutes".
      * 
-     * @return the Route's total duration as a human-readable 
-     *          String
+     * @return the Route's total duration as a human-readable String.
      */
     public String getDurationHumanReadable() {
         long totalDurationSeconds = getDurationInSeconds();
@@ -258,7 +266,7 @@ public final class Route implements Serializable, Comparable<Route>{
         System.out.println(TAG + "getDurationHumanReadable()->humanReadable: " + humanReadable);
         return humanReadable;
     }
-    
+
     /**
      * Returns an unmodifiable list of Legs to complete this Route.
      * 
@@ -307,7 +315,7 @@ public final class Route implements Serializable, Comparable<Route>{
         }
         return toReturn;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder routeString = new StringBuilder("Route:\n");
@@ -363,19 +371,21 @@ public final class Route implements Serializable, Comparable<Route>{
         summary = (String) in.readObject();
         warnings = (List<String>) in.readObject();
     }
-    
+
     /**
-     * Overwrite compareTo method
+     * Overwrite compareTo method.
+     * 
      * @param other
-     * @return
+     *            the route to compare to.
+     * @return whether or not the route was less, greater than, or equal to the
+     *         other route.
      */
-    public int compareTo(Route other) {
+    public int compareTo(final Route other) {
         System.out.println(TAG + "compareTo()->Entering this method.");
         if (this.getDurationInSeconds() < other.getDurationInSeconds()) {
             System.out.println(TAG + "compareTo()->Exiting this method.");
             return -1;
-        } else if (this.getDurationInSeconds()
-        		== other.getDurationInSeconds()) {
+        } else if (this.getDurationInSeconds() == other.getDurationInSeconds()) {
             System.out.println(TAG + "compareTo()->Exiting this method.");
             return 0;
         } else {

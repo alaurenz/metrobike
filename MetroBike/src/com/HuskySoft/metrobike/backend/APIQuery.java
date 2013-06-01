@@ -8,10 +8,11 @@ import java.io.IOException;
 /**
  * @author coreyh3
  * 
- * This class is an interface that is used by both the actual class and the stub class,
- * as defined in the lecture slides: 
- * https://www.cs.washington.edu/education/courses/403/13sp/lectures/14-integrationtesting.ppt
- *
+ *         This class is an interface that is used by both the actual class and
+ *         the stub class, as defined in the lecture slides:
+ *         https://www.cs.washington
+ *         .edu/education/courses/403/13sp/lectures/14-integrationtesting.ppt
+ * 
  */
 public interface APIQuery {
     /**
@@ -24,5 +25,5 @@ public interface APIQuery {
      * @throws IOException
      *             if the connection fails for any reason
      */
-    public String doQuery(final String theURL) throws IOException;
+    String doQuery(final String theURL) throws IOException;
 }

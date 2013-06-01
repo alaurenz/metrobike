@@ -386,7 +386,7 @@ public class NavigateActivity extends FragmentActivity {
                 
                 // draw the bus icon
                 if (s.getTravelMode() == TravelMode.TRANSIT) {
-                	boolean getIcon = true;
+                    boolean getIcon = true;
                     Thread markerThread = new Thread(new MarkerThread(s));
                     markerThread.start();                    
                     try {
@@ -407,27 +407,27 @@ public class NavigateActivity extends FragmentActivity {
                 }
 
                 if (i == currentLeg && j == currentStep) {
-                	LatLng ll = com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
-                    		.getStartLocation());
+                    LatLng ll = com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
+                            .getStartLocation());
                     // set the camera to focus on the step
                     CameraUpdate update = CameraUpdateFactory.newLatLngZoom(
                             ll, com.HuskySoft.metrobike.ui.utility.Utility
                                     .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth));
                     googleMap.animateCamera(update, ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
-                	
+                    
                     if (s.getTravelMode() == TravelMode.TRANSIT) {
-                    	googleMap.addPolyline(polylineOptions
+                        googleMap.addPolyline(polylineOptions
                                 .color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
                                 .width(POLYLINE_THICK));
                     } else {
-                    	googleMap.addPolyline(polylineOptions
+                        googleMap.addPolyline(polylineOptions
                                 .color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
                                 .width(POLYLINE_THIN).zIndex(1));
                     }
                 } else {
                     if (s.getTravelMode() == TravelMode.TRANSIT) {
                         googleMap.addPolyline(polylineOptions
-                        		.color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                                .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
                                         DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
                                 .width(POLYLINE_THICK));
                     } else {
