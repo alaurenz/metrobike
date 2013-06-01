@@ -37,7 +37,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 /**
  * This class shows the detail of the routes step by step.
  * 
- * @author Xinyun Chen, Sam Wilson
+ * @author Xinyun Chen, Sam Wilson, Shuo Wang
  * 
  */
 

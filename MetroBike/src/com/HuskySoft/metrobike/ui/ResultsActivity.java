@@ -40,7 +40,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
  * This class shows the result and display it onto the screen.
- * @author mengwan, Sam Wilson
+ * @author mengwan, Sam Wilson, Shuo Wang
  * 
  */
 public class ResultsActivity extends Activity {

@@ -101,31 +101,29 @@
 
        <ImageButton
             android:id="@+id/imageButtonCurrentLocationFrom"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignLeft="@+id/editTextStartFrom"
             android:layout_alignTop="@+id/editTextStartFrom"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="2dp"
+            android:padding="8dp"
             android:adjustViewBounds="true"
             android:background="@null"
             android:contentDescription="@string/button_clear_from_desc"
-            android:padding="0dp"
             android:scaleType="fitCenter"
             android:src="@drawable/current_location_select" />
        
         <ImageButton
             android:id="@+id/imageButtonCurrentLocationTo"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignLeft="@+id/editTextTo"
             android:layout_alignTop="@+id/editTextTo"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="2dp"
+            android:padding="8dp"
             android:adjustViewBounds="true"
             android:background="@null"
             android:contentDescription="@string/button_clear_from_desc"
-            android:padding="0dp"
             android:scaleType="fitCenter"
             android:src="@drawable/current_location_select" />
        
@@ -137,10 +135,11 @@
             android:layout_alignTop="@+id/editTextStartFrom"
             android:layout_marginRight="5dp"
             android:layout_marginTop="7dp"
+            android:padding="5dp"
             android:adjustViewBounds="true"
             android:background="@null"
             android:contentDescription="@string/button_clear_from_desc"
-            android:padding="0dp"
+            
             android:scaleType="fitCenter"
             android:src="@drawable/clear"
             android:visibility="invisible" />
@@ -153,10 +152,10 @@
             android:layout_alignTop="@+id/editTextTo"
             android:layout_marginRight="5dp"
             android:layout_marginTop="7dp"
+            android:padding="5dp"
             android:adjustViewBounds="true"
             android:background="@null"
             android:contentDescription="@string/button_clear_to_desc"
-            android:padding="0dp"
             android:scaleType="fitCenter"
             android:src="@drawable/clear"
             android:visibility="invisible" />
@@ -230,16 +229,15 @@
 
         <Button
             android:id="@+id/buttonFind"
+            android:background="@drawable/custom_btn_green"
             android:layout_width="200dp"
             android:layout_height="45dp"
             android:textSize="22sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:background="#54BF83"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:drawable="@drawable/search"
             android:text="@string/button_find" />
     </RelativeLayout>
         
