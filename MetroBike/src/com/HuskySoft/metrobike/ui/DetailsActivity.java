@@ -7,8 +7,10 @@ import java.util.List;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Html.ImageGetter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +53,11 @@ public class DetailsActivity extends Activity {
      * TextView to show destination address.
      */
     private TextView destination;
+	
+	/**
+     * The size of the bus and bicycle icons.
+     */
+    private static final int IMAGE_SIZE = 35;
 
     /**
      * onCreate function of DetailsActivity class Display the details of
@@ -180,15 +187,31 @@ public class DetailsActivity extends Activity {
         // sets up details
         Route displayRoute = routes.get(currRoute);
         List<Leg> legs = displayRoute.getLegList();
-        int count = 1;
         start.append(legs.get(0).getStartAddress());
         for (int i = 0; i < legs.size(); i++) {
             Leg curLeg = legs.get(i);
             List<Step> steps = curLeg.getStepList();
             for (int j = 0; j < steps.size(); j++) {
-                Step s = steps.get(j);
-                directions.append("Step " + count + ": ");
+                final Step s = steps.get(j);
+
+            	// Add the bus or bicycle icon for each step
+                ImageGetter imgGetter = new ImageGetter() {
+            		public Drawable getDrawable(String source) {
+                		Drawable drawable = null;
+                        if (s.getTravelMode() != TravelMode.TRANSIT) {   
+                        	drawable = getResources().getDrawable(R.drawable.bicycle_icon);
+                        } else {
+                        	drawable = getResources().getDrawable(R.drawable.bus_icon);
+                        }
+                        drawable.setBounds(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+                        return drawable;
+                    }
+                 };
+            	String image = "<img src=\"mode\"/>";
+                directions.append(Html.fromHtml(image, imgGetter, null));
                 
+                // Add duration time for each step
+                directions.append("  ( " + s.getDurationHumanReadable() + " )\n");
                 
                 // Note: DO NOT combine multiple directions.append() calls
                 // into one. Otherwise, the format (bold, italics, etc.) 
@@ -217,7 +240,6 @@ public class DetailsActivity extends Activity {
                 }   
                 
                 directions.append("\n");
-                count++;
             }
         }
         destination.append(legs.get(legs.size() - 1).getEndAddress());

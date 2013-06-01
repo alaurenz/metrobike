@@ -13,10 +13,35 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/directionsStart"
-                style="@style/textview_style"
-                android:text="@string/history_from" />
+            <RelativeLayout
+        		android:layout_width="wrap_content"
+       			android:layout_height="wrap_content" >
+        
+            	<ImageView
+            		android:id="@+id/imageViewA"
+            		android:layout_width="20dp"
+            		android:layout_height="20dp"
+            		android:layout_marginTop="15dp"
+            		android:layout_alignParentLeft="true"
+            		android:layout_marginLeft="10dp"
+            		android:contentDescription="@string/image_desc"
+            		android:padding="0dp"
+            		android:src="@drawable/a" />
+            
+            	<TextView
+                	android:id="@+id/directionsStart"
+					android:text="@string/history_from"
+           			android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:layout_marginLeft="5dp"
+            		android:layout_marginRight="5dp"
+            		android:layout_marginTop="10dp"
+            		android:paddingTop="5dp"
+            		android:paddingBottom="10dp"
+            		android:paddingLeft="5dp"
+            		android:paddingRight="5dp"
+            		android:layout_toRightOf="@+id/imageViewA" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/directions"
@@ -24,14 +49,41 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:textSize="18sp"
                 android:textIsSelectable="false" />
 
-            <TextView
-                android:id="@+id/directionsDest"
-                style="@style/textview_style"
-                android:layout_marginTop="10dp"
-                android:text="@string/history_to" />
+            <RelativeLayout
+        		android:layout_width="wrap_content"
+       			android:layout_height="wrap_content" >
+        
+            	<ImageView
+            		android:id="@+id/imageViewB"
+            		android:layout_width="20dp"
+            		android:layout_height="20dp"
+            		android:layout_marginTop="5dp"
+            		android:paddingBottom="60dp"
+            		android:layout_alignParentLeft="true"
+            		android:layout_marginLeft="10dp"
+            		android:contentDescription="@string/image_desc"
+            		android:padding="0dp"
+            		android:src="@drawable/b" />
+            
+            	<TextView
+                	android:id="@+id/directionsDest"
+					android:text="@string/history_to"
+           			android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:layout_marginLeft="5dp"
+            		android:layout_marginRight="5dp"
+            		android:layout_marginTop="0dp"
+            		android:paddingTop="5dp"
+            		android:paddingBottom="60dp"
+            		android:paddingLeft="5dp"
+            		android:paddingRight="5dp"
+            		android:layout_toRightOf="@+id/imageViewB" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -46,7 +98,7 @@
         <!-- android:visibility="gone" to disable this button -->
         <Button
             android:id="@+id/button_go_to_search"
-            style="@style/button_style_details"
+            style="@style/button"
             android:layout_weight=".33"
             android:onClick="goToSearchPage"
             android:text="@string/button_go_to_search"
@@ -54,14 +106,14 @@
 
         <Button
             android:id="@+id/button_go_to_result"
-            style="@style/button_style_details"
+            style="@style/button"
             android:layout_weight=".34"
             android:onClick="goToResults"
             android:text="@string/button_go_to_results" />
 
         <Button
             android:id="@+id/button_navigate"
-            style="@style/button_style_details"
+            style="@style/button"
             android:layout_weight=".33"
             android:onClick="goToNavigate"
             android:text="@string/button_navigate" />
