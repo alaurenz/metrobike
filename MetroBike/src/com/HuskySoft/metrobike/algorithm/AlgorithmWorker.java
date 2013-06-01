@@ -434,7 +434,8 @@ public abstract class AlgorithmWorker {
     
     /**
      * Replaces all walking Steps within given Route (assumed to be a transit
-     * Route) with bicycling directions Steps.
+     * Route) with bicycling directions Steps and re-queries API for all
+     * other steps so that transit departure times align.
      *
      * NOTE: this method only works for TransitTimeMode.DEPARTURE_TIME
      *
@@ -541,7 +542,8 @@ public abstract class AlgorithmWorker {
     
     /**
      * Replaces all walking Steps within given Route (assumed to be a transit
-     * Route) with bicycling directions Steps.
+     * Route) with bicycling directions Steps and re-queries API for all
+     * other steps so that transit arrival times align.
      *
      * NOTE: this method only works for TransitTimeMode.ARRIVAL_TIME
      *
