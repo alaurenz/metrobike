@@ -12,8 +12,19 @@ import com.HuskySoft.metrobike.backend.Location;
  * 
  * @author coreyh3
  * 
+ * check style: Sam Wilson
  */
 public class LocationTest extends TestCase {
+    /**
+     * The expected hashing value.
+     */
+    private static final int HASHING_VALUE = -1529164004;
+
+    /**
+     * The dalta value.
+     */
+    private static final double DELTA = .001;
+
     /**
      * This field holds a location object for use by the test methods.
      */
@@ -22,12 +33,12 @@ public class LocationTest extends TestCase {
     /**
      * The latitude of Seattle.
      */
-    private double latitude = 47.61;
+    private static final double LATITUDE = 47.61;
 
     /**
      * The longitude of Seattle.
      */
-    private double longitude = -122.33;
+    private static final double LONGITUDE = -122.33;
 
     /**
      * This initializes the Location field for use by the test methods.
@@ -35,22 +46,23 @@ public class LocationTest extends TestCase {
      * @throws Exception
      */
     // @Before
-    public void setUp() {
+    public final void setUp() {
         // Seattle
-        loc = new Location(latitude, longitude);
+        loc = new Location(LATITUDE, LONGITUDE);
     }
 
     /**
      * WhiteBox: This tests the getLatitude method.
      * 
      * @throws Exception
+     *             prevent any exceptions.
      */
     // @Test
-    public void test_getLatitudeTest() throws Exception {
+    public final void testGetLatitudeTest() throws Exception {
         setUp();
-        double expected = latitude;
+        double expected = LATITUDE;
         double actual = loc.getLatitude();
-        double delta = .001;
+        double delta = DELTA;
 
         Assert.assertEquals("Actual value of loc.getLatitude() was: " + actual, expected, actual,
                 delta);
@@ -60,11 +72,11 @@ public class LocationTest extends TestCase {
      * WhiteBox: This tests the getLongitude method.
      */
     // @Test
-    public void test_getLongitudeTest() {
+    public final void testGetLongitudeTest() {
         setUp();
-        double expected = longitude;
+        double expected = LONGITUDE;
         double actual = loc.getLongitude();
-        double delta = .001;
+        double delta = DELTA;
 
         Assert.assertEquals("Actual value of loc.getLongitude() was: " + actual, expected, actual,
                 delta);
@@ -74,9 +86,9 @@ public class LocationTest extends TestCase {
      * WhiteBox: This tests the hashCode method.
      */
     // @Test
-    public void test_hashCodeTest() {
+    public final void testHashCodeTest() {
         setUp();
-        int expected = -1529164004;
+        int expected = HASHING_VALUE;
         int actual = loc.hashCode();
         Assert.assertEquals("Actual value of loc.hashCode() was: " + actual, expected, actual);
     }
@@ -85,7 +97,7 @@ public class LocationTest extends TestCase {
      * WhiteBox: This tests the equals method.
      */
     // @Test
-    public void test_equalsTest() {
+    public final void testEqualsTest() {
         setUp();
         Assert.assertTrue("Actual value of loc.equals(loc) was: false", loc.equals(loc));
     }
@@ -95,7 +107,7 @@ public class LocationTest extends TestCase {
      * objects.
      */
     // @Test
-    public void test_equalsDiffObjectTest() {
+    public final void testEqualsDiffObjectTest() {
         setUp();
         Assert.assertFalse("Actual value of loc.equals(new LinkedList<String>()) was: true",
                 loc.equals(new LinkedList<String>()));
@@ -106,11 +118,11 @@ public class LocationTest extends TestCase {
      * longitude is incorrect.
      */
     // @Test
-    public void test_equalsWrongLatTest() {
+    public final void testEqualsWrongLatTest() {
         setUp();
         Assert.assertFalse(
                 "Actual value of loc.equals(new Location(latitude, latitude)) was: true",
-                loc.equals(new Location(latitude, latitude)));
+                loc.equals(new Location(LATITUDE, LATITUDE)));
     }
 
     /**
@@ -118,18 +130,18 @@ public class LocationTest extends TestCase {
      * latitude is incorrect. https://github.com/alaurenz/metrobike/issues/94
      */
     // @Test
-    public void test_equalsWrongLongTest() {
+    public final void testEqualsWrongLongTest() {
         setUp();
         Assert.assertTrue(
                 "Actual value of loc.equals(new Location(longitude, longitude)) was: false",
-                !loc.equals(new Location(longitude, longitude)));
+                !loc.equals(new Location(LONGITUDE, LONGITUDE)));
     }
 
     /**
      * WhiteBox: This tests the toString method.
      */
     // @Test
-    public void test_toStringTest() {
+    public final void testToStringTest() {
         setUp();
         String expected = "    Location:\n        Latitude: 47.61\n        Longitude: -122.33\n";
         loc.setIndent(2);
@@ -141,7 +153,7 @@ public class LocationTest extends TestCase {
      * WhiteBox: This tests the getIndent method.
      */
     // @Test
-    public void test_getIndentTest() {
+    public final void testGetIndentTest() {
         setUp();
         int expected = 2;
         loc.setIndent(expected);

@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -23,9 +22,49 @@ import com.HuskySoft.metrobike.backend.TravelMode;
  * 
  * @author coreyh3
  * 
+ * check style: Sam Wilson
  */
 public final class DirectionsRequestTest extends TestCase {
 
+    /**
+     * Max distance bike in meter.
+     */
+    private static final int MAX_DIST_BIKE_METER = 400;
+
+    /**
+     * Min distance bike in meter.
+     */
+    private static final int MIN_DIST_BIKE_METER = 500;
+
+    /**
+     * Negative bus transfer value.
+     */
+    private static final int NEGATIVE_MIN_BUS_TRANSFERS = -2;
+
+    /**
+     * Max bus transfer.
+     */
+    private static final int MAX_BUS_TRANSFER_1 = 5;
+
+    /**
+     * The max distance to bike in meters.
+     */
+    private static final int MAX_DIST_IN_METER = 2000;
+    
+    /**
+     * The min distance to bike in meters.
+     */
+    private static final int MIN_DIST_IN_METER = 1000;
+    
+    /**
+     * The arrival time in ms.
+     */
+    private static final int ARRIVAL_TIME = 4000000;
+    
+    /**
+     * The departure time.
+     */
+    private static final int DEPARTURE_TIME = 100;
     /**
      * This holds a directionsRequest object for use by other testing methods.
      */
@@ -45,10 +84,10 @@ public final class DirectionsRequestTest extends TestCase {
         String endAddress = "3801 Brooklyn Ave NE,Seattle,WA";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setArrivalTime(4000000);
+        request.setArrivalTime(ARRIVAL_TIME);
         request.setTravelMode(TravelMode.TRANSIT);
-        request.setMinDistanceToBikeInMeters(1000);
-        request.setMaxDistanceToBikeInMeters(2000);
+        request.setMinDistanceToBikeInMeters(MIN_DIST_IN_METER);
+        request.setMaxDistanceToBikeInMeters(MAX_DIST_IN_METER);
         request.setMinNumberBusTransfers(0);
         request.setMaxNumberBusTransfers(0);
     }
@@ -57,7 +96,7 @@ public final class DirectionsRequestTest extends TestCase {
      * WhiteBox: This tests the toString method.
      */
     // @Test
-    public void test_toStringTest() {
+    public void testToStringTest() {
         setUp();
         String expected = "DirectionsRequest: RequestParameters:\nstartAddress: 6504 "
                 + "Latona Ave NE,Seattle,WA\n" + "endAddress: 3801 Brooklyn Ave NE,Seattle,WA\n"
@@ -74,7 +113,7 @@ public final class DirectionsRequestTest extends TestCase {
      * BlackBox: This tests the doDummyRequest method in the success case.
      */
     // @Test
-    public void test_doDummyRequest1Test() {
+    public void testDoDummyRequest1Test() {
 
         request = new DirectionsRequest();
 
@@ -82,10 +121,10 @@ public final class DirectionsRequestTest extends TestCase {
         String endAddress = "3801 Brooklyn Ave NE,Seattle,WA";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setDepartureTime(4000000);
+        request.setDepartureTime(ARRIVAL_TIME);
         request.setTravelMode(TravelMode.MIXED);
-        request.setMinDistanceToBikeInMeters(1000);
-        request.setMaxDistanceToBikeInMeters(2000);
+        request.setMinDistanceToBikeInMeters(MIN_DIST_IN_METER);
+        request.setMaxDistanceToBikeInMeters(MAX_DIST_IN_METER);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -99,17 +138,17 @@ public final class DirectionsRequestTest extends TestCase {
      * BlackBox: This tests the doDummyRequest method in the success case.
      */
     // @Test
-    public void test_doDummyRequest2Test() {
+    public void testDoDummyRequest2Test() {
         request = new DirectionsRequest();
 
         String startAddress = "The Space Needle";
         String endAddress = "University of Washington, Seattle";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setDepartureTime(4000000);
+        request.setDepartureTime(ARRIVAL_TIME);
         request.setTravelMode(TravelMode.MIXED);
         request.setMinNumberBusTransfers(0);
-        request.setMaxNumberBusTransfers(5);
+        request.setMaxNumberBusTransfers(MAX_BUS_TRANSFER_1);
 
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -123,7 +162,7 @@ public final class DirectionsRequestTest extends TestCase {
      * BlackBox: This tests the doDummyRequest method in the success case.
      */
     // @Test
-    public void test_doDummyRequest3Test() {
+    public void testDoDummyRequest3Test() {
 
         request = new DirectionsRequest();
 
@@ -131,10 +170,10 @@ public final class DirectionsRequestTest extends TestCase {
         String endAddress = "Corey's place";
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
-        request.setArrivalTime(4000000);
+        request.setArrivalTime(ARRIVAL_TIME);
         request.setTravelMode(TravelMode.MIXED);
-        request.setMinDistanceToBikeInMeters(1000);
-        request.setMaxDistanceToBikeInMeters(2000);
+        request.setMinDistanceToBikeInMeters(MIN_DIST_IN_METER);
+        request.setMaxDistanceToBikeInMeters(MAX_DIST_IN_METER);
         request.setMinNumberBusTransfers(0);
         request.setMaxNumberBusTransfers(0);
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
@@ -153,12 +192,12 @@ public final class DirectionsRequestTest extends TestCase {
      *          us causing the test to fail.
      */
     // @Test
-    public void test_doRequestTest() {
+    public void testDoRequestTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         request.setArrivalTime(RequestParameters.DONT_CARE);
-        request.setDepartureTime(4000000);
+        request.setDepartureTime(ARRIVAL_TIME);
 
         DirectionsStatus actual = request.doRequest();
         Assert.assertEquals(
@@ -170,7 +209,7 @@ public final class DirectionsRequestTest extends TestCase {
      * WhiteBox: This tests the doRequest method with invalid params.
      */
     // @Test
-    public void test_doRequestInvalidParamsTest() {
+    public void testDoRequestInvalidParamsTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setStartAddress(null);
@@ -185,7 +224,7 @@ public final class DirectionsRequestTest extends TestCase {
      * WhiteBox: This tests the doDummyRequest with the arrival value set.
      */
     // @Test
-    public void test_doDummyRequest_ArrivalSetTest() {
+    public void testDoDummyRequestArrivalSetTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -199,11 +238,11 @@ public final class DirectionsRequestTest extends TestCase {
      * WhiteBox: This tests the doDummyRequest with the departure value set.
      */
     // @Test
-    public void test_doDummyRequestDepartureSetTest() {
+    public void testDoDummyRequestDepartureSetTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
         request.setArrivalTime(RequestParameters.DONT_CARE);
-        request.setDepartureTime(4000000);
+        request.setDepartureTime(ARRIVAL_TIME);
 
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
@@ -216,7 +255,7 @@ public final class DirectionsRequestTest extends TestCase {
      * null.
      */
     // @Test
-    public void test_doDummyRequestStartAddressNullTest() {
+    public void testDoDummyRequestStartAddressNullTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setStartAddress(null);
@@ -231,7 +270,7 @@ public final class DirectionsRequestTest extends TestCase {
      * ("").
      */
     // @Test
-    public void test_doDummyRequest_StartAddressEmptyTest() {
+    public void testDoDummyRequestStartAddressEmptyTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setStartAddress("");
@@ -245,7 +284,7 @@ public final class DirectionsRequestTest extends TestCase {
      * WhiteBox: This tests the doDummyRequest with the endAddress null.
      */
     // @Test
-    public void test_doDummyRequestEndAddressNullTest() {
+    public void testDoDummyRequestEndAddressNullTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setEndAddress(null);
@@ -259,7 +298,7 @@ public final class DirectionsRequestTest extends TestCase {
      * WhiteBox: This tests the doDummyRequest with an empty end address.
      */
     // @Test
-    public void test_doDummyRequestEndAddressEmptyTest() {
+    public void testDoDummyRequestEndAddressEmptyTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setEndAddress("");
@@ -274,7 +313,7 @@ public final class DirectionsRequestTest extends TestCase {
      * arrival times for a transit call.
      */
     // @Test
-    public void test_doDummyRequestFailToSetDepartureAndArrivalTimeforTransitOrMixedTest() {
+    public void testDoDummyRequestFailToSetDepartureAndArrivalTimeforTransitOrMixedTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
         request.setArrivalTime(RequestParameters.DONT_CARE);
@@ -289,7 +328,7 @@ public final class DirectionsRequestTest extends TestCase {
      * arrival times equal zero when bicycling.
      */
     // @Test
-    public void test_doDummyRequestBreakOnBicylingModeTest() {
+    public void testDoDummyRequestBreakOnBicylingModeTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
@@ -306,7 +345,7 @@ public final class DirectionsRequestTest extends TestCase {
      * walking.
      */
     // @Test
-    public void test_doDummyRequestInvalidTravelModeWalkingTest() {
+    public void testDoDummyRequestInvalidTravelModeWalkingTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
@@ -322,12 +361,12 @@ public final class DirectionsRequestTest extends TestCase {
      * than the max.
      */
     // @Test
-    public void test_doDummyRequestMinDistanceToBikeGreaterThanMaxDistanceTest() {
+    public void testDoDummyRequestMinDistanceToBikeGreaterThanMaxDistanceTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMinDistanceToBikeInMeters(500);
-        request.setMaxDistanceToBikeInMeters(400);
+        request.setMinDistanceToBikeInMeters(MIN_DIST_BIKE_METER);
+        request.setMaxDistanceToBikeInMeters(MAX_DIST_BIKE_METER);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -339,12 +378,12 @@ public final class DirectionsRequestTest extends TestCase {
      * than the max.
      */
     // @Test
-    public void test_doDummyRequestMinNumberOfTransfersGreaterThanMaxNumberTest() {
+    public void testDoDummyRequestMinNumberOfTransfersGreaterThanMaxNumberTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMinNumberBusTransfers(3);
-        request.setMaxNumberBusTransfers(2);
+        request.setMinNumberBusTransfers(1 + 1 + 1);
+        request.setMaxNumberBusTransfers(1 + 1);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -356,11 +395,11 @@ public final class DirectionsRequestTest extends TestCase {
      * 0.
      */
     // @Test
-    public void test_doDummyRequestMinNumberOfTransfersLessThanZeroTest() {
+    public void testDoDummyRequestMinNumberOfTransfersLessThanZeroTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMinNumberBusTransfers(-2);
+        request.setMinNumberBusTransfers(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -374,11 +413,11 @@ public final class DirectionsRequestTest extends TestCase {
      * @Bug https://github.com/alaurenz/metrobike/issues/93
      */
     // @Test
-    public void test_doDummyRequestMaxNumberOfTransfersLessThanZeroTest() {
+    public void testDoDummyRequestMaxNumberOfTransfersLessThanZeroTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMaxNumberBusTransfers(-2);
+        request.setMaxNumberBusTransfers(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -390,11 +429,11 @@ public final class DirectionsRequestTest extends TestCase {
      * 0.
      */
     // @Test
-    public void test_doDummyRequestMinDistanceToBikeLessThanZeroTest() {
+    public void testDoDummyRequestMinDistanceToBikeLessThanZeroTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMinDistanceToBikeInMeters(-2);
+        request.setMinDistanceToBikeInMeters(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -406,12 +445,12 @@ public final class DirectionsRequestTest extends TestCase {
      * time. It should throw an IllegalArgumentException that is caught.
      */
     // @Test
-    public void test_setDepartureThenArrivalTimeTest() {
+    public void testSetDepartureThenArrivalTimeTest() {
         setUp();
         request.setArrivalTime(RequestParameters.DONT_CARE);
-        request.setDepartureTime(100);
+        request.setDepartureTime(DEPARTURE_TIME);
         try {
-            request.setArrivalTime(100);
+            request.setArrivalTime(DEPARTURE_TIME);
         } catch (IllegalArgumentException iae) {
             // It should throw an exception here
             return;
@@ -425,10 +464,10 @@ public final class DirectionsRequestTest extends TestCase {
      * time. It should throw an IllegalArgumentException that is caught.
      */
     // @Test
-    public void test_setArrivalThenDepartureTimeTest() {
+    public void testSetArrivalThenDepartureTimeTest() {
         setUp();
         try {
-            request.setDepartureTime(100);
+            request.setDepartureTime(DEPARTURE_TIME);
         } catch (IllegalArgumentException iae) {
             // It should throw an exception here.
             return;
@@ -442,11 +481,11 @@ public final class DirectionsRequestTest extends TestCase {
      * 0.
      */
     // @Test
-    public void test_doDummyRequest_maxDistanceToBikeLessThanZeroTest() {
+    public void testDoDummyRequestMaxDistanceToBikeLessThanZeroTest() {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMaxDistanceToBikeInMeters(-2);
+        request.setMaxDistanceToBikeInMeters(NEGATIVE_MIN_BUS_TRANSFERS);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
@@ -457,7 +496,7 @@ public final class DirectionsRequestTest extends TestCase {
      * WhiteBox: This tests the getErrorMessages method.
      */
     // @Test
-    public void test_getErrorMessagesTest() {
+    public void testGetErrorMessagesTest() {
         setUp();
         String expected = null;
         request.doDummyRequest();
@@ -471,7 +510,7 @@ public final class DirectionsRequestTest extends TestCase {
      * list is not null.
      */
     // @Test
-    public void test_getSolutionsTest() {
+    public void testGetSolutionsTest() {
         setUp();
         request.doDummyRequest();
         List<Route> actual = request.getSolutions();
@@ -489,7 +528,8 @@ public final class DirectionsRequestTest extends TestCase {
      * @throws ClassNotFoundException
      *             if a class cannot be found
      */
-    public void test_serializationTestEmptyDRObject() throws IOException, ClassNotFoundException {
+    public void testSerializationTestEmptyDRObject() throws IOException,
+            ClassNotFoundException {
         DirectionsRequest testRequest = new DirectionsRequest();
 
         // Serialize the empty request, then de-serialize it
@@ -512,7 +552,8 @@ public final class DirectionsRequestTest extends TestCase {
      * @throws ClassNotFoundException
      *             if a class cannot be found
      */
-    public void test_serializationTestNonEmptyDRObject() throws IOException, ClassNotFoundException {
+    public void testSerializationTestNonEmptyDRObject() throws IOException,
+            ClassNotFoundException {
         setUp();
 
         // Serialize the request, then de-serialize it
@@ -524,12 +565,12 @@ public final class DirectionsRequestTest extends TestCase {
                 + " object should remain unchanged.", request.toString(),
                 recreatedRequest.toString());
     }
-    
+
     /**
-     * WhiteBox: Tests to make sure that when DoRequest is configured to use the 
+     * WhiteBox: Tests to make sure that when DoRequest is configured to use the
      * stubGoogleAPIWrapper it actually does.
      */
-    public void test_StubDoRequestCase1StandardResponse(){
+    public void testStubDoRequestCase1StandardResponse() {
         request = new DirectionsRequest();
 
         String startAddress = "302 NE 50th St,Seattle,WA";
@@ -537,9 +578,9 @@ public final class DirectionsRequestTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setTravelMode(TravelMode.BICYCLING);
-        
+
         request.setResource(new StubGoogleAPIWrapper());
-        
+
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
 
         DirectionsStatus actual = request.doRequest();
@@ -549,12 +590,13 @@ public final class DirectionsRequestTest extends TestCase {
     }
 
     /**
-     * WhiteBox:LoadTest: Test that uses the StubGoogleAPIWrapper and makes sure that the code can handle 
-     * large JSON responses.
+     * WhiteBox:LoadTest: Test that uses the StubGoogleAPIWrapper and makes sure
+     * that the code can handle large JSON responses.
      * 
-     * This load tests the system by returning an approximately 60,000 character String.
+     * This load tests the system by returning an approximately 60,000 character
+     * String.
      */
-    public final void test_stubDoRequestCase2StressTest() {
+    public void testStubDoRequestCase2StressTest() {
         request = new DirectionsRequest();
 
         String startAddress = "302 NE 50th St,Seattle,WA";
@@ -563,23 +605,23 @@ public final class DirectionsRequestTest extends TestCase {
         request.setEndAddress(endAddress);
         request.setTravelMode(TravelMode.BICYCLING);
         request.setResource(new StubGoogleAPIWrapper());
-        
+
         DirectionsStatus expected = DirectionsStatus.REQUEST_SUCCESSFUL;
         DirectionsStatus actual = request.doRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
                 actual);
     }
-    
+
     /**
-     * WhiteBox:SubSystem Disabled: Test that uses the StubGoogleAPIWrapper and makes 
-     * sure that the code can handle large JSON responses.
+     * WhiteBox:SubSystem Disabled: Test that uses the StubGoogleAPIWrapper and
+     * makes sure that the code can handle large JSON responses.
      * 
-     * This tests how the system handles not having an Internet connection.  It simulates this
-     * by having the stub throw a IOException(), which is what would happen if the system was not
-     * able to contact Google.
+     * This tests how the system handles not having an Internet connection. It
+     * simulates this by having the stub throw a IOException(), which is what
+     * would happen if the system was not able to contact Google.
      */
-    public final void test_stubDoRequestCase3ConnectionFailedThrowIOException() {
+    public void testStubDoRequestCase3ConnectionFailedThrowIOException() {
         request = new DirectionsRequest();
 
         String startAddress = "3801 Brooklyn Ave NE,Seattle,WA";
@@ -588,19 +630,19 @@ public final class DirectionsRequestTest extends TestCase {
         request.setEndAddress(endAddress);
         request.setTravelMode(TravelMode.BICYCLING);
         request.setResource(new StubGoogleAPIWrapper());
-        
+
         DirectionsStatus expected = DirectionsStatus.CONNECTION_ERROR;
         DirectionsStatus actual = request.doRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual); 
+                actual);
     }
-    
+
     /**
-     * WhiteBox: Test that uses the StubGoogleAPIWrapper and makes sure that the code can handle 
-     * large JSON responses.
+     * WhiteBox: Test that uses the StubGoogleAPIWrapper and makes sure that the
+     * code can handle large JSON responses.
      */
-    public final void test_stubDoRequestCase4GoogleReturnsNoResults() {
+    public void testStubDoRequestCase4GoogleReturnsNoResults() {
         request = new DirectionsRequest();
 
         String startAddress = "pig";
@@ -609,21 +651,22 @@ public final class DirectionsRequestTest extends TestCase {
         request.setEndAddress(endAddress);
         request.setTravelMode(TravelMode.BICYCLING);
         request.setResource(new StubGoogleAPIWrapper());
-        
+
         DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
         DirectionsStatus actual = request.doRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual); 
+                actual);
     }
-    
+
     /**
-     * WhiteBox: Test that uses the StubGoogleAPIWrapper and makes sure that the code can handle 
-     * large JSON responses.  Note that this actual request would technically return a 
-     * status of ZERO_RESULTS, but I can't get the system to generate an invalid query so 
-     * I'm using this one in conjunction with the stub.  
+     * WhiteBox: Test that uses the StubGoogleAPIWrapper and makes sure that the
+     * code can handle large JSON responses. Note that this actual request would
+     * technically return a status of ZERO_RESULTS, but I can't get the system
+     * to generate an invalid query so I'm using this one in conjunction with
+     * the stub.
      */
-    public final void test_stubDoRequestCase5GoogleDeniesRequest() {
+    public void testStubDoRequestCase5GoogleDeniesRequest() {
         request = new DirectionsRequest();
 
         String startAddress = "cow";
@@ -632,17 +675,17 @@ public final class DirectionsRequestTest extends TestCase {
         request.setEndAddress(endAddress);
         request.setTravelMode(TravelMode.BICYCLING);
         request.setResource(new StubGoogleAPIWrapper());
-        
+
         DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
         DirectionsStatus actual = request.doRequest();
         Assert.assertEquals(
                 "Actual status for request.doRequest() call was: " + actual.getMessage(), expected,
-                actual); 
+                actual);
     }
-    
+
     /**
      * Helper function for serializing a DirectionsRequest object.Help on
-     * testing this based on
+     * testing this based on.
      * http://www.ibm.com/developerworks/library/j-serialtest/index.html
      * 
      * @param toSerialize
@@ -651,18 +694,17 @@ public final class DirectionsRequestTest extends TestCase {
      * @throws IOException
      *             if an IO exception occurs during processing
      */
-    private byte[] helpSerialize(DirectionsRequest toSerialize) throws IOException {
-        ByteArrayOutputStream byte_out = new ByteArrayOutputStream();
-        ObjectOutputStream object_out = new ObjectOutputStream(byte_out);
-        object_out.writeObject(toSerialize);
-        object_out.close();
-        return byte_out.toByteArray();
+    private byte[] helpSerialize(final DirectionsRequest toSerialize) throws IOException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream objectOut = new ObjectOutputStream(byteOut);
+        objectOut.writeObject(toSerialize);
+        objectOut.close();
+        return byteOut.toByteArray();
     }
 
-    
     /**
      * Helper function for serializing a DirectionsRequest object.Help on
-     * testing this based on
+     * testing this based on.
      * http://www.ibm.com/developerworks/library/j-serialtest/index.html
      * 
      * @param toDeSerialize
@@ -672,13 +714,11 @@ public final class DirectionsRequestTest extends TestCase {
      *             if an IO exception occurs during processing
      * @throws ClassNotFoundException
      *             if a class cannot be found
-     * @throws OptionalDataException
-     *             if the object conversion is out of order
      */
-    private DirectionsRequest helpDeserialize(byte[] toDeSerialize) throws OptionalDataException,
-            ClassNotFoundException, IOException {
-        ByteArrayInputStream byte_in = new ByteArrayInputStream(toDeSerialize);
-        ObjectInputStream object_in = new ObjectInputStream(byte_in);
-        return (DirectionsRequest) object_in.readObject();
+    private DirectionsRequest helpDeserialize(final byte[] toDeSerialize)
+            throws ClassNotFoundException, IOException {
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(toDeSerialize);
+        ObjectInputStream objectIn = new ObjectInputStream(byteIn);
+        return (DirectionsRequest) objectIn.readObject();
     }
 }

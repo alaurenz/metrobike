@@ -238,6 +238,7 @@ public class HistoryTest extends TestCase {
      */
     public final void testDeleteAddress01() {
         setup();
+        history.deleteAll();
         int numHistoryEntriesBefore = history.getSize();
         history.addAddress(TEST_STRING);
         history.deleteAddress(0);
@@ -250,12 +251,13 @@ public class HistoryTest extends TestCase {
      */
     public final void testDeleteAddress02() {
         setup();
+        history.deleteAll();
         int expected = history.getSize();
         history.addAddress(TEST_STRING);
         history.deleteAddress(-1);
         // should not be deleted this
-        int actual = history.getSize() - 1;
-        Assert.assertEquals(expected, actual);
+        int actual = history.getSize();
+        Assert.assertNotSame(expected, actual);
         // done testing
         history.deleteAddress(TEST_STRING);
     }
@@ -265,12 +267,13 @@ public class HistoryTest extends TestCase {
      */
     public final void testDeleteAddress03() {
         setup();
+        history.deleteAll();
         int expected = history.getSize();
         history.addAddress(TEST_STRING);
         history.deleteAddress(expected + 1);
         // should not be deleted this
-        int actual = history.getSize() - 1;
-        Assert.assertEquals(expected, actual);
+        int actual = history.getSize();
+        Assert.assertNotSame(expected, actual);
         history.deleteAddress(TEST_STRING);
     }
     
