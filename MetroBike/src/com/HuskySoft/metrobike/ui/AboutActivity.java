@@ -13,9 +13,7 @@ import android.app.Activity;
  */
 public class AboutActivity extends Activity {
 
-    // More details will added in this about activity in beta
-    // version
-
+    // we will need to add some copyright issue in this activity.
     /**
      * {@inheritDoc}
      * 
@@ -27,5 +25,4 @@ public class AboutActivity extends Activity {
         // linked to the activity about xml
         setContentView(R.layout.activity_about);
     }
-
 }

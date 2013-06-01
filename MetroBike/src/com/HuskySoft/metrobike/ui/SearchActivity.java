@@ -1106,14 +1106,10 @@ public class SearchActivity extends Activity implements
         try {
             // append the address into exist file.
             fos = openFileOutput(History.FILENAME, Context.MODE_APPEND);
-            fos.write(address.getBytes());
-            // \n indicate the next address
-            fos.write("\n".getBytes());
+            History.writeOneAddressToFile(fos, address);
         } catch (FileNotFoundException e) {
             Log.i(TAG, "Cannot create history file");
-        } catch (IOException e) {
-            Log.i(TAG, "Connot write history into file");
-        } finally {
+        }  finally {
             try {
                 // close the file output stream.
                 if (fos != null) {

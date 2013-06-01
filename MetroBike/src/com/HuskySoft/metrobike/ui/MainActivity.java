@@ -36,11 +36,6 @@ public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
 
     /**
-     * The file name that we will write the history in.
-     */
-    private static final String FILENAME = "History";
-
-    /**
      * The latitude value of University of Washington.
      */
     private static final double LATITUDE = 47.65555089999999;
@@ -53,10 +48,6 @@ public class MainActivity extends FragmentActivity {
      * 2.0 the highest zoom out and 21.0 the lowest zoom in
      */
     private static final float ZOOM = 15.0f;
-    /**
-     * History object.
-     */
-    private History history;
 
     /**
      * The actual GoogleMap object.
@@ -86,8 +77,8 @@ public class MainActivity extends FragmentActivity {
         // only initialize the map setting
         MapSetting.getInstance(googleMap);
         // onResume should be called so it can update the map
-
-        history = History.getInstance();
+        // create a new empty history object
+        History.getInstance();
         readFromHistoryFile();
         // Showing log in console for debugging. To be removed for formal
         // release.
@@ -164,28 +155,11 @@ public class MainActivity extends FragmentActivity {
      */
     private void readFromHistoryFile() {
         FileInputStream fis = null;
-        StringBuilder sb;
         try {
-            fis = openFileInput(FILENAME);
-            sb = new StringBuilder();
-            int readByte;
-            // read one byte at a time.
-            while ((readByte = fis.read()) != -1) {
-                char c = (char) readByte;
-                if (c == '\n') {
-                    // if we hit the new line, that's the other address.
-                    String address = sb.toString();
-                    Log.d(TAG, "Address: " + address + " is read from file.");
-                    history.addAddress(address);
-                    sb = new StringBuilder();
-                    continue;
-                }
-                sb.append(c);
-            }
+            fis = openFileInput(History.FILENAME);
+            History.readFromFile(fis);
         } catch (FileNotFoundException e) {
             Log.i(TAG, "Cannot open history file");
-        } catch (IOException e) {
-            Log.i(TAG, "Connot read history from file");
         } finally {
             // close the file input stream
             try {
