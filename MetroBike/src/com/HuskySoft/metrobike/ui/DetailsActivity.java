@@ -53,8 +53,8 @@ public class DetailsActivity extends Activity {
      * TextView to show destination address.
      */
     private TextView destination;
-	
-	/**
+    
+    /**
      * The size of the bus and bicycle icons.
      */
     private static final int IMAGE_SIZE = 35;
@@ -194,20 +194,20 @@ public class DetailsActivity extends Activity {
             for (int j = 0; j < steps.size(); j++) {
                 final Step s = steps.get(j);
 
-            	// Add the bus or bicycle icon for each step
+                // Add the bus or bicycle icon for each step
                 ImageGetter imgGetter = new ImageGetter() {
-            		public Drawable getDrawable(String source) {
-                		Drawable drawable = null;
+                    public Drawable getDrawable(final String source) {
+                        Drawable drawable = null;
                         if (s.getTravelMode() != TravelMode.TRANSIT) {   
-                        	drawable = getResources().getDrawable(R.drawable.bicycle_icon);
+                            drawable = getResources().getDrawable(R.drawable.bicycle_icon);
                         } else {
-                        	drawable = getResources().getDrawable(R.drawable.bus_icon);
+                            drawable = getResources().getDrawable(R.drawable.bus_icon);
                         }
                         drawable.setBounds(0, 0, IMAGE_SIZE, IMAGE_SIZE);
                         return drawable;
                     }
-                 };
-            	String image = "<img src=\"mode\"/>";
+                };
+                String image = "<img src=\"mode\"/>";
                 directions.append(Html.fromHtml(image, imgGetter, null));
                 
                 // Add duration time for each step

@@ -18,7 +18,31 @@ import com.HuskySoft.metrobike.backend.Location;
 public final class Utility {
 
     /**
-     * Tag for determining which class is generating the logging messages
+     * Factoring this out for checkstyle.
+     */
+    private static final int CHAR_OFFSET = 63;
+    
+    /**
+     * Factoring this out for checkstyle.
+     */
+    private static final int TEST_CONDITION = 0x20;
+    
+    /**
+     * Factoring this out for checkstyle.
+     */
+    private static final int SHIFT_VALUE = 5;
+    
+    /**
+     * Factoring this out for checkstyle.
+     */
+    private static final double FLOAT_ERROR_RANGE = 1E5;
+    
+    /**
+     * Factoring this out for checkstyle.
+     */
+    private static final int BITSHIFT_CONSTANT = 0x1f;
+    /**
+     * Tag for determining which class is generating the logging messages.
      */
     private static final String TAG = "com.jeffreysambells.polyline: Utility.java: ";
     
@@ -54,27 +78,40 @@ public final class Utility {
         while (index < len) {
             int b, shift = 0, result = 0;
             do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                b = encoded.charAt(index++) - CHAR_OFFSET;
+                result |= (b & BITSHIFT_CONSTANT) << shift;
+                shift += SHIFT_VALUE;
+            } while (b >= TEST_CONDITION);
+            int dlat = 0;
+            if ((result & 1) != 0) {
+                dlat = ~(result >> 1);
+            } else {
+                dlat = (result >> 1);
+            }
+            
             lat += dlat;
 
             shift = 0;
             result = 0;
             do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                b = encoded.charAt(index++) - CHAR_OFFSET;
+                result |= (b & BITSHIFT_CONSTANT) << shift;
+                shift += SHIFT_VALUE;
+            } while (b >= TEST_CONDITION);
+            int dlng = 0;
+            if ((result & 1) != 0) { 
+                dlng = ~(result >> 1);
+            } else {
+                dlng = (result >> 1);
+            }
+            
             lng += dlng;
 
             System.out.println(TAG + "decodePoly()->Lat: " + lat);
             System.out.println(TAG + "decodePoly()->Lng: " + lng + "\n");
             Location p =
-                    new Location(((double) lat / 1E5), ((double) lng / 1E5));
+                    new Location(((double) lat / FLOAT_ERROR_RANGE), 
+                            ((double) lng / FLOAT_ERROR_RANGE));
             // OLD PROBLEMATIC CODE 
             //Location p =
             //        new Location((int) (((double) lat / 1E5) * 1E6),
