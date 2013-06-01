@@ -18,6 +18,11 @@ import com.HuskySoft.metrobike.backend.Location;
 public final class Utility {
 
     /**
+     * Tag for determining which class is generating the logging messages
+     */
+    private static final String TAG = "com.jeffreysambells.polyline: Utility.java: ";
+    
+    /**
      * A private constructor that throws an error to deter instantiation of this
      * utility class.
      */
@@ -41,7 +46,7 @@ public final class Utility {
      * @return the list of Location objects in the line
      */
     public static List<Location> decodePoly(final String encoded) {
-
+        System.out.println(TAG + "decodePoly()->Encoded String is: " + encoded);
         List<Location> poly = new ArrayList<Location>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
@@ -66,6 +71,8 @@ public final class Utility {
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 
+            System.out.println(TAG + "decodePoly()->Lat: " + lat);
+            System.out.println(TAG + "decodePoly()->Lng: " + lng + "\n");
             Location p =
                     new Location(((double) lat / 1E5), ((double) lng / 1E5));
             // OLD PROBLEMATIC CODE 

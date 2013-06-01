@@ -11,6 +11,12 @@ import com.google.android.gms.maps.GoogleMap;
  * 
  */
 public final class MapSetting {
+    
+    /**
+     * Tag string for logging.
+     */
+    private static final String TAG = "com.HuskySoft.metrobike.ui.utility: MapSetting.java: ";
+    
     /**
      * The actual google map object.
      */
@@ -28,6 +34,7 @@ public final class MapSetting {
      *            the actual google map object
      */
     private MapSetting(final GoogleMap googleMap) {
+        System.out.println(TAG + "MapSetting()->googleMap: " + googleMap);
         mMap = googleMap;
         // default value
         // we will need to read the saved value in verion 1
@@ -45,6 +52,7 @@ public final class MapSetting {
      */
     public static MapSetting getInstance(final GoogleMap googleMap) {
         if (mSet == null && googleMap != null) {
+            System.out.println(TAG + "getInstance()->googleMap: " + googleMap);
             mSet = new MapSetting(googleMap);
         }
         return mSet;
@@ -57,6 +65,7 @@ public final class MapSetting {
      *            true if show
      */
     public void setTraffic(final boolean show) {
+        System.out.println(TAG + "setTraffic()->show: " + show);
         mMap.setTrafficEnabled(show);
     }
 
@@ -66,6 +75,8 @@ public final class MapSetting {
      * @return true if traffic is enable.
      */
     public boolean getTrafficDisplay() {
+        System.out.println(TAG + "getTraffic()->mMap.isTrafficEnabled(): " + 
+                mMap.isTrafficEnabled());
         return mMap.isTrafficEnabled();
     }
 
@@ -76,6 +87,7 @@ public final class MapSetting {
      *            the value of the map type
      */
     public void setMapDisplay(final int mapType) {
+        System.out.println(TAG + "setMapDisplay()->mapType: " + mapType);
         mMap.setMapType(mapType);
     }
 
@@ -85,6 +97,7 @@ public final class MapSetting {
      * @return the map types in integer
      */
     public int getMapDisplay() {
+        System.out.println(TAG + "getMapDisplay()->mMap.getMapType(): " + mMap.getMapType());
         return mMap.getMapType();
     }
 
@@ -95,6 +108,7 @@ public final class MapSetting {
      *            true if display
      */
     public void setCurrentLocationButton(final boolean display) {
+        System.out.println(TAG + "setCurrentLocationButton()->display: " + display);
         mMap.setMyLocationEnabled(display);
     }
 
@@ -117,6 +131,8 @@ public final class MapSetting {
      * @return true if my current location enable.
      */
     public boolean getMyCurrentLocation() {
+        System.out.println(TAG + "getMyCurrentLocation()->mMap.isMyLocationEnabled(): " + 
+                mMap.isMyLocationEnabled());
         return mMap.isMyLocationEnabled();
     }
 
@@ -127,6 +143,7 @@ public final class MapSetting {
      *            the map that need to be updated.
      */
     public static void updateStatus(final GoogleMap googleMap) {
+        System.out.println(TAG + "updateStatus()->googleMap: " + googleMap);
         googleMap.setMapType(mMap.getMapType());
         googleMap.setMyLocationEnabled(mMap.isMyLocationEnabled());
         googleMap.setTrafficEnabled(mMap.isTrafficEnabled());
@@ -139,5 +156,6 @@ public final class MapSetting {
      */
     public static void resetMapSetting() {
         mSet = null;
+        System.out.println(TAG + "resetMapSetting()->setting mSet to null.");
     }
 }
