@@ -19,7 +19,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -225,27 +224,24 @@ public class SearchActivity extends Activity implements
             // Set up addresses for direction request
             String currLocationLatLagString = "";
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
-                if (locationClient.isConnected()) {
-                    Location lastLoc = locationClient.getLastLocation();
-                    if (lastLoc == null) {
-                        // defensive programming, avoid null pointer exception.
-                        showErrorDialog("GPS location is not available");
-                        return;
-                    }
-                    currLocationLatLagString += lastLoc.getLatitude() + ", "
-                            + lastLoc.getLongitude();
-
+                // defensive programming, avoid null pointer exception and leak window
+                if (locationClient != null && locationClient.isConnected()
+                        && locationClient.getLastLocation() != null) {
+                    currLocationLatLagString += locationClient.getLastLocation().getLatitude()
+                            + ", " + locationClient.getLastLocation().getLongitude();
                 } else {
-                    currLocationLatLagString += "" + LATITUDE + ", " + LONGITUDE;
                     // Must call runOnUiThread if want to display a Toast or a
-                    // Dialog within a thread
+                    // // Dialog within a thread
                     runOnUiThread(new Runnable() {
+                        @Override
                         public void run() {
-                            Toast.makeText(SearchActivity.this,
-                                    "Cannot get current location, " + "use UW address instead",
-                                    Toast.LENGTH_LONG).show();
+                            showErrorDialog("GPS location is not available");
                         }
                     });
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    return;
                 }
             }
             String from = "";
@@ -495,15 +491,6 @@ public class SearchActivity extends Activity implements
      * Location Client to get user's current location.
      */
     private LocationClient locationClient;
-
-    /**
-     * The latitude value of University of Washington.
-     */
-    private static final double LATITUDE = 47.65555089999999;
-    /**
-     * The longitude value of University of Washington.
-     */
-    private static final double LONGITUDE = -122.30906219999997;
 
     /**
      * Current Location (From) button for current location.
