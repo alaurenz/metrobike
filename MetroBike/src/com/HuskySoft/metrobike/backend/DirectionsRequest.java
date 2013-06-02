@@ -40,6 +40,11 @@ public final class DirectionsRequest implements Serializable {
     private static final String TAG = "com.HuskySoft.metrobike.backend: DirectionsRequest.java: ";
 
     /**
+     * The longest route a request may return, in kilometers.
+     */
+    public static final long MAX_ROUTE_LENGTH_IN_METERS = 500000;
+
+    /**
      * The request parameters object for this request, which specifies all of
      * the important request details.
      */
@@ -129,12 +134,6 @@ public final class DirectionsRequest implements Serializable {
 
         solutions = new ArrayList<Route>();
 
-        /*
-         * TODO: Idea: Instantiate the algorithm workers into a
-         * List<AlgorithmWorkers> in a different method, then call them in a
-         * nested foreach loop to get all of the results (?)
-         */
-
         AlgorithmWorker alg = null;
 
         // Query the simple algorithm first
@@ -142,7 +141,16 @@ public final class DirectionsRequest implements Serializable {
         case BICYCLING:
             alg = new BicycleOnlyAlgorithm();
             alg.setResource(myParams.getResource());
-            return doAlgorithm(alg);
+            filterSolutions();
+            DirectionsStatus simpleStatus = doAlgorithm(alg);
+
+            // Sort results by total duration, then filter by user requirements
+            filterSolutions();
+            if (simpleStatus == DirectionsStatus.REQUEST_SUCCESSFUL && solutions.size() == 0) {
+                return DirectionsStatus.NO_RESULTS_FOUND;
+            }
+
+            return simpleStatus;
         case MIXED:
             // Travel Mode Mix also needs the bicycle only routes
             BicycleOnlyAlgorithm bikeAlg = new BicycleOnlyAlgorithm();
@@ -159,10 +167,17 @@ public final class DirectionsRequest implements Serializable {
             DirectionsStatus comboStatus = doAlgorithm(scAlg);
 
             if (bikeStatus.isError() && smartStatus.isError() && comboStatus.isError()) {
+                return bikeStatus; // Return the first error we received
+            }
+
+            // Sort results by total duration, then filter by user requirements
+            Collections.sort(solutions);
+            filterSolutions();
+            if (solutions.size() == 0) {
+                // If filter took out all results, none were found
                 return DirectionsStatus.NO_RESULTS_FOUND;
             }
-            // Sort results by total duration
-            Collections.sort(solutions);
+
             return DirectionsStatus.REQUEST_SUCCESSFUL;
         default:
             System.err
@@ -170,6 +185,91 @@ public final class DirectionsRequest implements Serializable {
             return DirectionsStatus.UNSUPPORTED_TRAVEL_MODE_ERROR;
         }
 
+    }
+
+    /**
+     * Filters the result solutions based on the request parameters object and
+     * the max trip distance.
+     */
+    private void filterSolutions() {
+        List<Route> newSolutions = new ArrayList<Route>();
+
+        for (Route res : solutions) {
+            // If we discard a route, this will say why.
+            String routeDeleteReason = null;
+
+            // First, check for route length
+            if (res.getDistanceInMeters() > MAX_ROUTE_LENGTH_IN_METERS) {
+                routeDeleteReason = "Discarding route because length " + res.getDistanceInMeters()
+                        + "(m) > " + MAX_ROUTE_LENGTH_IN_METERS + "(m)";
+            }
+
+            // Next, check for biking distance
+            long bikeDistance = 0;
+            long numTransitSteps = 0;
+
+            // Calculate total distance of bicycle riding and number of transit
+            // steps
+            for (Leg l : res.getLegList()) {
+                for (Step s : l.getStepList()) {
+                    if (s.getTravelMode() == TravelMode.BICYCLING) {
+                        bikeDistance += s.getDistanceInMeters();
+                    } else if (s.getTravelMode() == TravelMode.TRANSIT) {
+                        numTransitSteps++;
+                    }
+                }
+            }
+
+            long bikeMin = myParams.getMinDistanceToBikeInMeters();
+            long bikeMax = myParams.getMaxDistanceToBikeInMeters();
+
+            // Make sure bikeMin <= bikeDistance <= bikeMax
+            // (but only if bikeMin and/or bikeMax is set)
+            if ((bikeMin != RequestParameters.DONT_CARE) && (bikeDistance < bikeMin)) {
+                routeDeleteReason = "Discarding route because bicycling distance " + bikeDistance
+                        + "(m) < " + bikeMin + "(m) set by user.";
+            }
+
+            if ((bikeMax != RequestParameters.DONT_CARE) && (bikeDistance > bikeMax)) {
+                routeDeleteReason = "Discarding route because bicycling distance " + bikeDistance
+                        + "(m) > " + bikeMin + "(m) set by user.";
+            }
+
+            // Next, check for transit transfers
+            long numTransfers;
+
+            if (numTransitSteps == 0) {
+                numTransfers = 0;
+            } else {
+                numTransfers = numTransitSteps - 1;
+            }
+
+            long transferMin = myParams.getMinNumberBusTransfers();
+            long transferMax = myParams.getMaxNumberBusTransfers();
+
+            // Make sure transferMin <= numTransfers <= transferMax
+            // (but only if transferMin and/or transferMax is set)
+            if ((transferMin != RequestParameters.DONT_CARE) && (numTransfers < transferMin)) {
+                routeDeleteReason = "Discarding route because number of tranfers " + numTransfers
+                        + " < " + transferMin + " set by user.";
+            }
+
+            if ((transferMax != RequestParameters.DONT_CARE) && (numTransfers > transferMax)) {
+                routeDeleteReason = "Discarding route because number of tranfers " + numTransfers
+                        + " > " + transferMin + " set by user.";
+            }
+
+            // If there were no errors, keep the route!
+            // Otherwise, save an error message and discard it.
+            if (routeDeleteReason == null) {
+                newSolutions.add(res);
+            } else {
+                System.err.println(routeDeleteReason);
+                appendErrorMessage(routeDeleteReason);
+            }
+        }
+
+        solutions = newSolutions;
     }
 
     /**
@@ -574,7 +674,7 @@ public final class DirectionsRequest implements Serializable {
             } else {
                 toReturn = "" + toFormat;
             }
-            
+
             return toReturn;
         }
 
