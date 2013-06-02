@@ -435,6 +435,6 @@ public final class TransitDetails implements Serializable {
         vehicleIconURL = (String) in.readObject();
         numStops = in.readInt();
         indent = in.readInt();
-        indentString = (String)in.readObject();
+        indentString = (String) in.readObject();
     }
 }
