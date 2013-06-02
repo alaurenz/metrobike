@@ -15,7 +15,8 @@ import com.HuskySoft.metrobike.backend.Route;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * @author sw11 This class holds any utility functions that will be used across
+ * @author Sam Wilson, Shuo Wang, Qinyuan Wan 
+ *         This class holds any utility functions that will be used across
  *         the ui of the MetroBike project.
  */
 public final class Utility {
@@ -181,7 +182,7 @@ public final class Utility {
     }
     
     /**
-     * Build a bit map from the given URL.
+     * Convert Android system representation of date to natural form.
      * @param systemYear : year in Android
      * @param systemMonth : month in Android
      * @param systemDay : day in Android
@@ -208,5 +209,27 @@ public final class Utility {
         }
         dayString += systemDay;
         return monthString + "/" + dayString + "/" + systemYear;
+    }
+    
+    /**
+     * Convert Android system representation of time to natural form.
+     * @param systemHour : year in Android
+     * @param systemMinute : month in Android
+     * @return a natural formatted time string
+     */
+    public static String convertAndroidSystemTimeToFormatedTimeString(final int systemHour, 
+                                                                    final int systemMinute) {
+        String hourString = "";
+        if (systemHour < MIN_TWO_DIGIT_NUMBER) {
+            hourString += "0";
+        }
+        hourString += systemHour;
+
+        String minuteString = "";
+        if (systemMinute < MIN_TWO_DIGIT_NUMBER) {
+            minuteString += "0";
+        }
+        minuteString += systemMinute;
+        return hourString + ":" + minuteString;
     }
 }

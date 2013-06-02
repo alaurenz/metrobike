@@ -166,6 +166,11 @@ public final class DirectionsRequest implements Serializable {
             scAlg.setResource(myParams.getResource());
             DirectionsStatus comboStatus = doAlgorithm(scAlg);
 
+            if (bikeStatus == DirectionsStatus.CONNECTION_ERROR || 
+                    smartStatus == DirectionsStatus.CONNECTION_ERROR ||
+                    comboStatus == DirectionsStatus.CONNECTION_ERROR) {
+                return DirectionsStatus.CONNECTION_ERROR;
+            }
             if (bikeStatus.isError() && smartStatus.isError() && comboStatus.isError()) {
                 return bikeStatus; // Return the first error we received
             }
