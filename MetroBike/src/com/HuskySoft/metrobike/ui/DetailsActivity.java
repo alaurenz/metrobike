@@ -232,9 +232,15 @@ public class DetailsActivity extends Activity {
 
                 Log.v("MetroBike HTML Intructions", s.getHtmlInstruction());
 
-                // Strip out all the <div> and </div> blocks in details
-                String ss = s.getHtmlInstruction().replaceAll("[<]div[^>]*[>]", " (")
-                        .replaceAll("[<]/div[>]", ")");
+                String ss;
+                if (i == legs.size() - 1 && j == steps.size() - 1) {
+                    // If final destination, display "Destination on ..." if applicable
+                    ss = s.getHtmlInstruction().replaceAll("[<]div[^>]*[>]", " (")
+                                               .replaceAll("[<]/div[>]", ")");
+                } else { 
+                    // If not final destination, strip the entire "Destination on ..."
+                    ss = s.getHtmlInstruction().replaceAll("<div.*>", ""); 
+                }
 
                 directions.append(Html.fromHtml(ss));
 
