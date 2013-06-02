@@ -112,7 +112,7 @@ public final class DirectionsRequestTest extends TestCase {
         request.setStartAddress(startAddress);
         request.setEndAddress(endAddress);
         request.setArrivalTime(ARRIVAL_TIME);
-        request.setTravelMode(TravelMode.TRANSIT);
+        request.setTravelMode(TravelMode.MIXED);
         request.setMinDistanceToBikeInMeters(MIN_DIST_IN_METER);
         request.setMaxDistanceToBikeInMeters(MAX_DIST_IN_METER);
         request.setMinNumberBusTransfers(RequestParameters.DONT_CARE);
@@ -130,7 +130,7 @@ public final class DirectionsRequestTest extends TestCase {
                         + "Latona Ave NE,Seattle,WA\n"
                         + "endAddress: 3801 Brooklyn Ave NE,Seattle,WA\n"
                         + "arrivalTime: 4000000\n" + "departureTime: "
-                        + RequestParameters.DONT_CARE_STRING + "\n" + "travelMode: TRANSIT\n"
+                        + RequestParameters.DONT_CARE_STRING + "\n" + "travelMode: MIXED\n"
                         + "minDistanceToBikeInMeters: 1000\n" + "maxDistanceToBikeInMeters: 2000\n"
                         + "minNumberBusTransfers: " + RequestParameters.DONT_CARE_STRING + "\n"
                         + "maxNumberBusTransfers: " + RequestParameters.DONT_CARE_STRING + "\n"
