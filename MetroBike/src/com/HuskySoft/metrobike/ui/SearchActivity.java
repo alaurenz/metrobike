@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -19,7 +18,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -70,21 +68,11 @@ public class SearchActivity extends Activity implements
     private static final String TAG = "SearchActivity";
 
     /**
-     * Minimum two digit number.
-     */
-    private static final int MIN_TWO_DIGIT_NUMBER = 10;
-
-    /**
      * A Fragment that contains a date picker to let user select a date of
      * departure/arrival.
      */
     public static class DatePickerFragment extends DialogFragment implements
             DatePickerDialog.OnDateSetListener {
-
-        /**
-         * Minimum two digit number.
-         */
-        private static final int MIN_TWO_DIGIT_NUMBER = 10;
 
         @Override
         public final Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -117,24 +105,9 @@ public class SearchActivity extends Activity implements
         public final void onDateSet(final DatePicker view, final int year, final int month,
                 final int day) {
             EditText dateEditText = (EditText) getActivity().findViewById(R.id.editTextDate);
-
-            // Formatting string be displayed
-            String monthString = "";
-
-            // System uses month from 0 to 11 to represent January to December
-            int monthUIStyle = month + 1;
-            if (monthUIStyle < MIN_TWO_DIGIT_NUMBER) {
-                monthString += "0";
-            }
-            monthString += monthUIStyle;
-
-            String dayString = "";
-            if (day < MIN_TWO_DIGIT_NUMBER) {
-                dayString += "0";
-            }
-            dayString += day;
             // Update the date EditText widget
-            dateEditText.setText(monthString + "/" + dayString + "/" + year);
+            dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                                .convertAndroidSystemDateToFormatedDateString(year, month, day));
             Log.v(TAG, "Done on data set");
         }
     }
@@ -145,11 +118,6 @@ public class SearchActivity extends Activity implements
      */
     public static class TimePickerFragment extends DialogFragment implements
             TimePickerDialog.OnTimeSetListener {
-
-        /**
-         * Minimum two digit number.
-         */
-        private static final int MIN_TWO_DIGIT_NUMBER = 10;
 
         @Override
         public final Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -178,22 +146,9 @@ public class SearchActivity extends Activity implements
          */
         public final void onTimeSet(final TimePicker view, final int hourOfDay, final int minute) {
             EditText timeEditText = (EditText) getActivity().findViewById(R.id.editTextTime);
-
-            // Formatting string be displayed
-            String hourString = "";
-            if (hourOfDay < MIN_TWO_DIGIT_NUMBER) {
-                hourString += "0";
-            }
-            hourString += hourOfDay;
-
-            String minuteString = "";
-            if (minute < MIN_TWO_DIGIT_NUMBER) {
-                minuteString += "0";
-            }
-            minuteString += minute;
-
             // Update the time EditText widget
-            timeEditText.setText(hourString + ":" + minuteString);
+            timeEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                    .convertAndroidSystemTimeToFormatedTimeString(hourOfDay, minute));
         }
     }
 
@@ -245,27 +200,24 @@ public class SearchActivity extends Activity implements
             // Set up addresses for direction request
             String currLocationLatLagString = "";
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
-                if (locationClient.isConnected()) {
-                    Location lastLoc = locationClient.getLastLocation();
-                    if (lastLoc == null) {
-                        // defensive programming, avoid null pointer exception.
-                        showErrorDialog("GPS location is not available");
-                        return;
-                    }
-                    currLocationLatLagString += lastLoc.getLatitude() + ", "
-                            + lastLoc.getLongitude();
-
+                // defensive programming, avoid null pointer exception and leak window
+                if (locationClient != null && locationClient.isConnected()
+                        && locationClient.getLastLocation() != null) {
+                    currLocationLatLagString += locationClient.getLastLocation().getLatitude()
+                            + ", " + locationClient.getLastLocation().getLongitude();
                 } else {
-                    currLocationLatLagString += "" + LATITUDE + ", " + LONGITUDE;
                     // Must call runOnUiThread if want to display a Toast or a
-                    // Dialog within a thread
+                    // // Dialog within a thread
                     runOnUiThread(new Runnable() {
+                        @Override
                         public void run() {
-                            Toast.makeText(SearchActivity.this,
-                                    "Cannot get current location, " + "use UW address instead",
-                                    Toast.LENGTH_LONG).show();
+                            showErrorDialog("GPS location is not available");
                         }
                     });
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
+                    return;
                 }
             }
             String from = "";
@@ -293,7 +245,7 @@ public class SearchActivity extends Activity implements
             Log.d(TAG, "Done setting the travel mode: " + tm);
             long timeToSend = timeDirectionRequest();
 
-            // Determine time mode
+            // Set up time mode
             if (arriveAtButton.isChecked()) {
                 dReq.setArrivalTime(timeToSend);
             } else {
@@ -381,7 +333,7 @@ public class SearchActivity extends Activity implements
 
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
-    // cancel this dialog
+                    // cancel this dialog
                     dialog.cancel();
                 }
             });
@@ -423,11 +375,6 @@ public class SearchActivity extends Activity implements
             return timeToSend;
         }
     }
-
-    /**
-     * Integer Representation of Color: Light Blue.
-     */
-    private static final int COLOR_LIGHT_BLUE = Color.rgb(13, 139, 217);
 
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
@@ -517,15 +464,6 @@ public class SearchActivity extends Activity implements
     private LocationClient locationClient;
 
     /**
-     * The latitude value of University of Washington.
-     */
-    private static final double LATITUDE = 47.65555089999999;
-    /**
-     * The longitude value of University of Washington.
-     */
-    private static final double LONGITUDE = -122.30906219999997;
-
-    /**
      * Current Location (From) button for current location.
      */
     private ImageButton fromCurrLocationButton;
@@ -569,11 +507,9 @@ public class SearchActivity extends Activity implements
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
         
         establishViewsAndOtherNecessaryComponents();
-        setInitialText();
+        
         setListeners();
         setHistorySection();
         Log.v(TAG, "Done on create");
@@ -596,6 +532,7 @@ public class SearchActivity extends Activity implements
      */
     @Override
     protected final void onResume() {
+        setInitialText();
         setHistorySection();
         super.onResume();
         Log.v(TAG, "Done on Resume");
@@ -656,335 +593,63 @@ public class SearchActivity extends Activity implements
     }
 
     /**
-     * Sets up default text to be displayed on the UI of this activity.
-     */
-    private void setInitialText() {
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        String hourString = "";
-        if (hour < MIN_TWO_DIGIT_NUMBER) {
-            hourString += "0";
-        }
-        hourString += hour;
-
-        int minute = calendar.get(Calendar.MINUTE);
-        String minuteString = "";
-        if (minute < MIN_TWO_DIGIT_NUMBER) {
-            minuteString += "0";
-        }
-        minuteString += minute;
-
-        int year = calendar.get(Calendar.YEAR);
-
-        int month = calendar.get(Calendar.MONTH);
-        // System uses month from 0 to 11 to represent January to December
-        month++;
-
-        String monthString = "";
-        if (month < MIN_TWO_DIGIT_NUMBER) {
-            monthString += "0";
-        }
-        monthString += month;
-
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String dayString = "";
-        if (day < MIN_TWO_DIGIT_NUMBER) {
-            dayString += "0";
-        }
-        dayString += day;
-
-        dateEditText.setText(monthString + "/" + dayString + "/" + year);
-        timeEditText.setText(hourString + ":" + minuteString);
-    }
-
-    /**
-     * Find and establish all UI components from xml to this activity.
+     * Find and establish all UI components.
      */
     private void establishViewsAndOtherNecessaryComponents() {
+        // Action Bar setup
+        this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        // Address setup
+        fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
+        toAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextTo);
+        reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
+        fromClearButton = (ImageButton) findViewById(R.id.imageButtonClearFrom);
+        toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
+
+        // Location setup
+        locationClient = new LocationClient(this, this, this);
+        fromCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationFrom);
+        toCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationTo);
+        
+        // Basic options setup
         leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
         departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
         arriveAtButton = (RadioButton) findViewById(R.id.radioButtonArriveAt);
 
         dateEditText = (EditText) findViewById(R.id.editTextDate);
         timeEditText = (EditText) findViewById(R.id.editTextTime);
-
-        findButton = (Button) findViewById(R.id.buttonFind);
-
-        fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
-        toAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextTo);
-        reverseButton = (ImageButton) findViewById(R.id.imageButtonReverse);
-        fromClearButton = (ImageButton) findViewById(R.id.imageButtonClearFrom);
-        toClearButton = (ImageButton) findViewById(R.id.imageButtonClearTo);
-        numBusesTextView = (TextView) findViewById(R.id.textViewNumBuses);
-        minNumBusesEditText = (EditText) findViewById(R.id.editTextMinNumBuses);
-        maxNumBusesEditText = (EditText) findViewById(R.id.editTextMaxNumBuses);
-        minBikingDistanceEditText = (EditText) findViewById(R.id.editTextMinBikingDistance);
-        maxBikingDistanceEditText = (EditText) findViewById(R.id.editTextMaxBikingDistance);
         
         tm = TravelMode.MIXED;
         bicycleOnlyCheckBox = (CheckBox) findViewById(R.id.checkboxBicycleOnly);
+        
+        // Find button setup
+        findButton = (Button) findViewById(R.id.buttonFind);
 
-        // Location setup
-        locationClient = new LocationClient(this, this, this);
-        fromCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationFrom);
-        toCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationTo);
+        // Advanced options setup
+        numBusesTextView = (TextView) findViewById(R.id.textViewNumBuses);
+        minBikingDistanceEditText = (EditText) findViewById(R.id.editTextMinBikingDistance);
+        maxBikingDistanceEditText = (EditText) findViewById(R.id.editTextMaxBikingDistance);
+        minNumBusesEditText = (EditText) findViewById(R.id.editTextMinNumBuses);
+        maxNumBusesEditText = (EditText) findViewById(R.id.editTextMaxNumBuses);
     }
-
+    
     /**
      * Attach all listeners to corresponding UI widgets.
      */
     private void setListeners() {
-        setAddressRelatedListeners();
-        leaveNowButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                dateEditText.setEnabled(false);
-                timeEditText.setEnabled(false);
-            }
-        });
-
-        departAtButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                dateEditText.setEnabled(true);
-                timeEditText.setEnabled(true);
-            }
-        });
-
-        arriveAtButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                dateEditText.setEnabled(true);
-                timeEditText.setEnabled(true);
-            }
-        });
-
-        dateEditText.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                DialogFragment dpf = new DatePickerFragment();
-                dpf.show(getFragmentManager(), "datePicker");
-            }
-        });
-        // Prohibit user from directly typing a date (instead, users should pick
-        // a date)
-        dateEditText.setKeyListener(null);
-
-        timeEditText.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                DialogFragment tpf = new TimePickerFragment();
-                tpf.show(getFragmentManager(), "timePicker");
-            }
-        });
-        // Prohibit user from directly typing a time (instead, users should pick
-        // a time)
-        timeEditText.setKeyListener(null);
-        findButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                pd = ProgressDialog.show(v.getContext(), "Searching", "Searching for routes...");
-
-                Thread dirThread = new Thread(new DirThread());
-                dirThread.start();
-            }
-        });
-        
-        bicycleOnlyCheckBox.setOnClickListener(new OnClickListener() {
-            private boolean isCheckedBefore = false;
-            public void onClick(final View v) {
-                if (isCheckedBefore) {
-                    numBusesTextView.setVisibility(View.VISIBLE);
-                    minNumBusesEditText.setVisibility(View.VISIBLE);
-                    maxNumBusesEditText.setVisibility(View.VISIBLE);          
-                    isCheckedBefore = false;
-                } else {
-                    numBusesTextView.setVisibility(View.INVISIBLE);
-                    minNumBusesEditText.setVisibility(View.INVISIBLE);
-                    maxNumBusesEditText.setVisibility(View.INVISIBLE);
-                    isCheckedBefore = true;
-                }
-            }
-        });
-        
-        minNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(final View v, final boolean hasFocus) {
-                if (!hasFocus && minNumBusesEditText.getText().length() != 0) {
-                    // Format numbers
-                    int formattedNumber = Integer
-                            .parseInt(minNumBusesEditText.getText().toString());
-                    minNumBusesEditText.setText("" + formattedNumber);
-                }
-            }
-        });
-        
-        maxNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(final View v, final boolean hasFocus) {
-                if (!hasFocus && maxNumBusesEditText.getText().length() != 0) {
-                    // Format numbers
-                    int formattedNumber = Integer
-                            .parseInt(maxNumBusesEditText.getText().toString());
-                    maxNumBusesEditText.setText("" + formattedNumber);
-                }
-            }
-            
-        });
-
-        minBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(final View v, final boolean hasFocus) {
-                if (!hasFocus && minBikingDistanceEditText.getText().length() != 0) {
-                    // Format numbers
-                    int formattedNumber = Integer.parseInt(minBikingDistanceEditText.getText()
-                            .toString());
-                    minBikingDistanceEditText.setText("" + formattedNumber);
-                }
-            }
-            
-        });
-        
-        maxBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(final View v, final boolean hasFocus) {
-                if (!hasFocus && maxBikingDistanceEditText.getText().length() != 0) {
-                    // Format numbers
-                    int formattedNumber = Integer.parseInt(maxBikingDistanceEditText.getText()
-                            .toString());
-                    maxBikingDistanceEditText.setText("" + formattedNumber);
-                }
-            }
-        });
-    }
-
-    /**
-     * Attach address-related listeners to corresponding UI widgets.
-     */
-    private void setAddressRelatedListeners() {
-        // Determine whether to show clear button for fromAutoCompleteTextView
-        // when it is focused
         setAddressBoxListeners();
-
-        reverseButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                boolean fromACTVisEnabled = fromAutoCompleteTextView.isEnabled();
-                boolean toACTVisEnabled = toAutoCompleteTextView.isEnabled();
-                String fromACTVOriginalText = fromAutoCompleteTextView.getText().toString();
-                String toACTVOriginalText = toAutoCompleteTextView.getText().toString();
-
-                if (!fromACTVisEnabled) {
-                    toAutoCompleteTextView.clearComposingText();
-                    toAutoCompleteTextView.setEnabled(false);
-                    toAutoCompleteTextView.setText(fromACTVOriginalText);
-                    toAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
-                    toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
-                    toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    toClearButton.setVisibility(View.INVISIBLE);
-                } else {
-                    toAutoCompleteTextView.setTextColor(Color.BLACK);
-                    toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
-                    toCurrLocationButton.setImageResource(R.drawable.current_location_select);
-                    toAutoCompleteTextView.setText(fromACTVOriginalText);
-                    toAutoCompleteTextView.setEnabled(true);
-                }
-
-                if (!toACTVisEnabled) {
-                    fromAutoCompleteTextView.clearComposingText();
-                    fromAutoCompleteTextView.setEnabled(false);
-                    fromAutoCompleteTextView.setText(toACTVOriginalText);
-                    fromAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
-                    fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
-                    fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    fromClearButton.setVisibility(View.INVISIBLE);
-                } else {
-                    fromAutoCompleteTextView.setTextColor(Color.BLACK);
-                    fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
-                    fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
-                    fromAutoCompleteTextView.setText(toACTVOriginalText);
-                    fromAutoCompleteTextView.setEnabled(true);
-                }
-            }
-        });
-
-        fromClearButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                fromAutoCompleteTextView.clearComposingText();
-                fromAutoCompleteTextView.setText("");
-            }
-        });
-
-        toClearButton.setOnClickListener(new OnClickListener() {
-            public void onClick(final View v) {
-                toAutoCompleteTextView.clearComposingText();
-                toAutoCompleteTextView.setText("");
-            }
-        });
-
-        fromCurrLocationButton.setOnClickListener(new OnClickListener() {
-            private boolean currentLocationSelected = false;
-
-            public void onClick(final View v) {
-                if (currentLocationSelected) {
-                    fromAutoCompleteTextView.setText("");
-                    fromAutoCompleteTextView.setTextColor(Color.BLACK);
-                    fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
-                    fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
-                    fromAutoCompleteTextView.setEnabled(true);
-                    fromAutoCompleteTextView.requestFocus();
-                    currentLocationSelected = false;
-                } else {
-                    fromAutoCompleteTextView.clearComposingText();
-                    fromAutoCompleteTextView.setEnabled(false);
-                    fromAutoCompleteTextView.setText("Current Location");
-                    fromAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
-                    fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
-                    fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    fromClearButton.setVisibility(View.INVISIBLE);
-                    currentLocationSelected = true;
-                }
-
-            }
-        });
-
-        toCurrLocationButton.setOnClickListener(new OnClickListener() {
-            private boolean currentLocationSelected = false;
-
-            public void onClick(final View v) {
-                if (currentLocationSelected) {
-                    toAutoCompleteTextView.setText("");
-                    toAutoCompleteTextView.setTextColor(Color.BLACK);
-                    toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
-                    toCurrLocationButton.setImageResource(R.drawable.current_location_select);
-                    toAutoCompleteTextView.setEnabled(true);
-                    toAutoCompleteTextView.requestFocus();
-                    currentLocationSelected = false;
-                } else {
-                    toAutoCompleteTextView.clearComposingText();
-                    toAutoCompleteTextView.setEnabled(false);
-                    toAutoCompleteTextView.setText("Current Location");
-                    toAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
-                    toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
-                    toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
-                    toClearButton.setVisibility(View.INVISIBLE);
-                    currentLocationSelected = true;
-                }
-            }
-        });
+        setAddressEditListeners();
+        setLocationListeners();
+        setBasicOptionsListners();
+        setAdvancedOptionsListners();
     }
 
     /**
      * Attach the two address boxes listeners to corresponding UI widgets.
      */
     private void setAddressBoxListeners() {
-        fromAutoCompleteTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(final View v, final boolean hasFocus) {
-                if (hasFocus) {
-                    if (fromAutoCompleteTextView.getText().toString().isEmpty()) {
-                        fromClearButton.setVisibility(View.INVISIBLE);
-                    } else {
-                        fromClearButton.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    fromClearButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        fromAutoCompleteTextView.setOnFocusChangeListener(
+                new FromToAutoCompleteTextViewOnFocusChangeListener());
 
         // Determine whether to show clear button for fromAutoCompleteTextView
         // when it is being edited
@@ -1026,20 +691,8 @@ public class SearchActivity extends Activity implements
 
         // Determine whether to show clear button for toAutoCompleteTextView
         // when it is focused
-        toAutoCompleteTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(final View v, final boolean hasFocus) {
-                if (hasFocus) {
-                    if (toAutoCompleteTextView.getText().toString().isEmpty()) {
-                        toClearButton.setVisibility(View.INVISIBLE);
-                    } else {
-                        toClearButton.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    toClearButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        toAutoCompleteTextView.setOnFocusChangeListener(
+                new FromToAutoCompleteTextViewOnFocusChangeListener());
 
         // Determine whether to show clear button for fromAutoCompleteTextView
         // when it is being edited
@@ -1064,11 +717,323 @@ public class SearchActivity extends Activity implements
             }
         });
     }
+    
+    /**
+     * FromToAutoCompleteTextViewOnFocusChangeListener serves for fromAutoCompleteTextView 
+     * and toAutoCompleteTextView to determine the visibility of the clear buttons.
+     */
+    private class FromToAutoCompleteTextViewOnFocusChangeListener implements OnFocusChangeListener {
+        @Override
+        public void onFocusChange(final View v, final boolean hasFocus) {
+            ImageButton targetClearButton;
+            if (v.getId() == R.id.editTextStartFrom) {
+                targetClearButton = fromClearButton;
+            } else {
+                targetClearButton = toClearButton;
+            }
+            
+            if (hasFocus && !((AutoCompleteTextView) v).getText().toString().isEmpty()) {
+                targetClearButton.setVisibility(View.VISIBLE);
+            } else {
+                targetClearButton.setVisibility(View.INVISIBLE);
+            }
+        }
+        
+    }
+    
+    /**
+     * Attach address editing listeners to corresponding UI widgets.
+     */
+    private void setAddressEditListeners() {
+        reverseButton.setOnClickListener(new OnClickListener() {
+            
+            /**
+             * @see android.view.View.OnClickListener#onClick(android.view.View)
+             */
+            public void onClick(final View v) {
+                boolean fromACTVisEnabled = fromAutoCompleteTextView.isEnabled();
+                boolean toACTVisEnabled = toAutoCompleteTextView.isEnabled();
+                String fromACTVOriginalText = fromAutoCompleteTextView.getText().toString();
+                String toACTVOriginalText = toAutoCompleteTextView.getText().toString();
+
+                // process according to from
+                reverseProcessingHelper(toAutoCompleteTextView, 
+                                        toCurrLocationButton,
+                                        toClearButton,
+                                        fromACTVOriginalText,
+                                        fromACTVisEnabled);
+                
+                // process according to to
+                reverseProcessingHelper(fromAutoCompleteTextView, 
+                                        fromCurrLocationButton,
+                                        fromClearButton,
+                                        toACTVOriginalText,
+                                        toACTVisEnabled);
+            }
+            
+            /**
+             * Helper method to finish reverse process.
+             */
+            private void reverseProcessingHelper(
+                    final AutoCompleteTextView targetAutoCompleteTextView,
+                    final ImageButton targetCurrLocationButton, 
+                    final ImageButton targetClearButton,
+                    final String originalACTVText,
+                    final boolean originalACTVisEnabled) {
+                
+                if (!originalACTVisEnabled) {
+                    targetAutoCompleteTextView.clearComposingText();
+                    targetAutoCompleteTextView.setEnabled(false);
+                    targetAutoCompleteTextView.setText(originalACTVText);
+                    targetAutoCompleteTextView.setTextColor(
+                            SearchActivity.this.getResources().getColor(R.color.cyan));
+                    targetAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    targetAutoCompleteTextView.dismissDropDown();
+                    targetCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
+                    targetClearButton.setVisibility(View.INVISIBLE);
+                } else {
+                    targetAutoCompleteTextView.setText("");
+                    targetAutoCompleteTextView.setTextColor(Color.BLACK);
+                    targetAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
+                    targetCurrLocationButton.setImageResource(R.drawable.current_location_select);
+                    targetAutoCompleteTextView.setText(originalACTVText);
+                    targetAutoCompleteTextView.setEnabled(true);
+                }               
+            }
+            
+        });
+
+        fromClearButton.setOnClickListener(new FromToClearButtonOnClickListner());
+        toClearButton.setOnClickListener(new FromToClearButtonOnClickListner());
+
+    }
+    
+    /**
+     * FromToClearButtonOnClickListner serves for from fromClearButton
+     * and toClearButton to clear text.
+     */
+    private class FromToClearButtonOnClickListner implements OnClickListener {
+        @Override
+        public void onClick(final View v) {
+            AutoCompleteTextView targetAutoCompleteTextView;
+            if (v.getId() == R.id.imageButtonClearFrom) {
+                targetAutoCompleteTextView = fromAutoCompleteTextView;
+            } else {
+                targetAutoCompleteTextView = toAutoCompleteTextView;
+            }
+            targetAutoCompleteTextView.clearComposingText();
+            targetAutoCompleteTextView.setText("");
+        }
+        
+    }
+    
+    /**
+     * Attach location-related listeners to corresponding UI widgets.
+     */
+    private void setLocationListeners() {
+        fromCurrLocationButton.setOnClickListener(new OnClickListener() {
+            private boolean currentLocationSelected = false;
+
+            public void onClick(final View v) {
+                if (currentLocationSelected) {
+                    fromAutoCompleteTextView.setText("");
+                    fromAutoCompleteTextView.setTextColor(Color.BLACK);
+                    fromAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
+                    fromCurrLocationButton.setImageResource(R.drawable.current_location_select);
+                    fromAutoCompleteTextView.setEnabled(true);
+                    fromAutoCompleteTextView.requestFocus();
+                    currentLocationSelected = false;
+                } else {
+                    fromAutoCompleteTextView.clearComposingText();
+                    fromAutoCompleteTextView.setEnabled(false);
+                    fromAutoCompleteTextView.setText("Current Location");
+                    fromAutoCompleteTextView.setTextColor(
+                            SearchActivity.this.getResources().getColor(R.color.cyan));
+                    fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
+                    fromClearButton.setVisibility(View.INVISIBLE);
+                    currentLocationSelected = true;
+                }
+
+            }
+        });
+
+        toCurrLocationButton.setOnClickListener(new OnClickListener() {
+            private boolean currentLocationSelected = false;
+
+            public void onClick(final View v) {
+                if (currentLocationSelected) {
+                    toAutoCompleteTextView.setText("");
+                    toAutoCompleteTextView.setTextColor(Color.BLACK);
+                    toAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
+                    toCurrLocationButton.setImageResource(R.drawable.current_location_select);
+                    toAutoCompleteTextView.setEnabled(true);
+                    toAutoCompleteTextView.requestFocus();
+                    currentLocationSelected = false;
+                } else {
+                    toAutoCompleteTextView.clearComposingText();
+                    toAutoCompleteTextView.setEnabled(false);
+                    toAutoCompleteTextView.setText("Current Location");
+                    toAutoCompleteTextView.setTextColor(
+                            SearchActivity.this.getResources().getColor(R.color.cyan));
+                    toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
+                    toClearButton.setVisibility(View.INVISIBLE);
+                    currentLocationSelected = true;
+                }
+            }
+        });        
+    }
+    
+    /**
+     * Attach basic options listeners to corresponding UI widgets.
+     */
+    private void setBasicOptionsListners() {
+        leaveNowButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                dateEditText.setEnabled(false);
+                timeEditText.setEnabled(false);
+            }
+        });
+
+        departAtButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                dateEditText.setEnabled(true);
+                timeEditText.setEnabled(true);
+            }
+        });
+
+        arriveAtButton.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                dateEditText.setEnabled(true);
+                timeEditText.setEnabled(true);
+            }
+        });
+
+        dateEditText.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                DialogFragment dpf = new DatePickerFragment();
+                dpf.show(getFragmentManager(), "datePicker");
+            }
+        });
+        
+        // Prohibit user from directly typing a date (instead, users should pick
+        // a date)
+        dateEditText.setKeyListener(null);
+
+        timeEditText.setOnClickListener(new OnClickListener() {
+            public void onClick(final View v) {
+                DialogFragment tpf = new TimePickerFragment();
+                tpf.show(getFragmentManager(), "timePicker");
+            }
+        });
+        
+        // Prohibit user from directly typing a time (instead, users should pick
+        // a time)
+        timeEditText.setKeyListener(null);
+        findButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                pd = ProgressDialog.show(v.getContext(), "Searching", "Searching for routes...");
+
+                Thread dirThread = new Thread(new DirThread());
+                dirThread.start();
+            }
+        });
+        
+        bicycleOnlyCheckBox.setOnClickListener(new OnClickListener() {
+            private boolean isCheckedBefore = false;
+            public void onClick(final View v) {
+                if (isCheckedBefore) {
+                    numBusesTextView.setVisibility(View.VISIBLE);
+                    minNumBusesEditText.setVisibility(View.VISIBLE);
+                    maxNumBusesEditText.setVisibility(View.VISIBLE);          
+                    isCheckedBefore = false;
+                } else {
+                    numBusesTextView.setVisibility(View.INVISIBLE);
+                    minNumBusesEditText.setVisibility(View.INVISIBLE);
+                    maxNumBusesEditText.setVisibility(View.INVISIBLE);
+                    isCheckedBefore = true;
+                }
+            }
+        });
+    }
+    
+    /**
+     * Attach advanced options listeners to corresponding UI widgets.
+     */
+    private void setAdvancedOptionsListners() {
+        minBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (!hasFocus && minBikingDistanceEditText.getText().length() != 0) {
+                    // Format numbers
+                    int formattedNumber = Integer.parseInt(minBikingDistanceEditText.getText()
+                            .toString());
+                    minBikingDistanceEditText.setText("" + formattedNumber);
+                }
+            }
+            
+        });
+        
+        maxBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (!hasFocus && maxBikingDistanceEditText.getText().length() != 0) {
+                    // Format numbers
+                    int formattedNumber = Integer.parseInt(maxBikingDistanceEditText.getText()
+                            .toString());
+                    maxBikingDistanceEditText.setText("" + formattedNumber);
+                }
+            }
+        }); 
+        
+        minNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (!hasFocus && minNumBusesEditText.getText().length() != 0) {
+                    // Format numbers
+                    int formattedNumber = Integer
+                            .parseInt(minNumBusesEditText.getText().toString());
+                    minNumBusesEditText.setText("" + formattedNumber);
+                }
+            }
+        });
+        
+        maxNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (!hasFocus && maxNumBusesEditText.getText().length() != 0) {
+                    // Format numbers
+                    int formattedNumber = Integer
+                            .parseInt(maxNumBusesEditText.getText().toString());
+                    maxNumBusesEditText.setText("" + formattedNumber);
+                }
+            }
+            
+        });
+       
+    }
+    
+    /**
+     * Sets up default text to be displayed on the UI of this activity.
+     */
+    private void setInitialText() {
+        // Set initial date and time
+        dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                .convertAndroidSystemDateToFormatedDateString(
+                        calendar.get(Calendar.YEAR), 
+                        calendar.get(Calendar.MONTH), 
+                        calendar.get(Calendar.DAY_OF_MONTH)));
+
+        timeEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                .convertAndroidSystemTimeToFormatedTimeString(
+                        calendar.get(Calendar.HOUR_OF_DAY), 
+                        calendar.get(Calendar.MINUTE)));
+    }
 
     /**
-     * Fill in the history section. TODO: currently hard-coded, creating a live
-     * version in next phases. Since the data is dummy, I keep all the numbers
-     * even if they are marked as magic numbers by Check-Style.
+     * Fill in the history section.
      */
     private void setHistorySection() {
         historyItem = History.getInstance();

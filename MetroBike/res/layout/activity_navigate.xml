@@ -56,17 +56,25 @@
             style="@style/button"
             android:textSize="14sp"
             android:text="@string/button_go_to_previous" />
-   		
+
+   		<ScrollView
+   		    android:id="@+id/scrollView1"
+   		    android:layout_width="wrap_content"
+   		    android:layout_height="50dp"
+   		    android:layout_gravity="top|center"
+   		    android:paddingLeft="75dp"
+   		    android:paddingRight="70dp" >
+
    		<TextView
             android:id="@+id/direction_instr"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_gravity="top|center"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textIsSelectable="false" 
-            android:paddingLeft="75dp"
-            android:paddingRight="60dp"/>
-
+            
+            />
+</ScrollView>
    		<!-- we may not need this for the next button android:layout_marginRight="60dp" -->
    		
     	<Button
