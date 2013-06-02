@@ -132,7 +132,7 @@ public final class Utility {
      * Get the appropriate zoom level of the given route.
      * 
      * @param route
-     *            : the route object to be process
+     *            : the route object to be process, require not null
      * @param screenHeight
      *            : the screen height of the device
      * @param screenWidth
