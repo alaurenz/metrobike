@@ -26,7 +26,6 @@ import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
 import com.HuskySoft.metrobike.ui.utility.MapSetting;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -386,6 +385,14 @@ public class NavigateActivity extends FragmentActivity {
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending));
             googleMap.addMarker(markerTo);
             
+            //set the camera to focus on the route
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    com.HuskySoft.metrobike.ui.utility.Utility.
+                    getCameraCenter(routes.get(currRoute)), 
+                    com.HuskySoft.metrobike.ui.utility.Utility.
+                    getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth)),
+                    ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);  
+            
             drawSteps();
         }
     }
@@ -470,14 +477,6 @@ public class NavigateActivity extends FragmentActivity {
                 .getPolyLinePoints())) {
             polylineOptions = polylineOptions.add(ll);
         }
-        LatLng ll = com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
-                .getStartLocation());
-        
-        // set the camera to focus on the step
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(
-                ll, com.HuskySoft.metrobike.ui.utility.Utility
-                        .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth));
-        googleMap.animateCamera(update, ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
         
         if (s.getTravelMode() == TravelMode.TRANSIT) {
             googleMap.addPolyline(polylineOptions
