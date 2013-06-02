@@ -237,8 +237,8 @@ public class TransitDetailsTest extends TestCase {
 
         // Use string equality to check the request
         Assert.assertEquals("The toString() representation of a serialized->deserialized"
-                + " object should remain unchanged.", transitDetails.toString(),
-                recreatedTD.toString());
+                + " object should remain unchanged.", transitDetails,
+                recreatedTD);
     }
 
     /**
