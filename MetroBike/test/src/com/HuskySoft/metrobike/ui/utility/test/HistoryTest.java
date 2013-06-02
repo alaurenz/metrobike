@@ -1,5 +1,8 @@
 package com.HuskySoft.metrobike.ui.utility.test;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 import com.HuskySoft.metrobike.ui.utility.History;
 
 import junit.framework.Assert;
@@ -316,50 +319,6 @@ public class HistoryTest extends TestCase {
     }
 
     /**
-     * White box test: test writeOneAddressToFile.
-     *//* TODO: Get this test working!
-    public final void testWriteToFile02() {
-        try {
-            History.writeOneAddressToFile(new FileOutputStream("./testFile"), TEST_STRING);
-        } catch (FileNotFoundException e) {
-            Assert.fail("Cannot create a test file");
-        }
-    }*/
-
-    /**
-     * White box test: test writeOneAddressToFile.
-     *//* TODO: Get this test working!
-    public final void testWriteToFile03() {
-        String file = "./testFile";
-        FileOutputStream fos = null;
-        FileInputStream fis = null;
-        try {
-            fos = new FileOutputStream(file);
-            History.writeOneAddressToFile(fos, TEST_STRING);
-            fis = new FileInputStream(file);
-            byte[] expected = TEST_STRING.getBytes();
-            byte[] actual = new byte[expected.length];
-            fis.read(actual);
-            Assert.assertTrue(Arrays.equals(expected, actual));
-        } catch (FileNotFoundException e) {
-            Assert.fail("File cannot open");
-        } catch (IOException e) {
-            Assert.fail("Cannot read or write file");
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                System.out.println("file didn't close");
-            }
-        }
-    }*/
-    
-    /**
      * White box test: test addToHistory.
      */
     public final void testAddToHistory02() {
@@ -387,40 +346,15 @@ public class HistoryTest extends TestCase {
     }
 
     /**
-     * White box test: test readOneAddressToFile.
-     *//* TODO: Get this test working!
-    public final void testReadToFile02() {
-        setup();
-        String file = "./testFile";
+     * White box test: test closeStreamFile.
+     */ 
+    public final void testCloseFile01() {
         FileOutputStream fos = null;
         FileInputStream fis = null;
-        try {
-            int expected = history.getSize();
-            fos = new FileOutputStream(file);
-            byte[] strBytes = TEST_STRING.getBytes();
-            fos.write(strBytes);
-            fos.write("\n".getBytes());
-            fis = new FileInputStream(file);
-            History.readFromFile(fis);
-            int actual = history.getSize() - 1;
-            Assert.assertEquals(expected, actual);
-        } catch (FileNotFoundException e) {
-            Assert.fail("File cannot open");
-        } catch (IOException e) {
-            Assert.fail("Cannot read or write file");
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                System.out.println("file didn't close");
-            }
-        }
-    }*/
+        History.closeFileStream(fis, fos);
+        Assert.assertNull(fis);
+        Assert.assertNull(fos);
+    }
     
     /**
      * helper method for deleting the string array that has been added.

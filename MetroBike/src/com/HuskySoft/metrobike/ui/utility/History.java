@@ -267,4 +267,27 @@ public final class History {
             System.out.println(TAG + " Connot read history from file");
         }
     }
+    
+    /**
+     * Close this file stream.
+     * 
+     * @param fis
+     *            input stream that will close.
+     * @param fos
+     *            output stream that will close.
+     */
+    public static void closeFileStream(final FileInputStream fis, final FileOutputStream fos) {
+        try {
+            if (fis != null) {
+                fis.close();
+            }
+            System.out.println(TAG + "Close input stream");
+            if (fos != null) {
+                fos.close();
+            }
+            System.out.println(TAG + "Close output stream");
+        } catch (IOException e) {
+            System.err.println(TAG + "Cannot close the file stream");
+        }
+    }
 }
