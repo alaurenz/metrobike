@@ -44,6 +44,11 @@ public final class Utility {
      * vehicle icon size.
      */
     private static final int VEHICLE_ICON_SIZE = 40;
+    
+    /**
+     * Minimum two digit number.
+     */
+    private static final int MIN_TWO_DIGIT_NUMBER = 10;
 
     /**
      * A private constructor that throws an error to deter instantiation of this
@@ -173,5 +178,35 @@ public final class Utility {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    /**
+     * Build a bit map from the given URL.
+     * @param systemYear : year in Android
+     * @param systemMonth : month in Android
+     * @param systemDay : day in Android
+     * @return a natural formatted date string
+     */
+    public static String convertAndroidSystemDateToFormatedDateString(final int systemYear
+                                                                , final int systemMonth 
+                                                                , final int systemDay) {
+        
+        // formatted month string
+        String monthString = "";
+
+        // System uses month from 0 to 11 to represent January to December
+        int monthUIStyle = systemMonth + 1;
+        if (monthUIStyle < MIN_TWO_DIGIT_NUMBER) {
+            monthString += "0";
+        }
+        monthString += monthUIStyle;
+
+        // formatted day string
+        String dayString = "";
+        if (systemDay < MIN_TWO_DIGIT_NUMBER) {
+            dayString += "0";
+        }
+        dayString += systemDay;
+        return monthString + "/" + dayString + "/" + systemYear;
     }
 }

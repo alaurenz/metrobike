@@ -81,11 +81,6 @@ public class SearchActivity extends Activity implements
     public static class DatePickerFragment extends DialogFragment implements
             DatePickerDialog.OnDateSetListener {
 
-        /**
-         * Minimum two digit number.
-         */
-        private static final int MIN_TWO_DIGIT_NUMBER = 10;
-
         @Override
         public final Dialog onCreateDialog(final Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
@@ -117,24 +112,9 @@ public class SearchActivity extends Activity implements
         public final void onDateSet(final DatePicker view, final int year, final int month,
                 final int day) {
             EditText dateEditText = (EditText) getActivity().findViewById(R.id.editTextDate);
-
-            // Formatting string be displayed
-            String monthString = "";
-
-            // System uses month from 0 to 11 to represent January to December
-            int monthUIStyle = month + 1;
-            if (monthUIStyle < MIN_TWO_DIGIT_NUMBER) {
-                monthString += "0";
-            }
-            monthString += monthUIStyle;
-
-            String dayString = "";
-            if (day < MIN_TWO_DIGIT_NUMBER) {
-                dayString += "0";
-            }
-            dayString += day;
             // Update the date EditText widget
-            dateEditText.setText(monthString + "/" + dayString + "/" + year);
+            dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                                .convertAndroidSystemDateToFormatedDateString(year, month, day));
             Log.v(TAG, "Done on data set");
         }
     }
