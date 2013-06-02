@@ -2,7 +2,6 @@ package com.HuskySoft.metrobike.ui;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import com.HuskySoft.metrobike.R;
@@ -178,13 +177,7 @@ public class HistoryActivity extends Activity {
         } catch (FileNotFoundException e) {
             Log.i(TAG, "Cannot create history file");
         } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                Log.i(TAG, "Connot close the file ouput stream");
-            }
+            History.closeFileStream(null, fos);
         }
     }
 }

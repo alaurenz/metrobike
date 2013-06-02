@@ -2,9 +2,9 @@ package com.HuskySoft.metrobike.ui;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -141,16 +141,25 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected final void onResume() {
         super.onResume();
-        if (googleMap == null) {
-            initGoogleMap();
+        try {
+            if (googleMap == null) {
+                initGoogleMap();
+            }
+            // update or initialize the map
+            MapSetting.updateStatus(googleMap);
+            // try to get the current location
+            Location currLoc = googleMap.getMyLocation();
+            LatLng latLng;
+            if (currLoc == null) { 
+                latLng = new LatLng(LATITUDE, LONGITUDE);
+            } else {
+                latLng = new LatLng(currLoc.getLatitude(), currLoc.getLongitude());
+            }
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
+            Log.v(TAG, "Finished launching main activity--onResume!");
+        } catch (Exception e) {
+            Log.e(TAG, "Fail to move camera, google play service needed to be updated");
         }
-        // update or initialize the map
-        MapSetting.updateStatus(googleMap);
-        // try to get the current location
-        // would be in version 1.0
-        LatLng latLng = new LatLng(LATITUDE, LONGITUDE);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
-        Log.v(TAG, "Finished launching main activity--onResume!");
     }
 
     /**
@@ -177,13 +186,7 @@ public class MainActivity extends FragmentActivity {
             Log.i(TAG, "Cannot open history file");
         } finally {
             // close the file input stream
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                Log.i(TAG, "Cannot close the file input stream");
-            }
+            History.closeFileStream(fis, null);
         }
     }
 

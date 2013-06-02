@@ -2,7 +2,6 @@ package com.HuskySoft.metrobike.ui;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -1125,14 +1124,7 @@ public class SearchActivity extends Activity implements
         } catch (FileNotFoundException e) {
             Log.i(TAG, "Cannot create history file");
         }  finally {
-            try {
-                // close the file output stream.
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                Log.i(TAG, "Connot close the file ouput stream");
-            }
+            History.closeFileStream(null, fos);
         }
     }
 }
