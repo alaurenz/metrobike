@@ -249,6 +249,8 @@ public final class DirectionsRequestTest extends TestCase {
      * is too large to be returned.
      */
     // @Test
+    // This test commented-out because it takes ~10 minutes to run.
+    /*
     public void testDoLargeRequestTest() {
 
         request = new DirectionsRequest();
@@ -271,7 +273,7 @@ public final class DirectionsRequestTest extends TestCase {
         
         Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage() + " with errors ["
                 + request.getVerboseErrorMessages() + "]", expected, actual);
-    }
+    }*/
 
     /**
      * WhiteBox: This tests the doRequest method with invalid params.

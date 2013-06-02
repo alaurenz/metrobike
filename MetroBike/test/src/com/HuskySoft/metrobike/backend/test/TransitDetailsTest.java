@@ -229,7 +229,7 @@ public class TransitDetailsTest extends TestCase {
      */
     public void testSerializationTestEmptyDRObject() throws IOException, ClassNotFoundException,
             JSONException {
-        setUp();
+        transitDetails = null;
 
         // Serialize the empty TD, then de-serialize it
         byte[] theBytes = helpSerialize(transitDetails);
@@ -237,8 +237,8 @@ public class TransitDetailsTest extends TestCase {
 
         // Use string equality to check the request
         Assert.assertEquals("The toString() representation of a serialized->deserialized"
-                + " object should remain unchanged.", transitDetails.toString(),
-                recreatedTD.toString());
+                + " object should remain unchanged.", transitDetails,
+                recreatedTD);
     }
 
     /**

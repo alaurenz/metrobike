@@ -19,7 +19,7 @@ public final class TransitDetails implements Serializable {
      * or writeObject() methods, so we don't have old-version Location objects
      * (ex: from the log) being made into new-version Location objects.
      */
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * TAG for logging statements.
@@ -405,6 +405,8 @@ public final class TransitDetails implements Serializable {
         out.writeObject(vehicleType);
         out.writeObject(vehicleIconURL);
         out.writeInt(numStops);
+        out.writeInt(indent);
+        out.writeObject(indentString);
     }
 
     /**
@@ -432,5 +434,7 @@ public final class TransitDetails implements Serializable {
         vehicleType = (String) in.readObject();
         vehicleIconURL = (String) in.readObject();
         numStops = in.readInt();
+        indent = in.readInt();
+        indentString = (String)in.readObject();
     }
 }
