@@ -785,7 +785,8 @@ public class SearchActivity extends Activity implements
                     targetAutoCompleteTextView.clearComposingText();
                     targetAutoCompleteTextView.setEnabled(false);
                     targetAutoCompleteTextView.setText(originalACTVText);
-                    targetAutoCompleteTextView.setTextColor(SearchActivity.this.getResources().getColor(R.color.cyan));
+                    targetAutoCompleteTextView.setTextColor(
+                            SearchActivity.this.getResources().getColor(R.color.cyan));
                     targetAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     targetAutoCompleteTextView.dismissDropDown();
                     targetCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
@@ -846,7 +847,8 @@ public class SearchActivity extends Activity implements
                     fromAutoCompleteTextView.clearComposingText();
                     fromAutoCompleteTextView.setEnabled(false);
                     fromAutoCompleteTextView.setText("Current Location");
-                    fromAutoCompleteTextView.setTextColor(SearchActivity.this.getResources().getColor(R.color.cyan));
+                    fromAutoCompleteTextView.setTextColor(
+                            SearchActivity.this.getResources().getColor(R.color.cyan));
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     fromClearButton.setVisibility(View.INVISIBLE);
@@ -872,7 +874,8 @@ public class SearchActivity extends Activity implements
                     toAutoCompleteTextView.clearComposingText();
                     toAutoCompleteTextView.setEnabled(false);
                     toAutoCompleteTextView.setText("Current Location");
-                    toAutoCompleteTextView.setTextColor(SearchActivity.this.getResources().getColor(R.color.cyan));
+                    toAutoCompleteTextView.setTextColor(
+                            SearchActivity.this.getResources().getColor(R.color.cyan));
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     toClearButton.setVisibility(View.INVISIBLE);
