@@ -45,9 +45,49 @@ public class UtilityTest extends TestCase {
     private static final float ZOOM_1 = 600f;
 
     /**
-     * Fix value 4. Need this in order to pass the checkstyle.
+     * Fix value 5. Need this in order to pass the checkstyle.
      */
     private static final float ZOOM_2 = 250f;
+    
+    /**
+     * Fix value 6. Need this in order to pass the checkstyle.
+     */
+    private static final int YEAR_2013 = 2013;
+    
+    /**
+     * Fix value 7. Need this in order to pass the checkstyle.
+     */
+    private static final int INT_3 = 3;
+    
+    /**
+     * Fix value 8. Need this in order to pass the checkstyle.
+     */
+    private static final int INT_5 = 5;
+    
+    /**
+     * Fix value 9. Need this in order to pass the checkstyle.
+     */
+    private static final int INT_8 = 8;
+    
+    /**
+     * Fix value 10. Need this in order to pass the checkstyle.
+     */
+    private static final int INT_9 = 9;
+    
+    /**
+     * Fix value 11. Need this in order to pass the checkstyle.
+     */
+    private static final int INT_11 = 11;
+    
+    /**
+     * Fix value 12. Need this in order to pass the checkstyle.
+     */
+    private static final int INT_15 = 15;
+    
+    /**
+     * Fix value 13. Need this in order to pass the checkstyle.
+     */
+    private static final int INT_31 = 31;
 
     /**
      * WhiteBox: This test the case of converting a null Location to a LatLng.
@@ -177,5 +217,27 @@ public class UtilityTest extends TestCase {
         LatLng result = Utility.convertLocation(toConvert);
         Assert.assertEquals(toConvert.getLatitude(), result.latitude);
         Assert.assertEquals(toConvert.getLongitude(), result.longitude);
+    }
+    
+    /**
+     * BlackBox: Test if the converting method of the date is working properly.
+     */
+    public final void testConvertAndroidSystemDateToFormatedDateString() {
+        Assert.assertEquals("06/03/2013", 
+                Utility.convertAndroidSystemDateToFormatedDateString(YEAR_2013, INT_5, INT_3));
+        Assert.assertEquals("12/31/2013", 
+                Utility.convertAndroidSystemDateToFormatedDateString(YEAR_2013, INT_11, INT_31));
+    }
+    
+    /**
+     * BlackBox: Test if the converting method of the time is working properly.
+     */
+    public final void testConvertAndroidSystemTimeToFormatedTimeString() {
+        Assert.assertEquals("09:08", 
+                Utility.convertAndroidSystemTimeToFormatedTimeString(INT_9, INT_8));
+        Assert.assertEquals("00:00", 
+                Utility.convertAndroidSystemTimeToFormatedTimeString(0, 0));
+        Assert.assertEquals("15:11", 
+                Utility.convertAndroidSystemTimeToFormatedTimeString(INT_15, INT_11));
     }
 }
