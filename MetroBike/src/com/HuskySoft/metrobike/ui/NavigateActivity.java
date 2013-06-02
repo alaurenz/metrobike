@@ -77,7 +77,7 @@ public class NavigateActivity extends FragmentActivity {
     /**
      * Transparent rate of the poly-line.
      */
-    private static final int POLYLINE_TRANSPARENT = 200;
+    private static final int POLYLINE_TRANSPARENT = 255;
 
     /**
      * poly-line color integer.
@@ -128,6 +128,21 @@ public class NavigateActivity extends FragmentActivity {
      * Index for current step.
      */
     private int currentStep = 0;
+    
+    /**
+     * Index for previous leg.
+     */
+    private int previousLeg = -1;
+
+    /**
+     * Index for previous step.
+     */
+    private int previousStep = -1;
+    
+    /**
+     * Z-Index for drawing steps.
+     */
+    private int zIndex = 1;
 
     /**
      * TextView for showing instructions.
@@ -189,14 +204,14 @@ public class NavigateActivity extends FragmentActivity {
         next.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 updateNext();
-                drawRoute();
+                drawStep();
             }
         });
 
         prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 updatePrev();
-                drawRoute();
+                drawStep();
             }
         });
         Log.v(TAG, "Done creating the navigate activity");
@@ -206,6 +221,8 @@ public class NavigateActivity extends FragmentActivity {
      * Update the state of the navigation for previous step.
      */
     private void updatePrev() {
+    	previousLeg = currentLeg;
+    	previousStep = currentStep;
         // re-enable the "next" button
         if (currentStep + 1 == legs.get(currentLeg).getStepList().size()
                 && currentLeg + 1 == legs.size()) {
@@ -227,6 +244,8 @@ public class NavigateActivity extends FragmentActivity {
      * Update the state of the navigation for next step.
      */
     private void updateNext() {
+    	previousLeg = currentLeg;
+    	previousStep = currentStep;
         int legsize = legs.size();
         int stepsize = legs.get(currentLeg).getStepList().size();
         // re-enable the "previous" button
@@ -242,7 +261,7 @@ public class NavigateActivity extends FragmentActivity {
         // disable the "next" button when get to the end of the steps
         if (currentStep + 1 == legs.get(currentLeg).getStepList().size()
                 && currentLeg + 1 == legs.size()) {
-            next.setEnabled(false);
+        	next.setEnabled(false);
         }
     }
 
@@ -332,7 +351,6 @@ public class NavigateActivity extends FragmentActivity {
      *            the view of the button onClick funtion for the return to
      *            result page button
      */
-
     public final void goToResults(final View view) {
         // Do something in response to button
         Intent intent = new Intent(this, ResultsActivity.class);
@@ -367,7 +385,7 @@ public class NavigateActivity extends FragmentActivity {
                     .title("End Here!")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending));
             googleMap.addMarker(markerTo);
-
+            
             drawSteps();
         }
     }
@@ -380,6 +398,7 @@ public class NavigateActivity extends FragmentActivity {
         String direction = legs.get(currentLeg).getStepList().get(currentStep).getHtmlInstruction()
                 .replaceAll("\\<.*?>", "");
         instr.setText(direction);
+        
         for (int i = 0; i < legs.size(); i++) {
             Leg l = legs.get(i);
             for (int j = 0; j < l.getStepList().size(); j++) {
@@ -413,43 +432,85 @@ public class NavigateActivity extends FragmentActivity {
                     googleMap.addMarker(mo);
                 }
 
-                if (i == currentLeg && j == currentStep) {
-                    LatLng ll = com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
-                            .getStartLocation());
-                    // set the camera to focus on the step
-                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(
-                            ll, com.HuskySoft.metrobike.ui.utility.Utility
-                                    .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth));
-                    googleMap.animateCamera(update, ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
-                    
-                    if (s.getTravelMode() == TravelMode.TRANSIT) {
-                        googleMap.addPolyline(polylineOptions
-                                .color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
-                                .width(POLYLINE_THICK));
-                    } else {
-                        googleMap.addPolyline(polylineOptions
-                                .color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
-                                .width(POLYLINE_THIN).zIndex(1));
-                    }
+                if (s.getTravelMode() == TravelMode.TRANSIT) {
+                    googleMap.addPolyline(polylineOptions
+                            .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                                    DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
+                            .width(POLYLINE_THICK).zIndex(zIndex));
                 } else {
-                    if (s.getTravelMode() == TravelMode.TRANSIT) {
-                        googleMap.addPolyline(polylineOptions
-                                .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
-                                        DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
-                                .width(POLYLINE_THICK));
-                    } else {
-                        googleMap.addPolyline(polylineOptions
-                                .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
-                                        DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
-                                .width(POLYLINE_THIN).zIndex(1));
-                    }
+                    googleMap.addPolyline(polylineOptions
+                            .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                                    DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
+                            .width(POLYLINE_THIN).zIndex(zIndex));
                 }
+                zIndex++;
+                
                 googleMap.addCircle(new CircleOptions()
-                        .center(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
-                                .getEndLocation())).radius(DRAW_STEPS_RADIUS)
-                        .strokeColor(Color.BLACK).strokeWidth(DRAW_STEPS_STROKE_WIDTH)
-                        .fillColor(Color.WHITE).zIndex(2));
+                .center(com.HuskySoft.metrobike.ui.utility.Utility
+                .convertLocation(s.getStartLocation()))
+                .radius(DRAW_STEPS_RADIUS)
+                .strokeColor(Color.BLACK).strokeWidth(DRAW_STEPS_STROKE_WIDTH)
+                .fillColor(Color.WHITE).zIndex(zIndex));
             }
+        }
+        drawStep();
+    }
+    
+    /**
+     * Draw the current single step for the navigation on the map.
+     */
+    private void drawStep() {
+    	// get rid of the HTML tags
+    	Step s = legs.get(currentLeg).getStepList().get(currentStep);
+        String direction = s.getHtmlInstruction().replaceAll("\\<.*?>", "");
+        instr.setText(direction);
+        
+        PolylineOptions polylineOptions = new PolylineOptions();
+        for (LatLng ll : com.HuskySoft.metrobike.ui.utility.Utility.convertLocationList(s
+                .getPolyLinePoints())) {
+            polylineOptions = polylineOptions.add(ll);
+        }
+        LatLng ll = com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(s
+                .getStartLocation());
+        
+        // set the camera to focus on the step
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(
+                ll, com.HuskySoft.metrobike.ui.utility.Utility
+                        .getCameraZoomLevel(routes.get(currRoute), dPHeight, dPWidth));
+        googleMap.animateCamera(update, ANIMATED_CAMERA_DURATION_IN_MILLISECOND, null);
+        
+        if (s.getTravelMode() == TravelMode.TRANSIT) {
+            googleMap.addPolyline(polylineOptions
+                    .color(Color.argb(POLYLINE_TRANSPARENT, POLYLINE_COLOR, 0, 0))
+                    .width(POLYLINE_THICK).zIndex(zIndex));
+        } else {
+            googleMap.addPolyline(polylineOptions
+                    .color(Color.argb(POLYLINE_TRANSPARENT, 0, POLYLINE_COLOR, 0))
+                    .width(POLYLINE_THIN).zIndex(zIndex));
+        }
+        zIndex++;
+        
+        // draw the previous step gray
+        if(previousLeg > -1 && previousStep > -1) {
+        	Step preS = legs.get(previousLeg).getStepList().get(previousStep);
+        	PolylineOptions polylineOptionsPrev = new PolylineOptions();
+        	for (LatLng llpre : com.HuskySoft.metrobike.ui.utility.Utility.convertLocationList(preS
+                .getPolyLinePoints())) {
+        		polylineOptionsPrev = polylineOptionsPrev.add(llpre);
+        	}
+        
+        	if (preS.getTravelMode() == TravelMode.TRANSIT) {
+        		googleMap.addPolyline(polylineOptionsPrev
+                    .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                            DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
+                    .width(POLYLINE_THICK).zIndex(zIndex));
+        	} else {
+        		googleMap.addPolyline(polylineOptionsPrev
+                    .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                            DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
+                    .width(POLYLINE_THIN).zIndex(zIndex));
+        	}
+        	zIndex++;
         }
     }
 
