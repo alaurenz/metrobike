@@ -281,6 +281,33 @@ public class SearchActivity extends Activity implements
             // Do Request
             DirectionsStatus retVal = dReq.doRequest();
             Log.d(TAG, "Finish the do request");
+            
+            // If a cancellation happens to the direction request
+            // display an AlertDialog to let user to (re)start
+            // a new request
+            if (canceled) {
+                Log.d(TAG, "Request has been successfully canceled");
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
+                        builder.setMessage("Request has been canceled.");
+                        builder.setTitle("Success");
+                        builder.setCancelable(false);
+                        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(final DialogInterface dialog, final int which) {
+                                // cancel this dialog
+                                dialog.cancel();
+                            }
+                        });
+                        // Create the AlertDialog object and return it
+                        builder.create().show();
+                    }
+                });
+                return;
+            }
+            
             // If an error happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
@@ -374,6 +401,30 @@ public class SearchActivity extends Activity implements
             return timeToSend;
         }
     }
+    
+    /**
+     * An inner class that generates a request for canceling running DirThread routes and
+     * allows the backend to cancel on its own thread.
+     * 
+     * @author Shuo Wang
+     */
+    private class CancelThread implements Runnable {
+
+        @Override
+        public void run() {
+            DirectionsRequest.disableBackendQueries();
+            
+            try {
+                dirThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            DirectionsRequest.enableBackendQueries();
+            canceled = false;
+            pdCancel.dismiss();
+        }
+        
+    }
 
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
@@ -456,6 +507,16 @@ public class SearchActivity extends Activity implements
      * A progress dialog indicating the searching status of this activity.
      */
     private ProgressDialog pd;
+    
+    /**
+     * A progress dialog indicating the canceling status of this activity.
+     */
+    private ProgressDialog pdCancel;
+    
+    /**
+     * Indicating the status of the request.
+     */
+    private boolean canceled;
 
     /**
      * Location Client to get user's current location.
@@ -496,6 +557,16 @@ public class SearchActivity extends Activity implements
      * EditText for user to set maximum biking distance.
      */
     private EditText maxBikingDistanceEditText;
+    
+    /**
+     * Thread requesting for new routes.
+     */
+    private Thread dirThread;
+    
+    /**
+     * Thread for canceling dirThread.
+     */
+    private Thread cancelThread;
 
     /**
      * {@inheritDoc}
@@ -933,13 +1004,12 @@ public class SearchActivity extends Activity implements
         findButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final Thread dirThread = new Thread(new DirThread());
-                //pd = ProgressDialog.show(v.getContext(), "Searching", "Searching for routes...");
+                dirThread = new Thread(new DirThread());
+                canceled = false;
                 pd = new ProgressDialog(SearchActivity.this);
                 pd.setTitle("Searching");
                 pd.setMessage(
-                        "Searching for routes... \n(You can cancel the request but it takes "
-                        + "serveral seconds)");
+                        "Searching for routes...");
                 // This is to enforce user to click "cancel" button to cancel
                 // instead of clicking anywhere else
                 pd.setCancelable(false);
@@ -951,14 +1021,18 @@ public class SearchActivity extends Activity implements
                     public void onClick(final DialogInterface dialog, final int which) {
                         // Cancel the request
                         if (which == DialogInterface.BUTTON_NEUTRAL) {
-                            DirectionsRequest.disableBackendQueries();
-                    
-                            try {
-                                dirThread.join();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            DirectionsRequest.enableBackendQueries();
+                            canceled = true;
+                            
+                            cancelThread = new Thread(new CancelThread());
+                            cancelThread.start();
+                            pdCancel = new ProgressDialog(SearchActivity.this);
+                            pdCancel.setTitle("Canceling");
+                            pdCancel.setMessage(
+                                    "Canceling request... (This takes a moment)");
+                            // This is to enforce user to click "cancel" button to cancel
+                            // instead of clicking anywhere else
+                            pdCancel.setCancelable(false);
+                            pdCancel.show();
                         }
                         
                     }
