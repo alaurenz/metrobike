@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -401,10 +402,6 @@ public class NavigateActivity extends FragmentActivity {
      * Draw the steps on the map.
      */
     private void drawSteps() {
-        // get rid of the HTML tags
-        String direction = legs.get(currentLeg).getStepList().get(currentStep).getHtmlInstruction()
-                .replaceAll("\\<.*?>", "");
-        instr.setText(direction);
         
         for (int i = 0; i < legs.size(); i++) {
             Leg l = legs.get(i);
@@ -469,8 +466,20 @@ public class NavigateActivity extends FragmentActivity {
     private void drawStep() {
         // get rid of the HTML tags
         Step s = legs.get(currentLeg).getStepList().get(currentStep);
-        String direction = s.getHtmlInstruction().replaceAll("\\<.*?>", "");
-        instr.setText(direction);
+         
+        String direction;
+        if (currentLeg == legs.size() - 1 && 
+                currentStep == legs.get(currentLeg).getStepList().size() - 1) {
+            // If final destination, display "Destination on ..." if applicable
+            direction = s.getHtmlInstruction().replaceAll("[<]div[^>]*[>]", " (")
+                                       .replaceAll("[<]/div[>]", ")");
+        } else { 
+            // If not final destination, strip the entire "Destination on ..."
+            direction = s.getHtmlInstruction().replaceAll("<div.*>", ""); 
+        }
+        
+        // Html.fromHtml is used for displaying formatted instruction
+        instr.setText(Html.fromHtml(direction));
         
         PolylineOptions polylineOptions = new PolylineOptions();
         for (LatLng ll : com.HuskySoft.metrobike.ui.utility.Utility.convertLocationList(s
