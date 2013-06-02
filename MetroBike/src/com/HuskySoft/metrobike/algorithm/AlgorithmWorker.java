@@ -42,7 +42,7 @@ public abstract class AlgorithmWorker {
     /**
      * The maximum number of consecutive attempts to contact the Google server.
      */
-    private static final int MAX_CONNECTION_ATTEMPTS = 5;
+    private static final int MAX_CONNECTION_ATTEMPTS = 2;
 
     /**
      * The maximum number of consecutive attempts to contact the Google server
