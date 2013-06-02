@@ -246,8 +246,7 @@ public class SettingsActivity extends PreferenceActivity {
             } else {
                 // no history, show the toast
                 Context context = preference.getContext();
-                int emptyHistory = R.string.empty_history;
-                Toast.makeText(context, emptyHistory, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.empty_history, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "History list is empty, no need to create a history activity");
             }
         }

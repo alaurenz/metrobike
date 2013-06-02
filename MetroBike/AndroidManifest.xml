@@ -69,7 +69,7 @@
         <activity
             android:name="com.HuskySoft.metrobike.ui.SearchActivity"
             android:label="@string/title_activity_search"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity

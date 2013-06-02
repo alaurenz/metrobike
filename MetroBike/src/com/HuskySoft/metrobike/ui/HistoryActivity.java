@@ -31,8 +31,6 @@ import android.widget.Toast;
  */
 public class HistoryActivity extends Activity {
 
-    // This class pass the check style
-
     /**
      * The tag of this class.
      */
@@ -92,9 +90,8 @@ public class HistoryActivity extends Activity {
                         adapter.notifyDataSetChanged();
                         if (history.getSize() == 0) {
                             // nothing to show, go back to the setting activity
-                            int emptyHistory = R.string.empty_history;
-                            Context context = view.getContext();
-                            Toast.makeText(context, emptyHistory, Toast.LENGTH_SHORT).show();
+                            int empty = R.string.empty_history;
+                            Toast.makeText(view.getContext(), empty, Toast.LENGTH_SHORT).show();
                             // kill this activity and go back to the previous
                             // one
                             Log.d(TAG, "No more addresses, quite this history page");
@@ -122,11 +119,9 @@ public class HistoryActivity extends Activity {
     private void initializeHistoryListView() {
         historyListView = (ListView) findViewById(R.id.history_listView);
         // get the list array from
-        final List<String> list = history.getHistory();
         int layout = android.R.layout.simple_dropdown_item_1line;
-        adapter = new ArrayAdapter<String>(this, layout, list);
+        adapter = new ArrayAdapter<String>(this, layout, history.getHistory());
         historyListView.setAdapter(adapter);
-
     }
 
     /**

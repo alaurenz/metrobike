@@ -173,6 +173,19 @@ public class HistoryTest extends TestCase {
     }
 
     /**
+     * White box test: test addAddress(String[] address).
+     */
+    public final void testAddEmptyArrayAddress06() {
+        setup();
+        String[] strArray = {};
+        int expected = history.getSize();
+        // add array address
+        history.addAddress(strArray);
+        int actual = history.getSize();
+        Assert.assertEquals("The size should not changed ", expected, actual);
+    }
+    
+    /**
      * White box test: test getAddress(int index).
      */
     public final void testGetAddedAddress01() {

@@ -220,8 +220,8 @@ public class NavigateActivity extends FragmentActivity {
      * Update the state of the navigation for previous step.
      */
     private void updatePrev() {
-    	previousLeg = currentLeg;
-    	previousStep = currentStep;
+        previousLeg = currentLeg;
+        previousStep = currentStep;
         // re-enable the "next" button
         if (currentStep + 1 == legs.get(currentLeg).getStepList().size()
                 && currentLeg + 1 == legs.size()) {
@@ -243,8 +243,8 @@ public class NavigateActivity extends FragmentActivity {
      * Update the state of the navigation for next step.
      */
     private void updateNext() {
-    	previousLeg = currentLeg;
-    	previousStep = currentStep;
+        previousLeg = currentLeg;
+        previousStep = currentStep;
         int legsize = legs.size();
         int stepsize = legs.get(currentLeg).getStepList().size();
         // re-enable the "previous" button
@@ -260,7 +260,7 @@ public class NavigateActivity extends FragmentActivity {
         // disable the "next" button when get to the end of the steps
         if (currentStep + 1 == legs.get(currentLeg).getStepList().size()
                 && currentLeg + 1 == legs.size()) {
-        	next.setEnabled(false);
+            next.setEnabled(false);
         }
     }
 
@@ -467,8 +467,8 @@ public class NavigateActivity extends FragmentActivity {
      * Draw the current single step for the navigation on the map.
      */
     private void drawStep() {
-    	// get rid of the HTML tags
-    	Step s = legs.get(currentLeg).getStepList().get(currentStep);
+        // get rid of the HTML tags
+        Step s = legs.get(currentLeg).getStepList().get(currentStep);
         String direction = s.getHtmlInstruction().replaceAll("\\<.*?>", "");
         instr.setText(direction);
         
@@ -490,26 +490,26 @@ public class NavigateActivity extends FragmentActivity {
         zIndex++;
         
         // draw the previous step gray
-        if(previousLeg > -1 && previousStep > -1) {
-        	Step preS = legs.get(previousLeg).getStepList().get(previousStep);
-        	PolylineOptions polylineOptionsPrev = new PolylineOptions();
-        	for (LatLng llpre : com.HuskySoft.metrobike.ui.utility.Utility.convertLocationList(preS
-                .getPolyLinePoints())) {
-        		polylineOptionsPrev = polylineOptionsPrev.add(llpre);
-        	}
-        
-        	if (preS.getTravelMode() == TravelMode.TRANSIT) {
-        		googleMap.addPolyline(polylineOptionsPrev
-                    .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
-                            DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
-                    .width(POLYLINE_THICK).zIndex(zIndex));
-        	} else {
-        		googleMap.addPolyline(polylineOptionsPrev
-                    .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
-                            DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105))
-                    .width(POLYLINE_THIN).zIndex(zIndex));
-        	}
-        	zIndex++;
+        if (previousLeg > -1 && previousStep > -1) {
+            Step preS = legs.get(previousLeg).getStepList().get(previousStep);
+            PolylineOptions polylineOptionsPrev = new PolylineOptions();
+            for (LatLng llpre : com.HuskySoft.metrobike.ui.utility.Utility.convertLocationList(preS
+                    .getPolyLinePoints())) {
+                polylineOptionsPrev = polylineOptionsPrev.add(llpre);
+            }
+
+            if (preS.getTravelMode() == TravelMode.TRANSIT) {
+                googleMap.addPolyline(polylineOptionsPrev
+                        .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                                DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105)).width(POLYLINE_THICK)
+                        .zIndex(zIndex));
+            } else {
+                googleMap.addPolyline(polylineOptionsPrev
+                        .color(Color.argb(POLYLINE_TRANSPARENT, DRAW_STEPS_ARGB_105,
+                                DRAW_STEPS_ARGB_105, DRAW_STEPS_ARGB_105)).width(POLYLINE_THIN)
+                        .zIndex(zIndex));
+            }
+            zIndex++;
         }
     }
 

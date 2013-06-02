@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.util.Log;
-
 /**
  * History class contains valid history address that user used to use.
  * 
@@ -42,8 +40,6 @@ public final class History {
      */
     private History() {
         historyList = new ArrayList<String>();
-        // remove the hard code in the version 1 phrase
-        // hardCodeAddress();
         System.out.println(TAG + "History()->Done creating a singleton class for History");
     }
 
@@ -65,7 +61,8 @@ public final class History {
      * @return unmodifiable list to prevent representation exposition
      */
     public List<String> getHistory() {
-        return Collections.unmodifiableList(historyList);
+        List<String> unmodifiedList = Collections.unmodifiableList(historyList);
+        return unmodifiedList;
     }
 
     /**
@@ -83,8 +80,13 @@ public final class History {
             return;
         }
         // only added if no duplicate history
-        if (!historyList.contains(address)) {
+        boolean isContain = historyList.contains(address);
+        if (!isContain) {
             historyList.add(address);
+        } else {
+            // do nothing
+            System.out.println(TAG + "addAddress(String address)->Add duplicate address");
+            return;
         }
     }
 
@@ -99,6 +101,11 @@ public final class History {
             // defensive programming.
             System.err.println(TAG
                     + "addAddress(String[] addresses)->Add address array should not be null!");
+            return;
+        }
+        int length = addresses.length;
+        if (length == 0) {
+            System.out.println(TAG + "addAddress(String[] addresses)->Nothing to added");
             return;
         }
         for (int i = 0; i < addresses.length; i++) {
@@ -120,7 +127,8 @@ public final class History {
                     + "getAddress()->Don't give an invalid index of the history list to me!");
             return null;
         }
-        return historyList.get(index);
+        String address = historyList.get(index);
+        return address;
     }
 
     /**
@@ -147,11 +155,13 @@ public final class History {
             return;
         }
         // here although the address should be in this list, we just need to
-        if (historyList.contains(address)) {
+        boolean isContain = historyList.contains(address);
+        if (isContain) {
             historyList.remove(address);
         } else {
             System.err.println(TAG + " This address " + address
                     + " cannot be found in this history list!");
+            return;
         }
     }
 
@@ -213,6 +223,7 @@ public final class History {
     public static void writeOneAddressToFile(final FileOutputStream fos, final String address) {
         if (fos == null || address == null) {
             // don't write to file as object is null
+            System.err.println(TAG + "writeOneAddressToFile->fos or address is null");
             return;
         }
         try {
@@ -220,7 +231,7 @@ public final class History {
             // \n indicate the next address
             fos.write("\n".getBytes());
         } catch (IOException e) {
-            Log.i(TAG, "Connot write history into file");
+            System.out.println(TAG + " Connot write history from file");
         }
     }
     
@@ -237,6 +248,7 @@ public final class History {
         char c;
         if (fis == null) {
             // input stream is null, don't process.
+            System.err.println(TAG + "readFromFile->fis is null");
             return;
         }
         // read one byte at a time.
@@ -245,7 +257,6 @@ public final class History {
                 c = (char) readByte;
                 if (c == '\n') {
                     // if we hit the new line, that's the other address.
-                    System.out.println(TAG + " Address: " + sb.toString() + " is read from file.");
                     history.addAddress(sb.toString());
                     sb = new StringBuilder();
                     continue;
@@ -256,25 +267,4 @@ public final class History {
             System.out.println(TAG + " Connot read history from file");
         }
     }
-
-//    /**
-//     * Hardcoded address for testing. Will delete this method in version 1
-//     * phase. TODO: Remove this in V1 phase.
-//     */
-//    private void hardCodeAddress() {
-//        historyList.add("Paul G. Allen Center for Computer Science & Engineering (CSE)");
-//        historyList.add("Guggenheim Hall (GUG)");
-//        historyList.add("4311 11th Ave NE, Seattle, WA");
-//        historyList.add("Schmitz Hall (SMZ)");
-//        historyList.add("85 Pike St, Seattle, Washington");
-//        historyList.add("7201 East Green Lake Dr N, Seattle, WA");
-//        historyList.add("601 N 59th St, Seattle, WA");
-//        historyList.add("400 Broad St, Seattle, WA");
-//        historyList.add("401 Broad St, Seattle, WA");
-//        historyList.add("402 Broad St, Seattle, WA");
-//        historyList.add("403 Broad St, Seattle, WA");
-//        historyList.add("404 Broad St, Seattle, WA");
-//        historyList.add("405 Broad St, Seattle, WA");
-//        historyList.add("2623 NE University Village St #7, Seattle, WA");
-//    }
 }
