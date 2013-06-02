@@ -1,5 +1,10 @@
 package com.HuskySoft.metrobike.backend.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -9,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.Leg;
 import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
@@ -33,7 +39,6 @@ public class TransitDetailsTest extends TestCase {
      */
     private static final double SEATTLE_LAT_2 = 47.6814690;
 
-    
     /**
      * To keep checkstyle happy.
      */
@@ -88,7 +93,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getDepartureStop method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getDepartureStop() throws JSONException {
         setUp();
@@ -102,7 +107,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getArrivalTime method.
      * 
      * @throws JSONException
-     *  If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getArrivalTime() throws JSONException {
         setUp();
@@ -116,7 +121,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getDepartureTime method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getDepartureTime() throws JSONException {
         setUp();
@@ -130,7 +135,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getAgencyName method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getAgencyName() throws JSONException {
         setUp();
@@ -144,7 +149,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getHeadsign method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getHeadsign() throws JSONException {
         setUp();
@@ -158,7 +163,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getLineShortName method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getLineShortName() throws JSONException {
         setUp();
@@ -172,7 +177,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getLineShortName method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getVehicleType() throws JSONException {
         setUp();
@@ -186,7 +191,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getVehicleIconURL method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getVehicleIconURL() throws JSONException {
         setUp();
@@ -200,7 +205,7 @@ public class TransitDetailsTest extends TestCase {
      * WhiteBox: This tests the getLineShortName method.
      * 
      * @throws JSONException
-     *      If something goes wrong.
+     *             If something goes wrong.
      */
     public final void test_getNumStops() throws JSONException {
         setUp();
@@ -208,6 +213,97 @@ public class TransitDetailsTest extends TestCase {
         int actual = transitDetails.getNumStops();
         Assert.assertEquals("Actual value for transitDetails.getNumStops() was: " + actual,
                 expected, actual);
+    }
+
+    /**
+     * BlackBox: Tests to be sure we can safely serialize and deserialize a
+     * TransitDetails object. This functionality is used in the intent-passing
+     * system.
+     * 
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     * @throws JSONException
+     *             If something goes wrong.
+     */
+    public void testSerializationTestEmptyDRObject() throws IOException, ClassNotFoundException,
+            JSONException {
+        setUp();
+
+        // Serialize the empty TD, then de-serialize it
+        byte[] theBytes = helpSerialize(transitDetails);
+        TransitDetails recreatedTD = helpDeserialize(theBytes);
+
+        // Use string equality to check the request
+        Assert.assertEquals("The toString() representation of a serialized->deserialized"
+                + " object should remain unchanged.", transitDetails.toString(),
+                recreatedTD.toString());
+    }
+
+    /**
+     * BlackBox: Tests to be sure we can safely serialize and deserialize a
+     * non-empty TransitDetails object. This functionality is used in the
+     * intent-passing system.
+     * 
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     * @throws JSONException
+     *             If something goes wrong.
+     */
+    public void testSerializationTestNonEmptyDRObject() throws IOException, ClassNotFoundException,
+            JSONException {
+        setUp();
+
+        // Serialize the empty TD, then de-serialize it
+        byte[] theBytes = helpSerialize(transitDetails);
+        TransitDetails recreatedTD = helpDeserialize(theBytes);
+
+        // Use string equality to check the TD
+        Assert.assertEquals("The toString() representation of a serialized->deserialized"
+                + " object should remain unchanged.", transitDetails.toString(),
+                recreatedTD.toString());
+    }
+
+    /**
+     * Helper function for serializing a TransitDetails object. Help on testing
+     * this based on:
+     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * 
+     * @param toSerialize
+     *            the DirectionsRequest to serialize
+     * @return a byte array representing the serialized DirectionsRequest
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     */
+    private byte[] helpSerialize(final TransitDetails toSerialize) throws IOException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream objectOut = new ObjectOutputStream(byteOut);
+        objectOut.writeObject(toSerialize);
+        objectOut.close();
+        return byteOut.toByteArray();
+    }
+
+    /**
+     * Helper function for serializing a DirectionsRequest object.Help on
+     * testing this based on:
+     * http://www.ibm.com/developerworks/library/j-serialtest/index.html
+     * 
+     * @param toDeSerialize
+     *            a byte array representing the serialized DirectionsRequest
+     * @return the deserialized DirectionsRequest
+     * @throws IOException
+     *             if an IO exception occurs during processing
+     * @throws ClassNotFoundException
+     *             if a class cannot be found
+     */
+    private TransitDetails helpDeserialize(final byte[] toDeSerialize)
+            throws ClassNotFoundException, IOException {
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(toDeSerialize);
+        ObjectInputStream objectIn = new ObjectInputStream(byteIn);
+        return (TransitDetails) objectIn.readObject();
     }
 
     /**
