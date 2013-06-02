@@ -229,7 +229,7 @@ public class TransitDetailsTest extends TestCase {
      */
     public void testSerializationTestEmptyDRObject() throws IOException, ClassNotFoundException,
             JSONException {
-        setUp();
+        transitDetails = null;
 
         // Serialize the empty TD, then de-serialize it
         byte[] theBytes = helpSerialize(transitDetails);
