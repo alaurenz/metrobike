@@ -245,7 +245,7 @@ public class SearchActivity extends Activity implements
             Log.d(TAG, "Done setting the travel mode: " + tm);
             long timeToSend = timeDirectionRequest();
 
-            // Determine time mode
+            // Set up time mode
             if (arriveAtButton.isChecked()) {
                 dReq.setArrivalTime(timeToSend);
             } else {
@@ -333,7 +333,7 @@ public class SearchActivity extends Activity implements
 
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
-    // cancel this dialog
+                    // cancel this dialog
                     dialog.cancel();
                 }
             });
@@ -375,11 +375,6 @@ public class SearchActivity extends Activity implements
             return timeToSend;
         }
     }
-
-    /**
-     * Integer Representation of Color: Light Blue.
-     */
-    private static final int COLOR_LIGHT_BLUE = Color.rgb(13, 139, 217);
 
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
@@ -654,7 +649,7 @@ public class SearchActivity extends Activity implements
      */
     private void setAddressBoxListeners() {
         fromAutoCompleteTextView.setOnFocusChangeListener(
-                new fromToAutoCompleteTextViewOnFocusChangeListener());
+                new FromToAutoCompleteTextViewOnFocusChangeListener());
 
         // Determine whether to show clear button for fromAutoCompleteTextView
         // when it is being edited
@@ -697,7 +692,7 @@ public class SearchActivity extends Activity implements
         // Determine whether to show clear button for toAutoCompleteTextView
         // when it is focused
         toAutoCompleteTextView.setOnFocusChangeListener(
-                new fromToAutoCompleteTextViewOnFocusChangeListener());
+                new FromToAutoCompleteTextViewOnFocusChangeListener());
 
         // Determine whether to show clear button for fromAutoCompleteTextView
         // when it is being edited
@@ -723,9 +718,13 @@ public class SearchActivity extends Activity implements
         });
     }
     
-    private class fromToAutoCompleteTextViewOnFocusChangeListener implements OnFocusChangeListener {
+    /**
+     * FromToAutoCompleteTextViewOnFocusChangeListener serves for fromAutoCompleteTextView 
+     * and toAutoCompleteTextView to determine the visibility of the clear buttons.
+     */
+    private class FromToAutoCompleteTextViewOnFocusChangeListener implements OnFocusChangeListener {
         @Override
-        public void onFocusChange(View v, boolean hasFocus) {
+        public void onFocusChange(final View v, final boolean hasFocus) {
             ImageButton targetClearButton;
             if (v.getId() == R.id.editTextStartFrom) {
                 targetClearButton = fromClearButton;
@@ -747,6 +746,10 @@ public class SearchActivity extends Activity implements
      */
     private void setAddressEditListeners() {
         reverseButton.setOnClickListener(new OnClickListener() {
+            
+            /**
+             * @see android.view.View.OnClickListener#onClick(android.view.View)
+             */
             public void onClick(final View v) {
                 boolean fromACTVisEnabled = fromAutoCompleteTextView.isEnabled();
                 boolean toACTVisEnabled = toAutoCompleteTextView.isEnabled();
@@ -768,20 +771,27 @@ public class SearchActivity extends Activity implements
                                         toACTVisEnabled);
             }
             
-            private void reverseProcessingHelper(AutoCompleteTextView targetAutoCompleteTextView,
-                                                ImageButton targetCurrLocationButton, 
-                                                ImageButton targetClearButton,
-                                                String originalACTVText,
-                                                boolean originalACTVisEnabled) {
+            /**
+             * Helper method to finish reverse process.
+             */
+            private void reverseProcessingHelper(
+                    final AutoCompleteTextView targetAutoCompleteTextView,
+                    final ImageButton targetCurrLocationButton, 
+                    final ImageButton targetClearButton,
+                    final String originalACTVText,
+                    final boolean originalACTVisEnabled) {
+                
                 if (!originalACTVisEnabled) {
                     targetAutoCompleteTextView.clearComposingText();
                     targetAutoCompleteTextView.setEnabled(false);
                     targetAutoCompleteTextView.setText(originalACTVText);
-                    targetAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
+                    targetAutoCompleteTextView.setTextColor(SearchActivity.this.getResources().getColor(R.color.cyan));
                     targetAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
+                    targetAutoCompleteTextView.dismissDropDown();
                     targetCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     targetClearButton.setVisibility(View.INVISIBLE);
                 } else {
+                    targetAutoCompleteTextView.setText("");
                     targetAutoCompleteTextView.setTextColor(Color.BLACK);
                     targetAutoCompleteTextView.setTypeface(null, Typeface.NORMAL);
                     targetCurrLocationButton.setImageResource(R.drawable.current_location_select);
@@ -792,14 +802,18 @@ public class SearchActivity extends Activity implements
             
         });
 
-        fromClearButton.setOnClickListener(new fromToClearButtonOnClickListner());
-        toClearButton.setOnClickListener(new fromToClearButtonOnClickListner());
+        fromClearButton.setOnClickListener(new FromToClearButtonOnClickListner());
+        toClearButton.setOnClickListener(new FromToClearButtonOnClickListner());
 
     }
     
-    private class fromToClearButtonOnClickListner implements OnClickListener {
+    /**
+     * FromToClearButtonOnClickListner serves for from fromClearButton
+     * and toClearButton to clear text.
+     */
+    private class FromToClearButtonOnClickListner implements OnClickListener {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             AutoCompleteTextView targetAutoCompleteTextView;
             if (v.getId() == R.id.imageButtonClearFrom) {
                 targetAutoCompleteTextView = fromAutoCompleteTextView;
@@ -812,6 +826,9 @@ public class SearchActivity extends Activity implements
         
     }
     
+    /**
+     * Attach location-related listeners to corresponding UI widgets.
+     */
     private void setLocationListeners() {
         fromCurrLocationButton.setOnClickListener(new OnClickListener() {
             private boolean currentLocationSelected = false;
@@ -829,7 +846,7 @@ public class SearchActivity extends Activity implements
                     fromAutoCompleteTextView.clearComposingText();
                     fromAutoCompleteTextView.setEnabled(false);
                     fromAutoCompleteTextView.setText("Current Location");
-                    fromAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
+                    fromAutoCompleteTextView.setTextColor(SearchActivity.this.getResources().getColor(R.color.cyan));
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     fromClearButton.setVisibility(View.INVISIBLE);
@@ -855,7 +872,7 @@ public class SearchActivity extends Activity implements
                     toAutoCompleteTextView.clearComposingText();
                     toAutoCompleteTextView.setEnabled(false);
                     toAutoCompleteTextView.setText("Current Location");
-                    toAutoCompleteTextView.setTextColor(COLOR_LIGHT_BLUE);
+                    toAutoCompleteTextView.setTextColor(SearchActivity.this.getResources().getColor(R.color.cyan));
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     toClearButton.setVisibility(View.INVISIBLE);
@@ -865,6 +882,9 @@ public class SearchActivity extends Activity implements
         });        
     }
     
+    /**
+     * Attach basic options listeners to corresponding UI widgets.
+     */
     private void setBasicOptionsListners() {
         leaveNowButton.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
@@ -936,6 +956,9 @@ public class SearchActivity extends Activity implements
         });
     }
     
+    /**
+     * Attach advanced options listeners to corresponding UI widgets.
+     */
     private void setAdvancedOptionsListners() {
         minBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
