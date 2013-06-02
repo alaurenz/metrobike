@@ -934,9 +934,40 @@ public class SearchActivity extends Activity implements
         findButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
-                pd = ProgressDialog.show(v.getContext(), "Searching", "Searching for routes...");
+                final Thread dirThread = new Thread(new DirThread());
+                //pd = ProgressDialog.show(v.getContext(), "Searching", "Searching for routes...");
+                pd = new ProgressDialog(SearchActivity.this);
+                pd.setTitle("Searching");
+                pd.setMessage(
+                        "Searching for routes... \n(You can cancel the request but it takes "
+                        + "serveral seconds)");
+                // This is to enforce user to click "cancel" button to cancel
+                // instead of clicking anywhere else
+                pd.setCancelable(false);
+                pd.setButton(DialogInterface.BUTTON_NEUTRAL, 
+                             "Cancel", 
+                             new DialogInterface.OnClickListener() {
 
-                Thread dirThread = new Thread(new DirThread());
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        // Cancel the request
+                        if (which == DialogInterface.BUTTON_NEUTRAL) {
+                            DirectionsRequest.disableBackendQueries();
+                    
+                            try {
+                                dirThread.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            DirectionsRequest.enableBackendQueries();
+                        }
+                        
+                    }
+                    
+                });
+                
+                pd.show();
+                
                 dirThread.start();
             }
         });
