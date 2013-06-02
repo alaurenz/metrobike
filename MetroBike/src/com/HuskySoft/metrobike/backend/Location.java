@@ -188,7 +188,7 @@ public final class Location implements Serializable {
      * @return the amount to indent.
      */
     public int getIndent() {
-        System.out.println(TAG + "getIndent()->indent: " + indent);
+        //System.out.println(TAG + "getIndent()->indent: " + indent);
         return indent;
     }
 

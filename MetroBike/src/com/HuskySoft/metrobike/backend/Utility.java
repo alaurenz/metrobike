@@ -416,7 +416,7 @@ public final class Utility {
      * @return the indentation string
      */
     public static String getIndentString() {
-        System.out.println(TAG + "getIndentString()->INDENT_STRING: " + INDENT_STRING);
+        //System.out.println(TAG + "getIndentString()->INDENT_STRING: " + INDENT_STRING);
         return INDENT_STRING;
     }
 

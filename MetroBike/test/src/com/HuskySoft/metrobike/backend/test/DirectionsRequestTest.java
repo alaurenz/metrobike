@@ -27,12 +27,12 @@ public final class DirectionsRequestTest extends TestCase {
     /**
      * Max distance bike in meter.
      */
-    private static final int MAX_DIST_BIKE_METER = 400;
+    private static final int BAD_MAX_DIST_BIKE_METER = 400;
 
     /**
      * Min distance bike in meter.
      */
-    private static final int MIN_DIST_BIKE_METER = 500;
+    private static final int BAD_MIN_DIST_BIKE_METER = 500;
 
     /**
      * Negative bus transfer value.
@@ -63,6 +63,11 @@ public final class DirectionsRequestTest extends TestCase {
      * The departure time.
      */
     private static final int DEPARTURE_TIME = 100;
+    
+    /**
+     * Time to wait after certain Google API-using tests
+     */
+    private static final long TIME_TO_WAIT_AFTER_TEST_MS = 2000; 
 
     /**
      * An output constant.
@@ -93,6 +98,7 @@ public final class DirectionsRequestTest extends TestCase {
             setUp();
             Thread.yield();
             threadedResult = request.doRequest();
+            waitBetweenLiveTests();
         }
     }
 
@@ -221,6 +227,48 @@ public final class DirectionsRequestTest extends TestCase {
         request.setDepartureTime(ARRIVAL_TIME);
 
         DirectionsStatus actual = request.doRequest();
+        waitBetweenLiveTests();
+        
+        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage() + " with errors ["
+                + request.getVerboseErrorMessages() + "]", expected, actual);
+    }
+    
+    /**
+     * Waits between live Google API tests to avoid overuse (and failure).
+     */
+    private void waitBetweenLiveTests(){
+        try {
+            Thread.sleep(TIME_TO_WAIT_AFTER_TEST_MS);
+        } catch (InterruptedException e) {
+            // do nothing if interrupted
+        }
+    }
+
+    /**
+     * BlackBox: This tests the doRequest method in the case where the distance
+     * is too large to be returned.
+     */
+    // @Test
+    public void testDoLargeRequestTest() {
+
+        request = new DirectionsRequest();
+
+        String startAddress = "6504 Latona Ave NE, Seattle, WA";
+        String endAddress = "Central Park, New York City, NY";
+        request.setStartAddress(startAddress);
+        request.setEndAddress(endAddress);
+        request.setArrivalTime(ARRIVAL_TIME);
+        request.setTravelMode(TravelMode.MIXED);
+        request.setMinDistanceToBikeInMeters(RequestParameters.DONT_CARE);
+        request.setMaxDistanceToBikeInMeters(RequestParameters.DONT_CARE);
+        request.setMinNumberBusTransfers(RequestParameters.DONT_CARE);
+        request.setMaxNumberBusTransfers(RequestParameters.DONT_CARE);
+        
+        DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
+
+        DirectionsStatus actual = request.doRequest();
+        waitBetweenLiveTests();
+        
         Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage() + " with errors ["
                 + request.getVerboseErrorMessages() + "]", expected, actual);
     }
@@ -365,8 +413,8 @@ public final class DirectionsRequestTest extends TestCase {
         setUp();
         DirectionsStatus expected = DirectionsStatus.INVALID_REQUEST_PARAMS;
 
-        request.setMinDistanceToBikeInMeters(MIN_DIST_BIKE_METER);
-        request.setMaxDistanceToBikeInMeters(MAX_DIST_BIKE_METER);
+        request.setMinDistanceToBikeInMeters(BAD_MIN_DIST_BIKE_METER);
+        request.setMaxDistanceToBikeInMeters(BAD_MAX_DIST_BIKE_METER);
         DirectionsStatus actual = request.doDummyRequest();
         Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage(), expected, actual);
     }

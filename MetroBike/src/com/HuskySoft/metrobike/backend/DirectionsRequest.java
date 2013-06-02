@@ -536,7 +536,6 @@ public final class DirectionsRequest implements Serializable {
             switch (travelMode) {
             case BICYCLING:
                 // This mode requires no extra checks.
-                // TODO: Be sure no bus transfer options are set
                 break;
             case TRANSIT:
             case MIXED:
