@@ -26,6 +26,11 @@ To checkout our repository from scratch:
 
 9) MetroBikeTest->Properties->Java Build Path, Projects tab. Add MetroBike
 
+10) Close Eclipse, Open Eclipse
+
+11) Select all, right click -> refresh
+
+12) Project -> Clean, clean all (with auto-rebuild)
 
 ------------------------------------------------
 Add + configure checkstyle tools to Eclipse/ADT:
