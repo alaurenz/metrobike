@@ -11,6 +11,11 @@ public enum TravelMode {
      * Indicates bicycling.
      */
     BICYCLING,
+    
+    /**
+     * Indicates driving. Needed for parsing some search results.
+     */
+    DRIVING,
 
     /**
      * Indicates some combination of travel modes, but most typically bicycling

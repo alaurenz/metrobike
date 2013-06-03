@@ -15,9 +15,8 @@ import com.HuskySoft.metrobike.backend.Route;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * @author Sam Wilson, Shuo Wang, Qinyuan Wan 
- *         This class holds any utility functions that will be used across
- *         the ui of the MetroBike project.
+ * @author Sam Wilson, Shuo Wang, Qinyuan Wan This class holds any utility
+ *         functions that will be used across the ui of the MetroBike project.
  */
 public final class Utility {
 
@@ -25,7 +24,7 @@ public final class Utility {
      * Tag string for logging.
      */
     private static final String TAG = "com.HuskySoft.metrobike.ui.utility: Utility.java: ";
-    
+
     /**
      * naxus7's screen height.
      */
@@ -37,15 +36,16 @@ public final class Utility {
     private static final float NEXUS7_SCREEN_WIDTH = 600.93896f;
 
     /**
-     * zoom level constant helps to get the appropriate zoom level of the camera.
+     * zoom level constant helps to get the appropriate zoom level of the
+     * camera.
      */
     private static final double NEXUS7_ZOOM_CONSTANT = 259.6656;
-    
+
     /**
      * vehicle icon size.
      */
     private static final int VEHICLE_ICON_SIZE = 40;
-    
+
     /**
      * Minimum two digit number.
      */
@@ -77,7 +77,7 @@ public final class Utility {
             System.out.println(TAG + "convertLocation()->toConvert was null.");
             return null;
         }
-        
+
         System.out.println(TAG + "convertLocation()->toConvert.getLatitude(): "
                 + toConvert.getLatitude());
         System.out.println(TAG + "convertLocation()->toConvert.getLongitude(): "
@@ -112,18 +112,16 @@ public final class Utility {
      * Get the center of the route to let the camera center there.
      * 
      * @param route
-     *             : route to be process
+     *            : route to be process
      * @return a LatLng representation of the geographical point on the map.
      */
     public static LatLng getCameraCenter(final Route route) {
         if (route == null) {
             return null;
         }
-        double latitude = (route.getNeBound().getLatitude() 
-                + route.getSwBound().getLatitude()) / 2;
-        double longitude = (route.getNeBound().getLongitude() 
-                + route.getSwBound().getLongitude()) / 2;
-        
+        double latitude = (route.getNeBound().getLatitude() + route.getSwBound().getLatitude()) / 2;
+        double longitude = (route.getNeBound().getLongitude() + route.getSwBound().getLongitude()) / 2;
+
         System.out.println(TAG + "getCameraCenter()->latitude: " + latitude);
         System.out.println(TAG + "getCameraCenter()->longitude: " + longitude);
         return new LatLng(latitude, longitude);
@@ -159,10 +157,12 @@ public final class Utility {
 
         return Math.round(Math.log(NEXUS7_ZOOM_CONSTANT / maxOfTwo) / Math.log(2) + 1);
     }
-    
+
     /**
      * Build a bit map from the given URL.
-     * @param src : the src string of the url.
+     * 
+     * @param src
+     *            : the src string of the url.
      * @return a Bitmap object
      */
     public static Bitmap getBitmapFromURL(final String src) {
@@ -178,20 +178,27 @@ public final class Utility {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } catch (NullPointerException e) {
+            // Null pointer here may happen inside of connection.connect();
+            e.printStackTrace();
+            return null;
         }
     }
-    
+
     /**
      * Convert Android system representation of date to natural form.
-     * @param systemYear : year in Android
-     * @param systemMonth : month in Android
-     * @param systemDay : day in Android
+     * 
+     * @param systemYear
+     *            : year in Android
+     * @param systemMonth
+     *            : month in Android
+     * @param systemDay
+     *            : day in Android
      * @return a natural formatted date string
      */
-    public static String convertAndroidSystemDateToFormatedDateString(final int systemYear
-                                                                , final int systemMonth 
-                                                                , final int systemDay) {
-        
+    public static String convertAndroidSystemDateToFormatedDateString(final int systemYear,
+            final int systemMonth, final int systemDay) {
+
         // formatted month string
         String monthString = "";
 
@@ -210,15 +217,18 @@ public final class Utility {
         dayString += systemDay;
         return monthString + "/" + dayString + "/" + systemYear;
     }
-    
+
     /**
      * Convert Android system representation of time to natural form.
-     * @param systemHour : year in Android
-     * @param systemMinute : month in Android
+     * 
+     * @param systemHour
+     *            : year in Android
+     * @param systemMinute
+     *            : month in Android
      * @return a natural formatted time string
      */
-    public static String convertAndroidSystemTimeToFormatedTimeString(final int systemHour, 
-                                                                    final int systemMinute) {
+    public static String convertAndroidSystemTimeToFormatedTimeString(final int systemHour,
+            final int systemMinute) {
         String hourString = "";
         if (systemHour < MIN_TWO_DIGIT_NUMBER) {
             hourString += "0";
