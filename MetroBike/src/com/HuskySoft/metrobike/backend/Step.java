@@ -235,7 +235,7 @@ public final class Step implements Serializable {
 
                 JSONObject tempVehicle =
                         tempTransitLine.getJSONObject(WebRequestJSONKeys.VEHICLE.getLowerCase());
-                newStepTransitDetails.setVehicleType(tempVehicle.getString(WebRequestJSONKeys.TYPE
+                newStepTransitDetails.setVehicleType(tempVehicle.getString(WebRequestJSONKeys.NAME
                         .getLowerCase()));
                 newStepTransitDetails.setVehicleIconURL(tempVehicle
                         .getString(WebRequestJSONKeys.ICON.getLowerCase()));
