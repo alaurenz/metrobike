@@ -8,6 +8,7 @@
     <string name="title_activity_details">详细路线</string>
     <string name="title_activity_navigate">导航</string>
     <string name="title_activity_search">搜索</string>
+    <string name="title_activity_history">历史记录</string>
     <string name="button_details">详细路线</string>
     <string name="button_search">搜索</string>
     <string name="button_search_desc">搜索按钮</string>
@@ -43,7 +44,14 @@
     <string name="clear_history">清空历史记录</string>
     <string name="view_history">查看历史记录</string>
     <string name="empty_history">历史记录为空</string>
-
+    <string name="dialog_title_warning">警告</string>
+    <string name="message_delete_all_history">确定删除所有历史记录?</string>
+    
+    <!-- History Activity -->
+    <string name="button_yes">是</string>
+    <string name="button_no">否</string>
+    <string name="message_are_your_sure">确定删除</string>
+    
     <!-- Details Activity -->
     <string name="button_go_to_search">搜索</string>
     <string name="button_go_to_results">路线</string>
@@ -90,7 +98,7 @@
     <string name="button_cancel">取消</string>
     <string name="edittext_curr_location">当前位置</string>
     
-    <!-- Result Activity -->
+    <!-- Results Activity -->
     <string name="bike">自行车&#8212;</string>
     <string name="transit">公交&#8212;</string>
     <string name="route_length">路线长度： </string>
@@ -125,7 +133,6 @@
     <!-- Main Activity -->
     <string name="button_search_main">搜索</string>
     <string name="textView_hint">点击“搜索”按钮搜索骑行路线</string>
-    <string name="title_activity_history">历史记录Activity</string>
     <string name="menu_settings">设置</string>
 
     <!-- Action Bar/Menu Texts -->
