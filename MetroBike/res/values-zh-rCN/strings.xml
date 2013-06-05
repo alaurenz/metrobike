@@ -101,8 +101,8 @@
     <!-- Results Activity -->
     <string name="bike">自行车&#8212;</string>
     <string name="transit">公交&#8212;</string>
-    <string name="route_length">路线长度： </string>
-    <string name="meters_duration">米\n总时间： </string>
+    <string name="route_length">路线长度：</string>
+    <string name="meters_duration">米\n总时间：</string>
 	<string name="start_here">由此开始！</string>
 	<string name="end_here">在此结束！</string>
 	<string name="departure_at">出发时间： </string>
@@ -140,8 +140,8 @@
     <string name="action_search">搜索</string>
     
     <!-- Backend Uitility Class -->
-	<string name="day"> 天</string>
-	<string name="hour"> 小时</string>
-	<string name="minute"> 分钟</string>
+	<string name="day">天</string>
+	<string name="hour">小时</string>
+	<string name="minute">分钟</string>
 
 </resources>
