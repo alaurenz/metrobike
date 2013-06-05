@@ -337,7 +337,7 @@ public class ResultsActivity extends Activity {
                             routes.get(currRoute).getDurationInSeconds());
             currToast = Toast.makeText(getApplicationContext(), 
                     ResultsActivity.this.getResources().getString(R.string.route_length)
-                    + routes.get(currRoute).getDistanceInMeters() 
+                    + " " + routes.get(currRoute).getDistanceInMeters() 
                     + ResultsActivity.this.getResources().getString(R.string.meters_duration)
                     + " " + prettyDuration, Toast.LENGTH_LONG);
             currToast.show();
