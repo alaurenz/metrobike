@@ -131,5 +131,10 @@
     <!-- Action Bar/Menu Texts -->
     <string name="action_settings">设置</string>
     <string name="action_search">搜索</string>
+    
+    <!-- Backend Uitility Class -->
+	<string name="day"> 天</string>
+	<string name="hour"> 小时</string>
+	<string name="minute"> 分钟</string>
 
 </resources>

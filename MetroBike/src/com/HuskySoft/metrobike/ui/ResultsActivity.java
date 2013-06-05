@@ -27,7 +27,6 @@ import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.HuskySoft.metrobike.backend.Step;
 import com.HuskySoft.metrobike.backend.TravelMode;
-import com.HuskySoft.metrobike.backend.Utility;
 import com.HuskySoft.metrobike.ui.utility.MapSetting;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -334,8 +333,8 @@ public class ResultsActivity extends Activity {
                 currToast.cancel();
             }
             String prettyDuration = 
-                    Utility.secondsToHumanReadableDuration(
-                            routes.get(currRoute).getDurationInSeconds());
+                    com.HuskySoft.metrobike.ui.utility.Utility.secondsToHumanReadableDuration(
+                            routes.get(currRoute).getDurationInSeconds(), this.getApplicationContext());
             currToast = Toast.makeText(getApplicationContext(), 
                     ResultsActivity.this.getResources().getString(R.string.route_length)
                     + routes.get(currRoute).getDistanceInMeters() 

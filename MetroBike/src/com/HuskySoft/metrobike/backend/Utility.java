@@ -42,20 +42,7 @@ public final class Utility {
      */
     private static final String TAG = "com.HuskySoft.metrobike.backend: Utility.java: ";
 
-    /**
-     * Used to round up when using math.floor.
-     */
-    private static final float ROUNDING_UP = 0.5f;
 
-    /**
-     * The number of hours in a day.
-     */
-    private static final int HOURS_IN_A_DAY = 24;
-
-    /**
-     * Number of seconds in a minute.
-     */
-    private static final int SECONDS_IN_A_MINUTE = 60;
 
     /**
      * Number of milliseconds in a second.
@@ -420,70 +407,7 @@ public final class Utility {
         return INDENT_STRING;
     }
 
-    /**
-     * Returns the given duration in seconds in the following format:
-     * "XX days, XX hours, XX minutes".
-     * 
-     * @param durationSeconds
-     *            Number of seconds to convert to human-readable String.
-     * @return the given duration as a human-readable String
-     */
-    public static String secondsToHumanReadableDuration(final long durationSeconds) {
-        int durationMinutesRounded =
-                (int) Math.floor(((float) durationSeconds / SECONDS_IN_A_MINUTE) + ROUNDING_UP);
-        int minutes = (int) (durationMinutesRounded % SECONDS_IN_A_MINUTE);
-        int hours = (int) ((durationMinutesRounded / SECONDS_IN_A_MINUTE) % HOURS_IN_A_DAY);
-        int days = (int) (durationMinutesRounded / (SECONDS_IN_A_MINUTE * HOURS_IN_A_DAY));
-
-        System.out.println(TAG + "secondsToHumanReadableDuration()->durationSeconds: "
-                + durationSeconds);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->durationMinutesRounded: "
-                + durationMinutesRounded);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->minutes: " + minutes);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->hours: " + hours);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days);
-
-        String output = "";
-        if (days > 0) {
-            if (Locale.getDefault().getLanguage().equals("zh")) {
-                output += days + " 天";
-            } else {
-                output += days + " day";
-                if (days > 1) {
-                    output += "s";
-                }
-            }
-            output += ", ";
-        }
-        if (hours > 0) {
-            if (Locale.getDefault().getLanguage().equals("zh")) {
-                output += hours + " 小时";
-            } else {
-                output += hours + " hour";
-                if (hours > 1) {
-                    output += "s";
-                }
-            }
-            output += ", ";
-        }
-        if (minutes >= 0) {
-            if (Locale.getDefault().getLanguage().equals("zh")) {
-                output += minutes + " 分钟";
-            } else {
-                output += minutes + " minute";
-                if (minutes > 1 || minutes == 0) {
-                    output += "s";
-                }
-            }
-            output += ", ";
-        }
-
-        System.out.println(TAG + "secondsToHumanReadableDuration()->"
-                + "output.substring(0, output.length() - 2): "
-                + output.substring(0, output.length() - 2));
-
-        return output.substring(0, output.length() - 2);
-    }
+    
 
     /**
      * Returns the given timestamp (in seconds) in a human-readable format NOTE:

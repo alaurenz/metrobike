@@ -6,10 +6,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.backend.Location;
 import com.HuskySoft.metrobike.backend.Route;
 import com.google.android.gms.maps.model.LatLng;
@@ -50,6 +53,21 @@ public final class Utility {
      * Minimum two digit number.
      */
     private static final int MIN_TWO_DIGIT_NUMBER = 10;
+    
+    /**
+     * Used to round up when using math.floor.
+     */
+    private static final float ROUNDING_UP = 0.5f;
+
+    /**
+     * The number of hours in a day.
+     */
+    private static final int HOURS_IN_A_DAY = 24;
+
+    /**
+     * Number of seconds in a minute.
+     */
+    private static final int SECONDS_IN_A_MINUTE = 60;
 
     /**
      * A private constructor that throws an error to deter instantiation of this
@@ -241,5 +259,60 @@ public final class Utility {
         }
         minuteString += systemMinute;
         return hourString + ":" + minuteString;
+    }
+    
+    /**
+     * Returns the given duration in seconds in the following format:
+     * "XX days, XX hours, XX minutes".
+     * 
+     * @param durationSeconds
+     *            Number of seconds to convert to human-readable String.
+     * @return the given duration as a human-readable String
+     */
+    public static String secondsToHumanReadableDuration(final long durationSeconds,
+            Context uiContext) {
+        int durationMinutesRounded =
+                (int) Math.floor(((float) durationSeconds / SECONDS_IN_A_MINUTE) + ROUNDING_UP);
+        int minutes = (int) (durationMinutesRounded % SECONDS_IN_A_MINUTE);
+        int hours = (int) ((durationMinutesRounded / SECONDS_IN_A_MINUTE) % HOURS_IN_A_DAY);
+        int days = (int) (durationMinutesRounded / (SECONDS_IN_A_MINUTE * HOURS_IN_A_DAY));
+
+        System.out.println(TAG + "secondsToHumanReadableDuration()->durationSeconds: "
+                + durationSeconds);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->durationMinutesRounded: "
+                + durationMinutesRounded);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->minutes: " + minutes);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->hours: " + hours);
+        System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days);
+
+        String output = "";
+        if (days > 0) {
+            output += days + uiContext.getResources().getString(R.string.day);
+            if (days > 1 && Locale.getDefault().getLanguage().equals("en")) {
+                output += "s";
+            }
+            output += ", ";
+        }
+        if (hours > 0) {
+            output += hours + uiContext.getResources().getString(R.string.hour);
+            if (hours > 1 && Locale.getDefault().getLanguage().equals("en")) {
+                output += "s";
+            }
+            output += ", ";
+        }
+        if (minutes >= 0) {
+            output += minutes + uiContext.getResources().getString(R.string.minute);
+            if ((minutes > 1 || minutes == 0) && 
+                    Locale.getDefault().getLanguage().equals("en")) {
+                output += "s";
+            }
+            output += ", ";
+        }
+
+        System.out.println(TAG + "secondsToHumanReadableDuration()->"
+                + "output.substring(0, output.length() - 2): "
+                + output.substring(0, output.length() - 2));
+
+        return output.substring(0, output.length() - 2);
     }
 }
