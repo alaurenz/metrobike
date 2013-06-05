@@ -329,20 +329,6 @@ public final class Step implements Serializable {
     }
 
     /**
-     * Returns the Step's total duration in the following format:
-     * "XX days, XX hours, XX minutes".
-     * 
-     * @return the Step's duration as a human-readable String
-     */
-    public String getDurationHumanReadable() {
-        long durationSeconds = getDurationInSeconds();
-        String secondsHumanReadable = Utility.secondsToHumanReadableDuration(durationSeconds);
-        System.out.println(TAG + "getDurationHumanReadable()->secondsHumanReadable: "
-                + secondsHumanReadable);
-        return secondsHumanReadable;
-    }
-
-    /**
      * @return the startLocation
      */
     public Location getStartLocation() {

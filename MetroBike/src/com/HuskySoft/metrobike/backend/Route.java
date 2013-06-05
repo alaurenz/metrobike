@@ -255,19 +255,6 @@ public final class Route implements Serializable, Comparable<Route> {
     }
 
     /**
-     * Returns the Route's total duration in the following format.
-     * "XX days, XX hours, XX minutes".
-     * 
-     * @return the Route's total duration as a human-readable String.
-     */
-    public String getDurationHumanReadable() {
-        long totalDurationSeconds = getDurationInSeconds();
-        String humanReadable = Utility.secondsToHumanReadableDuration(totalDurationSeconds);
-        System.out.println(TAG + "getDurationHumanReadable()->humanReadable: " + humanReadable);
-        return humanReadable;
-    }
-
-    /**
      * Returns an unmodifiable list of Legs to complete this Route.
      * 
      * @return an unmodifiable list of Legs to complete this Route
