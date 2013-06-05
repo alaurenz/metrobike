@@ -268,7 +268,8 @@ public class ResultsActivity extends Activity {
         for (int i = 0; i < routes.size(); i++) {
             Button selectRouteBtn = new Button(this);         
             selectRouteBtn.setBackgroundResource(R.drawable.custom_btn_shakespeare);
-            selectRouteBtn.setText("Route" + (i + 1));
+            selectRouteBtn.setText(ResultsActivity.this.getResources().
+                    getString(R.string.route_button) + (i + 1));
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
             params.setMargins(MARGIN, MARGIN, MARGIN, MARGIN);
@@ -335,9 +336,11 @@ public class ResultsActivity extends Activity {
             String prettyDuration = 
                     Utility.secondsToHumanReadableDuration(
                             routes.get(currRoute).getDurationInSeconds());
-            currToast = Toast.makeText(getApplicationContext(), "Route length: " 
+            currToast = Toast.makeText(getApplicationContext(), 
+                    ResultsActivity.this.getResources().getString(R.string.route_length)
                     + routes.get(currRoute).getDistanceInMeters() 
-                    + " meters\nDuration: " + prettyDuration, Toast.LENGTH_LONG);
+                    + ResultsActivity.this.getResources().getString(R.string.meters_duration)
+                    + prettyDuration, Toast.LENGTH_LONG);
             currToast.show();
             
             //set the camera to focus on the route
@@ -369,12 +372,13 @@ public class ResultsActivity extends Activity {
         //draw Markers for starting and ending points
         mMap.addMarker(new MarkerOptions()
                 .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
-                .title("Start Here!")
+                .title(ResultsActivity.this.getResources().getString(R.string.start_here))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting)));
 
         mMap.addMarker(new MarkerOptions()
                 .position(com.HuskySoft.metrobike.ui.utility.Utility.
-                        convertLocation(end)).title("End Here!")
+                        convertLocation(end)).title(
+                                ResultsActivity.this.getResources().getString(R.string.end_here))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending)));
         
         mMap.addCircle(new CircleOptions()
@@ -417,7 +421,7 @@ public class ResultsActivity extends Activity {
                             .convertLocation(s.getStartLocation()))
                     .title(s.getTransitDetails().getVehicleType() 
                             + " " + s.getTransitDetails().getLineShortName())
-                            .snippet("Departure at: " + s.getTransitDetails().getDepartureTime());
+                            .snippet(ResultsActivity.this.getResources().getString(R.string.departure_at) + s.getTransitDetails().getDepartureTime());
                     if (getIcon && bitmap != null) {
                         mo = mo.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
                     }
