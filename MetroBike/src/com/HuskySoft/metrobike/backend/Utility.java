@@ -445,23 +445,35 @@ public final class Utility {
 
         String output = "";
         if (days > 0) {
-            output += days + " day";
-            if (days > 1) {
-                output += "s";
+            if (Locale.getDefault().getLanguage().equals("zh")) {
+                output += days + " 天";
+            } else {
+                output += days + " day";
+                if (days > 1) {
+                    output += "s";
+                }
             }
             output += ", ";
         }
         if (hours > 0) {
-            output += hours + " hour";
-            if (hours > 1) {
-                output += "s";
+            if (Locale.getDefault().getLanguage().equals("zh")) {
+                output += hours + " 小时";
+            } else {
+                output += hours + " hour";
+                if (hours > 1) {
+                    output += "s";
+                }
             }
             output += ", ";
         }
         if (minutes >= 0) {
-            output += minutes + " minute";
-            if (minutes > 1 || minutes == 0) {
-                output += "s";
+            if (Locale.getDefault().getLanguage().equals("zh")) {
+                output += minutes + " 分钟";
+            } else {
+                output += minutes + " minute";
+                if (minutes > 1 || minutes == 0) {
+                    output += "s";
+                }
             }
             output += ", ";
         }
