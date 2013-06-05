@@ -134,8 +134,4 @@
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     
-    <!-- Backend Uitility Class -->
-	<string name="day"> day</string>
-	<string name="hour"> hour</string>
-	<string name="minute"> minute</string>
 </resources>

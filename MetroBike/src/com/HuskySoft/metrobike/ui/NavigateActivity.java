@@ -376,13 +376,13 @@ public class NavigateActivity extends FragmentActivity {
             // draw Markers for starting and ending points
             MarkerOptions markerFrom = new MarkerOptions()
                     .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(start))
-                    .title("Start Here!")
+                    .title(NavigateActivity.this.getResources().getString(R.string.start_here))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.starting));
             googleMap.addMarker(markerFrom);
 
             MarkerOptions markerTo = new MarkerOptions()
                     .position(com.HuskySoft.metrobike.ui.utility.Utility.convertLocation(end))
-                    .title("End Here!")
+                    .title(NavigateActivity.this.getResources().getString(R.string.end_here))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ending));
             googleMap.addMarker(markerTo);
             
@@ -429,7 +429,8 @@ public class NavigateActivity extends FragmentActivity {
                                             .getStartLocation()))
                             .title(s.getTransitDetails().getVehicleType() + " "
                                     + s.getTransitDetails().getLineShortName())
-                            .snippet("Departure at: " + s.getTransitDetails().getDepartureTime());
+                            .snippet(NavigateActivity.this.getResources().getString(R.string.departure_at)
+                                    + s.getTransitDetails().getDepartureTime());
                     if (getIcon && bitmap != null) {
                         mo = mo.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
                     }
