@@ -43,6 +43,8 @@
     <string name="clear_history">Clear History</string>
     <string name="view_history">View History</string>
     <string name="empty_history">History is empty</string>
+    <string name="dialog_title_warning">Warning</string>
+    <string name="message_delete_all_history">Are you sure want to delete all histories?</string>
 
     <!-- Details Activity -->
     <string name="button_go_to_search">Search</string>
@@ -77,6 +79,18 @@
     <string name="textview_choose_distance">Total Biking Distance (in miles):</string>
     <string name="edittext_hint_min">Min</string>
     <string name="edittext_hint_max">Max</string>
+    <string name="error_gps_not_available">GPS location is not available</string>
+    <string name="error_gms_connection_fail">Connection Failed, please check your Google Play Services status</string>
+    <string name="message_request_canceled">Request has been canceled</string>
+    <string name="message_searching_for_routes">Searching for routes&#8230;</string>
+    <string name="message_cancelling">Canceling request&#8230; (This takes a moment)</string>
+    <string name="dialog_title_success">Success</string>
+    <string name="dialog_title_error">Error</string>
+    <string name="dialog_title_searching">Searching</string>
+    <string name="dialog_title_canceling">Canceling</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="edittext_curr_location">Current Location</string>
 
     <!-- Result Activity -->
     <string name="bike">Bike&#8212;</string>

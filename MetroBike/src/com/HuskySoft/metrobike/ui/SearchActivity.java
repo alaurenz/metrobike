@@ -206,11 +206,12 @@ public class SearchActivity extends Activity implements
                             + ", " + locationClient.getLastLocation().getLongitude();
                 } else {
                     // Must call runOnUiThread if want to display a Toast or a
-                    // // Dialog within a thread
+                    // Dialog within a thread
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showErrorDialog("GPS location is not available");
+                            showErrorDialog(SearchActivity.this.getResources().
+                                    getString(R.string.error_gps_not_available));
                         }
                     });
                     if (pd != null) {
@@ -290,10 +291,11 @@ public class SearchActivity extends Activity implements
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-                        builder.setMessage("Request has been canceled.");
-                        builder.setTitle("Success");
+                        builder.setMessage(R.string.message_request_canceled);
+                        builder.setTitle(R.string.dialog_title_success);
                         builder.setCancelable(false);
-                        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        builder.setNeutralButton(R.string.button_ok, 
+                                new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
@@ -353,9 +355,12 @@ public class SearchActivity extends Activity implements
         private void showErrorDialog(final String message) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
             builder.setMessage(message);
-            builder.setTitle(Html.fromHtml("<font color='red'>Error</font>"));
+            builder.setTitle(Html.fromHtml("<font color='red'>"
+                                + SearchActivity.this
+                                .getResources()
+                                .getString(R.string.dialog_title_error) +"</font>"));
             // we can set the onClickListener parameter as null
-            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            builder.setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
@@ -916,7 +921,7 @@ public class SearchActivity extends Activity implements
                 } else {
                     fromAutoCompleteTextView.clearComposingText();
                     fromAutoCompleteTextView.setEnabled(false);
-                    fromAutoCompleteTextView.setText("Current Location");
+                    fromAutoCompleteTextView.setText(R.string.edittext_curr_location);
                     fromAutoCompleteTextView.setTextColor(
                             SearchActivity.this.getResources().getColor(R.color.cyan));
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
@@ -943,7 +948,7 @@ public class SearchActivity extends Activity implements
                 } else {
                     toAutoCompleteTextView.clearComposingText();
                     toAutoCompleteTextView.setEnabled(false);
-                    toAutoCompleteTextView.setText("Current Location");
+                    toAutoCompleteTextView.setText(R.string.edittext_curr_location);
                     toAutoCompleteTextView.setTextColor(
                             SearchActivity.this.getResources().getColor(R.color.cyan));
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
@@ -1007,14 +1012,15 @@ public class SearchActivity extends Activity implements
                 dirThread = new Thread(new DirThread());
                 canceled = false;
                 pd = new ProgressDialog(SearchActivity.this);
-                pd.setTitle("Searching");
-                pd.setMessage(
-                        "Searching for routes...");
+                pd.setTitle(R.string.dialog_title_searching);
+                pd.setMessage(SearchActivity.this
+                                .getResources()
+                                .getString(R.string.message_searching_for_routes));
                 // This is to enforce user to click "cancel" button to cancel
                 // instead of clicking anywhere else
                 pd.setCancelable(false);
                 pd.setButton(DialogInterface.BUTTON_NEUTRAL, 
-                             "Cancel", 
+                             SearchActivity.this.getResources().getString(R.string.button_cancel), 
                              new DialogInterface.OnClickListener() {
 
                     @Override
@@ -1026,9 +1032,10 @@ public class SearchActivity extends Activity implements
                             cancelThread = new Thread(new CancelThread());
                             cancelThread.start();
                             pdCancel = new ProgressDialog(SearchActivity.this);
-                            pdCancel.setTitle("Canceling");
-                            pdCancel.setMessage(
-                                    "Canceling request... (This takes a moment)");
+                            pdCancel.setTitle(R.string.dialog_title_canceling);
+                            pdCancel.setMessage(SearchActivity.this
+                                                .getResources()
+                                                .getString(R.string.message_cancelling));
                             // This is to enforce user to click "cancel" button to cancel
                             // instead of clicking anywhere else
                             pdCancel.setCancelable(false);
@@ -1157,8 +1164,9 @@ public class SearchActivity extends Activity implements
      */
     @Override
     public final void onConnectionFailed(final ConnectionResult cr) {
-        Toast.makeText(this,
-                "Connection Failed, please check your" + "Google Play Services status",
+        Toast.makeText(this, SearchActivity.this
+                            .getResources()
+                            .getString(R.string.error_gms_connection_fail),
                 Toast.LENGTH_SHORT).show();
     }
 

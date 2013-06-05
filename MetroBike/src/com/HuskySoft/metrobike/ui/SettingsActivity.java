@@ -33,7 +33,7 @@ import com.google.android.gms.maps.GoogleMap;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  * 
- * @author Sam Wilson
+ * @author Sam Wilson, Shuo Wang
  */
 public class SettingsActivity extends PreferenceActivity {
     /*
@@ -261,9 +261,13 @@ public class SettingsActivity extends PreferenceActivity {
             // history
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(preference.getContext());
             // set title warning and red color
-            alertDialog.setTitle(Html.fromHtml("<font color='red'>Warning</font>"));
-            alertDialog.setMessage("Are you sure want to delete all histories?");
-            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            alertDialog.setTitle(Html.fromHtml("<font color='red'>" 
+                                    + SettingsActivity.this
+                                    .getResources()
+                                    .getString(R.string.dialog_title_warning) 
+                                    + "</font>"));
+            alertDialog.setMessage(R.string.message_delete_all_history);
+            alertDialog.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
                     historyItem.deleteAll();
@@ -273,7 +277,7 @@ public class SettingsActivity extends PreferenceActivity {
                 }
 
             });
-            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            alertDialog.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
                     // cancel this dialog
