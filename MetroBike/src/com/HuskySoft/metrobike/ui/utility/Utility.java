@@ -235,6 +235,39 @@ public final class Utility {
         dayString += systemDay;
         return monthString + "/" + dayString + "/" + systemYear;
     }
+    
+    /**
+     * Convert Android system representation of date to natural form (Chinese convention).
+     * 
+     * @param systemYear
+     *            : year in Android
+     * @param systemMonth
+     *            : month in Android
+     * @param systemDay
+     *            : day in Android
+     * @return a natural formatted date string
+     */
+    public static String convertAndroidSystemDateToFormatedDateStringChineseConvention
+        (final int systemYear, final int systemMonth, final int systemDay) {
+
+        // formatted month string
+        String monthString = "";
+
+        // System uses month from 0 to 11 to represent January to December
+        int monthUIStyle = systemMonth + 1;
+        if (monthUIStyle < MIN_TWO_DIGIT_NUMBER) {
+            monthString += "0";
+        }
+        monthString += monthUIStyle;
+
+        // formatted day string
+        String dayString = "";
+        if (systemDay < MIN_TWO_DIGIT_NUMBER) {
+            dayString += "0";
+        }
+        dayString += systemDay;
+        return systemYear + "/" + monthString + "/" + dayString;
+    }
 
     /**
      * Convert Android system representation of time to natural form.

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -107,6 +108,23 @@ public class SearchActivity extends Activity implements
             // Update the date EditText widget
             dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                                 .convertAndroidSystemDateToFormatedDateString(year, month, day));
+            
+            Locale currLocale = getResources().getConfiguration().locale;
+            
+            // Date format in China
+            if (currLocale.getLanguage().equals("zh")) {
+                dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                        .convertAndroidSystemDateToFormatedDateStringChineseConvention(
+                                year, 
+                                month, 
+                                day));            
+            } else { // Date format in US
+                dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                        .convertAndroidSystemDateToFormatedDateString(
+                                year, 
+                                month, 
+                                day));          
+            } 
             Log.v(TAG, "Done on data set");
         }
     }
@@ -167,12 +185,27 @@ public class SearchActivity extends Activity implements
         /**
          * Sixth digit in a date/time.
          */
+        private static final int DIGIT_FIFTH = 4;
+        
+        /**
+         * Fifth digit in a date/time.
+         */
         private static final int DIGIT_SIXTH = 5;
 
         /**
          * Seventh digit in a date/time.
          */
         private static final int DIGIT_SEVENTH = 6;
+        
+        /**
+         * Eighth digit in a date/time.
+         */
+        private static final int DIGIT_EIGHTH = 7;
+        
+        /**
+         * Ninth digit in a date/time.
+         */
+        private static final int DIGIT_NINTH = 8;
 
         /**
          * Eleventh digit in a date/time.
@@ -210,13 +243,11 @@ public class SearchActivity extends Activity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showErrorDialog(SearchActivity.this.getResources().
-                                    getString(R.string.error_gps_not_available));
+                            showErrorDialog(SearchActivity.this.getResources()
+                                    .getString(R.string.error_gps_not_available));
                         }
                     });
-                    if (pd != null) {
-                        pd.dismiss();
-                    }
+                    if (pd != null) { pd.dismiss(); }
                     return;
                 }
             }
@@ -356,9 +387,8 @@ public class SearchActivity extends Activity implements
             AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
             builder.setMessage(message);
             builder.setTitle(Html.fromHtml("<font color='red'>"
-                                + SearchActivity.this
-                                .getResources()
-                                .getString(R.string.dialog_title_error) +"</font>"));
+                                + SearchActivity.this.getResources()
+                                .getString(R.string.dialog_title_error) + "</font>"));
             // we can set the onClickListener parameter as null
             builder.setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 
@@ -393,10 +423,19 @@ public class SearchActivity extends Activity implements
 
                 // System uses month from 0 to 11 to represent January to
                 // December
-                month = Integer.parseInt(dateString.substring(0, 2)) - 1;
-
-                dayOfMonth = Integer.parseInt(dateString.substring(DIGIT_FOURTH, DIGIT_SIXTH));
-                year = Integer.parseInt(dateString.substring(DIGIT_SEVENTH, DIGIT_ELEVENTH));
+                
+                // Chinese date format
+                if (currLocale.getLanguage().equals("zh")) {
+                    year = Integer.parseInt(dateString.substring(0, DIGIT_FIFTH));
+                    month = Integer.parseInt(dateString.substring(DIGIT_SIXTH, DIGIT_EIGHTH)) - 1;
+                    dayOfMonth = Integer.parseInt(
+                            dateString.substring(DIGIT_NINTH, DIGIT_ELEVENTH));   
+                    
+                } else { // US date format
+                    month = Integer.parseInt(dateString.substring(0, 2)) - 1;
+                    dayOfMonth = Integer.parseInt(dateString.substring(DIGIT_FOURTH, DIGIT_SIXTH));
+                    year = Integer.parseInt(dateString.substring(DIGIT_SEVENTH, DIGIT_ELEVENTH)); 
+                }
                 hourOfDay = Integer.parseInt(timeString.substring(0, 2));
                 minute = Integer.parseInt(timeString.substring(DIGIT_FOURTH, DIGIT_SIXTH));
             }
@@ -572,6 +611,11 @@ public class SearchActivity extends Activity implements
      * Thread for canceling dirThread.
      */
     private Thread cancelThread;
+    
+    /**
+     * User's Current locale.
+     */
+    private Locale currLocale;
 
     /**
      * {@inheritDoc}
@@ -673,6 +717,9 @@ public class SearchActivity extends Activity implements
     private void establishViewsAndOtherNecessaryComponents() {
         // Action Bar setup
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        // Get locale
+        currLocale = getResources().getConfiguration().locale;
         
         // Address setup
         fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
@@ -1131,16 +1178,27 @@ public class SearchActivity extends Activity implements
      */
     private void setInitialText() {
         // Set initial date and time
-        dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
-                .convertAndroidSystemDateToFormatedDateString(
-                        calendar.get(Calendar.YEAR), 
-                        calendar.get(Calendar.MONTH), 
-                        calendar.get(Calendar.DAY_OF_MONTH)));
-
+        
+        // Date format in China
+        if (currLocale.getLanguage().equals("zh")) {
+            dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                    .convertAndroidSystemDateToFormatedDateStringChineseConvention(
+                            calendar.get(Calendar.YEAR), 
+                            calendar.get(Calendar.MONTH), 
+                            calendar.get(Calendar.DAY_OF_MONTH)));            
+        } else { // Date format in US
+            dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
+                    .convertAndroidSystemDateToFormatedDateString(
+                            calendar.get(Calendar.YEAR), 
+                            calendar.get(Calendar.MONTH), 
+                            calendar.get(Calendar.DAY_OF_MONTH)));          
+        }
+        
         timeEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                 .convertAndroidSystemTimeToFormatedTimeString(
                         calendar.get(Calendar.HOUR_OF_DAY), 
-                        calendar.get(Calendar.MINUTE)));
+                        calendar.get(Calendar.MINUTE)));  
+
     }
 
     /**
