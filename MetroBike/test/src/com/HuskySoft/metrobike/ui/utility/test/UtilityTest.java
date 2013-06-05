@@ -88,7 +88,7 @@ public class UtilityTest extends TestCase {
      * Fix value 13. Need this in order to pass the checkstyle.
      */
     private static final int INT_31 = 31;
-
+    
     /**
      * WhiteBox: This test the case of converting a null Location to a LatLng.
      */

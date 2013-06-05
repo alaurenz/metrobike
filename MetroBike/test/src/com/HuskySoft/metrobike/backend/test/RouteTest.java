@@ -372,21 +372,6 @@ public class RouteTest extends TestCase {
     }
 
     /**
-     * Test-Driven Development: This tests the getDurationHumanReadable method.
-     * 
-     * @throws JSONException
-     *             the json exception
-     */
-    // @Test
-    public final void testGetDurationHumanReadable() throws JSONException {
-        setUp();
-        String expected = "13 minutes";
-        String actual = route.getDurationHumanReadable();
-        Assert.assertEquals("Actual value for route.getDurationHumanReadable() was: " + actual,
-                expected, actual);
-    }
-
-    /**
      * This is the value to compare the toString test to.
      */
     private final String dummyBicycleJSONToString = "Route:\n   " + " neBound: Location:\n    "
