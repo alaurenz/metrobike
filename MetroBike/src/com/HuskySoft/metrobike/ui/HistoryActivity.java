@@ -79,10 +79,17 @@ public class HistoryActivity extends Activity {
                 final String item = (String) parent.getItemAtPosition(position);
                 // builder an alertdialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle(Html.fromHtml("<font color='red'>Warning</font>"));
-                builder.setMessage("Are you sure want to delete " + item + "?");
+                builder.setTitle(Html.fromHtml("<font color='red'>"
+                                                + HistoryActivity.this
+                                                .getResources()
+                                                .getString(R.string.dialog_title_warning)
+                                                +"</font>"));
+                builder.setMessage(HistoryActivity.this
+                                    .getResources()
+                                    .getString(R.string.message_are_your_sure)
+                                    + " " + item + " ?");
                 // Yes button
-                builder.setPositiveButton("Yes", new OnClickListener() {
+                builder.setPositiveButton(R.string.button_yes, new OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         history.deleteAddress(item);
@@ -99,7 +106,7 @@ public class HistoryActivity extends Activity {
                     }
                 });
                 // No button
-                builder.setNegativeButton("No", new OnClickListener() {
+                builder.setNegativeButton(R.string.button_no, new OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         // close this dialog

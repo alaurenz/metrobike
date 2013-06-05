@@ -8,6 +8,7 @@
     <string name="title_activity_details">Details</string>
     <string name="title_activity_navigate">Navigate</string>
     <string name="title_activity_search">Search</string>
+    <string name="title_activity_history">History</string>
     <string name="button_details">Details</string>
     <string name="button_search">Search</string>
     <string name="button_search_desc">Search Button</string>
@@ -44,7 +45,12 @@
     <string name="view_history">View History</string>
     <string name="empty_history">History is empty</string>
     <string name="dialog_title_warning">Warning</string>
-    <string name="message_delete_all_history">Are you sure want to delete all histories?</string>
+    <string name="message_delete_all_history">Are you sure to delete all history entries?</string>
+    
+    <!-- History Activity -->
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="message_are_your_sure">Are you sure to delete</string>
 
     <!-- Details Activity -->
     <string name="button_go_to_search">Search</string>
@@ -92,7 +98,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="edittext_curr_location">Current Location</string>
 
-    <!-- Result Activity -->
+    <!-- Results Activity -->
     <string name="bike">Bike&#8212;</string>
     <string name="transit">Transit&#8212;</string>
     <string name="route_length">Route length: </string>
@@ -127,7 +133,6 @@
     <!-- Main Activity -->
     <string name="button_search_main">Search</string>
     <string name="textView_hint">Click "Search" to Start Searching for Biking Routes</string>
-    <string name="title_activity_history">HistoryActivity</string>
     <string name="menu_settings">Settings</string>
 
     <!-- Action Bar/Menu Texts -->
