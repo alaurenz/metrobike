@@ -17,9 +17,10 @@
 
     <ImageView
         android:id="@+id/huskySoftLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="60dip"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
+        android:gravity="center"
         android:contentDescription="@string/huskysoft_description"
         android:src="@drawable/about_logo" />
 

@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">MetroBike</string>
-    <string name="version">Version 1.0</string>
+    <string name="version">2.0</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">Main</string>
     <string name="title_activity_details">Details</string>
@@ -29,7 +29,7 @@
     <string name="pref_header_general">General</string>
     <string name="pref_title_about">About</string>
     <string name="pref_title_version">Version</string>
-    <string name="pref_detail_version">Version 1.0</string>
+    <string name="pref_detail_version">2.0</string>
     <string name="pref_title_locale">Locale</string>
     <string name="pref_detail_locale">en_US</string>
 
@@ -124,10 +124,10 @@
     <string name="textview_sam">Sam Wilson</string>
     <string name="textview_title_term_and_conditions">Terms and Conditions</string>
     <string name="button_term_and_conditions">Terms and Conditions</string>
-    <string name="term_and_conditions">MetroBike is a non-profit android application developed by students in Computer Science department at University of Washington, Seattle.
-        \nMetroBike is only used in education and research purpose. The result routes may not be the best route. MetroBike will not responsable for any loss or damage caused by using this application. 
-        \nMetroBike used Google Map service as our map engine. All the terms and conditions are under Google Map term and conditions.
-        \nFor more information about the Google map terms and conditions, please use Google to search "google maps terms and conditions"
+    <string name="term_and_conditions">MetroBike is a non-profit Android application developed by students in Department of Computer Science and Engineering at University of Washington, Seattle.
+        \n\nMetroBike is only used for educational and research purposes. The result routes may not be the best routes. MetroBike will not be responsible for any loss or damage caused by using this application. 
+        \n\nMetroBike used Google Maps as our map engine. All the terms and conditions are under Google Maps term and conditions.
+        \n\nFor more information about the Google map terms and conditions, please use Google to search \"Google Maps terms and conditions\".
        </string>
 
     <!-- Main Activity -->

@@ -3,7 +3,7 @@
 <resources>
 
     <string name="app_name">MetroBike</string>
-    <string name="version">1.0版</string>
+    <string name="version">2.0</string>
     <string name="hello_world">你好，世界！</string>
     <string name="title_activity_main">主页</string>
     <string name="title_activity_details">详细路线</string>
@@ -30,7 +30,7 @@
     <string name="pref_header_general">常规</string>
     <string name="pref_title_about">关于</string>
     <string name="pref_title_version">版本</string>
-    <string name="pref_detail_version">1.0版</string>
+    <string name="pref_detail_version">2.0</string>
     <string name="pref_title_locale">语言区域</string>
     <string name="pref_detail_locale">zh_CN</string>
 
@@ -126,9 +126,9 @@
     <string name="textview_title_term_and_conditions">条款与条件</string>
     <string name="button_term_and_conditions">条款与条件</string>
     <string name="term_and_conditions">MetroBike是一款由华盛顿大学（西雅图）(University of Washington, Seattle)计算机科学与工程系学生开发的非营利性安卓应用。
-\nMetroBike仅用于教育/研究目的。其路线结果并不一定为最佳。MetroBike不为因使用此应用而造成的任何损失及损害承担任何责任。
-\nMetroBike使用Google地图(Google Maps)服务作为此应用的地图引擎。所有条款与条件均以Google地图(Google Maps)条款与条件为准。
-\n如需了解更多Google地图(Google Maps)条款与条件，请使用Google搜索"Google maps terms and conditions"。
+\n\nMetroBike仅用于教育/研究目的。其路线结果并不一定为最佳。MetroBike不为因使用此应用而造成的任何损失及损害承担任何责任。
+\n\nMetroBike使用Google地图(Google Maps)服务作为此应用的地图引擎。所有条款与条件均以Google地图(Google Maps)条款与条件为准。
+\n\n如需了解更多Google地图(Google Maps)条款与条件，请使用Google搜索\"Google Maps terms and conditions\"。
        </string>
 
     <!-- Main Activity -->
