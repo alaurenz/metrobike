@@ -339,7 +339,7 @@ public class ResultsActivity extends Activity {
                     ResultsActivity.this.getResources().getString(R.string.route_length)
                     + routes.get(currRoute).getDistanceInMeters() 
                     + ResultsActivity.this.getResources().getString(R.string.meters_duration)
-                    + prettyDuration, Toast.LENGTH_LONG);
+                    + " " + prettyDuration, Toast.LENGTH_LONG);
             currToast.show();
             
             //set the camera to focus on the route
