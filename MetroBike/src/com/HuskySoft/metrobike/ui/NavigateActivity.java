@@ -429,7 +429,8 @@ public class NavigateActivity extends FragmentActivity {
                                             .getStartLocation()))
                             .title(s.getTransitDetails().getVehicleType() + " "
                                     + s.getTransitDetails().getLineShortName())
-                            .snippet(NavigateActivity.this.getResources().getString(R.string.departure_at)
+                            .snippet(NavigateActivity.this.getResources().
+                                    getString(R.string.departure_at)
                                     + s.getTransitDetails().getDepartureTime());
                     if (getIcon && bitmap != null) {
                         mo = mo.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
@@ -469,8 +470,8 @@ public class NavigateActivity extends FragmentActivity {
         Step s = legs.get(currentLeg).getStepList().get(currentStep);
          
         String direction;
-        if (currentLeg == legs.size() - 1 && 
-                currentStep == legs.get(currentLeg).getStepList().size() - 1) {
+        if (currentLeg == legs.size() - 1 
+                && currentStep == legs.get(currentLeg).getStepList().size() - 1) {
             // If final destination, display "Destination on ..." if applicable
             direction = s.getHtmlInstruction().replaceAll("[<]div[^>]*[>]", " (")
                                        .replaceAll("[<]/div[>]", ")");

@@ -219,7 +219,7 @@ public class DetailsActivity extends Activity {
                 // Add duration time for each step
                 directions.append("  ( " 
                 + com.HuskySoft.metrobike.ui.utility.Utility.secondsToHumanReadableDuration(
-                        s.getDurationInSeconds(), this.getApplicationContext()) + " )\n");
+                        s.getDurationInSeconds()) + " )\n");
 
                 // Note: DO NOT combine multiple directions.append() calls
                 // into one. Otherwise, the format (bold, italics, etc.)

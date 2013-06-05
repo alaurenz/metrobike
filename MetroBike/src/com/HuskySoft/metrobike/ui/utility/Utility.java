@@ -137,8 +137,10 @@ public final class Utility {
         if (route == null) {
             return null;
         }
-        double latitude = (route.getNeBound().getLatitude() + route.getSwBound().getLatitude()) / 2;
-        double longitude = (route.getNeBound().getLongitude() + route.getSwBound().getLongitude()) / 2;
+        double latitude = (route.getNeBound().getLatitude() 
+                + route.getSwBound().getLatitude()) / 2;
+        double longitude = (route.getNeBound().getLongitude() 
+                + route.getSwBound().getLongitude()) / 2;
 
         System.out.println(TAG + "getCameraCenter()->latitude: " + latitude);
         System.out.println(TAG + "getCameraCenter()->longitude: " + longitude);
@@ -269,8 +271,7 @@ public final class Utility {
      *            Number of seconds to convert to human-readable String.
      * @return the given duration as a human-readable String
      */
-    public static String secondsToHumanReadableDuration(final long durationSeconds,
-            Context uiContext) {
+    public static String secondsToHumanReadableDuration(final long durationSeconds) {
         int durationMinutesRounded =
                 (int) Math.floor(((float) durationSeconds / SECONDS_IN_A_MINUTE) + ROUNDING_UP);
         int minutes = (int) (durationMinutesRounded % SECONDS_IN_A_MINUTE);
@@ -286,24 +287,25 @@ public final class Utility {
         System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days);
 
         String output = "";
+        Context context = MyApplicationClass.getContext();
         if (days > 0) {
-            output += days + uiContext.getResources().getString(R.string.day);
+            output += days + " " + context.getResources().getString(R.string.day);
             if (days > 1 && Locale.getDefault().getLanguage().equals("en")) {
                 output += "s";
             }
             output += ", ";
         }
         if (hours > 0) {
-            output += hours + uiContext.getResources().getString(R.string.hour);
+            output += hours + " " + context.getResources().getString(R.string.hour);
             if (hours > 1 && Locale.getDefault().getLanguage().equals("en")) {
                 output += "s";
             }
             output += ", ";
         }
         if (minutes >= 0) {
-            output += minutes + uiContext.getResources().getString(R.string.minute);
-            if ((minutes > 1 || minutes == 0) && 
-                    Locale.getDefault().getLanguage().equals("en")) {
+            output += minutes + " " + context.getResources().getString(R.string.minute);
+            if ((minutes > 1 || minutes == 0) 
+                    && Locale.getDefault().getLanguage().equals("en")) {
                 output += "s";
             }
             output += ", ";

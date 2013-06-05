@@ -334,7 +334,7 @@ public class ResultsActivity extends Activity {
             }
             String prettyDuration = 
                     com.HuskySoft.metrobike.ui.utility.Utility.secondsToHumanReadableDuration(
-                            routes.get(currRoute).getDurationInSeconds(), this.getApplicationContext());
+                            routes.get(currRoute).getDurationInSeconds());
             currToast = Toast.makeText(getApplicationContext(), 
                     ResultsActivity.this.getResources().getString(R.string.route_length)
                     + routes.get(currRoute).getDistanceInMeters() 
@@ -420,7 +420,9 @@ public class ResultsActivity extends Activity {
                             .convertLocation(s.getStartLocation()))
                     .title(s.getTransitDetails().getVehicleType() 
                             + " " + s.getTransitDetails().getLineShortName())
-                            .snippet(ResultsActivity.this.getResources().getString(R.string.departure_at) + s.getTransitDetails().getDepartureTime());
+                            .snippet(ResultsActivity.this.getResources().
+                                    getString(R.string.departure_at) 
+                                    + s.getTransitDetails().getDepartureTime());
                     if (getIcon && bitmap != null) {
                         mo = mo.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
                     }

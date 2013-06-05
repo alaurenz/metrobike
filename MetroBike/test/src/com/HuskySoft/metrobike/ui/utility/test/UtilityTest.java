@@ -88,6 +88,26 @@ public class UtilityTest extends TestCase {
      * Fix value 13. Need this in order to pass the checkstyle.
      */
     private static final int INT_31 = 31;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_4 = 20;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_3 = 1000;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_2 = 6100;
+
+    /**
+     * Human readable duration.
+     */
+    private static final int SEC_HUMAN_READABLE_DURATION_1 = 300000;
     
     /**
      * WhiteBox: This test the case of converting a null Location to a LatLng.
@@ -239,5 +259,61 @@ public class UtilityTest extends TestCase {
                 Utility.convertAndroidSystemTimeToFormatedTimeString(0, 0));
         Assert.assertEquals("15:11", 
                 Utility.convertAndroidSystemTimeToFormatedTimeString(INT_15, INT_11));
+    }
+    
+    /**
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a very short duration.
+     * 
+     */
+    // @Test
+    public final void testSecondsToHumanReadableDurationVeryShort() {
+        String expected = "0 minutes";
+        String actual = com.HuskySoft.metrobike.ui.utility.Utility.
+                secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_4);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(20) was: "
+                + actual, expected, actual);
+    }
+
+    /**
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a short duration.
+     * 
+     */
+    // @Test
+    public final void testSecondsToHumanReadableDurationShort() {
+        String expected = "17 minutes";
+        String actual = com.HuskySoft.metrobike.ui.utility.Utility.
+                secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_3);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(1000) was: "
+                + actual, expected, actual);
+    }
+
+    /**
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a medium duration.
+     * 
+     */
+    // @Test
+    public final void testSecondsToHumanReadableDurationMedium() {
+        String expected = "1 hour, 42 minutes";
+        String actual = com.HuskySoft.metrobike.ui.utility.Utility.
+                secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_2);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(6100) was: "
+                + actual, expected, actual);
+    }
+
+    /**
+     * Test-Driven Development: This tests secondsToHumanReadableDuration given
+     * a long duration.
+     * 
+     */
+    // @Test
+    public final void testSecondsToHumanReadableDurationLong() {
+        String expected = "3 days, 11 hours, 20 minutes";
+        String actual = com.HuskySoft.metrobike.ui.utility.Utility.
+                secondsToHumanReadableDuration(SEC_HUMAN_READABLE_DURATION_1);
+        Assert.assertEquals("Actual value of Utility.secondsToHumanReadableDuration(300000) was: "
+                + actual, expected, actual);
     }
 }
