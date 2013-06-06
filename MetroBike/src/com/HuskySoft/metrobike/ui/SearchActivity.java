@@ -319,9 +319,10 @@ public class SearchActivity extends Activity implements
             // a new request
             if (retVal == DirectionsStatus.USER_CANCELLED_REQUEST) {
                 Log.d(TAG, "Request has been successfully canceled");
-                pdCancel.dismiss();
+                
                 runOnUiThread(new Runnable() {
                     public void run() {
+                        pdCancel.dismiss();
                         AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
                         builder.setMessage(R.string.message_request_canceled);
                         builder.setTitle(R.string.dialog_title_success);
@@ -1039,9 +1040,8 @@ public class SearchActivity extends Activity implements
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         // Cancel the request
-                        if (which == DialogInterface.BUTTON_NEUTRAL) {
-                            dirThread.interrupt();
-                        }
+                        Log.d(TAG, "Interrupting dirThread: " + dirThread.getId());
+                        dirThread.interrupt();
                         pdCancel = new ProgressDialog(SearchActivity.this);
                         pdCancel.setTitle(R.string.dialog_title_canceling);
                         pdCancel.setMessage(SearchActivity.this
@@ -1057,6 +1057,7 @@ public class SearchActivity extends Activity implements
                 
                 pd.show();
                 
+                Log.d(TAG, "start dirThread: " + dirThread.getId());
                 dirThread.start();
             }
         });
