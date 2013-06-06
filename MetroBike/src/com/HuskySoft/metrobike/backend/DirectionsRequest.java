@@ -141,9 +141,14 @@ public final class DirectionsRequest implements Serializable {
         case BICYCLING:
             alg = new BicycleOnlyAlgorithm();
             alg.setResource(myParams.getResource());
-            filterSolutions();
             DirectionsStatus simpleStatus = doAlgorithm(alg);
 
+            // If the user cancelled the request while this algorithm
+            // was running, stop trying other algorithms
+            if (simpleStatus == DirectionsStatus.USER_CANCELLED_REQUEST){
+            	return simpleStatus;
+            }
+            
             // Sort results by total duration, then filter by user requirements
             filterSolutions();
             if (simpleStatus == DirectionsStatus.REQUEST_SUCCESSFUL && solutions.size() == 0) {
@@ -156,16 +161,36 @@ public final class DirectionsRequest implements Serializable {
             BicycleOnlyAlgorithm bikeAlg = new BicycleOnlyAlgorithm();
             bikeAlg.setResource(myParams.getResource());
             DirectionsStatus bikeStatus = doAlgorithm(bikeAlg);
+            
+            // If the user cancelled the request while this algorithm
+            // was running, stop trying other algorithms
+            if (bikeStatus == DirectionsStatus.USER_CANCELLED_REQUEST){
+            	return bikeStatus;
+            }
+            
             // this is to prevent need for SmartAlgorithm to re-query
             // directions API
             SmartAlgorithm smartAlg = new SmartAlgorithm();
             smartAlg.setResource(myParams.getResource());
             smartAlg.setReferencedRoute(bikeAlg.getReferencedRoute());
             DirectionsStatus smartStatus = doAlgorithm(smartAlg);
+            
+            // If the user cancelled the request while this algorithm
+            // was running, stop trying other algorithms
+            if (smartStatus == DirectionsStatus.USER_CANCELLED_REQUEST){
+            	return smartStatus;
+            }
+            
             SimpleComboAlgorithm scAlg = new SimpleComboAlgorithm();
             scAlg.setResource(myParams.getResource());
             DirectionsStatus comboStatus = doAlgorithm(scAlg);
 
+            // If the user cancelled the request while this algorithm
+            // was running, stop!
+            if (comboStatus == DirectionsStatus.USER_CANCELLED_REQUEST){
+            	return comboStatus;
+            }
+            
             if (bikeStatus == DirectionsStatus.CONNECTION_ERROR 
                     || smartStatus == DirectionsStatus.CONNECTION_ERROR 
                     || comboStatus == DirectionsStatus.CONNECTION_ERROR) {
@@ -303,24 +328,6 @@ public final class DirectionsRequest implements Serializable {
         solutions.addAll(routes);
 
         return DirectionsStatus.REQUEST_SUCCESSFUL;
-    }
-
-    /**
-     * Disables Internet queries so searches can be cancelled. To cancel
-     * doRequest(), call this method, then wait for the method to return, then
-     * call enableBackendQueries() to re-enable the backend. This is a static
-     * method, so all current queries will eventually (upon web failure) be
-     * cancelled.
-     */
-    public static void disableBackendQueries() {
-        GoogleAPIWrapper.disableAPIConnection();
-    }
-
-    /**
-     * Call this to re-enable web queries, after calling disableBackenQueries().
-     */
-    public static void enableBackendQueries() {
-        GoogleAPIWrapper.enableAPIConnection();
     }
 
     /**

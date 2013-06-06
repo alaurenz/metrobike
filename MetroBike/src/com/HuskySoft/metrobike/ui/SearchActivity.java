@@ -454,19 +454,25 @@ public class SearchActivity extends Activity implements
      */
     private class CancelThread implements Runnable {
 
-        @Override
-        public void run() {
-            DirectionsRequest.disableBackendQueries();
-            
-            try {
-                dirThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            DirectionsRequest.enableBackendQueries();
-            canceled = false;
-            pdCancel.dismiss();
-        }
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+		}
+
+//        @Override
+//        public void run() {
+//            //DirectionsRequest.disableBackendQueries();
+//            
+//            try {
+//                dirThread.join();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            //DirectionsRequest.enableBackendQueries();
+//            canceled = false;
+//            pdCancel.dismiss();
+//        }
         
     }
 

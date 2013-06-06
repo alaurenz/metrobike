@@ -25,25 +25,6 @@ public class GoogleAPIWrapper implements APIQuery {
     private static final String TAG = "com.HuskySoft.metrobike.backend: GoogleAPIWrapper.java: ";
 
     /**
-     * Used to turn off Internet capabilites, so searches can be cancelled.
-     */
-    private static volatile boolean INTERNET_ENABLED = true;
-
-    /**
-     * Disables Internet capabilities, disabling Google API access.
-     */
-    public static void disableAPIConnection() {
-        INTERNET_ENABLED = false;
-    }
-
-    /**
-     * Enables Internet capabilities, disabling Google API access.
-     */
-    public static void enableAPIConnection() {
-        INTERNET_ENABLED = true;
-    }
-    
-    /**
      * (non-Javadoc) @see
      * com.HuskySoft.metrobike.backend.APIQuery#doQuery(java.lang.String).
      * 
@@ -66,12 +47,6 @@ public class GoogleAPIWrapper implements APIQuery {
         System.out.println(TAG + "doQuery()->theURL: " + theURL);
         StringBuilder response = new StringBuilder();
         System.err.println("GoogleAPIWrapper: About to make query to this url: [" + theURL + "]");
-
-        if (!INTERNET_ENABLED) {
-            System.err.println("Internet access is currently disabled by the "
-                    + "API user.  Aborting query...");
-            throw new IOException("Internet access disabled by API user.");
-        }
 
         URL url = new URL(theURL);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

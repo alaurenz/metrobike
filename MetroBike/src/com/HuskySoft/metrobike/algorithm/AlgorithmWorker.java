@@ -297,8 +297,11 @@ public abstract class AlgorithmWorker {
                         try {
                             Thread.sleep(QUERY_LIMIT_RETRY_DELAY_MS);
                         } catch (InterruptedException e1) {
-                            System.err
-                                    .println(TAG + "Connection retry interrupted (not a problem)");
+                            // This means the user is trying to cancel us!
+                        	addError(DirectionsStatus.USER_CANCELLED_REQUEST);
+                        	return null;
+                        	//System.err
+                            //        .println(TAG + "Connection retry interrupted (not a problem)");
                         }
                     }
                 } catch (JSONException e) {
@@ -311,7 +314,10 @@ public abstract class AlgorithmWorker {
                 try {
                     Thread.sleep(CONNECTION_RETRY_DELAY_MS);
                 } catch (InterruptedException e1) {
-                    System.err.println(TAG + "Connection retry interrupted (not a problem)");
+                    //System.err.println(TAG + "Connection retry interrupted (not a problem)");
+                	// This means the user is trying to cancel us!
+                	addError(DirectionsStatus.USER_CANCELLED_REQUEST);
+                	return null;
                 }
             }
         }
@@ -407,7 +413,10 @@ public abstract class AlgorithmWorker {
         try {
             Thread.sleep(TRANSIT_QUERY_DELAY_MS);
         } catch (InterruptedException e) {
-            System.err.println("Error delaying transit query request.");
+        	// This means the user is trying to cancel us!
+        	addError(DirectionsStatus.USER_CANCELLED_REQUEST);
+        	return null;
+        	//System.err.println("Error delaying transit query request.");
         }
 
         String queryString = Utility.buildTransitQueryString(startAddress, endAddress, routeTime,

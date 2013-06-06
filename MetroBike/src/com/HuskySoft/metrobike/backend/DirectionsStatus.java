@@ -61,7 +61,12 @@ public enum DirectionsStatus {
      * (for the day)
      */
     OVER_QUERY_LIMIT("Over query limit. App has exceeded maximum number of daily"
-            + " directions request queries from Google.", true);
+            + " directions request queries from Google.", true),
+    
+    /**
+     * User cancelled the request while it was in-progress.
+     */
+    USER_CANCELLED_REQUEST("User cancelled the request while it was in-progress.", true);
 
     /**
      * The human-readable message to store.

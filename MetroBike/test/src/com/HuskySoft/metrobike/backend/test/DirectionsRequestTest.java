@@ -566,18 +566,19 @@ public final class DirectionsRequestTest extends TestCase {
 
         Thread requestThread = new Thread(new RequestRunner());
         requestThread.start();
-        DirectionsRequest.disableBackendQueries();
+        
+        requestThread.interrupt();
 
         try {
+        	// Wait for the thread to end
             requestThread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            // This thread shouldn't be the one getting interrupted!
+        	e.printStackTrace();
         }
 
         Assert.assertEquals("Backend query didn't stop when disabled!",
-                DirectionsStatus.CONNECTION_ERROR, threadedResult);
-
-        DirectionsRequest.enableBackendQueries();
+                DirectionsStatus.USER_CANCELLED_REQUEST, threadedResult);
     }
 
     /**
