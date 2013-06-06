@@ -141,6 +141,7 @@ public final class DirectionsRequest implements Serializable {
         case BICYCLING:
             alg = new BicycleOnlyAlgorithm();
             alg.setResource(myParams.getResource());
+            alg.setQueryLanguage(myParams.getQueryLanguage());
             DirectionsStatus simpleStatus = doAlgorithm(alg);
 
             // If the user cancelled the request while this algorithm
@@ -160,6 +161,7 @@ public final class DirectionsRequest implements Serializable {
             // Travel Mode Mix also needs the bicycle only routes
             BicycleOnlyAlgorithm bikeAlg = new BicycleOnlyAlgorithm();
             bikeAlg.setResource(myParams.getResource());
+            bikeAlg.setQueryLanguage(myParams.getQueryLanguage());
             DirectionsStatus bikeStatus = doAlgorithm(bikeAlg);
             
             // If the user cancelled the request while this algorithm
@@ -172,6 +174,7 @@ public final class DirectionsRequest implements Serializable {
             // directions API
             SmartAlgorithm smartAlg = new SmartAlgorithm();
             smartAlg.setResource(myParams.getResource());
+            smartAlg.setQueryLanguage(myParams.getQueryLanguage());
             smartAlg.setReferencedRoute(bikeAlg.getReferencedRoute());
             DirectionsStatus smartStatus = doAlgorithm(smartAlg);
             
@@ -183,6 +186,7 @@ public final class DirectionsRequest implements Serializable {
             
             SimpleComboAlgorithm scAlg = new SimpleComboAlgorithm();
             scAlg.setResource(myParams.getResource());
+            scAlg.setQueryLanguage(myParams.getQueryLanguage());
             DirectionsStatus comboStatus = doAlgorithm(scAlg);
 
             // If the user cancelled the request while this algorithm
@@ -358,7 +362,7 @@ public final class DirectionsRequest implements Serializable {
          * DirectionsRequest objects (ex: from the log) being made into
          * new-version DirectionsRequest objects.
          */
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 2L;
 
         /**
          * Represents a number-based option that hasn't been specified by the
@@ -434,6 +438,13 @@ public final class DirectionsRequest implements Serializable {
          * This determines whether or not to use the StubGoogleAPIWrapper.
          */
         private APIQuery resource = null;
+        
+        /**
+         * This determines the language that directions responses
+         * are returned in from API calls (English by default).
+         * NOTE: Must be a valid Google Directions API language code
+         */
+        private String queryLanguage = "en";
 
         /**
          * Getter for the resource field.
@@ -519,6 +530,15 @@ public final class DirectionsRequest implements Serializable {
                     + maxNumberBusTransfers);
             return maxNumberBusTransfers;
         }
+        
+        /**
+         * @return the queryLanguage
+         */
+        public String getQueryLanguage() {
+            System.out.println(TAG + "getQueryLanguage()->queryLanguage: "
+                    + queryLanguage);
+            return queryLanguage;
+        }
 
         /**
          * Returns whether the request parameters are valid. If they are not
@@ -591,6 +611,14 @@ public final class DirectionsRequest implements Serializable {
                         + "transfers");
                 return false;
             }
+            
+            // validate queryLanguage (currently only accepting English and Chinese (Simplified)
+            if(queryLanguage != "en" && queryLanguage != "zh-CN") {
+                appendErrorMessage("Invalid queryLanguage (only 'en' and 'zh-CN' accepted)");
+                System.err.println(TAG + "validateParameters()->Invalid queryLanguage (only"
+                		+ " 'en' and 'zh-CN' accepted)");
+                return false;
+            }
 
             // Printing out the parameters for debug purposes
             System.out.println(RP_TAG + "StartAddress: " + startAddress);
@@ -602,7 +630,7 @@ public final class DirectionsRequest implements Serializable {
             System.out.println(RP_TAG + "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
             System.out.println(RP_TAG + "MinNumberBusTransfers: " + minNumberBusTransfers);
             System.out.println(RP_TAG + "MaxNumberBusTransfers: " + maxNumberBusTransfers);
-
+            System.out.println(RP_TAG + "QueryLanguage: " + queryLanguage);
             return true;
         }
 
@@ -628,6 +656,7 @@ public final class DirectionsRequest implements Serializable {
             out.writeLong(maxDistanceToBikeInMeters);
             out.writeLong(minNumberBusTransfers);
             out.writeLong(maxNumberBusTransfers);
+            out.writeObject(queryLanguage);
         }
 
         /**
@@ -655,6 +684,7 @@ public final class DirectionsRequest implements Serializable {
             maxDistanceToBikeInMeters = in.readLong();
             minNumberBusTransfers = in.readLong();
             maxNumberBusTransfers = in.readLong();
+            queryLanguage = (String) in.readObject();
         }
 
         @Override
@@ -666,7 +696,8 @@ public final class DirectionsRequest implements Serializable {
                     + optionToString(minDistanceToBikeInMeters) + "\nmaxDistanceToBikeInMeters: "
                     + optionToString(maxDistanceToBikeInMeters) + "\nminNumberBusTransfers: "
                     + optionToString(minNumberBusTransfers) + "\nmaxNumberBusTransfers: "
-                    + optionToString(maxNumberBusTransfers) + "\n";
+                    + optionToString(maxNumberBusTransfers) + "\nqueryLanguage: "
+                    + queryLanguage + "\n";
         }
 
         /**
@@ -845,6 +876,20 @@ public final class DirectionsRequest implements Serializable {
         myParams.resource = queryObj;
     }
 
+    /**
+     * Set the ending address for the trip.
+     * 
+     * @param newEndAddress
+     *            the address to end at.
+     * @return the modified DirectionsRequest object. Used as part of the
+     *         builder pattern.
+     */
+    public DirectionsRequest setQueryLanguage(final String newQueryLanguage) {
+        System.out.println(TAG + "setQueryLanguage()->newQueryLanguage: " + newQueryLanguage);
+        myParams.queryLanguage = newQueryLanguage;
+        return this;
+    }
+    
     /**
      * Returns the verbose error messages. This may contain repeated error
      * messages, and so may not be suitable for displaying to users. To display

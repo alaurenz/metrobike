@@ -111,7 +111,7 @@ public class UtilityTest extends TestCase {
         String expected = buildBicycleQueryStringMultipleRoutesTestString;
         String actual =
                 Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
-                        "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
+                        "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes, "en");
         Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual,
                 expected, actual);
     }
@@ -130,7 +130,7 @@ public class UtilityTest extends TestCase {
         String expected = buildBicycleQueryStringSingleRouteTestString;
         String actual =
                 Utility.buildBicycleQueryString("6504 Latona Ave NE,Seattle,WA",
-                        "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes);
+                        "3801 Brooklyn Ave NE,Seattle,WA", multipleRoutes, "en");
         Assert.assertEquals("Actual value of Utility.buildBicycleQueryString() was: " + actual,
                 expected, actual);
     }
@@ -151,7 +151,7 @@ public class UtilityTest extends TestCase {
         String expected = buildTransitQueryStringMultipleRoutesArrivalTestString;
         String actual =
                 Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
-                        "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
+                        "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes, "en");
         Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual,
                 expected, actual);
     }
@@ -173,7 +173,7 @@ public class UtilityTest extends TestCase {
         String expected = buildTransitQueryStringSingleRouteDepartureTestString;
         String actual =
                 Utility.buildTransitQueryString("6504 Latona Ave NE,Seattle,WA",
-                        "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes);
+                        "3801 Brooklyn Ave NE,Seattle,WA", routeTime, timeMode, multipleRoutes, "en");
         Assert.assertEquals("Actual value of Utility.buildTransitQueryString() was: " + actual,
                 expected, actual);
     }

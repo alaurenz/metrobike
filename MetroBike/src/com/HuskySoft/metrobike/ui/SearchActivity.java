@@ -317,7 +317,7 @@ public class SearchActivity extends Activity implements
             // If a cancellation happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
-            if (canceled) {
+            if (retVal == DirectionsStatus.USER_CANCELLED_REQUEST) {
                 Log.d(TAG, "Request has been successfully canceled");
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -456,24 +456,9 @@ public class SearchActivity extends Activity implements
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			
+			dirThread.interrupt();
 		}
-
-//        @Override
-//        public void run() {
-//            //DirectionsRequest.disableBackendQueries();
-//            
-//            try {
-//                dirThread.join();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            //DirectionsRequest.enableBackendQueries();
-//            canceled = false;
-//            pdCancel.dismiss();
-//        }
-        
+   
     }
 
     /**
@@ -563,11 +548,6 @@ public class SearchActivity extends Activity implements
      */
     private ProgressDialog pdCancel;
     
-    /**
-     * Indicating the status of the request.
-     */
-    private boolean canceled;
-
     /**
      * Location Client to get user's current location.
      */
@@ -1063,7 +1043,6 @@ public class SearchActivity extends Activity implements
             @Override
             public void onClick(final View v) {
                 dirThread = new Thread(new DirThread());
-                canceled = false;
                 pd = new ProgressDialog(SearchActivity.this);
                 pd.setTitle(R.string.dialog_title_searching);
                 pd.setMessage(SearchActivity.this
@@ -1080,7 +1059,6 @@ public class SearchActivity extends Activity implements
                     public void onClick(final DialogInterface dialog, final int which) {
                         // Cancel the request
                         if (which == DialogInterface.BUTTON_NEUTRAL) {
-                            canceled = true;
                             
                             cancelThread = new Thread(new CancelThread());
                             cancelThread.start();
