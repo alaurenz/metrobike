@@ -319,6 +319,7 @@ public class SearchActivity extends Activity implements
             // a new request
             if (retVal == DirectionsStatus.USER_CANCELLED_REQUEST) {
                 Log.d(TAG, "Request has been successfully canceled");
+                pdCancel.dismiss();
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
@@ -445,21 +446,6 @@ public class SearchActivity extends Activity implements
             return timeToSend;
         }
     }
-    
-    /**
-     * An inner class that generates a request for canceling running DirThread routes and
-     * allows the backend to cancel on its own thread.
-     * 
-     * @author Shuo Wang
-     */
-    private class CancelThread implements Runnable {
-
-		@Override
-		public void run() {
-			dirThread.interrupt();
-		}
-   
-    }
 
     /**
      * The calendar visible within this SearchActivity as a source of time Note:
@@ -544,11 +530,6 @@ public class SearchActivity extends Activity implements
     private ProgressDialog pd;
     
     /**
-     * A progress dialog indicating the canceling status of this activity.
-     */
-    private ProgressDialog pdCancel;
-    
-    /**
      * Location Client to get user's current location.
      */
     private LocationClient locationClient;
@@ -589,14 +570,14 @@ public class SearchActivity extends Activity implements
     private EditText maxBikingDistanceEditText;
     
     /**
+     * A progress dialog indicating the canceling status of this activity.
+     */
+    private ProgressDialog pdCancel;
+    
+    /**
      * Thread requesting for new routes.
      */
     private Thread dirThread;
-    
-    /**
-     * Thread for canceling dirThread.
-     */
-    private Thread cancelThread;
     
     /**
      * User's Current locale.
@@ -1059,20 +1040,17 @@ public class SearchActivity extends Activity implements
                     public void onClick(final DialogInterface dialog, final int which) {
                         // Cancel the request
                         if (which == DialogInterface.BUTTON_NEUTRAL) {
-                            
-                            cancelThread = new Thread(new CancelThread());
-                            cancelThread.start();
-                            pdCancel = new ProgressDialog(SearchActivity.this);
-                            pdCancel.setTitle(R.string.dialog_title_canceling);
-                            pdCancel.setMessage(SearchActivity.this
-                                                .getResources()
-                                                .getString(R.string.message_cancelling));
-                            // This is to enforce user to click "cancel" button to cancel
-                            // instead of clicking anywhere else
-                            pdCancel.setCancelable(false);
-                            pdCancel.show();
+                            dirThread.interrupt();
                         }
-                        
+                        pdCancel = new ProgressDialog(SearchActivity.this);
+                        pdCancel.setTitle(R.string.dialog_title_canceling);
+                        pdCancel.setMessage(SearchActivity.this
+                                            .getResources()
+                                            .getString(R.string.message_cancelling));
+                        // This is to enforce user to click "cancel" button to cancel
+                        // instead of clicking anywhere else
+                        pdCancel.setCancelable(false);
+                        pdCancel.show();
                     }
                     
                 });
