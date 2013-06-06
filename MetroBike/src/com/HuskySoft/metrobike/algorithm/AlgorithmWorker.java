@@ -96,6 +96,13 @@ public abstract class AlgorithmWorker {
      * reduce transit API queries.
      */
     private Route referencedRoute = null;
+    
+    /**
+     * This determines the language that directions responses
+     * are returned in from API calls (English by default).
+     * (this is populated from the DirectionsRequest parameter)
+     */
+    private String queryLanguage = null;
 
     /**
      * Runs the algorithm on the RequestParameters.
@@ -106,6 +113,18 @@ public abstract class AlgorithmWorker {
      */
     public abstract DirectionsStatus findRoutes(DirectionsRequest.RequestParameters toProcess);
 
+    /**
+     * Saves given route so multiple algorithms can reference it.
+     * 
+     * @param route
+     *            to set
+     */
+    public final void setQueryLanguage(final String queryLanguageToSet) {
+        System.out.println(TAG + "setQueryLanguage()->queryLanguageToSet: "
+                + queryLanguageToSet);
+        queryLanguage = queryLanguageToSet;
+    }
+    
     /**
      * Saves given route so multiple algorithms can reference it.
      * 
@@ -401,7 +420,6 @@ public abstract class AlgorithmWorker {
         System.out.println(TAG + "getTransitResults()->startAddress: " + startAddress);
         System.out.println(TAG + "getTransitResults()->endAddress: " + endAddress);
         System.out.println(TAG + "getTransitResults()->routeTime: " + routeTime);
-        System.out.println(TAG + "getTransitResults()->timeMode.name(): " + timeMode.name());
 
         // For preventing exceeding query request limit
         try {
@@ -411,7 +429,7 @@ public abstract class AlgorithmWorker {
         }
 
         String queryString = Utility.buildTransitQueryString(startAddress, endAddress, routeTime,
-                timeMode, true);
+                timeMode, true, queryLanguage);
 
         System.out.println(TAG + "getTransitResults()->queryString: " + queryString);
         // Fetch the query results
@@ -443,7 +461,8 @@ public abstract class AlgorithmWorker {
         System.out.println(TAG + "getBicycleResults()->endAddress: " + endAddress);
         // Build the query string
         String queryString;
-        queryString = Utility.buildBicycleQueryString(startAddress, endAddress, true);
+        queryString = Utility.buildBicycleQueryString(startAddress, endAddress, true,
+                queryLanguage);
 
         System.out.println(TAG + "getBicycleResults()->queryString: " + queryString);
         // Fetch the query results

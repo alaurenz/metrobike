@@ -134,6 +134,8 @@ public final class Utility {
      *            the (unescaped) address to end at. Example: 1008 N Bennion St.
      * @param multipleRoutes
      *            if true, ask for more than one Route
+     * @param queryLanguage
+     *            language of the response (for localisation)
      * @return ex:
      *         "http://maps.googleapis.com/maps/api/directions/json?origin=6504
      *         %20Latona%20Ave%20NE%2CSeattle%2CWA&destination=3801%20Brooklyn%
@@ -145,7 +147,8 @@ public final class Utility {
      */
     public static String buildBicycleQueryString(final String startAddress,
             final String endAddress,
-            final boolean multipleRoutes) throws UnsupportedEncodingException {
+            final boolean multipleRoutes,
+            final String queryLanguage) throws UnsupportedEncodingException {
 
         System.out.println(TAG + "buildBicycleQueryString()->startAddress: " + startAddress);
         System.out.println(TAG + "buildBicycleQueryString()->endAddress: " + endAddress);
@@ -163,6 +166,8 @@ public final class Utility {
         } else {
             addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
         }
+        
+        addKeyValuePair(url, URIKeys.LANGUAGE, queryLanguage, false);
 
         return url.toString();
     }
@@ -182,6 +187,8 @@ public final class Utility {
      *            indicates whether routeTime means arrival or departure time
      * @param multipleRoutes
      *            if true, ask for more than one Route
+     * @param queryLanguage
+     *            language of the response (for localisation)
      * @return ex:
      *         "http://maps.googleapis.com/maps/api/directions/json?origin=6504
      *         %20Latona%20Ave%20NE%2CSeattle%2CWA&destination=3801%20Brooklyn%
@@ -195,7 +202,8 @@ public final class Utility {
             final String endAddress,
             final long routeTime,
             final TransitTimeMode timeMode,
-            final boolean multipleRoutes) throws UnsupportedEncodingException {
+            final boolean multipleRoutes,
+            final String queryLanguage) throws UnsupportedEncodingException {
         System.out.println(TAG + "buildtransitQueryString()->startAddress: " + startAddress);
         System.out.println(TAG + "buildtransitQueryString()->endAddress: " + endAddress);
         System.out.println(TAG + "buildtransitQueryString()->multipleRoutes: " + multipleRoutes);
@@ -228,6 +236,8 @@ public final class Utility {
         } else {
             addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
         }
+        
+        addKeyValuePair(url, URIKeys.LANGUAGE, queryLanguage, false);
 
         return url.toString();
     }
