@@ -312,16 +312,16 @@ public abstract class AlgorithmWorker {
                         response = null;
                         tryNumQueryLimit++;
                         System.err.println(TAG + "Over query limit... retrying "
-                                + (MAX_QUERY_LIMIT_RETRIES - tryNumQueryLimit) + " more times.");
-                        try {
-                            Thread.sleep(QUERY_LIMIT_RETRY_DELAY_MS);
-                        } catch (InterruptedException e1) {
-                            // This means the user is trying to cancel us!
-                        	addError(DirectionsStatus.USER_CANCELLED_REQUEST);
-                        	return null;
-                        	//System.err
-                            //        .println(TAG + "Connection retry interrupted (not a problem)");
-                        }
+                                + (MAX_QUERY_LIMIT_RETRIES - tryNumQueryLimit) + " more times.");                        
+                    }
+                    try {
+                        Thread.sleep(QUERY_LIMIT_RETRY_DELAY_MS);
+                    } catch (InterruptedException e1) {
+                        // This means the user is trying to cancel us!
+                        addError(DirectionsStatus.USER_CANCELLED_REQUEST);
+                        return null;
+                        //System.err
+                        //        .println(TAG + "Connection retry interrupted (not a problem)");
                     }
                 } catch (JSONException e) {
                     System.err.println(TAG + "Error parsing JSON response.");
