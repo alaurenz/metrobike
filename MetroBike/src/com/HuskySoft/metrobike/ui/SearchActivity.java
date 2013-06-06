@@ -107,24 +107,19 @@ public class SearchActivity extends Activity implements
             EditText dateEditText = (EditText) getActivity().findViewById(R.id.editTextDate);
             // Update the date EditText widget
             dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
-                                .convertAndroidSystemDateToFormatedDateString(year, month, day));
-            
+                    .convertAndroidSystemDateToFormatedDateString(year, month, day));
+
             Locale currLocale = getResources().getConfiguration().locale;
-            
+
             // Date format in China
             if (currLocale.getLanguage().equals("zh")) {
                 dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
-                        .convertAndroidSystemDateToFormatedDateStringChineseConvention(
-                                year, 
-                                month, 
-                                day));            
+                        .convertAndroidSystemDateToFormatedDateStringChineseConvention(year, month,
+                                day));
             } else { // Date format in US
                 dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
-                        .convertAndroidSystemDateToFormatedDateString(
-                                year, 
-                                month, 
-                                day));          
-            } 
+                        .convertAndroidSystemDateToFormatedDateString(year, month, day));
+            }
             Log.v(TAG, "Done on data set");
         }
     }
@@ -186,7 +181,7 @@ public class SearchActivity extends Activity implements
          * Sixth digit in a date/time.
          */
         private static final int DIGIT_FIFTH = 4;
-        
+
         /**
          * Fifth digit in a date/time.
          */
@@ -196,12 +191,12 @@ public class SearchActivity extends Activity implements
          * Seventh digit in a date/time.
          */
         private static final int DIGIT_SEVENTH = 6;
-        
+
         /**
          * Eighth digit in a date/time.
          */
         private static final int DIGIT_EIGHTH = 7;
-        
+
         /**
          * Ninth digit in a date/time.
          */
@@ -223,6 +218,11 @@ public class SearchActivity extends Activity implements
         private static final double MILE_TO_METER = 1609.34;
 
         /**
+         * Time to sleep after we get directions data, so user can still cancel.
+         */
+        private static final long MIN_QUERY_TIME = 500;
+
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -232,7 +232,8 @@ public class SearchActivity extends Activity implements
             // Set up addresses for direction request
             String currLocationLatLagString = "";
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
-                // defensive programming, avoid null pointer exception and leak window
+                // defensive programming, avoid null pointer exception and leak
+                // window
                 if (locationClient != null && locationClient.isConnected()
                         && locationClient.getLastLocation() != null) {
                     currLocationLatLagString += locationClient.getLastLocation().getLatitude()
@@ -243,11 +244,13 @@ public class SearchActivity extends Activity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showErrorDialog(SearchActivity.this.getResources()
-                                    .getString(R.string.error_gps_not_available));
+                            showErrorDialog(SearchActivity.this.getResources().getString(
+                                    R.string.error_gps_not_available));
                         }
                     });
-                    if (pd != null) { pd.dismiss(); }
+                    if (pd != null) {
+                        pd.dismiss();
+                    }
                     return;
                 }
             }
@@ -283,20 +286,19 @@ public class SearchActivity extends Activity implements
                 dReq.setDepartureTime(timeToSend);
             }
 
-            // Set up biking distance 
-            // Note: Use round instead of floor or ceil converting miles into meters
+            // Set up biking distance
+            // Note: Use round instead of floor or ceil converting miles into
+            // meters
             if (minBikingDistanceEditText.getText().length() != 0) {
-                dReq.setMinDistanceToBikeInMeters(
-                        Math.round(Integer.parseInt(minBikingDistanceEditText.getText()
-                                .toString()) * MILE_TO_METER));
+                dReq.setMinDistanceToBikeInMeters(Math.round(Integer
+                        .parseInt(minBikingDistanceEditText.getText().toString()) * MILE_TO_METER));
             }
-            
+
             if (maxBikingDistanceEditText.getText().length() != 0) {
-                dReq.setMaxDistanceToBikeInMeters(
-                        Math.round(Integer.parseInt(maxBikingDistanceEditText.getText()
-                                .toString()) * MILE_TO_METER));
+                dReq.setMaxDistanceToBikeInMeters(Math.round(Integer
+                        .parseInt(maxBikingDistanceEditText.getText().toString()) * MILE_TO_METER));
             }
-            
+
             // Set up number of buses
             if (!bicycleOnlyCheckBox.isChecked()) {
                 if (minNumBusesEditText.getText().length() != 0) {
@@ -309,17 +311,26 @@ public class SearchActivity extends Activity implements
                             .toString()));
                 }
             }
-            
+
             // Do Request
             DirectionsStatus retVal = dReq.doRequest();
             Log.d(TAG, "Finish the do request");
-            
+
+            try {
+                Thread.sleep(MIN_QUERY_TIME);
+            } catch (InterruptedException e) {
+                if (retVal != DirectionsStatus.USER_CANCELLED_REQUEST) {
+                    Log.w(TAG, "backend didn't catch thread interrupt.");
+                }
+                retVal = DirectionsStatus.USER_CANCELLED_REQUEST;
+            }
+
             // If a cancellation happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
             if (retVal == DirectionsStatus.USER_CANCELLED_REQUEST) {
                 Log.d(TAG, "Request has been successfully canceled");
-                
+
                 runOnUiThread(new Runnable() {
                     public void run() {
                         pdCancel.dismiss();
@@ -327,22 +338,23 @@ public class SearchActivity extends Activity implements
                         builder.setMessage(R.string.message_request_canceled);
                         builder.setTitle(R.string.dialog_title_success);
                         builder.setCancelable(false);
-                        builder.setNeutralButton(R.string.button_ok, 
+                        builder.setNeutralButton(R.string.button_ok,
                                 new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(final DialogInterface dialog, final int which) {
-                                // cancel this dialog
-                                dialog.cancel();
-                            }
-                        });
+                                    @Override
+                                    public void onClick(final DialogInterface dialog,
+                                            final int which) {
+                                        // cancel this dialog
+                                        dialog.cancel();
+                                    }
+                                });
                         // Create the AlertDialog object and return it
                         builder.create().show();
                     }
                 });
                 return;
             }
-            
+
             // If an error happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
@@ -361,6 +373,7 @@ public class SearchActivity extends Activity implements
                 pd.dismiss();
                 return;
             }
+
             Log.d(TAG, "Do request success!");
             if (historyItem.addToHistory(currLocationLatLagString, from)) {
                 saveHistoryFile(from);
@@ -368,12 +381,13 @@ public class SearchActivity extends Activity implements
             if (historyItem.addToHistory(currLocationLatLagString, to)) {
                 saveHistoryFile(to);
             }
+
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
             intent.putExtra("Current Route Index", 0);
-
             startActivity(intent);
+
             // Closes the searching dialog
             pd.dismiss();
             Log.v(TAG, "Done searching, go to result activity");
@@ -389,8 +403,8 @@ public class SearchActivity extends Activity implements
             AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
             builder.setMessage(message);
             builder.setTitle(Html.fromHtml("<font color='red'>"
-                                + SearchActivity.this.getResources()
-                                .getString(R.string.dialog_title_error) + "</font>"));
+                    + SearchActivity.this.getResources().getString(R.string.dialog_title_error)
+                    + "</font>"));
             // we can set the onClickListener parameter as null
             builder.setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 
@@ -425,18 +439,18 @@ public class SearchActivity extends Activity implements
 
                 // System uses month from 0 to 11 to represent January to
                 // December
-                
+
                 // Chinese date format
                 if (currLocale.getLanguage().equals("zh")) {
                     year = Integer.parseInt(dateString.substring(0, DIGIT_FIFTH));
                     month = Integer.parseInt(dateString.substring(DIGIT_SIXTH, DIGIT_EIGHTH)) - 1;
-                    dayOfMonth = Integer.parseInt(
-                            dateString.substring(DIGIT_NINTH, DIGIT_ELEVENTH));   
-                    
+                    dayOfMonth = Integer
+                            .parseInt(dateString.substring(DIGIT_NINTH, DIGIT_ELEVENTH));
+
                 } else { // US date format
                     month = Integer.parseInt(dateString.substring(0, 2)) - 1;
                     dayOfMonth = Integer.parseInt(dateString.substring(DIGIT_FOURTH, DIGIT_SIXTH));
-                    year = Integer.parseInt(dateString.substring(DIGIT_SEVENTH, DIGIT_ELEVENTH)); 
+                    year = Integer.parseInt(dateString.substring(DIGIT_SEVENTH, DIGIT_ELEVENTH));
                 }
                 hourOfDay = Integer.parseInt(timeString.substring(0, 2));
                 minute = Integer.parseInt(timeString.substring(DIGIT_FOURTH, DIGIT_SIXTH));
@@ -529,7 +543,7 @@ public class SearchActivity extends Activity implements
      * A progress dialog indicating the searching status of this activity.
      */
     private ProgressDialog pd;
-    
+
     /**
      * Location Client to get user's current location.
      */
@@ -549,12 +563,12 @@ public class SearchActivity extends Activity implements
      * TextView for informing user to choose number of buses.
      */
     private TextView numBusesTextView;
-    
+
     /**
      * EditText for user to set minimum number of buses.
      */
     private EditText minNumBusesEditText;
-    
+
     /**
      * EditText for user to set maximum number of buses.
      */
@@ -564,22 +578,22 @@ public class SearchActivity extends Activity implements
      * EditText for user to set minimum biking distance.
      */
     private EditText minBikingDistanceEditText;
-    
+
     /**
      * EditText for user to set maximum biking distance.
      */
     private EditText maxBikingDistanceEditText;
-    
+
     /**
      * A progress dialog indicating the canceling status of this activity.
      */
     private ProgressDialog pdCancel;
-    
+
     /**
      * Thread requesting for new routes.
      */
     private Thread dirThread;
-    
+
     /**
      * User's Current locale.
      */
@@ -594,9 +608,9 @@ public class SearchActivity extends Activity implements
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        
+
         establishViewsAndOtherNecessaryComponents();
-        
+
         setListeners();
         setHistorySection();
         Log.v(TAG, "Done on create");
@@ -685,10 +699,10 @@ public class SearchActivity extends Activity implements
     private void establishViewsAndOtherNecessaryComponents() {
         // Action Bar setup
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
-        
+
         // Get locale
         currLocale = getResources().getConfiguration().locale;
-        
+
         // Address setup
         fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
         toAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextTo);
@@ -700,7 +714,7 @@ public class SearchActivity extends Activity implements
         locationClient = new LocationClient(this, this, this);
         fromCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationFrom);
         toCurrLocationButton = (ImageButton) findViewById(R.id.imageButtonCurrentLocationTo);
-        
+
         // Basic options setup
         leaveNowButton = (RadioButton) findViewById(R.id.radioButtonLeaveNow);
         departAtButton = (RadioButton) findViewById(R.id.radioButtonDepartAt);
@@ -708,10 +722,10 @@ public class SearchActivity extends Activity implements
 
         dateEditText = (EditText) findViewById(R.id.editTextDate);
         timeEditText = (EditText) findViewById(R.id.editTextTime);
-        
+
         tm = TravelMode.MIXED;
         bicycleOnlyCheckBox = (CheckBox) findViewById(R.id.checkboxBicycleOnly);
-        
+
         // Find button setup
         findButton = (Button) findViewById(R.id.buttonFind);
 
@@ -722,7 +736,7 @@ public class SearchActivity extends Activity implements
         minNumBusesEditText = (EditText) findViewById(R.id.editTextMinNumBuses);
         maxNumBusesEditText = (EditText) findViewById(R.id.editTextMaxNumBuses);
     }
-    
+
     /**
      * Attach all listeners to corresponding UI widgets.
      */
@@ -738,8 +752,8 @@ public class SearchActivity extends Activity implements
      * Attach the two address boxes listeners to corresponding UI widgets.
      */
     private void setAddressBoxListeners() {
-        fromAutoCompleteTextView.setOnFocusChangeListener(
-                new FromToAutoCompleteTextViewOnFocusChangeListener());
+        fromAutoCompleteTextView
+                .setOnFocusChangeListener(new FromToAutoCompleteTextViewOnFocusChangeListener());
 
         // Determine whether to show clear button for fromAutoCompleteTextView
         // when it is being edited
@@ -768,8 +782,8 @@ public class SearchActivity extends Activity implements
         // Jump from fromAutoCompleteTextView to toAutoCompleteTextView
         fromAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(final TextView v, 
-                    final int actionId, final KeyEvent event) {
+            public boolean onEditorAction(final TextView v, final int actionId,
+                    final KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     toAutoCompleteTextView.requestFocus();
@@ -781,8 +795,8 @@ public class SearchActivity extends Activity implements
 
         // Determine whether to show clear button for toAutoCompleteTextView
         // when it is focused
-        toAutoCompleteTextView.setOnFocusChangeListener(
-                new FromToAutoCompleteTextViewOnFocusChangeListener());
+        toAutoCompleteTextView
+                .setOnFocusChangeListener(new FromToAutoCompleteTextViewOnFocusChangeListener());
 
         // Determine whether to show clear button for fromAutoCompleteTextView
         // when it is being edited
@@ -807,10 +821,11 @@ public class SearchActivity extends Activity implements
             }
         });
     }
-    
+
     /**
-     * FromToAutoCompleteTextViewOnFocusChangeListener serves for fromAutoCompleteTextView 
-     * and toAutoCompleteTextView to determine the visibility of the clear buttons.
+     * FromToAutoCompleteTextViewOnFocusChangeListener serves for
+     * fromAutoCompleteTextView and toAutoCompleteTextView to determine the
+     * visibility of the clear buttons.
      */
     private class FromToAutoCompleteTextViewOnFocusChangeListener implements OnFocusChangeListener {
         @Override
@@ -821,22 +836,22 @@ public class SearchActivity extends Activity implements
             } else {
                 targetClearButton = toClearButton;
             }
-            
+
             if (hasFocus && !((AutoCompleteTextView) v).getText().toString().isEmpty()) {
                 targetClearButton.setVisibility(View.VISIBLE);
             } else {
                 targetClearButton.setVisibility(View.INVISIBLE);
             }
         }
-        
+
     }
-    
+
     /**
      * Attach address editing listeners to corresponding UI widgets.
      */
     private void setAddressEditListeners() {
         reverseButton.setOnClickListener(new OnClickListener() {
-            
+
             /**
              * @see android.view.View.OnClickListener#onClick(android.view.View)
              */
@@ -847,36 +862,29 @@ public class SearchActivity extends Activity implements
                 String toACTVOriginalText = toAutoCompleteTextView.getText().toString();
 
                 // process according to from
-                reverseProcessingHelper(toAutoCompleteTextView, 
-                                        toCurrLocationButton,
-                                        toClearButton,
-                                        fromACTVOriginalText,
-                                        fromACTVisEnabled);
-                
+                reverseProcessingHelper(toAutoCompleteTextView, toCurrLocationButton,
+                        toClearButton, fromACTVOriginalText, fromACTVisEnabled);
+
                 // process according to to
-                reverseProcessingHelper(fromAutoCompleteTextView, 
-                                        fromCurrLocationButton,
-                                        fromClearButton,
-                                        toACTVOriginalText,
-                                        toACTVisEnabled);
+                reverseProcessingHelper(fromAutoCompleteTextView, fromCurrLocationButton,
+                        fromClearButton, toACTVOriginalText, toACTVisEnabled);
             }
-            
+
             /**
              * Helper method to finish reverse process.
              */
             private void reverseProcessingHelper(
                     final AutoCompleteTextView targetAutoCompleteTextView,
-                    final ImageButton targetCurrLocationButton, 
-                    final ImageButton targetClearButton,
-                    final String originalACTVText,
+                    final ImageButton targetCurrLocationButton,
+                    final ImageButton targetClearButton, final String originalACTVText,
                     final boolean originalACTVisEnabled) {
-                
+
                 if (!originalACTVisEnabled) {
                     targetAutoCompleteTextView.clearComposingText();
                     targetAutoCompleteTextView.setEnabled(false);
                     targetAutoCompleteTextView.setText(originalACTVText);
-                    targetAutoCompleteTextView.setTextColor(
-                            SearchActivity.this.getResources().getColor(R.color.cyan));
+                    targetAutoCompleteTextView.setTextColor(SearchActivity.this.getResources()
+                            .getColor(R.color.cyan));
                     targetAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     targetAutoCompleteTextView.dismissDropDown();
                     targetCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
@@ -888,19 +896,19 @@ public class SearchActivity extends Activity implements
                     targetCurrLocationButton.setImageResource(R.drawable.current_location_select);
                     targetAutoCompleteTextView.setText(originalACTVText);
                     targetAutoCompleteTextView.setEnabled(true);
-                }               
+                }
             }
-            
+
         });
 
         fromClearButton.setOnClickListener(new FromToClearButtonOnClickListner());
         toClearButton.setOnClickListener(new FromToClearButtonOnClickListner());
 
     }
-    
+
     /**
-     * FromToClearButtonOnClickListner serves for from fromClearButton
-     * and toClearButton to clear text.
+     * FromToClearButtonOnClickListner serves for from fromClearButton and
+     * toClearButton to clear text.
      */
     private class FromToClearButtonOnClickListner implements OnClickListener {
         @Override
@@ -914,9 +922,9 @@ public class SearchActivity extends Activity implements
             targetAutoCompleteTextView.clearComposingText();
             targetAutoCompleteTextView.setText("");
         }
-        
+
     }
-    
+
     /**
      * Attach location-related listeners to corresponding UI widgets.
      */
@@ -937,8 +945,8 @@ public class SearchActivity extends Activity implements
                     fromAutoCompleteTextView.clearComposingText();
                     fromAutoCompleteTextView.setEnabled(false);
                     fromAutoCompleteTextView.setText(R.string.edittext_curr_location);
-                    fromAutoCompleteTextView.setTextColor(
-                            SearchActivity.this.getResources().getColor(R.color.cyan));
+                    fromAutoCompleteTextView.setTextColor(SearchActivity.this.getResources()
+                            .getColor(R.color.cyan));
                     fromAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     fromCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     fromClearButton.setVisibility(View.INVISIBLE);
@@ -964,17 +972,17 @@ public class SearchActivity extends Activity implements
                     toAutoCompleteTextView.clearComposingText();
                     toAutoCompleteTextView.setEnabled(false);
                     toAutoCompleteTextView.setText(R.string.edittext_curr_location);
-                    toAutoCompleteTextView.setTextColor(
-                            SearchActivity.this.getResources().getColor(R.color.cyan));
+                    toAutoCompleteTextView.setTextColor(SearchActivity.this.getResources()
+                            .getColor(R.color.cyan));
                     toAutoCompleteTextView.setTypeface(null, Typeface.ITALIC);
                     toCurrLocationButton.setImageResource(R.drawable.current_location_cancel);
                     toClearButton.setVisibility(View.INVISIBLE);
                     currentLocationSelected = true;
                 }
             }
-        });        
+        });
     }
-    
+
     /**
      * Attach basic options listeners to corresponding UI widgets.
      */
@@ -1006,7 +1014,7 @@ public class SearchActivity extends Activity implements
                 dpf.show(getFragmentManager(), "datePicker");
             }
         });
-        
+
         // Prohibit user from directly typing a date (instead, users should pick
         // a date)
         dateEditText.setKeyListener(null);
@@ -1017,7 +1025,7 @@ public class SearchActivity extends Activity implements
                 tpf.show(getFragmentManager(), "timePicker");
             }
         });
-        
+
         // Prohibit user from directly typing a time (instead, users should pick
         // a time)
         timeEditText.setKeyListener(null);
@@ -1027,15 +1035,13 @@ public class SearchActivity extends Activity implements
                 dirThread = new Thread(new DirThread());
                 pd = new ProgressDialog(SearchActivity.this);
                 pd.setTitle(R.string.dialog_title_searching);
-                pd.setMessage(SearchActivity.this
-                                .getResources()
-                                .getString(R.string.message_searching_for_routes));
+                pd.setMessage(SearchActivity.this.getResources().getString(
+                        R.string.message_searching_for_routes));
                 // This is to enforce user to click "cancel" button to cancel
                 // instead of clicking anywhere else
                 pd.setCancelable(false);
-                pd.setButton(DialogInterface.BUTTON_NEUTRAL, 
-                             SearchActivity.this.getResources().getString(R.string.button_cancel), 
-                             new DialogInterface.OnClickListener() {
+                pd.setButton(DialogInterface.BUTTON_NEUTRAL, SearchActivity.this.getResources()
+                        .getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
@@ -1044,31 +1050,32 @@ public class SearchActivity extends Activity implements
                         dirThread.interrupt();
                         pdCancel = new ProgressDialog(SearchActivity.this);
                         pdCancel.setTitle(R.string.dialog_title_canceling);
-                        pdCancel.setMessage(SearchActivity.this
-                                            .getResources()
-                                            .getString(R.string.message_cancelling));
-                        // This is to enforce user to click "cancel" button to cancel
+                        pdCancel.setMessage(SearchActivity.this.getResources().getString(
+                                R.string.message_cancelling));
+                        // This is to enforce user to click "cancel"
+                        // button to cancel
                         // instead of clicking anywhere else
                         pdCancel.setCancelable(false);
                         pdCancel.show();
                     }
-                    
+
                 });
-                
+
                 pd.show();
-                
+
                 Log.d(TAG, "start dirThread: " + dirThread.getId());
                 dirThread.start();
             }
         });
-        
+
         bicycleOnlyCheckBox.setOnClickListener(new OnClickListener() {
             private boolean isCheckedBefore = false;
+
             public void onClick(final View v) {
                 if (isCheckedBefore) {
                     numBusesTextView.setVisibility(View.VISIBLE);
                     minNumBusesEditText.setVisibility(View.VISIBLE);
-                    maxNumBusesEditText.setVisibility(View.VISIBLE);          
+                    maxNumBusesEditText.setVisibility(View.VISIBLE);
                     isCheckedBefore = false;
                 } else {
                     numBusesTextView.setVisibility(View.INVISIBLE);
@@ -1079,7 +1086,7 @@ public class SearchActivity extends Activity implements
             }
         });
     }
-    
+
     /**
      * Attach advanced options listeners to corresponding UI widgets.
      */
@@ -1094,9 +1101,9 @@ public class SearchActivity extends Activity implements
                     minBikingDistanceEditText.setText("" + formattedNumber);
                 }
             }
-            
+
         });
-        
+
         maxBikingDistanceEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(final View v, final boolean hasFocus) {
@@ -1107,8 +1114,8 @@ public class SearchActivity extends Activity implements
                     maxBikingDistanceEditText.setText("" + formattedNumber);
                 }
             }
-        }); 
-        
+        });
+
         minNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(final View v, final boolean hasFocus) {
@@ -1120,7 +1127,7 @@ public class SearchActivity extends Activity implements
                 }
             }
         });
-        
+
         maxNumBusesEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(final View v, final boolean hasFocus) {
@@ -1131,36 +1138,32 @@ public class SearchActivity extends Activity implements
                     maxNumBusesEditText.setText("" + formattedNumber);
                 }
             }
-            
+
         });
-       
+
     }
-    
+
     /**
      * Sets up default text to be displayed on the UI of this activity.
      */
     private void setInitialText() {
         // Set initial date and time
-        
+
         // Date format in China
         if (currLocale.getLanguage().equals("zh")) {
             dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                     .convertAndroidSystemDateToFormatedDateStringChineseConvention(
-                            calendar.get(Calendar.YEAR), 
-                            calendar.get(Calendar.MONTH), 
-                            calendar.get(Calendar.DAY_OF_MONTH)));            
+                            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH)));
         } else { // Date format in US
             dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
-                    .convertAndroidSystemDateToFormatedDateString(
-                            calendar.get(Calendar.YEAR), 
-                            calendar.get(Calendar.MONTH), 
-                            calendar.get(Calendar.DAY_OF_MONTH)));          
+                    .convertAndroidSystemDateToFormatedDateString(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
         }
-        
+
         timeEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
-                .convertAndroidSystemTimeToFormatedTimeString(
-                        calendar.get(Calendar.HOUR_OF_DAY), 
-                        calendar.get(Calendar.MINUTE)));  
+                .convertAndroidSystemTimeToFormatedTimeString(calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE)));
 
     }
 
@@ -1185,9 +1188,8 @@ public class SearchActivity extends Activity implements
      */
     @Override
     public final void onConnectionFailed(final ConnectionResult cr) {
-        Toast.makeText(this, SearchActivity.this
-                            .getResources()
-                            .getString(R.string.error_gms_connection_fail),
+        Toast.makeText(this,
+                SearchActivity.this.getResources().getString(R.string.error_gms_connection_fail),
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -1226,7 +1228,7 @@ public class SearchActivity extends Activity implements
             History.writeOneAddressToFile(fos, address);
         } catch (FileNotFoundException e) {
             Log.i(TAG, "Cannot create history file");
-        }  finally {
+        } finally {
             History.closeFileStream(null, fos);
         }
     }
