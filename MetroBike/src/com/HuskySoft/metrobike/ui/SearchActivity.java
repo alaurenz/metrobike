@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -49,6 +48,8 @@ import com.HuskySoft.metrobike.backend.DirectionsRequest;
 import com.HuskySoft.metrobike.backend.DirectionsStatus;
 import com.HuskySoft.metrobike.backend.TravelMode;
 import com.HuskySoft.metrobike.ui.utility.History;
+import com.HuskySoft.metrobike.ui.utility.Utility;
+import com.HuskySoft.metrobike.ui.utility.Utility.Language;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -109,10 +110,11 @@ public class SearchActivity extends Activity implements
             dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                     .convertAndroidSystemDateToFormatedDateString(year, month, day));
 
-            Locale currLocale = getResources().getConfiguration().locale;
-
+//            Locale currLocale = getResources().getConfiguration().locale;
+            Log.e(TAG, "English " + (Utility.getCurrentLocale() == Language.ENGLISH));
             // Date format in China
-            if (currLocale.getLanguage().equals("zh")) {
+            if (Utility.getCurrentLocale() == Language.SIMPLIFY_CHINESE) {
+                    //currLocale.getLanguage().equals("zh")) {
                 dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                         .convertAndroidSystemDateToFormatedDateStringChineseConvention(year, month,
                                 day));
@@ -268,7 +270,6 @@ public class SearchActivity extends Activity implements
             }
             Log.d(TAG, "src address: " + from + " dest address: " + to);
             dReq.setStartAddress(from).setEndAddress(to);
-
             // Set up travel mode for direction request
             if (bicycleOnlyCheckBox.isChecked()) {
                 tm = TravelMode.BICYCLING;
@@ -278,14 +279,12 @@ public class SearchActivity extends Activity implements
             dReq.setTravelMode(tm);
             Log.d(TAG, "Done setting the travel mode: " + tm);
             long timeToSend = timeDirectionRequest();
-
             // Set up time mode
             if (arriveAtButton.isChecked()) {
                 dReq.setArrivalTime(timeToSend);
             } else {
                 dReq.setDepartureTime(timeToSend);
             }
-
             // Set up biking distance
             // Note: Use round instead of floor or ceil converting miles into
             // meters
@@ -293,29 +292,23 @@ public class SearchActivity extends Activity implements
                 dReq.setMinDistanceToBikeInMeters(Math.round(Integer
                         .parseInt(minBikingDistanceEditText.getText().toString()) * MILE_TO_METER));
             }
-
             if (maxBikingDistanceEditText.getText().length() != 0) {
                 dReq.setMaxDistanceToBikeInMeters(Math.round(Integer
                         .parseInt(maxBikingDistanceEditText.getText().toString()) * MILE_TO_METER));
             }
-
             // Set up number of buses
             if (!bicycleOnlyCheckBox.isChecked()) {
                 if (minNumBusesEditText.getText().length() != 0) {
                     dReq.setMinNumberBusTransfers(Integer.parseInt(minNumBusesEditText.getText()
                             .toString()));
                 }
-
                 if (maxNumBusesEditText.getText().length() != 0) {
                     dReq.setMaxNumberBusTransfers(Integer.parseInt(maxNumBusesEditText.getText()
                             .toString()));
                 }
             }
-
-            // Do Request
             DirectionsStatus retVal = dReq.doRequest();
             Log.d(TAG, "Finish the do request");
-
             try {
                 Thread.sleep(MIN_QUERY_TIME);
             } catch (InterruptedException e) {
@@ -324,19 +317,16 @@ public class SearchActivity extends Activity implements
                 }
                 retVal = DirectionsStatus.USER_CANCELLED_REQUEST;
             }
-            
             // Bottom line for cancellation
             if (cancelled) {
                 retVal = DirectionsStatus.USER_CANCELLED_REQUEST;
                 cancelled = false;
             }
-            
             // If a cancellation happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
             if (retVal == DirectionsStatus.USER_CANCELLED_REQUEST) {
                 Log.d(TAG, "Request has been successfully canceled");
-
                 runOnUiThread(new Runnable() {
                     public void run() {
                         pdCancel.dismiss();
@@ -346,7 +336,6 @@ public class SearchActivity extends Activity implements
                         builder.setCancelable(false);
                         builder.setNeutralButton(R.string.button_ok,
                                 new DialogInterface.OnClickListener() {
-
                                     @Override
                                     public void onClick(final DialogInterface dialog,
                                             final int which) {
@@ -360,7 +349,6 @@ public class SearchActivity extends Activity implements
                 });
                 return;
             }
-
             // If an error happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
@@ -374,12 +362,10 @@ public class SearchActivity extends Activity implements
                         showErrorDialog(errorMessage);
                     }
                 });
-
                 // Closes the searching dialog and stay in the search activity
                 pd.dismiss();
                 return;
             }
-
             Log.d(TAG, "Do request success!");
             if (historyItem.addToHistory(currLocationLatLagString, from)) {
                 saveHistoryFile(from);
@@ -387,13 +373,11 @@ public class SearchActivity extends Activity implements
             if (historyItem.addToHistory(currLocationLatLagString, to)) {
                 saveHistoryFile(to);
             }
-
             // send the result to ResultsActivity
             Intent intent = new Intent(SearchActivity.this, ResultsActivity.class);
             intent.putExtra("List of Routes", (Serializable) dReq.getSolutions());
             intent.putExtra("Current Route Index", 0);
             startActivity(intent);
-
             // Closes the searching dialog
             pd.dismiss();
             Log.v(TAG, "Done searching, go to result activity");
@@ -447,7 +431,8 @@ public class SearchActivity extends Activity implements
                 // December
 
                 // Chinese date format
-                if (currLocale.getLanguage().equals("zh")) {
+                if (Utility.getCurrentLocale() == Language.SIMPLIFY_CHINESE) {
+                        //currLocale.getLanguage().equals("zh")) {
                     year = Integer.parseInt(dateString.substring(0, DIGIT_FIFTH));
                     month = Integer.parseInt(dateString.substring(DIGIT_SIXTH, DIGIT_EIGHTH)) - 1;
                     dayOfMonth = Integer
@@ -606,11 +591,6 @@ public class SearchActivity extends Activity implements
     private Thread dirThread;
 
     /**
-     * User's Current locale.
-     */
-    private Locale currLocale;
-
-    /**
      * {@inheritDoc}
      * 
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -710,9 +690,6 @@ public class SearchActivity extends Activity implements
     private void establishViewsAndOtherNecessaryComponents() {
         // Action Bar setup
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Get locale
-        currLocale = getResources().getConfiguration().locale;
 
         // Address setup
         fromAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editTextStartFrom);
@@ -1163,7 +1140,7 @@ public class SearchActivity extends Activity implements
         // Set initial date and time
 
         // Date format in China
-        if (currLocale.getLanguage().equals("zh")) {
+        if (Utility.getCurrentLocale() == Language.SIMPLIFY_CHINESE) {
             dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                     .convertAndroidSystemDateToFormatedDateStringChineseConvention(
                             calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),

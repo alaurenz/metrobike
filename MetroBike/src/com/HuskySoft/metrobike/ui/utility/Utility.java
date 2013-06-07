@@ -24,6 +24,24 @@ import com.google.android.gms.maps.model.LatLng;
 public final class Utility {
 
     /**
+     * The unique string for setting the language.
+     */
+    public static final String LANGUAGE_NAME = "HuskySoft.MetroBike.LANG";
+    
+    /**
+     * The constant state of this current language.
+     */
+    public enum Language {
+        /** The different language available. */
+        ENGLISH, SIMPLIFY_CHINESE
+    };
+    
+    /**
+     * The current language state.
+     */
+    private static Language currentLocale;
+
+    /**
      * Tag string for logging.
      */
     private static final String TAG = "com.HuskySoft.metrobike.ui.utility: Utility.java: ";
@@ -249,8 +267,8 @@ public final class Utility {
      *            : day in Android
      * @return a natural formatted date string
      */
-    public static String convertAndroidSystemDateToFormatedDateStringChineseConvention
-        (final int systemYear, final int systemMonth, final int systemDay) {
+    public static String convertAndroidSystemDateToFormatedDateStringChineseConvention(
+            final int systemYear, final int systemMonth, final int systemDay) {
 
         // formatted month string
         String monthString = "";
@@ -349,5 +367,29 @@ public final class Utility {
                 + output.substring(0, output.length() - 2));
 
         return output.substring(0, output.length() - 2);
+    }
+
+    /**
+     * Set the current locale.
+     * 
+     * @param currLocale
+     *            the locale will used.
+     */
+    public static void setCurrentLocale(final Language currLocale) {
+        currentLocale = currLocale;
+    }
+    
+    /**
+     * Get the current locale.
+     * 
+     * @return the language that current locale is.
+     */
+    public static Language getCurrentLocale() {
+        if (currentLocale == null) {
+            // if not initialize, set English as default. 
+            System.err.println(TAG + "CurrentLocale is null");
+            currentLocale = Language.ENGLISH;
+        }
+        return currentLocale;
     }
 }

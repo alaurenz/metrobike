@@ -2,11 +2,16 @@ package com.HuskySoft.metrobike.ui;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Locale;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +22,7 @@ import android.widget.Button;
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.ui.utility.History;
 import com.HuskySoft.metrobike.ui.utility.MapSetting;
+import com.HuskySoft.metrobike.ui.utility.Utility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -62,6 +68,9 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        setSystemLocate();
+        
         setContentView(R.layout.activity_main);
         // the search button
         Button searchButton = (Button) findViewById(R.id.buttonSearch);
@@ -76,9 +85,31 @@ public class MainActivity extends FragmentActivity {
         // create a new empty history object
         History.getInstance();
         readFromHistoryFile();
+        
         // Showing log in console for debugging. To be removed for formal
         // release.
         Log.v(TAG, "Finished launching main activity!");
+    }
+
+    /**
+     * Initialize the language preference.
+     */
+    private void setSystemLocate() {
+        SharedPreferences settings = getSharedPreferences(Utility.LANGUAGE_NAME, 0);
+        String lang = settings.getString("language", "NO_LANG");
+        if (!lang.equals("NO_LANG")) {
+            Resources resources = getResources(); 
+            Configuration config = resources.getConfiguration(); 
+            if (lang.equals("CN")) {
+                Log.e(TAG, " chinese in main");
+                config.locale = Locale.SIMPLIFIED_CHINESE;
+            } else {
+                Log.e(TAG, " English in main");
+                config.locale = Locale.ENGLISH;
+            }
+            DisplayMetrics dm = resources.getDisplayMetrics(); 
+            resources.updateConfiguration(config, dm);
+        }
     }
 
     /**
@@ -90,6 +121,7 @@ public class MainActivity extends FragmentActivity {
                 .getMap();
         // only initialize the map setting
         MapSetting.getInstance(googleMap);
+
     }
 
     /**
@@ -150,7 +182,7 @@ public class MainActivity extends FragmentActivity {
             // try to get the current location
             Location currLoc = googleMap.getMyLocation();
             LatLng latLng;
-            if (currLoc == null) { 
+            if (currLoc == null) {
                 latLng = new LatLng(LATITUDE, LONGITUDE);
             } else {
                 latLng = new LatLng(currLoc.getLatitude(), currLoc.getLongitude());

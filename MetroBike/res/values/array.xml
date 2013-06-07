@@ -7,6 +7,10 @@
         <item>Hybrid</item>
         <item>Terrain</item>
     </string-array>
+    <string-array name="array_locate_language">
+        <item>English</item>
+        <item>Simple Chinese</item>
+    </string-array>
     <string-array name="value_map_type">
         <item>0</item>
         <item>1</item>

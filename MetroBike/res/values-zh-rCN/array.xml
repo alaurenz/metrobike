@@ -7,6 +7,10 @@
         <item>普通/卫星混合视图</item>
         <item>地形视图</item>
     </string-array>
+    <string-array name="array_locate_language">
+        <item>English 英文</item>
+        <item>Simplify Chinese 简体中文</item>
+    </string-array>
     <string-array name="value_map_type">
         <item>0</item>
         <item>1</item>

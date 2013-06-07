@@ -83,7 +83,7 @@ public class HistoryActivity extends Activity {
                                                 + HistoryActivity.this
                                                 .getResources()
                                                 .getString(R.string.dialog_title_warning)
-                                                +"</font>"));
+                                                + "</font>"));
                 builder.setMessage(HistoryActivity.this
                                     .getResources()
                                     .getString(R.string.message_are_your_sure)

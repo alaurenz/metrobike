@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.ui.utility.History;
 import com.HuskySoft.metrobike.ui.utility.MapSetting;
+import com.HuskySoft.metrobike.ui.utility.Utility;
+import com.HuskySoft.metrobike.ui.utility.Utility.Language;
 import com.google.android.gms.maps.GoogleMap;
 
 /**
@@ -98,7 +101,12 @@ public class SettingsActivity extends PreferenceActivity {
      * the current list preference.
      */
     private ListPreference currentType;
-
+    
+    /**
+     * the current locale.
+     */
+    private ListPreference localeType;
+    
     /**
      * Keeps an array of history entries.
      */
@@ -145,19 +153,21 @@ public class SettingsActivity extends PreferenceActivity {
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(VERSION));
-        bindPreferenceSummaryToValue(findPreference(LOCALE));
+        //bindPreferenceSummaryToValue(findPreference(LOCALE));
         // this is binding the button
         bindPreferenceToClick(findPreference(ABOUT));
         bindPreferenceToClick(findPreference(CLR_HISTORY));
         bindPreferenceToClick(findPreference(VIEW_HISTORY));
-
+        
         mapType = (ListPreference) findPreference(MAP_TYPE);
         trafficType = (ListPreference) findPreference(TRAFFIC_TYPE);
         currentType = (ListPreference) findPreference(CURRENT_TYPE);
-
+        localeType = (ListPreference) findPreference(LOCALE);
+        
         bindPreferenceToClick(mapType);
         bindPreferenceToClick(trafficType);
         bindPreferenceToClick(currentType);
+        bindPreferenceToClick(localeType);
     }
 
     /**
@@ -198,10 +208,49 @@ public class SettingsActivity extends PreferenceActivity {
                 switchMode(preference, key);
             } else if (key.equals(CURRENT_TYPE)) {
                 switchMode(preference, key);
+            } else if (key.equals(LOCALE)) { 
+                changeLocale(preference, key);
             } else {
                 isClick = false;
             }
             return isClick;
+        }
+
+        /**
+         * Invoke when user wanted to change the language type.
+         * 
+         * @param preference
+         *            the preference of this activity
+         * @param key
+         *            the type of language
+         */
+        private void changeLocale(final Preference preference, final String key) {
+            ((ListPreference) preference)
+                    .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(final Preference preference,
+                                final Object newValue) {
+
+                            SharedPreferences settings = getSharedPreferences(
+                                    Utility.LANGUAGE_NAME, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = settings.edit();
+                            if (((String) newValue).equals("false")) {
+                                Utility.setCurrentLocale(Language.SIMPLIFY_CHINESE);
+                                editor.putString("language", "CN");
+                                Log.e(TAG, " chinese is setted");
+                            } else {
+                                Utility.setCurrentLocale(Language.ENGLISH);
+                                editor.putString("language", "EN");
+                                Log.e(TAG, " English is setted");
+                            }
+                            editor.commit();
+                            // Do we need to go back to the main activity?
+                            Intent intent = new Intent(preference.getContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            return true;
+                        }
+                    });
         }
 
         /**
@@ -267,7 +316,8 @@ public class SettingsActivity extends PreferenceActivity {
                                     .getString(R.string.dialog_title_warning) 
                                     + "</font>"));
             alertDialog.setMessage(R.string.message_delete_all_history);
-            alertDialog.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+            alertDialog.setPositiveButton(R.string.button_ok, 
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
                     historyItem.deleteAll();
@@ -277,7 +327,8 @@ public class SettingsActivity extends PreferenceActivity {
                 }
 
             });
-            alertDialog.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+            alertDialog.setNegativeButton(R.string.button_cancel, 
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
                     // cancel this dialog

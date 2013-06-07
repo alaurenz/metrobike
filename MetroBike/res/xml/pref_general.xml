@@ -25,10 +25,10 @@
             android:key="version_key"
             android:selectable="false"
             android:title="@string/pref_title_version" />
-        <EditTextPreference
-            android:defaultValue="@string/pref_detail_locale"
+        <ListPreference
             android:key="locale_key"
-            android:selectable="false"
+            android:entries="@array/array_locate_language"
+            android:entryValues="@array/true_false"
             android:title="@string/pref_title_locale" />
     </PreferenceCategory>
 
