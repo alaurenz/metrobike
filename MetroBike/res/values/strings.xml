@@ -87,13 +87,13 @@
     <string name="edittext_hint_max">Max</string>
     <string name="error_gps_not_available">GPS location is not available</string>
     <string name="error_gms_connection_fail">Connection Failed, please check your Google Play Services status</string>
-    <string name="message_request_canceled">Request has been canceled</string>
+    <string name="message_request_cancelled">Request has been cancelled</string>
     <string name="message_searching_for_routes">Searching for routes&#8230;</string>
-    <string name="message_cancelling">Canceling request&#8230; (This takes a moment)</string>
+    <string name="message_cancelling">Cancelling request&#8230; (This may take a moment)</string>
     <string name="dialog_title_success">Success</string>
     <string name="dialog_title_error">Error</string>
     <string name="dialog_title_searching">Searching</string>
-    <string name="dialog_title_canceling">Canceling</string>
+    <string name="dialog_title_cancelling">Cancelling</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="edittext_curr_location">Current Location</string>
@@ -103,10 +103,10 @@
     <string name="transit">Transit&#8212;</string>
     <string name="route_length">Route length: </string>
     <string name="meters_duration"> meters\nDuration: </string>
-	<string name="start_here">Start Here!</string>
-	<string name="end_here">End Here!</string>
-	<string name="departure_at">Departure at: </string>
-	<string name="route_button">Route</string>
+    <string name="start_here">Start Here!</string>
+    <string name="end_here">End Here!</string>
+    <string name="departure_at">Departure at: </string>
+    <string name="route_button">Route</string>
     
     <!-- About Activity -->
     <string name="textview_dev_by">Developed By</string>
@@ -114,7 +114,8 @@
     <string name="textview_backend">Backend</string>
     <string name="textview_algorithm">Algorithm</string>
     <string name="textview_developers">	    Jaylen VanOrden, Xinyun Chen, Corey Harmon,
-	    Adrian Laurenzi, Qinyuan Wan, Shuo Wang, Sam Wilson</string>
+	    Adrian Laurenzi, Qinyuan Wan, Shuo Wang, Sam Wilson
+	</string>
     <string name="textview_jaylen">Jaylen VanOrden</string>
     <string name="textview_xinyun">Xinyun Chen</string>
     <string name="textview_corey">Corey Harmon</string>
@@ -128,7 +129,7 @@
         \n\nMetroBike is only used for educational and research purposes. The result routes may not be the best routes. MetroBike will not be responsible for any loss or damage caused by using this application. 
         \n\nMetroBike used Google Maps as our map engine. All the terms and conditions are under Google Maps term and conditions.
         \n\nFor more information about the Google map terms and conditions, please use Google to search \"Google Maps terms and conditions\".
-       </string>
+    </string>
 
     <!-- Main Activity -->
     <string name="button_search_main">Search</string>
@@ -140,7 +141,7 @@
     <string name="action_search">Search</string>
     
     <!-- Backend Uitility Class -->
-	<string name="day">day</string>
-	<string name="hour">hour</string>
-	<string name="minute">minute</string>
+    <string name="day">day</string>
+    <string name="hour">hour</string>
+    <string name="minute">minute</string>
 </resources>

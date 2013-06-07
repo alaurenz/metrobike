@@ -341,7 +341,7 @@ public class SearchActivity extends Activity implements
                     public void run() {
                         pdCancel.dismiss();
                         AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-                        builder.setMessage(R.string.message_request_canceled);
+                        builder.setMessage(R.string.message_request_cancelled);
                         builder.setTitle(R.string.dialog_title_success);
                         builder.setCancelable(false);
                         builder.setNeutralButton(R.string.button_ok,
@@ -1062,7 +1062,7 @@ public class SearchActivity extends Activity implements
                         cancelled = true;
                         dirThread.interrupt();
                         pdCancel = new ProgressDialog(SearchActivity.this);
-                        pdCancel.setTitle(R.string.dialog_title_canceling);
+                        pdCancel.setTitle(R.string.dialog_title_cancelling);
                         pdCancel.setMessage(SearchActivity.this.getResources().getString(
                                 R.string.message_cancelling));
                         // This is to enforce user to click "cancel"
