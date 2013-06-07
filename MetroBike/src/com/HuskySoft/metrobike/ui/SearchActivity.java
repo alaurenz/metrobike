@@ -324,7 +324,13 @@ public class SearchActivity extends Activity implements
                 }
                 retVal = DirectionsStatus.USER_CANCELLED_REQUEST;
             }
-
+            
+            // Bottom line for cancellation
+            if (cancelled) {
+                retVal = DirectionsStatus.USER_CANCELLED_REQUEST;
+                cancelled = false;
+            }
+            
             // If a cancellation happens to the direction request
             // display an AlertDialog to let user to (re)start
             // a new request
@@ -588,6 +594,11 @@ public class SearchActivity extends Activity implements
      * A progress dialog indicating the canceling status of this activity.
      */
     private ProgressDialog pdCancel;
+    
+    /**
+     * A boolean indicating the cancellation by user.
+     */
+    private boolean cancelled;
 
     /**
      * Thread requesting for new routes.
@@ -1032,6 +1043,7 @@ public class SearchActivity extends Activity implements
         findButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
+                cancelled = false;
                 dirThread = new Thread(new DirThread());
                 pd = new ProgressDialog(SearchActivity.this);
                 pd.setTitle(R.string.dialog_title_searching);
@@ -1047,6 +1059,7 @@ public class SearchActivity extends Activity implements
                     public void onClick(final DialogInterface dialog, final int which) {
                         // Cancel the request
                         Log.d(TAG, "Interrupting dirThread: " + dirThread.getId());
+                        cancelled = true;
                         dirThread.interrupt();
                         pdCancel = new ProgressDialog(SearchActivity.this);
                         pdCancel.setTitle(R.string.dialog_title_canceling);
