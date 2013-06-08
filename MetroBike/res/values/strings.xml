@@ -19,7 +19,7 @@
     <!-- General errors across the app -->
     <string name="error_invalid_request_params">Invalid request parameters.</string>
     <string name="error_unsupported_travel_mode_error">Requested travel mode not supported.</string>
-	<string name="error_unsupported_charset">Internal error: default charset not supported.</string>
+    <string name="error_unsupported_charset">Internal error: default charset not supported.</string>
     <string name="error_parsing_error">Got a bad response from the server.</string>
     <string name="error_connection_error">Having trouble connecting to the server. Please try again later.</string>
     <string name="error_no_results_found">Found no results. Please check to be sure your addresses and travel options are correct.</string>

@@ -20,7 +20,7 @@
     <!-- General errors across the app -->
     <string name="error_invalid_request_params">无效的请求参数</string>
     <string name="error_unsupported_travel_mode_error">不支持所请求的出行方式</string>
-	<string name="error_unsupported_charset">内部错误：不支持默认字符集</string>
+    <string name="error_unsupported_charset">内部错误：不支持默认字符集</string>
     <string name="error_parsing_error">从服务器得到无效的回应</string>
     <string name="error_connection_error">连接服务器出现问题，请稍后重试</string>
     <string name="error_no_results_found">没有查询到结果，请检查您的查询地址以及出行选项是否正确</string>
@@ -138,7 +138,7 @@
     <string name="term_and_conditions">MetroBike是一款由华盛顿大学（西雅图）(University of Washington, Seattle)计算机科学与工程系学生开发的非营利性安卓应用。
 		\n\nMetroBike仅用于教育/研究目的。其路线结果并不一定为最佳。MetroBike不为因使用此应用而造成的任何损失及损害承担任何责任。
 		\n\nMetroBike使用Google地图(Google Maps)服务作为此应用的地图引擎。所有条款与条件均以Google地图(Google Maps)条款与条件为准。
-		\n\n如需了解更多Google地图(Google Maps)条款与条件，请使用Google搜索\"Google Maps terms and conditions\"。
+		\n\n如需了解更多Google地图(Google Maps)条款与条件，请使用Google搜索“Google Maps terms and conditions”。
 	</string>
 
     <!-- Main Activity -->
