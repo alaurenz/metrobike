@@ -27,7 +27,7 @@
             android:title="@string/pref_title_version" />
         <ListPreference
             android:key="locale_key"
-            android:entries="@array/array_locate_language"
+            android:entries="@array/array_locale_language"
             android:entryValues="@array/true_false"
             android:title="@string/pref_title_locale" />
     </PreferenceCategory>

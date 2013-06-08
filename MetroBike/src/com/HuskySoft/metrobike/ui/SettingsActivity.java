@@ -123,8 +123,13 @@ public class SettingsActivity extends PreferenceActivity {
     private static final int[] MAP_ARRAYS = { GoogleMap.MAP_TYPE_NORMAL,
             GoogleMap.MAP_TYPE_SATELLITE, GoogleMap.MAP_TYPE_HYBRID, GoogleMap.MAP_TYPE_TERRAIN };
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         // Reload localized title: only needed for localization
@@ -171,12 +176,24 @@ public class SettingsActivity extends PreferenceActivity {
         trafficType = (ListPreference) findPreference(TRAFFIC_TYPE);
         currentType = (ListPreference) findPreference(CURRENT_TYPE);
         localeType = (ListPreference) findPreference(LOCALE);
+
         
         
         bindPreferenceToClick(mapType);
         bindPreferenceToClick(trafficType);
         bindPreferenceToClick(currentType);
         bindPreferenceToClick(localeType);
+        
+        // After binding locale type, we need to initialize the default
+        // value for user's first run of the app to avoid not-yet-checked
+        // listpreference
+        if (Utility.getCurrentLocale() == Language.SIMPLIFIED_CHINESE) {
+            Log.w(TAG, "The current locale entry is Chinese");
+            localeType.setValue("false");
+        } else {
+            Log.w(TAG, "The current locale entry is English");
+            localeType.setValue("true");
+        }
     }
 
     /**
@@ -234,6 +251,11 @@ public class SettingsActivity extends PreferenceActivity {
          *            the type of language
          */
         private void changeLocale(final Preference preference, final String key) {
+            // Set default value to be displayed as checked
+            Log.w(TAG, "The current locale entry value is "
+                    + ((ListPreference) preference).getValue());
+            
+            // Add onChange listener
             ((ListPreference) preference)
                     .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                         @Override

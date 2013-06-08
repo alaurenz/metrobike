@@ -118,8 +118,8 @@ public class MainActivity extends FragmentActivity {
             DisplayMetrics dm = resources.getDisplayMetrics(); 
             resources.updateConfiguration(config, dm);
         } else {
-            if (Locale.getDefault().getLanguage().equals("zh") && 
-                Locale.getDefault().getCountry().equals("CN")) {
+            if (Locale.getDefault().getLanguage().equals("zh")
+                && Locale.getDefault().getCountry().equals("CN")) {
                 Log.e(TAG, "No Language set. Use Chinese as default");
                 Utility.setCurrentLocale(Language.SIMPLIFIED_CHINESE);
             } else {

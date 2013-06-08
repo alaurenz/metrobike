@@ -7,7 +7,7 @@
         <item>普通/卫星混合视图</item>
         <item>地形视图</item>
     </string-array>
-    <string-array name="array_locate_language">
+    <string-array name="array_locale_language">
         <item>英文 (English)</item>
         <item>简体中文 (Simplified Chinese)</item>
     </string-array>

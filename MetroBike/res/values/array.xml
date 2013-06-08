@@ -7,7 +7,7 @@
         <item>Hybrid</item>
         <item>Terrain</item>
     </string-array>
-    <string-array name="array_locate_language">
+    <string-array name="array_locale_language">
         <item>English</item>
         <item>Simplified Chinese</item>
     </string-array>
