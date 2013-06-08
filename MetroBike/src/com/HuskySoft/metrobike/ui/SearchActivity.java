@@ -223,6 +223,12 @@ public class SearchActivity extends Activity implements
          * Time to sleep after we get directions data, so user can still cancel.
          */
         private static final long MIN_QUERY_TIME = 500;
+        
+        /**
+         * ID indicating that there is no 
+         * corresponding error message id in strings.xml.
+         */
+        private static final int NO_ERROR_MESSAGE_ID = -345;
 
         /**
          * {@inheritDoc}
@@ -337,7 +343,7 @@ public class SearchActivity extends Activity implements
             // display an AlertDialog to let user to (re)start
             // a new request
             if (retVal == DirectionsStatus.USER_CANCELLED_REQUEST) {
-                Log.d(TAG, "Request has been successfully canceled");
+                Log.d(TAG, "Request has been successfully canceled.");
                 runOnUiThread(new Runnable() {
                     public void run() {
                         pdCancel.dismiss();
@@ -365,7 +371,42 @@ public class SearchActivity extends Activity implements
             // a new request
             if (retVal.isError()) {
                 Log.d(TAG, "Error on do request");
-                final String errorMessage = retVal.getMessage();
+                
+                // Set corresponding error messages to display
+                int errorMessageId = NO_ERROR_MESSAGE_ID;
+                switch (retVal) {
+                case INVALID_REQUEST_PARAMS: 
+                    errorMessageId = R.string.error_invalid_request_params; 
+                    break;
+                case UNSUPPORTED_TRAVEL_MODE_ERROR: 
+                    errorMessageId = R.string.error_unsupported_travel_mode_error; 
+                    break;
+                case UNSUPPORTED_CHARSET: 
+                    errorMessageId = R.string.error_unsupported_charset; 
+                    break;
+                case PARSING_ERROR: 
+                    errorMessageId = R.string.error_parsing_error; 
+                    break;
+                case CONNECTION_ERROR: 
+                    errorMessageId = R.string.error_connection_error; 
+                    break;
+                case NO_RESULTS_FOUND: 
+                    errorMessageId = R.string.error_no_results_found; 
+                    break;
+                case OVER_QUERY_LIMIT: 
+                    errorMessageId = R.string.error_over_query_limit; 
+                    break;
+                default: 
+                    break;
+                }
+                
+                final String errorMessage;
+                if (errorMessageId != NO_ERROR_MESSAGE_ID) {
+                    errorMessage = getResources().getString(errorMessageId);
+                } else {
+                    errorMessage = retVal.getMessage();
+                }
+                
                 // Must call runOnUiThread if want to display a Toast or a
                 // Dialog within a thread
                 runOnUiThread(new Runnable() {

@@ -16,6 +16,15 @@
     <string name="edittext_hint_to">终点</string>
     <string name="edittext_hint_startfrom">起点</string>
     <string name="image_desc">图像</string>
+    
+    <!-- General errors across the app -->
+    <string name="error_invalid_request_params">无效的请求参数</string>
+    <string name="error_unsupported_travel_mode_error">不支持所请求的出行方式</string>
+	<string name="error_unsupported_charset">内部错误：不支持默认字符集</string>
+    <string name="error_parsing_error">从服务器得到无效的回应</string>
+    <string name="error_connection_error">连接服务器出现问题，请稍后重试</string>
+    <string name="error_no_results_found">没有查询到结果，请检查您的查询地址以及出行选项是否正确</string>
+    <string name="error_over_query_limit">超过请求次数限制：此应用已经超过了Google最大每日查询限制数</string>
 
     <!-- Strings related to About -->
     <string name="title_activity_about">关于</string>
