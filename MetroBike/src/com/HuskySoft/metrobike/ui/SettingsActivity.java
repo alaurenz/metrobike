@@ -123,6 +123,12 @@ public class SettingsActivity extends PreferenceActivity {
     private static final int[] MAP_ARRAYS = { GoogleMap.MAP_TYPE_NORMAL,
             GoogleMap.MAP_TYPE_SATELLITE, GoogleMap.MAP_TYPE_HYBRID, GoogleMap.MAP_TYPE_TERRAIN };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getActionBar().setTitle(R.string.title_activity_settings);
+    }
+    
     /**
      * {@inheritDoc}
      * 
@@ -235,13 +241,13 @@ public class SettingsActivity extends PreferenceActivity {
                                     Utility.LANGUAGE_NAME, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
                             if (((String) newValue).equals("false")) {
-                                Utility.setCurrentLocale(Language.SIMPLIFY_CHINESE);
+                                Utility.setCurrentLocale(Language.SIMPLIFIED_CHINESE);
                                 editor.putString("language", "CN");
-                                Log.e(TAG, " chinese is setted");
+                                Log.e(TAG, "Chinese is set");
                             } else {
                                 Utility.setCurrentLocale(Language.ENGLISH);
                                 editor.putString("language", "EN");
-                                Log.e(TAG, " English is setted");
+                                Log.e(TAG, "English is set");
                             }
                             editor.commit();
                             // Do we need to go back to the main activity?

@@ -33,7 +33,7 @@ public final class Utility {
      */
     public enum Language {
         /** The different language available. */
-        ENGLISH, SIMPLIFY_CHINESE
+        ENGLISH, SIMPLIFIED_CHINESE
     };
     
     /**

@@ -9,7 +9,7 @@
     </string-array>
     <string-array name="array_locate_language">
         <item>English</item>
-        <item>Simple Chinese</item>
+        <item>Simplified Chinese</item>
     </string-array>
     <string-array name="value_map_type">
         <item>0</item>

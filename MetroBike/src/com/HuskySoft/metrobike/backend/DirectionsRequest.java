@@ -613,7 +613,7 @@ public final class DirectionsRequest implements Serializable {
             }
             
             // validate queryLanguage (currently only accepting English and Chinese (Simplified)
-            if(queryLanguage != "en" && queryLanguage != "zh-CN") {
+            if(!queryLanguage.equals("en") && !queryLanguage.equals("zh-CN")) {
                 appendErrorMessage("Invalid queryLanguage (only 'en' and 'zh-CN' accepted)");
                 System.err.println(TAG + "validateParameters()->Invalid queryLanguage (only"
                 		+ " 'en' and 'zh-CN' accepted)");

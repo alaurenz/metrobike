@@ -113,7 +113,7 @@ public class SearchActivity extends Activity implements
 //            Locale currLocale = getResources().getConfiguration().locale;
             Log.e(TAG, "English " + (Utility.getCurrentLocale() == Language.ENGLISH));
             // Date format in China
-            if (Utility.getCurrentLocale() == Language.SIMPLIFY_CHINESE) {
+            if (Utility.getCurrentLocale() == Language.SIMPLIFIED_CHINESE) {
                     //currLocale.getLanguage().equals("zh")) {
                 dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                         .convertAndroidSystemDateToFormatedDateStringChineseConvention(year, month,
@@ -231,6 +231,15 @@ public class SearchActivity extends Activity implements
         public void run() {
             // Generate a direction request
             DirectionsRequest dReq = new DirectionsRequest();
+            
+            // Set up languages for Google Maps instructions
+            if (Utility.getCurrentLocale() == Utility.Language.SIMPLIFIED_CHINESE) {
+                dReq.setQueryLanguage("zh-CN");
+            } else {
+                dReq.setQueryLanguage("en");
+            }
+            
+            
             // Set up addresses for direction request
             String currLocationLatLagString = "";
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
@@ -431,7 +440,7 @@ public class SearchActivity extends Activity implements
                 // December
 
                 // Chinese date format
-                if (Utility.getCurrentLocale() == Language.SIMPLIFY_CHINESE) {
+                if (Utility.getCurrentLocale() == Language.SIMPLIFIED_CHINESE) {
                         //currLocale.getLanguage().equals("zh")) {
                     year = Integer.parseInt(dateString.substring(0, DIGIT_FIFTH));
                     month = Integer.parseInt(dateString.substring(DIGIT_SIXTH, DIGIT_EIGHTH)) - 1;
@@ -1140,7 +1149,7 @@ public class SearchActivity extends Activity implements
         // Set initial date and time
 
         // Date format in China
-        if (Utility.getCurrentLocale() == Language.SIMPLIFY_CHINESE) {
+        if (Utility.getCurrentLocale() == Language.SIMPLIFIED_CHINESE) {
             dateEditText.setText(com.HuskySoft.metrobike.ui.utility.Utility
                     .convertAndroidSystemDateToFormatedDateStringChineseConvention(
                             calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),

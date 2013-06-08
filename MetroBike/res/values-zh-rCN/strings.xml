@@ -31,7 +31,7 @@
     <string name="pref_title_about">关于</string>
     <string name="pref_title_version">版本</string>
     <string name="pref_detail_version">2.0</string>
-    <string name="pref_title_locale">语言区域</string>
+    <string name="pref_title_locale">区域/语言</string>
     <string name="pref_detail_locale">zh_CN</string>
 
     <!-- Map settings -->

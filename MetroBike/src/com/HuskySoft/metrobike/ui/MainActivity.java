@@ -101,10 +101,10 @@ public class MainActivity extends FragmentActivity {
             Resources resources = getResources(); 
             Configuration config = resources.getConfiguration(); 
             if (lang.equals("CN")) {
-                Log.e(TAG, " chinese in main");
+                Log.e(TAG, "Chinese in main");
                 config.locale = Locale.SIMPLIFIED_CHINESE;
             } else {
-                Log.e(TAG, " English in main");
+                Log.e(TAG, "English in main");
                 config.locale = Locale.ENGLISH;
             }
             DisplayMetrics dm = resources.getDisplayMetrics(); 
