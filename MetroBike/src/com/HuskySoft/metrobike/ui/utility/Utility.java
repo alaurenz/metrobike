@@ -341,14 +341,14 @@ public final class Utility {
         Context context = MyApplicationClass.getContext();
         if (days > 0) {
             output += days + " " + context.getResources().getString(R.string.day);
-            if (days > 1 && Locale.getDefault().getLanguage().equals("en")) {
+            if (days > 1 && Utility.getCurrentLocale() == Utility.Language.ENGLISH) {
                 output += "s";
             }
             output += ", ";
         }
         if (hours > 0) {
             output += hours + " " + context.getResources().getString(R.string.hour);
-            if (hours > 1 && Locale.getDefault().getLanguage().equals("en")) {
+            if (hours > 1 && Utility.getCurrentLocale() == Utility.Language.ENGLISH) {
                 output += "s";
             }
             output += ", ";
@@ -356,7 +356,7 @@ public final class Utility {
         if (minutes >= 0) {
             output += minutes + " " + context.getResources().getString(R.string.minute);
             if ((minutes > 1 || minutes == 0) 
-                    && Locale.getDefault().getLanguage().equals("en")) {
+                    && Utility.getCurrentLocale() == Utility.Language.ENGLISH) {
                 output += "s";
             }
             output += ", ";
