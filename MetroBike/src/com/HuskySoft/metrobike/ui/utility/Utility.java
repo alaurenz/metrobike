@@ -388,7 +388,11 @@ public final class Utility {
         if (currentLocale == null) {
             // if not initialize, set English as default. 
             System.err.println(TAG + "CurrentLocale is null");
-            currentLocale = Language.ENGLISH;
+            if (Locale.getDefault().getLanguage().equals("zh")) {
+                currentLocale = Language.SIMPLIFIED_CHINESE;
+            } else {
+                currentLocale = Language.ENGLISH;
+            }
         }
         return currentLocale;
     }

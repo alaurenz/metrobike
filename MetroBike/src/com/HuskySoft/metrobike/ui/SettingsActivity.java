@@ -126,6 +126,8 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Reload localized title: only needed for localization
         getActionBar().setTitle(R.string.title_activity_settings);
     }
     
@@ -169,6 +171,7 @@ public class SettingsActivity extends PreferenceActivity {
         trafficType = (ListPreference) findPreference(TRAFFIC_TYPE);
         currentType = (ListPreference) findPreference(CURRENT_TYPE);
         localeType = (ListPreference) findPreference(LOCALE);
+        
         
         bindPreferenceToClick(mapType);
         bindPreferenceToClick(trafficType);

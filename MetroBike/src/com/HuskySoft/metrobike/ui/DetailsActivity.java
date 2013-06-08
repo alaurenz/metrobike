@@ -74,12 +74,15 @@ public class DetailsActivity extends Activity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        
         directions = (TextView) findViewById(R.id.directions);
         start = (TextView) findViewById(R.id.directionsStart);
         destination = (TextView) findViewById(R.id.directionsDest);
 
         ActionBar actionBar = this.getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        // Reload localized title: only needed for localization
+        actionBar.setTitle(R.string.title_activity_details);
 
         @SuppressWarnings("unchecked")
         List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(

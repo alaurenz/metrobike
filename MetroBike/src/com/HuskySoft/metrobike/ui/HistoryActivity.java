@@ -59,6 +59,10 @@ public class HistoryActivity extends Activity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        
+        // Reload localized title: only needed for localization
+        getActionBar().setTitle(R.string.title_activity_history);
+        
         history = History.getInstance();
         initializeHistoryListView();
         setListener();

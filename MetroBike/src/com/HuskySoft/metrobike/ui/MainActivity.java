@@ -23,6 +23,7 @@ import com.HuskySoft.metrobike.R;
 import com.HuskySoft.metrobike.ui.utility.History;
 import com.HuskySoft.metrobike.ui.utility.MapSetting;
 import com.HuskySoft.metrobike.ui.utility.Utility;
+import com.HuskySoft.metrobike.ui.utility.Utility.Language;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -72,6 +73,10 @@ public class MainActivity extends FragmentActivity {
         setSystemLocate();
         
         setContentView(R.layout.activity_main);
+        
+        // Reload localized title: only needed for localization
+        getActionBar().setTitle(R.string.app_name);
+        
         // the search button
         Button searchButton = (Button) findViewById(R.id.buttonSearch);
         searchButton.setOnClickListener(new OnClickListener() {
@@ -97,18 +102,30 @@ public class MainActivity extends FragmentActivity {
     private void setSystemLocate() {
         SharedPreferences settings = getSharedPreferences(Utility.LANGUAGE_NAME, 0);
         String lang = settings.getString("language", "NO_LANG");
+        
         if (!lang.equals("NO_LANG")) {
             Resources resources = getResources(); 
             Configuration config = resources.getConfiguration(); 
             if (lang.equals("CN")) {
                 Log.e(TAG, "Chinese in main");
                 config.locale = Locale.SIMPLIFIED_CHINESE;
+                Utility.setCurrentLocale(Language.SIMPLIFIED_CHINESE);
             } else {
                 Log.e(TAG, "English in main");
                 config.locale = Locale.ENGLISH;
+                Utility.setCurrentLocale(Language.ENGLISH);
             }
             DisplayMetrics dm = resources.getDisplayMetrics(); 
             resources.updateConfiguration(config, dm);
+        } else {
+            if (Locale.getDefault().getLanguage().equals("zh") && 
+                Locale.getDefault().getCountry().equals("CN")) {
+                Log.e(TAG, "No Language set. Use Chinese as default");
+                Utility.setCurrentLocale(Language.SIMPLIFIED_CHINESE);
+            } else {
+                Log.e(TAG, "No Language set. Use English as default");
+                Utility.setCurrentLocale(Language.ENGLISH);
+            }
         }
     }
 

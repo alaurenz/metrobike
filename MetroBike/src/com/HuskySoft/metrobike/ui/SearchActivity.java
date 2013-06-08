@@ -233,9 +233,11 @@ public class SearchActivity extends Activity implements
             DirectionsRequest dReq = new DirectionsRequest();
             
             // Set up languages for Google Maps instructions
-            if (Utility.getCurrentLocale() == Utility.Language.SIMPLIFIED_CHINESE) {
+            if (Utility.getCurrentLocale() == Language.SIMPLIFIED_CHINESE) {
+                Log.w(TAG, "Set Simplified Chinese as query Language");
                 dReq.setQueryLanguage("zh-CN");
             } else {
+                Log.w(TAG, "Set English as query Language");
                 dReq.setQueryLanguage("en");
             }
             
@@ -608,6 +610,9 @@ public class SearchActivity extends Activity implements
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        
+        // Reload localized title: only needed for localization
+        getActionBar().setTitle(R.string.title_activity_search);
 
         establishViewsAndOtherNecessaryComponents();
 

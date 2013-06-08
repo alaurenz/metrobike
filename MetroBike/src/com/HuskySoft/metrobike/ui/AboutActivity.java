@@ -36,9 +36,14 @@ public class AboutActivity extends Activity {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         // linked to the activity about xml
         layoutID = R.layout.activity_about;
         setContentView(layoutID);
+        
+        // Reload localized title: only needed for localization
+        getActionBar().setTitle(R.string.title_activity_about);
+        
         Button term = (Button) findViewById(R.id.termAndConditions);
         term.setOnClickListener(new OnClickListener() {
             @Override

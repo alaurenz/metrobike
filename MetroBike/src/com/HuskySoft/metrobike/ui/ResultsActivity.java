@@ -163,6 +163,10 @@ public class ResultsActivity extends Activity {
         // set the default route to be the first route of the solution
 
         setContentView(R.layout.activity_results);
+        
+        // Reload localized title: only needed for localization
+        getActionBar().setTitle(R.string.app_name);
+        
         if (recievedRoutes != null) {
             routes = (ArrayList<Route>) recievedRoutes;
             currRoute = (Integer) getIntent().getSerializableExtra("Current Route Index");

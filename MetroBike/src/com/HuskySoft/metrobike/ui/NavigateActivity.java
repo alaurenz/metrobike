@@ -176,9 +176,6 @@ public class NavigateActivity extends FragmentActivity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
@@ -190,6 +187,13 @@ public class NavigateActivity extends FragmentActivity {
         List<Route> recievedRoutes = (ArrayList<Route>) getIntent().getSerializableExtra(
                 "List of Routes");
         setContentView(R.layout.activity_navigate);
+        
+        ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        // Reload localized title: only needed for localization
+        actionBar.setTitle(R.string.title_activity_navigate);
+        
+        
         instr = (TextView) findViewById(R.id.direction_instr);
         next = (Button) findViewById(R.id.button_next);
         prev = (Button) findViewById(R.id.button_previous);
