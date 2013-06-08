@@ -36,6 +36,10 @@ public final class History {
     private List<String> historyList;
 
     /**
+     * A page size of history.
+     */
+    private static final int PAGE = 1024;
+    /**
      * Private constructor for this singleton class.
      */
     private History() {
@@ -227,9 +231,9 @@ public final class History {
             return;
         }
         try {
-            fos.write(address.getBytes());
+            fos.write(address.getBytes("UTF8"));
             // \n indicate the next address
-            fos.write("\n".getBytes());
+            fos.write("\n".getBytes("UTF8"));
         } catch (IOException e) {
             System.out.println(TAG + " Connot write history from file");
         }
@@ -243,7 +247,8 @@ public final class History {
      */
     public static void readFromFile(final FileInputStream fis) {
         History history = History.getInstance();
-        StringBuilder sb = new StringBuilder();
+        List<Byte> byteLst = new ArrayList<Byte>();
+        byte[] buf = new byte[PAGE];
         int readByte;
         char c;
         if (fis == null) {
@@ -253,15 +258,27 @@ public final class History {
         }
         // read one byte at a time.
         try {
-            while ((readByte = fis.read()) != -1) {
-                c = (char) readByte;
-                if (c == '\n') {
-                    // if we hit the new line, that's the other address.
-                    history.addAddress(sb.toString());
-                    sb = new StringBuilder();
-                    continue;
+            while ((readByte = fis.read(buf, 0, buf.length)) != -1) {
+                if (readByte > buf.length) {
+                    buf = new byte[PAGE * 2];
+                } else {
+                    break;
                 }
-                sb.append(c);
+            }
+            for (int i = 0; buf[i] != 0 && i < buf.length; i++) {
+                c = (char) buf[i];
+                if (c == '\n') {
+                    // convert list<byte> to byte[]
+                    byte[] address = new byte[byteLst.size()];
+                    for (int j = 0; j < byteLst.size(); j++) {
+                        address[j] = byteLst.get(j);
+                    }
+                    String add = new String(address, "UTF-8");
+                    history.addAddress(add);
+                    byteLst = new ArrayList<Byte>();
+                } else {
+                    byteLst.add(buf[i]);
+                }
             }
         } catch (IOException e) {
             System.out.println(TAG + " Connot read history from file");

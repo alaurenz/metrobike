@@ -231,7 +231,6 @@ public class SearchActivity extends Activity implements
         public void run() {
             // Generate a direction request
             DirectionsRequest dReq = new DirectionsRequest();
-            
             // Set up languages for Google Maps instructions
             if (Utility.getCurrentLocale() == Language.SIMPLIFIED_CHINESE) {
                 Log.w(TAG, "Set Simplified Chinese as query Language");
@@ -240,8 +239,6 @@ public class SearchActivity extends Activity implements
                 Log.w(TAG, "Set English as query Language");
                 dReq.setQueryLanguage("en");
             }
-            
-            
             // Set up addresses for direction request
             String currLocationLatLagString = "";
             if (!fromAutoCompleteTextView.isEnabled() || !toAutoCompleteTextView.isEnabled()) {
@@ -341,19 +338,19 @@ public class SearchActivity extends Activity implements
                 runOnUiThread(new Runnable() {
                     public void run() {
                         pdCancel.dismiss();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-                        builder.setMessage(R.string.message_request_cancelled);
-                        builder.setTitle(R.string.dialog_title_success);
-                        builder.setCancelable(false);
-                        builder.setNeutralButton(R.string.button_ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(final DialogInterface dialog,
-                                            final int which) {
-                                        // cancel this dialog
-                                        dialog.cancel();
-                                    }
-                                });
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this)
+                                .setMessage(R.string.message_request_cancelled)
+                                .setTitle(R.string.dialog_title_success)
+                                .setCancelable(false)
+                                .setNeutralButton(R.string.button_ok,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(final DialogInterface dialog,
+                                                    final int which) {
+                                                // cancel this dialog
+                                                dialog.cancel();
+                                            }
+                                        });
                         // Create the AlertDialog object and return it
                         builder.create().show();
                     }

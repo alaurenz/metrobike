@@ -261,24 +261,29 @@ public class SettingsActivity extends PreferenceActivity {
                         @Override
                         public boolean onPreferenceChange(final Preference preference,
                                 final Object newValue) {
-
+                            Language previous = Utility.getCurrentLocale();
+                            Language now = null;
                             SharedPreferences settings = getSharedPreferences(
                                     Utility.LANGUAGE_NAME, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
                             if (((String) newValue).equals("false")) {
-                                Utility.setCurrentLocale(Language.SIMPLIFIED_CHINESE);
+                                now = Language.SIMPLIFIED_CHINESE;
+                                Utility.setCurrentLocale(now);
                                 editor.putString("language", "CN");
                                 Log.e(TAG, "Chinese is set");
                             } else {
+                                now = Language.ENGLISH;
                                 Utility.setCurrentLocale(Language.ENGLISH);
                                 editor.putString("language", "EN");
                                 Log.e(TAG, "English is set");
                             }
                             editor.commit();
-                            // Do we need to go back to the main activity?
-                            Intent intent = new Intent(preference.getContext(), MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+                            if (previous != now) {
+                                Intent intent = new Intent(preference.getContext(),
+                                        MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
                             return true;
                         }
                     });
@@ -458,6 +463,9 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected final void onResume() {
         super.onResume();
+        if (map == null || mapType == null || trafficType == null || currentType == null) {
+            setupSimplePreferencesScreen();
+        }
         int temp = map.getMapDisplay();
         int value = 0;
         for (; value < MAP_ARRAYS.length; value++) {
