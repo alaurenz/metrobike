@@ -153,6 +153,8 @@ public final class Utility {
         System.out.println(TAG + "buildBicycleQueryString()->startAddress: " + startAddress);
         System.out.println(TAG + "buildBicycleQueryString()->endAddress: " + endAddress);
         System.out.println(TAG + "buildBicycleQueryString()->multipleRoutes: " + multipleRoutes);
+        System.out.println(TAG + "buildBicycleQueryString()->queryLanguage: " + queryLanguage);
+        
         StringBuilder url = new StringBuilder(GOOGLE_MAPS_BASE_URL);
 
         // Add the key/value pairs to the url
@@ -162,12 +164,12 @@ public final class Utility {
         addKeyValuePair(url, URIKeys.MODE, URIKeys.BICYCLING, false);
 
         if (multipleRoutes) {
-            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.TRUE, true);
+            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.TRUE, false);
         } else {
-            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
+            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, false);
         }
         
-        addKeyValuePair(url, URIKeys.LANGUAGE, queryLanguage, false);
+        addKeyValuePair(url, URIKeys.LANGUAGE, queryLanguage, true);
 
         return url.toString();
     }
@@ -209,9 +211,11 @@ public final class Utility {
         System.out.println(TAG + "buildtransitQueryString()->multipleRoutes: " + multipleRoutes);
         System.out.println(TAG + "buildtransitQueryString()->routeTime: " + routeTime);
         System.out.println(TAG + "buildtransitQueryString()->timeMode.name(): " + timeMode.name());
+        System.out.println(TAG + "buildtransitQueryString()->queryLangueage: " + queryLanguage);
 
         StringBuilder url = new StringBuilder(GOOGLE_MAPS_BASE_URL);
-
+        System.out.println(TAG + "buildtransitQueryString()->startAddress: " + startAddress);
+        
         // Add the key/value pairs to the url
         addKeyValuePair(url, URIKeys.ORIGIN, startAddress, false);
         addKeyValuePair(url, URIKeys.DESTINATION, endAddress, false);
@@ -231,13 +235,16 @@ public final class Utility {
 
         addKeyValuePair(url, URIKeys.MODE, URIKeys.TRANSIT, false);
 
-        if (multipleRoutes) {
-            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.TRUE, true);
-        } else {
-            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, true);
-        }
         
-        addKeyValuePair(url, URIKeys.LANGUAGE, queryLanguage, false);
+        
+        if (multipleRoutes) {
+            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.TRUE, false);
+        } else {
+            addKeyValuePair(url, URIKeys.ALTERNATIVES, URIKeys.FALSE, false);
+        }
+
+        
+        addKeyValuePair(url, URIKeys.LANGUAGE, queryLanguage, true);
 
         return url.toString();
     }
