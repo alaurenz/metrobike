@@ -15,7 +15,16 @@
     <string name="edittext_hint_to">To</string>
     <string name="edittext_hint_startfrom">Start from</string>
     <string name="image_desc">Image</string>
-
+    
+    <!-- General errors across the app -->
+    <string name="error_invalid_request_params">Invalid request parameters.</string>
+    <string name="error_unsupported_travel_mode_error">Requested travel mode not supported.</string>
+	<string name="error_unsupported_charset">Internal error: default charset not supported.</string>
+    <string name="error_parsing_error">Got a bad response from the server.</string>
+    <string name="error_connection_error">Having trouble connecting to the server. Please try again later.</string>
+    <string name="error_no_results_found">Found no results. Please check to be sure your addresses and travel options are correct.</string>
+    <string name="error_over_query_limit">Over query limit. App has exceeded maximum number of daily directions request queries from Google.</string>
+    
     <!-- Strings related to About -->
     <string name="title_activity_about">About</string>
     <!-- this empty string is to get ride of the huskysoft image warning -->
