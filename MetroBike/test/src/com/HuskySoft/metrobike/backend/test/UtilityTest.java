@@ -54,7 +54,7 @@ public class UtilityTest extends TestCase {
             "http://maps.googleapis.com/maps/api/directions/json?"
                     + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
                     + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
-                    + "mode=bicycling&" + "alternatives=false";
+                    + "mode=bicycling&" + "alternatives=false&" + "language=en";
 
     /**
      * This is a bicycle query string to compare against.
@@ -63,7 +63,7 @@ public class UtilityTest extends TestCase {
             "http://maps.googleapis.com/maps/api/directions/json?"
                     + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
                     + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
-                    + "mode=bicycling&" + "alternatives=true";
+                    + "mode=bicycling&" + "alternatives=true&" + "language=en";
 
     /**
      * This is a transit query string to compare against.
@@ -72,7 +72,8 @@ public class UtilityTest extends TestCase {
             "http://maps.googleapis.com/maps/api/directions/json?"
                     + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
                     + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
-                    + "arrival_time=100&" + "mode=transit&" + "alternatives=true";
+                    + "arrival_time=100&" + "mode=transit&" + "alternatives=true&"
+                    + "language=en";
 
     /**
      * This is a transit query string to compare against.
@@ -81,7 +82,8 @@ public class UtilityTest extends TestCase {
             "http://maps.googleapis.com/maps/api/directions/json?"
                     + "origin=6504+Latona+Ave+NE%2CSeattle%2CWA&"
                     + "destination=3801+Brooklyn+Ave+NE%2CSeattle%2CWA&" + "sensor=true&"
-                    + "departure_time=1000&" + "mode=transit&" + "alternatives=false";
+                    + "departure_time=1000&" + "mode=transit&" + "alternatives=false&"
+                    + "language=en";
 
     /**
      * WhiteBox: This tests the jsonArrayToStringList method.

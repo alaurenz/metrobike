@@ -181,7 +181,7 @@ public class TransitDetailsTest extends TestCase {
      */
     public final void test_getVehicleType() throws JSONException {
         setUp();
-        String expected = "BUS";
+        String expected = "Bus";
         String actual = transitDetails.getVehicleType();
         Assert.assertEquals("Actual value for transitDetails.getVehicleType() was: " + actual,
                 expected, actual);

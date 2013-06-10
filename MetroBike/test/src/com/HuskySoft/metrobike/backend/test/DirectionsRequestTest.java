@@ -63,11 +63,11 @@ public final class DirectionsRequestTest extends TestCase {
      * The departure time.
      */
     private static final int DEPARTURE_TIME = 100;
-    
+
     /**
      * Time to wait after certain Google API-using tests
      */
-    private static final long TIME_TO_WAIT_AFTER_TEST_MS = 2000; 
+    private static final long TIME_TO_WAIT_AFTER_TEST_MS = 2000;
 
     /**
      * An output constant.
@@ -136,7 +136,8 @@ public final class DirectionsRequestTest extends TestCase {
                 + "\n" + "travelMode: MIXED\n" + "minDistanceToBikeInMeters: 1000\n"
                 + "maxDistanceToBikeInMeters: 2000\n" + "minNumberBusTransfers: "
                 + RequestParameters.DONT_CARE_STRING + "\n" + "maxNumberBusTransfers: "
-                + RequestParameters.DONT_CARE_STRING + "\n" + "solutions: null";
+                + RequestParameters.DONT_CARE_STRING + "\n" + "queryLanguage: en" + "\n"
+                + "solutions: null";
 
         String actual = request.toString();
         Assert.assertEquals("Problem comparing toString()", expected, actual);
@@ -228,15 +229,15 @@ public final class DirectionsRequestTest extends TestCase {
 
         DirectionsStatus actual = request.doRequest();
         waitBetweenLiveTests();
-        
+
         Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage() + " with errors ["
                 + request.getVerboseErrorMessages() + "]", expected, actual);
     }
-    
+
     /**
      * Waits between live Google API tests to avoid overuse (and failure).
      */
-    private void waitBetweenLiveTests(){
+    private void waitBetweenLiveTests() {
         try {
             Thread.sleep(TIME_TO_WAIT_AFTER_TEST_MS);
         } catch (InterruptedException e) {
@@ -251,29 +252,28 @@ public final class DirectionsRequestTest extends TestCase {
     // @Test
     // This test commented-out because it takes ~10 minutes to run.
     /*
-    public void testDoLargeRequestTest() {
-
-        request = new DirectionsRequest();
-
-        String startAddress = "6504 Latona Ave NE, Seattle, WA";
-        String endAddress = "Central Park, New York City, NY";
-        request.setStartAddress(startAddress);
-        request.setEndAddress(endAddress);
-        request.setArrivalTime(ARRIVAL_TIME);
-        request.setTravelMode(TravelMode.MIXED);
-        request.setMinDistanceToBikeInMeters(RequestParameters.DONT_CARE);
-        request.setMaxDistanceToBikeInMeters(RequestParameters.DONT_CARE);
-        request.setMinNumberBusTransfers(RequestParameters.DONT_CARE);
-        request.setMaxNumberBusTransfers(RequestParameters.DONT_CARE);
-        
-        DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
-
-        DirectionsStatus actual = request.doRequest();
-        waitBetweenLiveTests();
-        
-        Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage() + " with errors ["
-                + request.getVerboseErrorMessages() + "]", expected, actual);
-    }*/
+     * public void testDoLargeRequestTest() {
+     * 
+     * request = new DirectionsRequest();
+     * 
+     * String startAddress = "6504 Latona Ave NE, Seattle, WA"; String
+     * endAddress = "Central Park, New York City, NY";
+     * request.setStartAddress(startAddress); request.setEndAddress(endAddress);
+     * request.setArrivalTime(ARRIVAL_TIME);
+     * request.setTravelMode(TravelMode.MIXED);
+     * request.setMinDistanceToBikeInMeters(RequestParameters.DONT_CARE);
+     * request.setMaxDistanceToBikeInMeters(RequestParameters.DONT_CARE);
+     * request.setMinNumberBusTransfers(RequestParameters.DONT_CARE);
+     * request.setMaxNumberBusTransfers(RequestParameters.DONT_CARE);
+     * 
+     * DirectionsStatus expected = DirectionsStatus.NO_RESULTS_FOUND;
+     * 
+     * DirectionsStatus actual = request.doRequest(); waitBetweenLiveTests();
+     * 
+     * Assert.assertEquals(ACTUAL_STATUS_WAS_LABEL + actual.getMessage() +
+     * " with errors [" + request.getVerboseErrorMessages() + "]", expected,
+     * actual); }
+     */
 
     /**
      * WhiteBox: This tests the doRequest method with invalid params.
@@ -566,15 +566,15 @@ public final class DirectionsRequestTest extends TestCase {
 
         Thread requestThread = new Thread(new RequestRunner());
         requestThread.start();
-        
+
         requestThread.interrupt();
 
         try {
-        	// Wait for the thread to end
+            // Wait for the thread to end
             requestThread.join();
         } catch (InterruptedException e) {
             // This thread shouldn't be the one getting interrupted!
-        	e.printStackTrace();
+            e.printStackTrace();
         }
 
         Assert.assertEquals("Backend query didn't stop when disabled!",
