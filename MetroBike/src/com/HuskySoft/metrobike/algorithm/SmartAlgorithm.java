@@ -40,7 +40,7 @@ public final class SmartAlgorithm extends AlgorithmWorker {
     @Override
     public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
-        System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
+        //System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
         // NOTE: this method assumes:
         // toProcess.getTravelMode() == TravelMode.MIXED
 
@@ -61,9 +61,9 @@ public final class SmartAlgorithm extends AlgorithmWorker {
         // from some existing solution route
         Route tmpRoute = getReferencedRoute();
         if (tmpRoute == null) {
-            System.out.println(TAG + "No reference route found to use "
+            /*System.out.println(TAG + "No reference route found to use "
                     + "for getting lat/long for route start and end locations."
-                    + " Ensure another algorithm was run before this one.");
+                    + " Ensure another algorithm was run before this one.");*/
             addError(DirectionsStatus.NO_RESULTS_FOUND);
             return getMostRecentStatus();
         }
@@ -204,8 +204,8 @@ public final class SmartAlgorithm extends AlgorithmWorker {
         double latDegDiff = end.getLatitude() - start.getLatitude();
         double longDegDiff = end.getLongitude() - start.getLongitude();
 
-        System.out.println(TAG + "getLocationAlongDiagonal()->start: " + start);
-        System.out.println(TAG + "getLocationAlongDiagonal()->end: " + end);
+        //System.out.println(TAG + "getLocationAlongDiagonal()->start: " + start);
+        //System.out.println(TAG + "getLocationAlongDiagonal()->end: " + end);
 
         // these variables are used to determine which way to move
         // along diagonal
@@ -223,8 +223,8 @@ public final class SmartAlgorithm extends AlgorithmWorker {
         double newLong = (longDirectionCoeff * distanceInDeg * Math.sin(theta))
                 + start.getLongitude();
 
-        System.out.println(TAG + "getLocationAlongDiagonal()->newLat: " + newLat);
-        System.out.println(TAG + "getLocationAlongDiagonal()->newLong: " + newLong);
+        //System.out.println(TAG + "getLocationAlongDiagonal()->newLat: " + newLat);
+        //System.out.println(TAG + "getLocationAlongDiagonal()->newLong: " + newLong);
 
         return new Location(newLat, newLong);
     }
@@ -239,8 +239,8 @@ public final class SmartAlgorithm extends AlgorithmWorker {
      *         given route
      */
     private Route removeStartEndNonTransitSteps(final Route transitRoute) {
-        System.out.println(TAG + "removeStartEndNonTransitSteps()->Entering this method.");
-        System.out.println(TAG + "removeStartEndNonTransitSteps()->transitRoute: " + transitRoute);
+        //System.out.println(TAG + "removeStartEndNonTransitSteps()->Entering this method.");
+        //System.out.println(TAG + "removeStartEndNonTransitSteps()->transitRoute: " + transitRoute);
         Route result = new Route();
         List<Step> tmpSteps = new ArrayList<Step>();
         boolean addSteps = false;
@@ -273,7 +273,7 @@ public final class SmartAlgorithm extends AlgorithmWorker {
         }
 
         result.addLeg(tmpLeg);
-        System.out.println(TAG + "removeStartEndNonTransitSteps()->Exiting this method.");
+        //System.out.println(TAG + "removeStartEndNonTransitSteps()->Exiting this method.");
         return result;
     }
 }

@@ -36,7 +36,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
     @Override
     public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
-        System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
+        //System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
         // NOTE: this method assumes:
         // toProcess.getTravelMode() == TravelMode.MIXED
 
@@ -53,7 +53,7 @@ public final class SimpleComboAlgorithm extends AlgorithmWorker {
             routeTime = toProcess.getDepartureTime();
         }
 
-        System.out.println(TAG + "findRoutes()->routeTime: " + routeTime);
+        //System.out.println(TAG + "findRoutes()->routeTime: " + routeTime);
 
         List<Route> unsortedTransitRoutes;
         try {

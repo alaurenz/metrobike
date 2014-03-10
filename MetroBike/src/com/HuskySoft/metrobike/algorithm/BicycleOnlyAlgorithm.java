@@ -29,7 +29,7 @@ public final class BicycleOnlyAlgorithm extends AlgorithmWorker {
     public DirectionsStatus findRoutes(final RequestParameters toProcess) {
         clearErrors();
 
-        System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
+        //System.out.println(TAG + "findRoutes()->toProcess: " + toProcess);
 
         // Get only bicycle routes, no matter what.
         if (toProcess.getTravelMode() == TravelMode.BICYCLING

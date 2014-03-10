@@ -120,8 +120,8 @@ public abstract class AlgorithmWorker {
      *            to set
      */
     public final void setQueryLanguage(final String queryLanguageToSet) {
-        System.out.println(TAG + "setQueryLanguage()->queryLanguageToSet: "
-                + queryLanguageToSet);
+        //System.out.println(TAG + "setQueryLanguage()->queryLanguageToSet: "
+        //        + queryLanguageToSet);
         queryLanguage = queryLanguageToSet;
     }
     
@@ -132,7 +132,7 @@ public abstract class AlgorithmWorker {
      *            to set
      */
     public final void setReferencedRoute(final Route route) {
-        System.out.println(TAG + "setReferencedRoute()->route: " + route);
+        //System.out.println(TAG + "setReferencedRoute()->route: " + route);
         referencedRoute = route;
     }
 
@@ -140,7 +140,7 @@ public abstract class AlgorithmWorker {
      * @return getReferencedRoute
      */
     public final Route getReferencedRoute() {
-        System.out.println(TAG + "getReferencedRoute()->referencedRoute: " + referencedRoute);
+        //System.out.println(TAG + "getReferencedRoute()->referencedRoute: " + referencedRoute);
         return referencedRoute;
     }
 
@@ -221,7 +221,7 @@ public abstract class AlgorithmWorker {
      * @return A string if there is an error. Null otherwise.
      */
     public final String getErrors() {
-        System.out.println(TAG + "getErrors()->errorMessages: " + errorMessages);
+        //System.out.println(TAG + "getErrors()->errorMessages: " + errorMessages);
         return errorMessages;
     }
 
@@ -296,9 +296,9 @@ public abstract class AlgorithmWorker {
 
         while (response == null && tryNum < MAX_CONNECTION_ATTEMPTS
                 && tryNumQueryLimit < MAX_QUERY_LIMIT_RETRIES) {
-            System.out.println(TAG + "doQueryWithHandling()->tryNum: " + tryNum);
-            System.out
-                    .println(TAG + "doQueryWithHandling()->tryNumQueryLimit: " + tryNumQueryLimit);
+            //System.out.println(TAG + "doQueryWithHandling()->tryNum: " + tryNum);
+            //System.out
+            //        .println(TAG + "doQueryWithHandling()->tryNumQueryLimit: " + tryNumQueryLimit);
             try {
                 response = queryObj.doQuery(queryURL);
                 JSONObject responseJSON;
@@ -358,7 +358,7 @@ public abstract class AlgorithmWorker {
      * @return a list of Routes parsed from the JSON
      */
     protected final List<Route> buildRouteListFromJSONString(final String srcJSON) {
-        System.out.println(TAG + "buildRouteListFromJSONString()->Entering this method.");
+        //System.out.println(TAG + "buildRouteListFromJSONString()->Entering this method.");
         List<Route> routesList = new ArrayList<Route>();
 
         JSONObject myJSON;
@@ -371,12 +371,12 @@ public abstract class AlgorithmWorker {
                 // error
                 // Could even be as simple as checking for this error
                 addError(DirectionsStatus.NO_RESULTS_FOUND);
-                System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
+                //System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
                 return null;
             } else if (statusString.equalsIgnoreCase(GoogleMapsResponseStatusCodes.OVER_QUERY_LIMIT
                     .toString())) {
                 addError(DirectionsStatus.OVER_QUERY_LIMIT);
-                System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
+                //System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
                 return null;
             }
         } catch (JSONException e) {
@@ -394,11 +394,11 @@ public abstract class AlgorithmWorker {
             System.err.println("JSON_TEST" + "Processed " + routesArray.length() + " routes!");
         } catch (JSONException e1) {
             addError(DirectionsStatus.PARSING_ERROR);
-            System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
+            //System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
             return null;
         }
 
-        System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
+        //System.out.println(TAG + "buildRouteListFromJSONString()->Exiting this method.");
         return routesList;
     }
 
@@ -423,9 +423,9 @@ public abstract class AlgorithmWorker {
             final TransitTimeMode timeMode)
             throws UnsupportedEncodingException {
 
-        System.out.println(TAG + "getTransitResults()->startAddress: " + startAddress);
-        System.out.println(TAG + "getTransitResults()->endAddress: " + endAddress);
-        System.out.println(TAG + "getTransitResults()->routeTime: " + routeTime);
+        //System.out.println(TAG + "getTransitResults()->startAddress: " + startAddress);
+        //System.out.println(TAG + "getTransitResults()->endAddress: " + endAddress);
+        //System.out.println(TAG + "getTransitResults()->routeTime: " + routeTime);
 
         // For preventing exceeding query request limit
         try {
@@ -440,7 +440,7 @@ public abstract class AlgorithmWorker {
         String queryString = Utility.buildTransitQueryString(startAddress, endAddress, routeTime,
                 timeMode, true, queryLanguage);
 
-        System.out.println(TAG + "getTransitResults()->queryString: " + queryString);
+        //System.out.println(TAG + "getTransitResults()->queryString: " + queryString);
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
 
@@ -466,14 +466,14 @@ public abstract class AlgorithmWorker {
     protected final List<Route> getBicycleResults(final String startAddress, 
             final String endAddress)
             throws UnsupportedEncodingException {
-        System.out.println(TAG + "getBicycleResults()->startAddress: " + startAddress);
-        System.out.println(TAG + "getBicycleResults()->endAddress: " + endAddress);
+        //System.out.println(TAG + "getBicycleResults()->startAddress: " + startAddress);
+        //System.out.println(TAG + "getBicycleResults()->endAddress: " + endAddress);
         // Build the query string
         String queryString;
         queryString = Utility.buildBicycleQueryString(startAddress, endAddress, true,
                 queryLanguage);
 
-        System.out.println(TAG + "getBicycleResults()->queryString: " + queryString);
+        //System.out.println(TAG + "getBicycleResults()->queryString: " + queryString);
         // Fetch the query results
         String jsonResult = doQueryWithHandling(queryString);
 
@@ -502,10 +502,10 @@ public abstract class AlgorithmWorker {
     protected final Route replaceWalkingWithBicyclingDeparture(final Route transitRoute,
             final long departureTime) {
 
-        System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->transitRoute: "
-                + transitRoute);
-        System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->departureTime: "
-                + departureTime);
+        //System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->transitRoute: "
+        //        + transitRoute);
+        //System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->departureTime: "
+        //        + departureTime);
 
         Location curStretchStartLocation = null;
         long curStretchDepartTime = departureTime;
@@ -597,8 +597,8 @@ public abstract class AlgorithmWorker {
                 prevStep = curStep;
             }
         }
-        System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->comboRoute: "
-                + comboRoute);
+        //System.out.println(TAG + "replaceWalkingWithBicyclingDeparture()->comboRoute: "
+        //        + comboRoute);
         return comboRoute;
     }
 
@@ -618,10 +618,10 @@ public abstract class AlgorithmWorker {
      */
     protected final Route replaceWalkingWithBicyclingArrival(final Route transitRoute,
             final long arrivalTime) {
-        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->transitRoute: "
-                + transitRoute);
-        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->arrivalTime: "
-                + arrivalTime);
+        //System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->transitRoute: "
+        //        + transitRoute);
+        //System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->arrivalTime: "
+        //        + arrivalTime);
 
         Location curStretchEndLocation = null;
         long curStretchArrivalTime = arrivalTime;
@@ -714,7 +714,7 @@ public abstract class AlgorithmWorker {
                 prevStep = curStep;
             }
         }
-        System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->comboRoute: " + comboRoute);
+        //System.out.println(TAG + "replaceWalkingWithBicyclingArrival()->comboRoute: " + comboRoute);
 
         return comboRoute;
     }
@@ -728,7 +728,7 @@ public abstract class AlgorithmWorker {
      * @return first route without walking steps, null if none found
      */
     protected final Route getRouteWithoutWalkingSteps(final List<Route> subRoutes) {
-        System.out.println(TAG + "getRouteWithoutWalkingSteps()->Entering this method.");
+        //System.out.println(TAG + "getRouteWithoutWalkingSteps()->Entering this method.");
         for (Route subRoute : subRoutes) {
             boolean subRouteHasWalkingSteps = false;
             for (Leg curLeg : subRoute.getLegList()) {
@@ -740,13 +740,13 @@ public abstract class AlgorithmWorker {
                 }
             }
             if (!subRouteHasWalkingSteps) {
-                System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method.");
+                //System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method.");
                 return subRoute;
             }
         }
 
-        System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method "
-                + "(returning null).");
+        //System.out.println(TAG + "getRouteWithoutWalkingSteps()->Exiting this method "
+        //        + "(returning null).");
         return null;
     }
 }

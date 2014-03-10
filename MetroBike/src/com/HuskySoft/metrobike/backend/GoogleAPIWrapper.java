@@ -44,9 +44,9 @@ public class GoogleAPIWrapper implements APIQuery {
          * -body-out-of-httpresponse and other StackOverflow examples for
          * URLConnection.
          */
-        System.out.println(TAG + "doQuery()->theURL: " + theURL);
+        //System.out.println(TAG + "doQuery()->theURL: " + theURL);
         StringBuilder response = new StringBuilder();
-        System.err.println("GoogleAPIWrapper: About to make query to this url: [" + theURL + "]");
+        //System.out.println("GoogleAPIWrapper: About to make query to this url: [" + theURL + "]");
 
         URL url = new URL(theURL);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

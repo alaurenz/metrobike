@@ -1251,7 +1251,7 @@ public class StubGoogleAPIWrapper implements APIQuery {
      * @return The JSON response.
      */
     public final String doQuery(final String theURL) throws IOException {
-        System.out.println(TAG + "doQuery()->theURL: " + theURL);
+        //System.out.println(TAG + "doQuery()->theURL: " + theURL);
         if (theURL == null) {
             throw new IllegalArgumentException("theURL parameter was null.");
         } else if (!queryMap.containsKey(theURL)) {
