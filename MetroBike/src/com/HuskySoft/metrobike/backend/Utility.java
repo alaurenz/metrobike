@@ -63,7 +63,10 @@ public final class Utility {
      * The URL for Google Maps.
      */
     private static final String GOOGLE_MAPS_BASE_URL =
-            "http://maps.googleapis.com/maps/api/directions/json?";
+            "https://maps.googleapis.com/maps/api/directions/json?";
+
+    private static final String GOOGLE_API_KEY =
+            "AIzaSyCPI_s9-Y4fgu94emL2lKmlvHhgRe-bnvM";
 
     /**
      * The assignment operator for paramaterized URL requests.
@@ -158,6 +161,7 @@ public final class Utility {
         StringBuilder url = new StringBuilder(GOOGLE_MAPS_BASE_URL);
 
         // Add the key/value pairs to the url
+        addKeyValuePair(url, URIKeys.KEY, GOOGLE_API_KEY, false);
         addKeyValuePair(url, URIKeys.ORIGIN, startAddress, false);
         addKeyValuePair(url, URIKeys.DESTINATION, endAddress, false);
         addKeyValuePair(url, URIKeys.SENSOR, URIKeys.TRUE, false);
@@ -214,9 +218,9 @@ public final class Utility {
         System.out.println(TAG + "buildtransitQueryString()->queryLangueage: " + queryLanguage);
 		*/
         StringBuilder url = new StringBuilder(GOOGLE_MAPS_BASE_URL);
-        //System.out.println(TAG + "buildtransitQueryString()->startAddress: " + startAddress);
         
         // Add the key/value pairs to the url
+        addKeyValuePair(url, URIKeys.KEY, GOOGLE_API_KEY, false);
         addKeyValuePair(url, URIKeys.ORIGIN, startAddress, false);
         addKeyValuePair(url, URIKeys.DESTINATION, endAddress, false);
         addKeyValuePair(url, URIKeys.SENSOR, URIKeys.TRUE, false);

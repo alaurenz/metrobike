@@ -53,7 +53,7 @@ public abstract class AlgorithmWorker {
     /**
      * The time in milliseconds to wait between retries.
      */
-    private static final long CONNECTION_RETRY_DELAY_MS = 1000;
+    private static final long CONNECTION_RETRY_DELAY_MS = 1200;
 
     /**
      * The time in milliseconds to wait between retries after exceeding the
@@ -116,7 +116,7 @@ public abstract class AlgorithmWorker {
     /**
      * Saves given route so multiple algorithms can reference it.
      * 
-     * @param route
+     * @param queryLanguageToSet
      *            to set
      */
     public final void setQueryLanguage(final String queryLanguageToSet) {
@@ -312,24 +312,23 @@ public abstract class AlgorithmWorker {
                         response = null;
                         tryNumQueryLimit++;
                         System.err.println(TAG + "Over query limit... retrying "
-                                + (MAX_QUERY_LIMIT_RETRIES - tryNumQueryLimit) + " more times.");                        
-                    }
-                    try {
-                        Thread.sleep(QUERY_LIMIT_RETRY_DELAY_MS);
-                    } catch (InterruptedException e1) {
-                        // This means the user is trying to cancel us!
-                        addError(DirectionsStatus.USER_CANCELLED_REQUEST);
-                        return null;
-                        //System.err
-                        //        .println(TAG + "Connection retry interrupted (not a problem)");
+                                + (MAX_QUERY_LIMIT_RETRIES - tryNumQueryLimit) + " more times.");
+
+                        try {
+                            Thread.sleep(QUERY_LIMIT_RETRY_DELAY_MS);
+                        } catch (InterruptedException e1) {
+                            System.err.println(TAG + "Connection retry interrupted (not a problem)");
+                            addError(DirectionsStatus.USER_CANCELLED_REQUEST);
+                            return null;
+                        }
                     }
                 } catch (JSONException e) {
                     System.err.println(TAG + "Error parsing JSON response.");
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 tryNum++;
-                System.err.println(TAG + "Bad connection... retrying "
-                        + (MAX_CONNECTION_ATTEMPTS - tryNum) + " more times.");
+                System.err.println(TAG + "Error getting directions: " + e.getMessage());
+                System.err.println("retrying " + (MAX_CONNECTION_ATTEMPTS - tryNum) + " more times");
                 try {
                     Thread.sleep(CONNECTION_RETRY_DELAY_MS);
                 } catch (InterruptedException e1) {
