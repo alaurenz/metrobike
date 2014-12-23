@@ -87,7 +87,7 @@
         <!-- Needed for Google Maps API -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCLfZrMn6hJIiduzSHqK0n-QCc2k8DBnTM" />
+            android:value="AIzaSyCPI_s9-Y4fgu94emL2lKmlvHhgRe-bnvM" />
 
         <activity
             android:name="com.HuskySoft.metrobike.ui.HistoryActivity"

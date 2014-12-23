@@ -14,6 +14,9 @@ import android.annotation.SuppressLint;
  */
 public enum URIKeys {
 
+    // Google API key
+    KEY,
+
     /**
      * If true, asks for more than one solution.
      */
