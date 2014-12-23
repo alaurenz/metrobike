@@ -94,7 +94,7 @@ public final class Leg implements Serializable {
      *             If parsing the JSON fails
      */
     public static Leg buildLegFromJSON(final JSONObject jsonLeg) throws JSONException {
-        System.out.println(TAG + "buildLegFromJSON()->Entering this method.");
+        //System.out.println(TAG + "buildLegFromJSON()->Entering this method.");
         Leg newLeg = new Leg();
 
         // Set the start address
@@ -110,7 +110,7 @@ public final class Leg implements Serializable {
             Step currentStep = Step.buildStepFromJSON(stepsArray.getJSONObject(i));
             newLeg.addStep(currentStep);
         }
-        System.out.println(TAG + "buildLegFromJSON()->Exiting this method.");
+        //System.out.println(TAG + "buildLegFromJSON()->Exiting this method.");
 
         return newLeg;
     }
@@ -123,7 +123,7 @@ public final class Leg implements Serializable {
      * @return the modified Leg, for Builder pattern purposes
      */
     public Leg addStep(final Step newStep) {
-        System.out.println(TAG + "addStep()->newStep: " + newStep);
+        //System.out.println(TAG + "addStep()->newStep: " + newStep);
 
         // Update neBound
         neBound = Location.makeNorthEastBound(neBound, newStep.getStartLocation());
@@ -141,7 +141,7 @@ public final class Leg implements Serializable {
      * @return the startAddress
      */
     public String getStartAddress() {
-        System.out.println(TAG + "getStartAddress()->startAddress: " + startAddress);
+        //System.out.println(TAG + "getStartAddress()->startAddress: " + startAddress);
         return startAddress;
     }
 
@@ -153,7 +153,7 @@ public final class Leg implements Serializable {
      * @return the modified Leg, for Builder pattern purposes
      */
     public Leg setStartAddress(final String newStartAddress) {
-        System.out.println(TAG + "setStartAddress()->newStartAddress: " + newStartAddress);
+        //System.out.println(TAG + "setStartAddress()->newStartAddress: " + newStartAddress);
         this.startAddress = newStartAddress;
         return this;
     }
@@ -162,7 +162,7 @@ public final class Leg implements Serializable {
      * @return the endAddress
      */
     public String getEndAddress() {
-        System.out.println(TAG + "getEndAddress()->endAddress: " + endAddress);
+        //System.out.println(TAG + "getEndAddress()->endAddress: " + endAddress);
         return endAddress;
     }
 
@@ -174,7 +174,7 @@ public final class Leg implements Serializable {
      * @return the modified Leg, for Builder pattern purposes
      */
     public Leg setEndAddress(final String newEndAddress) {
-        System.out.println(TAG + "setEndAddress()->newEndAddress: " + newEndAddress);
+        //System.out.println(TAG + "setEndAddress()->newEndAddress: " + newEndAddress);
         this.endAddress = newEndAddress;
         return this;
     }
@@ -188,7 +188,7 @@ public final class Leg implements Serializable {
         if (!stepList.isEmpty()) {
             return stepList.get(0).getStartLocation();
         }
-        System.out.println(TAG + "getStartLocation()->stepList was empty.");
+        //System.out.println(TAG + "getStartLocation()->stepList was empty.");
         return null;
     }
 
@@ -201,7 +201,7 @@ public final class Leg implements Serializable {
         if (!stepList.isEmpty()) {
             return stepList.get(stepList.size() - 1).getEndLocation();
         }
-        System.out.println(TAG + "getEndLocation()->stepList was empty.");
+        //System.out.println(TAG + "getEndLocation()->stepList was empty.");
         return null;
     }
 
@@ -211,7 +211,7 @@ public final class Leg implements Serializable {
      * @return the North-East bound for the route display area.
      */
     public Location getNeBound() {
-        System.out.println(TAG + "getNeBound()->neBound: " + neBound);
+        //System.out.println(TAG + "getNeBound()->neBound: " + neBound);
         return neBound;
     }
 
@@ -221,7 +221,7 @@ public final class Leg implements Serializable {
      * @return the South-West bound for the route display area.
      */
     public Location getSwBound() {
-        System.out.println(TAG + "getSwBound()->swBound: " + swBound);
+        //System.out.println(TAG + "getSwBound()->swBound: " + swBound);
         return swBound;
     }
 
@@ -236,7 +236,7 @@ public final class Leg implements Serializable {
             myDistance += s.getDistanceInMeters();
         }
 
-        System.out.println(TAG + "getDistanceInMeters()->myDistance: " + myDistance);
+        //System.out.println(TAG + "getDistanceInMeters()->myDistance: " + myDistance);
         return myDistance;
     }
 
@@ -251,7 +251,7 @@ public final class Leg implements Serializable {
             myDuration += s.getDurationInSeconds();
         }
 
-        System.out.println(TAG + "getDurationInSeconds()->myDuration: " + myDuration);
+        //System.out.println(TAG + "getDurationInSeconds()->myDuration: " + myDuration);
         return myDuration;
     }
 

@@ -459,7 +459,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the startAddress
          */
         public String getStartAddress() {
-            System.out.println(TAG + "getStartAddress()->startAddress: " + startAddress);
+            ////System.out.println(TAG + "getStartAddress()->startAddress: " + startAddress);
             return startAddress;
         }
 
@@ -467,7 +467,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the endAddress
          */
         public String getEndAddress() {
-            System.out.println(TAG + "getEndAddress()->endAddress: " + endAddress);
+            ////System.out.println(TAG + "getEndAddress()->endAddress: " + endAddress);
             return endAddress;
         }
 
@@ -475,7 +475,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the arrivalTime
          */
         public long getArrivalTime() {
-            System.out.println(TAG + "getArrivalTime()->arrivalTime: " + arrivalTime);
+            //System.out.println(TAG + "getArrivalTime()->arrivalTime: " + arrivalTime);
             return arrivalTime;
         }
 
@@ -483,7 +483,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the departureTime
          */
         public long getDepartureTime() {
-            System.out.println(TAG + "getDepartureTime()->departureTime: " + departureTime);
+            //System.out.println(TAG + "getDepartureTime()->departureTime: " + departureTime);
             return departureTime;
         }
 
@@ -491,7 +491,7 @@ public final class DirectionsRequest implements Serializable {
          * @return the travelMode
          */
         public TravelMode getTravelMode() {
-            System.out.println(TAG + "getTravelMode()->travelMode.name(): " + travelMode.name());
+            //System.out.println(TAG + "getTravelMode()->travelMode.name(): " + travelMode.name());
             return travelMode;
         }
 
@@ -499,8 +499,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the minDistanceToBikeInMeters
          */
         public long getMinDistanceToBikeInMeters() {
-            System.out.println(TAG + "getMinDistanceToBikeInMeters()->minDistanceToBikeInMeters: "
-                    + minDistanceToBikeInMeters);
+            //System.out.println(TAG + "getMinDistanceToBikeInMeters()->minDistanceToBikeInMeters: "
+            //        + minDistanceToBikeInMeters);
             return minDistanceToBikeInMeters;
         }
 
@@ -508,8 +508,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the maxDistanceToBikeInMeters
          */
         public long getMaxDistanceToBikeInMeters() {
-            System.out.println(TAG + "getMaxDistanceToBikeInMeters()->maxDistanceToBikeInMeters: "
-                    + maxDistanceToBikeInMeters);
+            //System.out.println(TAG + "getMaxDistanceToBikeInMeters()->maxDistanceToBikeInMeters: "
+            //        + maxDistanceToBikeInMeters);
             return maxDistanceToBikeInMeters;
         }
 
@@ -517,8 +517,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the minNumberBusTransfers
          */
         public long getMinNumberBusTransfers() {
-            System.out.println(TAG + "getMinNumberBusTransfers()->minNumberBusTransfers: "
-                    + minNumberBusTransfers);
+            //System.out.println(TAG + "getMinNumberBusTransfers()->minNumberBusTransfers: "
+            //        + minNumberBusTransfers);
             return minNumberBusTransfers;
         }
 
@@ -526,8 +526,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the maxNumberBusTransfers
          */
         public long getMaxNumberBusTransfers() {
-            System.out.println(TAG + "getMaxNumberBusTransfers()->maxNumberBusTransfers: "
-                    + maxNumberBusTransfers);
+            //System.out.println(TAG + "getMaxNumberBusTransfers()->maxNumberBusTransfers: "
+            //        + maxNumberBusTransfers);
             return maxNumberBusTransfers;
         }
         
@@ -535,8 +535,8 @@ public final class DirectionsRequest implements Serializable {
          * @return the queryLanguage
          */
         public String getQueryLanguage() {
-            System.out.println(TAG + "getQueryLanguage()->queryLanguage: "
-                    + queryLanguage);
+            //System.out.println(TAG + "getQueryLanguage()->queryLanguage: "
+            //        + queryLanguage);
             return queryLanguage;
         }
 
@@ -621,16 +621,16 @@ public final class DirectionsRequest implements Serializable {
             }
 
             // Printing out the parameters for debug purposes
-            System.out.println(RP_TAG + "StartAddress: " + startAddress);
-            System.out.println(RP_TAG + "EndAddress: " + endAddress);
-            System.out.println(RP_TAG + "ArrivalTime: " + arrivalTime);
-            System.out.println(RP_TAG + "DepartureTime: " + departureTime);
-            System.out.println(RP_TAG + "TravelMode: " + travelMode);
-            System.out.println(RP_TAG + "MinDistanceToBikeInMeters: " + minDistanceToBikeInMeters);
-            System.out.println(RP_TAG + "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
-            System.out.println(RP_TAG + "MinNumberBusTransfers: " + minNumberBusTransfers);
-            System.out.println(RP_TAG + "MaxNumberBusTransfers: " + maxNumberBusTransfers);
-            System.out.println(RP_TAG + "QueryLanguage: " + queryLanguage);
+            //System.out.println(RP_TAG + "StartAddress: " + startAddress);
+            //System.out.println(RP_TAG + "EndAddress: " + endAddress);
+            //System.out.println(RP_TAG + "ArrivalTime: " + arrivalTime);
+            //System.out.println(RP_TAG + "DepartureTime: " + departureTime);
+            //System.out.println(RP_TAG + "TravelMode: " + travelMode);
+            //System.out.println(RP_TAG + "MinDistanceToBikeInMeters: " + minDistanceToBikeInMeters);
+            //System.out.println(RP_TAG + "MaxDistanceToBikeInMeters: " + maxDistanceToBikeInMeters);
+            //System.out.println(RP_TAG + "MinNumberBusTransfers: " + minNumberBusTransfers);
+            //System.out.println(RP_TAG + "MaxNumberBusTransfers: " + maxNumberBusTransfers);
+            //System.out.println(RP_TAG + "QueryLanguage: " + queryLanguage);
             return true;
         }
 
@@ -731,7 +731,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setStartAddress(final String newStartAddress) {
-        System.out.println(TAG + "setStartAddress()->newStartAddress: " + newStartAddress);
+        //System.out.println(TAG + "setStartAddress()->newStartAddress: " + newStartAddress);
         myParams.startAddress = newStartAddress;
         return this;
     }
@@ -745,7 +745,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setEndAddress(final String newEndAddress) {
-        System.out.println(TAG + "setEndAddress()->newEndAddress: " + newEndAddress);
+        //System.out.println(TAG + "setEndAddress()->newEndAddress: " + newEndAddress);
         myParams.endAddress = newEndAddress;
         return this;
     }
@@ -763,7 +763,7 @@ public final class DirectionsRequest implements Serializable {
         if (myParams.departureTime != RequestParameters.DONT_CARE) {
             throw new IllegalArgumentException("departureTime was already " + "set.");
         }
-        System.out.println(TAG + "setArrivalTime()->newArrivalTime: " + newArrivalTime);
+        //System.out.println(TAG + "setArrivalTime()->newArrivalTime: " + newArrivalTime);
 
         myParams.arrivalTime = newArrivalTime;
         return this;
@@ -783,7 +783,7 @@ public final class DirectionsRequest implements Serializable {
         if (myParams.arrivalTime != RequestParameters.DONT_CARE) {
             throw new IllegalArgumentException("arrivalTime was " + "already set.");
         }
-        System.out.println(TAG + "setDepartureTime()->newDepartureTime: " + newDepartureTime);
+        //System.out.println(TAG + "setDepartureTime()->newDepartureTime: " + newDepartureTime);
         myParams.departureTime = newDepartureTime;
         return this;
     }
@@ -799,7 +799,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setTravelMode(final TravelMode newTravelMode) {
-        System.out.println(TAG + "setTravelMode()->newTravelMode: " + newTravelMode);
+        //System.out.println(TAG + "setTravelMode()->newTravelMode: " + newTravelMode);
         myParams.travelMode = newTravelMode;
         return this;
     }
@@ -814,8 +814,8 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setMinDistanceToBikeInMeters(final long newMinDistanceToBikeInMeters) {
-        System.out.println(TAG + "setMinDistanceToBikeInMeters()->newMinDistanceToBikeInMeters: "
-                + newMinDistanceToBikeInMeters);
+        //System.out.println(TAG + "setMinDistanceToBikeInMeters()->newMinDistanceToBikeInMeters: "
+        //        + newMinDistanceToBikeInMeters);
         myParams.minDistanceToBikeInMeters = newMinDistanceToBikeInMeters;
         return this;
     }
@@ -829,8 +829,8 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setMaxDistanceToBikeInMeters(final long newMaxDistanceToBikeInMeters) {
-        System.out.println(TAG + "setMaxDistanceToBikeInMeters()->newMaxDistanceToBikeInMeters: "
-                + newMaxDistanceToBikeInMeters);
+        //System.out.println(TAG + "setMaxDistanceToBikeInMeters()->newMaxDistanceToBikeInMeters: "
+        //        + newMaxDistanceToBikeInMeters);
         myParams.maxDistanceToBikeInMeters = newMaxDistanceToBikeInMeters;
         return this;
     }
@@ -844,8 +844,8 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setMinNumberBusTransfers(final long newMinNumberBusTransfers) {
-        System.out.println(TAG + "setMinNumberBusTransfers()->newMinNumberBusTransfers: "
-                + newMinNumberBusTransfers);
+        //System.out.println(TAG + "setMinNumberBusTransfers()->newMinNumberBusTransfers: "
+        //        + newMinNumberBusTransfers);
         myParams.minNumberBusTransfers = newMinNumberBusTransfers;
         return this;
     }
@@ -859,8 +859,8 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setMaxNumberBusTransfers(final long newMaxNumberBusTransfers) {
-        System.out.println(TAG + "setMaxNumberBusTransfers()->newMaxNumberBusTransfers: "
-                + newMaxNumberBusTransfers);
+        //System.out.println(TAG + "setMaxNumberBusTransfers()->newMaxNumberBusTransfers: "
+        //        + newMaxNumberBusTransfers);
         myParams.maxNumberBusTransfers = newMaxNumberBusTransfers;
         return this;
     }
@@ -885,7 +885,7 @@ public final class DirectionsRequest implements Serializable {
      *         builder pattern.
      */
     public DirectionsRequest setQueryLanguage(final String newQueryLanguage) {
-        System.out.println(TAG + "setQueryLanguage()->newQueryLanguage: " + newQueryLanguage);
+        //System.out.println(TAG + "setQueryLanguage()->newQueryLanguage: " + newQueryLanguage);
         myParams.queryLanguage = newQueryLanguage;
         return this;
     }

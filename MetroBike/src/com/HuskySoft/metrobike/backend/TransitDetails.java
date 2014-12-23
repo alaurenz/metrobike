@@ -109,7 +109,7 @@ public final class TransitDetails implements Serializable {
      * @return the arrival stop
      */
     public Location getArrivalStop() {
-        System.out.println(TAG + "getArrivalStop()->arrivalStop: " + arrivalStop);
+        //System.out.println(TAG + "getArrivalStop()->arrivalStop: " + arrivalStop);
         return arrivalStop;
     }
 
@@ -119,7 +119,7 @@ public final class TransitDetails implements Serializable {
      * @return the departure stop
      */
     public Location getDepartureStop() {
-        System.out.println(TAG + "getDepartureStop()->departureStop: " + departureStop);
+        //System.out.println(TAG + "getDepartureStop()->departureStop: " + departureStop);
         return departureStop;
     }
 
@@ -129,7 +129,7 @@ public final class TransitDetails implements Serializable {
      * @return the arrival time
      */
     public String getArrivalTime() {
-        System.out.println(TAG + "getArrivalTime()->arrivalTime: " + arrivalTime);
+        //System.out.println(TAG + "getArrivalTime()->arrivalTime: " + arrivalTime);
         return arrivalTime;
     }
 
@@ -139,7 +139,7 @@ public final class TransitDetails implements Serializable {
      * @return the departure time
      */
     public String getDepartureTime() {
-        System.out.println(TAG + "getDepartureTime()->departureTime: " + departureTime);
+        //System.out.println(TAG + "getDepartureTime()->departureTime: " + departureTime);
         return departureTime;
     }
 
@@ -149,7 +149,7 @@ public final class TransitDetails implements Serializable {
      * @return the agency name of the transit line
      */
     public String getAgencyName() {
-        System.out.println(TAG + "getAgencyName()->agencyName: " + agencyName);
+        //System.out.println(TAG + "getAgencyName()->agencyName: " + agencyName);
         return agencyName;
     }
 
@@ -159,7 +159,7 @@ public final class TransitDetails implements Serializable {
      * @return the headsign of the transit line
      */
     public String getHeadsign() {
-        System.out.println(TAG + "getHeadsign()->headsign: " + headsign);
+        //System.out.println(TAG + "getHeadsign()->headsign: " + headsign);
         return headsign;
     }
 
@@ -169,7 +169,7 @@ public final class TransitDetails implements Serializable {
      * @return the short name of the transit line
      */
     public String getLineShortName() {
-        System.out.println(TAG + "getLineShortName()->lineShortName: " + lineShortName);
+        //System.out.println(TAG + "getLineShortName()->lineShortName: " + lineShortName);
         return lineShortName;
     }
 
@@ -179,7 +179,7 @@ public final class TransitDetails implements Serializable {
      * @return the vehicle type (i.e. bus)
      */
     public String getVehicleType() {
-        System.out.println(TAG + "getVehicleType()->vehicleType: " + vehicleType);
+        //System.out.println(TAG + "getVehicleType()->vehicleType: " + vehicleType);
         return vehicleType;
     }
 
@@ -189,7 +189,7 @@ public final class TransitDetails implements Serializable {
      * @return the vehicle icon URL
      */
     public String getVehicleIconURL() {
-        System.out.println(TAG + "getVehicleIconURL()->vehicleIconURL: " + vehicleIconURL);
+        //System.out.println(TAG + "getVehicleIconURL()->vehicleIconURL: " + vehicleIconURL);
         return vehicleIconURL;
     }
 
@@ -199,7 +199,7 @@ public final class TransitDetails implements Serializable {
      * @return the number of stops
      */
     public int getNumStops() {
-        System.out.println(TAG + "getNumStops()->numStops: " + numStops);
+        //System.out.println(TAG + "getNumStops()->numStops: " + numStops);
         return numStops;
     }
 
@@ -213,8 +213,8 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setArrivalStop(final double lat, final double lng) {
-        System.out.println(TAG + "setArrivalStop()->lat: " + lat);
-        System.out.println(TAG + "setArrivalStop()->lng: " + lng);
+        //System.out.println(TAG + "setArrivalStop()->lat: " + lat);
+        //System.out.println(TAG + "setArrivalStop()->lng: " + lng);
         this.arrivalStop = new Location(lat, lng);
         return this;
     }
@@ -229,8 +229,8 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setDepartureStop(final double lat, final double lng) {
-        System.out.println(TAG + "setDepartureStop()->lat: " + lat);
-        System.out.println(TAG + "setDepartureStop()->lng: " + lng);
+        //System.out.println(TAG + "setDepartureStop()->lat: " + lat);
+        //System.out.println(TAG + "setDepartureStop()->lng: " + lng);
         this.departureStop = new Location(lat, lng);
         return this;
     }
@@ -243,7 +243,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setArrivalTime(final String newArrivalTime) {
-        System.out.println(TAG + "setArrivalTime()->newArrivalTime: " + newArrivalTime);
+        //System.out.println(TAG + "setArrivalTime()->newArrivalTime: " + newArrivalTime);
         this.arrivalTime = newArrivalTime;
         return this;
     }
@@ -256,7 +256,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setDepartureTime(final String newDepartureTime) {
-        System.out.println(TAG + "setDepartureTime()->newDepartureTime: " + newDepartureTime);
+        //System.out.println(TAG + "setDepartureTime()->newDepartureTime: " + newDepartureTime);
         this.departureTime = newDepartureTime;
         return this;
     }
@@ -269,7 +269,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setAgencyName(final String newAgencyName) {
-        System.out.println(TAG + "setAgencyName()->newAgencyName: " + newAgencyName);
+        //System.out.println(TAG + "setAgencyName()->newAgencyName: " + newAgencyName);
         this.agencyName = newAgencyName;
         return this;
     }
@@ -282,7 +282,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setHeadsign(final String newHeadsign) {
-        System.out.println(TAG + "setHeadsign()->newHeadsign: " + newHeadsign);
+        //System.out.println(TAG + "setHeadsign()->newHeadsign: " + newHeadsign);
         this.headsign = newHeadsign;
         return this;
     }
@@ -295,7 +295,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setLineShortName(final String newLineShortName) {
-        System.out.println(TAG + "setShortName()->newLineShortName: " + newLineShortName);
+        //System.out.println(TAG + "setShortName()->newLineShortName: " + newLineShortName);
         this.lineShortName = newLineShortName;
         return this;
     }
@@ -308,7 +308,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setVehicleType(final String newVehicleType) {
-        System.out.println(TAG + "setVehicleType()->newVehicleType: " + newVehicleType);
+        //System.out.println(TAG + "setVehicleType()->newVehicleType: " + newVehicleType);
         this.vehicleType = newVehicleType;
         return this;
     }
@@ -321,7 +321,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setVehicleIconURL(final String newVehicleIconURL) {
-        System.out.println(TAG + "setVehicleIconURL()->newVehicleIconURL: " + newVehicleIconURL);
+        //System.out.println(TAG + "setVehicleIconURL()->newVehicleIconURL: " + newVehicleIconURL);
         this.vehicleIconURL = newVehicleIconURL;
         return this;
     }
@@ -334,7 +334,7 @@ public final class TransitDetails implements Serializable {
      * @return the modified TransitDetails, for Builder pattern purposes
      */
     public TransitDetails setNumStops(final int newNumStops) {
-        System.out.println(TAG + "setNumStops()->newNumStops: " + newNumStops);
+        //System.out.println(TAG + "setNumStops()->newNumStops: " + newNumStops);
         this.numStops = newNumStops;
         return this;
     }
@@ -347,7 +347,7 @@ public final class TransitDetails implements Serializable {
      *            the new indent value.
      */
     public void setIndent(final int newIndent) {
-        System.out.println(TAG + "setIndent()->newIndent: " + indent);
+        //System.out.println(TAG + "setIndent()->newIndent: " + indent);
         this.indent = newIndent;
         indentString = "";
         for (int i = 0; i < indent; i++) {
@@ -361,7 +361,7 @@ public final class TransitDetails implements Serializable {
      * @return the amount to indent.
      */
     public int getIndent() {
-        //System.out.println(TAG + "getIndent()->indent: " + indent);
+        ////System.out.println(TAG + "getIndent()->indent: " + indent);
         return indent;
     }
 

@@ -110,14 +110,14 @@ public final class Utility {
      */
     public static LatLng convertLocation(final Location toConvert) {
         if (toConvert == null) {
-            System.out.println(TAG + "convertLocation()->toConvert was null.");
+            //System.out.println(TAG + "convertLocation()->toConvert was null.");
             return null;
         }
 
-        System.out.println(TAG + "convertLocation()->toConvert.getLatitude(): "
-                + toConvert.getLatitude());
-        System.out.println(TAG + "convertLocation()->toConvert.getLongitude(): "
-                + toConvert.getLongitude());
+        //System.out.println(TAG + "convertLocation()->toConvert.getLatitude(): "
+        //        + toConvert.getLatitude());
+        //System.out.println(TAG + "convertLocation()->toConvert.getLongitude(): "
+        //        + toConvert.getLongitude());
         return new LatLng(toConvert.getLatitude(), toConvert.getLongitude());
     }
 
@@ -132,11 +132,11 @@ public final class Utility {
      */
     public static List<LatLng> convertLocationList(final List<Location> toConvert) {
         if (toConvert == null) {
-            System.out.println(TAG + "convertLocationList()->toConvert() was null.");
+            //System.out.println(TAG + "convertLocationList()->toConvert() was null.");
             return null;
         }
 
-        System.out.println(TAG + "convertLocationList()->toConvert.size(): " + toConvert.size());
+        //System.out.println(TAG + "convertLocationList()->toConvert.size(): " + toConvert.size());
         List<LatLng> toReturn = new ArrayList<LatLng>();
         for (Location l : toConvert) {
             toReturn.add(convertLocation(l));
@@ -160,8 +160,8 @@ public final class Utility {
         double longitude = (route.getNeBound().getLongitude() 
                 + route.getSwBound().getLongitude()) / 2;
 
-        System.out.println(TAG + "getCameraCenter()->latitude: " + latitude);
-        System.out.println(TAG + "getCameraCenter()->longitude: " + longitude);
+        //System.out.println(TAG + "getCameraCenter()->latitude: " + latitude);
+        //System.out.println(TAG + "getCameraCenter()->longitude: " + longitude);
         return new LatLng(latitude, longitude);
     }
 
@@ -185,13 +185,13 @@ public final class Utility {
         double maxOfTwo = Math.max(comparedLatitudeDif, comparedLongitudeDif * NEXUS7_SCREEN_HEIGHT
                 / NEXUS7_SCREEN_WIDTH);
 
-        System.out.println(TAG + "getCameraZoomLevel()->latitudeDif: " + latitudeDif);
-        System.out.println(TAG + "getCameraZoomLevel()->longitudeDif: " + longitudeDif);
-        System.out.println(TAG + "getCameraZoomLevel()->comparedLatitudeDif: "
-                + comparedLatitudeDif);
-        System.out.println(TAG + "getCameraZoomLevel()->comparedLongitudeDif: "
-                + comparedLongitudeDif);
-        System.out.println(TAG + "getCameraZoomLevel()->maxOfTwo: " + maxOfTwo);
+        //System.out.println(TAG + "getCameraZoomLevel()->latitudeDif: " + latitudeDif);
+        //System.out.println(TAG + "getCameraZoomLevel()->longitudeDif: " + longitudeDif);
+        //System.out.println(TAG + "getCameraZoomLevel()->comparedLatitudeDif: "
+        //        + comparedLatitudeDif);
+        //System.out.println(TAG + "getCameraZoomLevel()->comparedLongitudeDif: "
+        //        + comparedLongitudeDif);
+        //System.out.println(TAG + "getCameraZoomLevel()->maxOfTwo: " + maxOfTwo);
 
         return Math.round(Math.log(NEXUS7_ZOOM_CONSTANT / maxOfTwo) / Math.log(2) + 1);
     }
@@ -205,7 +205,7 @@ public final class Utility {
      */
     public static Bitmap getBitmapFromURL(final String src) {
         try {
-            System.out.println(TAG + "getBitmapFromURL()->src: " + src);
+            //System.out.println(TAG + "getBitmapFromURL()->src: " + src);
             URL url = new URL("http:" + src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
@@ -329,13 +329,13 @@ public final class Utility {
         int hours = (int) ((durationMinutesRounded / SECONDS_IN_A_MINUTE) % HOURS_IN_A_DAY);
         int days = (int) (durationMinutesRounded / (SECONDS_IN_A_MINUTE * HOURS_IN_A_DAY));
 
-        System.out.println(TAG + "secondsToHumanReadableDuration()->durationSeconds: "
-                + durationSeconds);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->durationMinutesRounded: "
-                + durationMinutesRounded);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->minutes: " + minutes);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->hours: " + hours);
-        System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days);
+        //System.out.println(TAG + "secondsToHumanReadableDuration()->durationSeconds: "
+        //        + durationSeconds);
+        //System.out.println(TAG + "secondsToHumanReadableDuration()->durationMinutesRounded: "
+        //        + durationMinutesRounded);
+        //System.out.println(TAG + "secondsToHumanReadableDuration()->minutes: " + minutes);
+        //System.out.println(TAG + "secondsToHumanReadableDuration()->hours: " + hours);
+        //System.out.println(TAG + "secondsToHumanReadableDuration()->days: " + days);
 
         String output = "";
         Context context = MyApplicationClass.getContext();
@@ -362,9 +362,9 @@ public final class Utility {
             output += ", ";
         }
 
-        System.out.println(TAG + "secondsToHumanReadableDuration()->"
-                + "output.substring(0, output.length() - 2): "
-                + output.substring(0, output.length() - 2));
+        //System.out.println(TAG + "secondsToHumanReadableDuration()->"
+        //        + "output.substring(0, output.length() - 2): "
+        //        + output.substring(0, output.length() - 2));
 
         return output.substring(0, output.length() - 2);
     }

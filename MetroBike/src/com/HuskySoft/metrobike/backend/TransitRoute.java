@@ -54,8 +54,8 @@ public final class TransitRoute implements Comparable<TransitRoute> {
      * @return the total duration of the route in seconds
      */
     public long getDurationInSeconds() {
-        System.out.println(TAG + "getDurationInSeconds()->route.getDurationInSeconds(): "
-                + route.getDurationInSeconds());
+        //System.out.println(TAG + "getDurationInSeconds()->route.getDurationInSeconds(): "
+        //        + route.getDurationInSeconds());
         return route.getDurationInSeconds();
     }
 
@@ -63,8 +63,8 @@ public final class TransitRoute implements Comparable<TransitRoute> {
      * @return the total duration of transit steps of the route in seconds
      */
     public long getTransitDurationInSeconds() {
-        System.out.println(TAG + "getTransitDurationInSeconds()->transitDuration: "
-                + transitDuration);
+        //System.out.println(TAG + "getTransitDurationInSeconds()->transitDuration: "
+        //        + transitDuration);
         return transitDuration;
     }
 
@@ -76,23 +76,23 @@ public final class TransitRoute implements Comparable<TransitRoute> {
      * @return comparison result
      */
     public int compareTo(final TransitRoute other) {
-        System.out.println(TAG + "compareTo()->Entering compareTo");
+        //System.out.println(TAG + "compareTo()->Entering compareTo");
         if (this.getTransitDurationInSeconds() < other.getTransitDurationInSeconds()) {
-            System.out.println(TAG + "compareTo()->Exiting compareTo");
+            //System.out.println(TAG + "compareTo()->Exiting compareTo");
             return -1;
         } else if (this.getTransitDurationInSeconds() == other.getTransitDurationInSeconds()) {
             if (this.getDurationInSeconds() < other.getDurationInSeconds()) {
-                System.out.println(TAG + "compareTo()->Exiting compareTo");
+                //System.out.println(TAG + "compareTo()->Exiting compareTo");
                 return -1;
             } else if (this.getDurationInSeconds() == other.getDurationInSeconds()) {
-                System.out.println(TAG + "compareTo()->Exiting compareTo");
+                //System.out.println(TAG + "compareTo()->Exiting compareTo");
                 return 0;
             } else {
-                System.out.println(TAG + "compareTo()->Exiting compareTo");
+                //System.out.println(TAG + "compareTo()->Exiting compareTo");
                 return 1;
             }
         } else {
-            System.out.println(TAG + "compareTo()->Exiting compareTo");
+            //System.out.println(TAG + "compareTo()->Exiting compareTo");
             return 1;
         }
     }
